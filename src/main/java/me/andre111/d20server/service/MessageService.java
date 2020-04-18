@@ -1,0 +1,90 @@
+package me.andre111.d20server.service;
+
+import io.netty.channel.Channel;
+import io.netty.channel.ChannelFuture;
+import io.netty.channel.group.ChannelGroupFuture;
+import me.andre111.d20server.message.IllegalMessageException;
+import me.andre111.d20server.message.Message;
+import me.andre111.d20server.message.MessageEncoder;
+import me.andre111.d20server.message.RecievableMessage;
+import me.andre111.d20server.message.util.ErrorMessage;
+import me.andre111.d20server.model.EntityManager;
+import me.andre111.d20server.model.entity.game.Game;
+import me.andre111.d20server.model.entity.game.GamePlayer;
+import me.andre111.d20server.model.entity.map.Map;
+import me.andre111.d20server.model.entity.profile.Profile;
+
+public abstract class MessageService {
+	
+	public static void recieve(RecievableMessage message) {
+		Message reply = null;
+		try {
+			reply = message.handle();
+		} catch(IllegalMessageException e) {
+			reply = new ErrorMessage(e.getMessage());
+		}
+		
+		if (reply != null) {
+			send(reply, message.getChannel());
+		}
+	}
+	
+	/**
+	 * Sends a message to all clients joined into the game.
+	 * If the map is not null, the message will only be send to players on that map.
+	 * 
+	 * @param message the message to send
+	 * @param game    the game
+	 * @param map     the map or null
+	 */
+	public static void send(Message message, Game game, Map map) {
+		for(GamePlayer player : game.getPlayers()) {
+			if(player.isJoined()) {
+				if(map != null && !map.equals(game.getPlayerMap(player))) continue;
+				
+				send(message, EntityManager.PROFILE.find(player.getProfileID()));
+			}
+		}
+	}
+
+	/**
+	 * Sends a message to all clients logged into the provided profiles.
+	 * 
+	 * @param message  the message to send
+	 * @param profiles the profiles
+	 */
+	public static void send(Message message, Profile... profiles) {
+		for (Profile profile : profiles) {
+			// TODO: redirect messages for the ai instead of sending them
+			send(message, UserService.getChannelFor(profile));
+		}
+	}
+
+	/**
+	 * Sends a message to the provided channel.
+	 * 
+	 * @param message the message to send
+	 * @param channel the channel
+	 * @return a ChannelFuture for the operation
+	 */
+	public static ChannelFuture send(Message message, Channel channel) {
+		if (message == null || channel == null || !channel.isActive())
+			return null;
+
+		// TODO: logging
+		String json = MessageEncoder.encode(message);
+		return channel.writeAndFlush(json);
+	}
+
+	/**
+	 * Sends a message to all connected clients. Including clients that are not
+	 * logged into any profile.
+	 * 
+	 * @param message the message to send
+	 * @return a ChannelGroupFuture for the operation
+	 */
+	public static ChannelGroupFuture broadcast(Message message) {
+		String json = MessageEncoder.encode(message);
+		return UserService.getAllChannels().writeAndFlush(json);
+	}
+}

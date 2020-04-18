@@ -1,0 +1,202 @@
+package me.andre111.d20server.server;
+
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
+
+import io.netty.buffer.ByteBuf;
+import io.netty.buffer.Unpooled;
+import io.netty.channel.Channel;
+import io.netty.channel.ChannelFuture;
+import io.netty.channel.ChannelFutureListener;
+import io.netty.channel.ChannelHandlerContext;
+import io.netty.channel.ChannelInboundHandlerAdapter;
+import io.netty.handler.codec.TooLongFrameException;
+import io.netty.handler.codec.http.DefaultFullHttpResponse;
+import io.netty.handler.codec.http.FullHttpResponse;
+import io.netty.handler.codec.http.HttpContent;
+import io.netty.handler.codec.http.HttpHeaderNames;
+import io.netty.handler.codec.http.HttpHeaderValues;
+import io.netty.handler.codec.http.HttpMethod;
+import io.netty.handler.codec.http.HttpObject;
+import io.netty.handler.codec.http.HttpRequest;
+import io.netty.handler.codec.http.HttpResponse;
+import io.netty.handler.codec.http.HttpResponseStatus;
+import io.netty.handler.codec.http.HttpUtil;
+import io.netty.handler.codec.http.HttpVersion;
+import io.netty.handler.codec.http.LastHttpContent;
+import io.netty.handler.codec.http.multipart.DefaultHttpDataFactory;
+import io.netty.handler.codec.http.multipart.FileUpload;
+import io.netty.handler.codec.http.multipart.HttpDataFactory;
+import io.netty.handler.codec.http.multipart.HttpPostRequestDecoder;
+import io.netty.handler.codec.http.multipart.InterfaceHttpData;
+import me.andre111.d20server.model.EntityManager;
+import me.andre111.d20server.model.entity.Image;
+import me.andre111.d20server.service.GameService;
+
+public class HttpServerHandler extends ChannelInboundHandlerAdapter {
+	private static final String IMAGE_PATH = "/img/";
+	private static final String UPLOAD_IMAGE_PATH = "/upload_img";
+
+	private static final HttpDataFactory factory = new DefaultHttpDataFactory(false);
+	private HttpPostRequestDecoder decoder;
+
+	@Override
+	public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
+		handleMessageReceived(ctx, (HttpObject) msg);
+	}
+
+	private void handleMessageReceived(ChannelHandlerContext ctx, HttpObject msg) throws UnsupportedEncodingException {
+		// only allow get
+		if (msg instanceof HttpRequest && ((HttpRequest) msg).method() == HttpMethod.GET) {
+			handleGET(ctx, (HttpRequest) msg);
+		} else if((msg instanceof HttpRequest && ((HttpRequest) msg).method() == HttpMethod.POST) || msg instanceof HttpContent) {
+			handlePOST(ctx, msg);
+		} else {
+			sendError(ctx, HttpResponseStatus.METHOD_NOT_ALLOWED);
+			return;
+		}
+	}
+
+	private void handleGET(ChannelHandlerContext ctx, HttpRequest request) throws UnsupportedEncodingException {
+		// read and check path
+		String path = URLDecoder.decode(request.uri(), "UTF-8");
+		if (!isValidPath(path)) {
+			sendError(ctx, HttpResponseStatus.NOT_FOUND);
+			return;
+		}
+
+		// response variables
+		byte[] data = null;
+		String contentType = null;
+
+		// provide images
+		if(path.startsWith(IMAGE_PATH)) {
+			String idString = path.substring(IMAGE_PATH.length());
+			long id = Long.parseLong(idString);
+			Image image = EntityManager.IMAGE.find(id);
+			if(image != null) {
+				data = image.getData();
+				contentType = "image/png";
+			}
+		}
+
+		// send response
+		if(data == null) {
+			sendError(ctx, HttpResponseStatus.NOT_FOUND);
+			return;
+		}
+
+		// write
+		//TODO: split header and content and use chunked sending (to support large files)
+		HttpResponse response = new DefaultFullHttpResponse(HttpVersion.HTTP_1_1, HttpResponseStatus.OK, Unpooled.wrappedBuffer(data));
+		HttpUtil.setContentLength(response, data.length);
+		response.headers().set("Content-Type", contentType);
+		if (!HttpUtil.isKeepAlive(request)) {
+			response.headers().set(HttpHeaderNames.CONNECTION, HttpHeaderValues.CLOSE);
+		} else if (request.protocolVersion().equals(HttpVersion.HTTP_1_0)) {
+			response.headers().set(HttpHeaderNames.CONNECTION, HttpHeaderValues.KEEP_ALIVE);
+		}
+
+		//ctx.write(response);
+		//ctx.write(data);
+		//ChannelFuture writeFuture = ctx.writeAndFlush(LastHttpContent.EMPTY_LAST_CONTENT);
+
+		ChannelFuture writeFuture = ctx.writeAndFlush(response);
+		if(!HttpUtil.isKeepAlive(request)) {
+			writeFuture.addListener(ChannelFutureListener.CLOSE);
+		}
+	}
+
+	private void handlePOST(ChannelHandlerContext ctx, HttpObject msg) throws UnsupportedEncodingException {
+		if(msg instanceof HttpRequest) {
+			HttpRequest request = (HttpRequest) msg;
+
+			// read and check path
+			String path = URLDecoder.decode(request.uri(), "UTF-8");
+			if(path == null || !path.startsWith(UPLOAD_IMAGE_PATH)) {
+				sendError(ctx, HttpResponseStatus.NOT_FOUND);
+				return;
+			}
+
+			// create decoder
+			if(decoder != null) {
+				decoder.destroy();
+				decoder = null;
+			}
+			decoder = new HttpPostRequestDecoder(factory, request);
+		}
+		if(msg instanceof HttpContent) {
+			HttpContent content = (HttpContent) msg;
+
+			if(decoder != null) {
+				decoder.offer(content);
+
+				// read data from decoder
+				while(decoder.hasNext()) {
+					InterfaceHttpData data = decoder.next();
+					switch(data.getHttpDataType()) {
+					case FileUpload:
+						FileUpload fileUpload = (FileUpload) data;
+						if(fileUpload.isCompleted()) {
+							try {
+								String imageName = fileUpload.getFilename();
+								byte[] imageData = fileUpload.get();
+								Image image = new Image(imageName, imageData);
+								if(image.isValid()) {
+									image.save();
+									GameService.updateImageList();
+								}
+							} catch (IOException e) {
+								// TODO Auto-generated catch block
+								e.printStackTrace();
+							}
+						}
+						break;
+					default:
+						System.out.println("Unhandled post data type: "+data.getHttpDataType());
+						break;
+					}
+				}
+
+				if(content instanceof LastHttpContent) {
+					FullHttpResponse response = new DefaultFullHttpResponse(HttpVersion.HTTP_1_1, HttpResponseStatus.OK);
+					ctx.writeAndFlush(response).addListener(ChannelFutureListener.CLOSE);
+
+					// reset decode
+					decoder.destroy();
+					decoder = null;
+				}
+			}
+		}
+	}
+
+	private boolean isValidPath(String path) {
+		return path != null && path.startsWith(IMAGE_PATH);
+	}
+
+	@Override
+	public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
+		Channel ch = ctx.channel();
+		if (cause instanceof TooLongFrameException) {
+			sendError(ctx, HttpResponseStatus.BAD_REQUEST);
+			return;
+		}
+
+		cause.printStackTrace();
+		if (ch.isActive()) {
+			sendError(ctx, HttpResponseStatus.INTERNAL_SERVER_ERROR);
+		}
+	}
+
+	private void sendError(ChannelHandlerContext ctx, HttpResponseStatus status) {
+		ByteBuf data = Unpooled.copiedBuffer("Failure: " + status.toString() + "\r\n", StandardCharsets.UTF_8);
+
+		DefaultFullHttpResponse response = new DefaultFullHttpResponse(HttpVersion.HTTP_1_1, status, data);
+		response.headers().set("Content-Type", "text/plain; charset=UTF-8");
+
+		Channel channel = ctx.channel();
+		channel.writeAndFlush(response).addListener(ChannelFutureListener.CLOSE);
+	}
+}
