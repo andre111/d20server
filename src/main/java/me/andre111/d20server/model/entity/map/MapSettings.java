@@ -1,5 +1,7 @@
 package me.andre111.d20server.model.entity.map;
 
+import me.andre111.d20common.model.property.Light;
+
 public class MapSettings {
 	private int gridSize = 70;
 	private int width = 100;

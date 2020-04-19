@@ -6,12 +6,12 @@ import java.util.stream.Stream;
 
 import com.google.gson.reflect.TypeToken;
 
+import me.andre111.d20common.util.Utils;
 import me.andre111.d20server.model.entity.ChatData;
 import me.andre111.d20server.model.entity.Image;
 import me.andre111.d20server.model.entity.game.Game;
 import me.andre111.d20server.model.entity.map.Map;
 import me.andre111.d20server.model.entity.profile.Profile;
-import me.andre111.d20server.util.Utils;
 
 public abstract class EntityManager<E extends BaseEntity> {
 	public static final EntityManager<Map> MAP = new FileEntityManager<>("map", Map.class);
@@ -32,7 +32,7 @@ public abstract class EntityManager<E extends BaseEntity> {
 		this.name = name;
 		this.c = c;
 		
-		index = Utils.read("entity."+name+"_index", new TypeToken<java.util.Map<Long, String>>(){}.getType());
+		index = Utils.readJson("entity."+name+"_index", new TypeToken<java.util.Map<Long, String>>(){}.getType());
 		if(index == null) index = new HashMap<>();
 	}
 	
@@ -40,7 +40,7 @@ public abstract class EntityManager<E extends BaseEntity> {
 		saveElement(e);
 		
 		index.put(e.id(), e.getName());
-		Utils.save("entity."+name+"_index", index);
+		Utils.saveJson("entity."+name+"_index", index);
 	}
 	
 	public abstract E find(long id);

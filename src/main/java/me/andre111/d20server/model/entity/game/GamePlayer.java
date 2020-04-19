@@ -1,5 +1,9 @@
 package me.andre111.d20server.model.entity.game;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
 import me.andre111.d20server.model.entity.profile.Profile;
 
 public class GamePlayer {
@@ -10,6 +14,7 @@ public class GamePlayer {
 	private boolean joined = false;
 	
 	private transient long overrideMapID = -1;
+	private transient List<Long> selectedTokens = new ArrayList<>();
 
 	public GamePlayer(Profile profile) {
 		this.profile = profile.id();
@@ -40,6 +45,13 @@ public class GamePlayer {
 	}
 	public void setOverrideMapID(long overrideMapID) {
 		this.overrideMapID = overrideMapID;
+	}
+	
+	public List<Long> getSelectedTokens() {
+		return Collections.unmodifiableList(selectedTokens);
+	}
+	public void setSelectedTokens(List<Long> selectedTokens) {
+		this.selectedTokens = selectedTokens;
 	}
 
 	@Override

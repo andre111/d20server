@@ -28,6 +28,8 @@ public abstract class Command {
 		new RollCommand("roll", new String[] {"r"}, true, true);
 		new RollCommand("gmroll", new String[] {"gmr"}, false, true);
 		new RollCommand("hiddenroll", new String[] {"hr"}, false, false);
+		
+		new GetCommand("get", new String[] {});
 	}
 	
 	public static final Command get(String name) {

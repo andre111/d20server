@@ -15,6 +15,8 @@ public abstract class ChatService {
 	public static final String STYLE_SENDER = "[style \"font=Arial-BOLD-14\"]";
 	public static final String STYLE_INFO = "[style \"font=Arial-ITALIC-12\"]";
 
+	public static final long SYSTEM_SOURCE = 0;
+	
 	public static void onMessage(Game game, GamePlayer player, String message) {
 		// strip formatting stuff
 		message = message.replace("[", "");
@@ -33,13 +35,7 @@ public abstract class ChatService {
 				// handle command
 				command.execute(game, player, arguments);
 			} else {
-				// reply with "unknown"
-				StringBuilder sb = new StringBuilder();
-				sb.append(STYLE_INFO);
-				sb.append("Unknown command: ");
-				sb.append(commandName);
-				
-				append(game, new ChatEntry(sb.toString(), 0, false, player.getProfileID()));
+				appendError(game, player, "Unknown command: "+commandName);
 			}
 		} else {
 			// handle simple message
@@ -51,6 +47,17 @@ public abstract class ChatService {
 			
 			append(game, new ChatEntry(sb.toString(), player.getProfileID()));
 		}
+	}
+	
+	public static void appendError(Game game, GamePlayer player, String... lines) {
+		StringBuilder sb = new StringBuilder();
+		for(String line : lines) {
+			sb.append(STYLE_INFO);
+			sb.append(line);
+			sb.append("\n");
+		}
+		
+		append(game, new ChatEntry(sb.toString(), SYSTEM_SOURCE, false, player.getProfileID()));
 	}
 	
 	public static void append(Game game, ChatEntry... entries) {

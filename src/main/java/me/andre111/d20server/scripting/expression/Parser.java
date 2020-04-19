@@ -1,16 +1,19 @@
-package me.andre111.d20server.expression;
+package me.andre111.d20server.scripting.expression;
+
+import me.andre111.d20server.scripting.ScriptException;
+import me.andre111.d20server.scripting.VariableParser;
 
 //Grammar:
 // expression = term | expression `+` term | expression `-` term
 // term = factor | term `*` factor | term `/` factor
 // factor = `+` factor | `-` factor | `(` expression `)` | value
-// value = dice | number
+// value = `{`variable`}` | dice | number
 public class Parser {
 	private String string;
 	private int pos;
 	private int c;
 	
-	public Expression parse(String string) {
+	public Expression parse(String string) throws ScriptException {
 		// init
 		this.string = string;
 		this.pos = -1;
@@ -35,7 +38,7 @@ public class Parser {
 	}
 	
 	// expression = term | expression `+` term | expression `-` term
-	private Expression parseExpression() {
+	private Expression parseExpression() throws ScriptException {
 		Expression x = parseTerm();
 		while(true) {
 			if(eat('+')) {
@@ -43,9 +46,9 @@ public class Parser {
 				Expression a = x;
 				Expression b = parseTerm();
 				
-				x = (() -> {
-					Result ar = a.eval();
-					Result br = b.eval();
+				x = ((g,m,p) -> {
+					Result ar = a.eval(g,m,p);
+					Result br = b.eval(g,m,p);
 					return new Result(ar.v + br.v, ar.s + " + " + br.s);
 				});
 			} else if(eat('-')) {
@@ -53,9 +56,9 @@ public class Parser {
 				Expression a = x;
 				Expression b = parseTerm();
 				
-				x = (() -> {
-					Result ar = a.eval();
-					Result br = b.eval();
+				x = ((g,m,p) -> {
+					Result ar = a.eval(g,m,p);
+					Result br = b.eval(g,m,p);
 					return new Result(ar.v - br.v, ar.s + " - " + br.s);
 				});
 			} else {
@@ -65,7 +68,7 @@ public class Parser {
 	}
 	
 	// term = factor | term `*` factor | term `/` factor
-	private Expression parseTerm() {
+	private Expression parseTerm() throws ScriptException {
 		Expression x = parseFactor();
 		while(true) {
 			if(eat('*')) {
@@ -73,9 +76,9 @@ public class Parser {
 				Expression a = x;
 				Expression b = parseFactor();
 				
-				x = (() -> {
-					Result ar = a.eval();
-					Result br = b.eval();
+				x = ((g,m,p) -> {
+					Result ar = a.eval(g,m,p);
+					Result br = b.eval(g,m,p);
 					return new Result(ar.v * br.v, ar.s + " * " + br.s);
 				});
 			} else if(eat('/')) {
@@ -83,9 +86,9 @@ public class Parser {
 				Expression a = x;
 				Expression b = parseFactor();
 				
-				x = (() -> {
-					Result ar = a.eval();
-					Result br = b.eval();
+				x = ((g,m,p) -> {
+					Result ar = a.eval(g,m,p);
+					Result br = b.eval(g,m,p);
 					return new Result(ar.v / br.v, ar.s + " / " + br.s);
 				});
 			} else {
@@ -95,15 +98,15 @@ public class Parser {
 	}
 	
 	// factor = `+` factor | `-` factor | `(` expression `)` | value
-	private Expression parseFactor() {
+	private Expression parseFactor() throws ScriptException {
 		// parse signed facotr
 		if(eat('+')) {
 			return parseFactor();
 		}
 		if(eat('-')) {
 			Expression a = parseFactor();
-			return (() -> {
-				Result ar = a.eval();
+			return ((g,m,p) -> {
+				Result ar = a.eval(g,m,p);
 				return new Result(-ar.v, "-"+ar.s);
 			});
 		}
@@ -111,10 +114,10 @@ public class Parser {
 		// parse (expression)
 		if(eat('(')) {
 			Expression a = parseExpression();
-			if(!eat(')')) throw new IllegalArgumentException("Unclosed parentheses");
+			if(!eat(')')) throw new ScriptException("Unclosed parentheses");
 			
-			return (() -> {
-				Result ar = a.eval();
+			return ((g,m,p) -> {
+				Result ar = a.eval(g,m,p);
 				return new Result(ar.v, "("+ar.s+")");
 			});
 		}
@@ -124,7 +127,17 @@ public class Parser {
 	}
 
 	// value = dice | number
-	private Expression parseValue() {
+	private Expression parseValue() throws ScriptException {
+		// variable
+		if(eat('{')) {
+			int startPos = pos;
+			while((c != '}' && c != -1)) nextChar();
+			String variableString = string.substring(startPos, pos);
+			if(!eat('}')) throw new ScriptException("Unclosed variable parentheses");
+			
+			return VariableParser.parseVariable(variableString);
+		}
+		
 		// find substring
 		int startPos = pos;
 		while((c >= '0' && c <= '9') || c == 'D' || c == 'd' || c == 'W' || c == 'w') nextChar();
@@ -145,7 +158,7 @@ public class Parser {
 		} else {
 			// parse number
 			int number = Integer.parseInt(valueString);
-			return (() -> new Result(number, Integer.toString(number)));
+			return ((g,m,p) -> new Result(number, Integer.toString(number)));
 		}
 	}
 }

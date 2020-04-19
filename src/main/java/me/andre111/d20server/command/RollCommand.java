@@ -1,11 +1,11 @@
 package me.andre111.d20server.command;
 
-import me.andre111.d20server.expression.Expression;
-import me.andre111.d20server.expression.Parser;
-import me.andre111.d20server.expression.Result;
 import me.andre111.d20server.model.entity.ChatEntry;
 import me.andre111.d20server.model.entity.game.Game;
 import me.andre111.d20server.model.entity.game.GamePlayer;
+import me.andre111.d20server.scripting.expression.Expression;
+import me.andre111.d20server.scripting.expression.Parser;
+import me.andre111.d20server.scripting.expression.Result;
 import me.andre111.d20server.service.ChatService;
 
 public class RollCommand extends Command {
@@ -44,7 +44,7 @@ public class RollCommand extends Command {
 		// parse roll and execute
 		try {
 			Expression expr = parser.parse(arguments);
-			Result result = expr.eval();
+			Result result = expr.eval(game, game.getPlayerMap(player), player);
 			
 			sb.append("[group \"align-vertical=CENTER\"");
 			sb.append("[style \"font=Arial-18\"]");
@@ -62,6 +62,11 @@ public class RollCommand extends Command {
 		} catch(Exception e) {
 			sb.append("[style \"font=Arial-BOLD-18\"]");
 			sb.append(" = ? \n");
+			
+			sb.append(ChatService.STYLE_INFO);
+			sb.append("(");
+			sb.append(e.getMessage().replace("[", "").replace("]", "").replace("|", ""));
+			sb.append(") \n");
 		}
 		
 		// determine recipents

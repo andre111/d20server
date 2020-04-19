@@ -1,5 +1,9 @@
-package me.andre111.d20server.expression;
+package me.andre111.d20server.scripting.expression;
 
+import me.andre111.d20server.model.entity.game.Game;
+import me.andre111.d20server.model.entity.game.GamePlayer;
+import me.andre111.d20server.model.entity.map.Map;
+import me.andre111.d20server.scripting.ScriptException;
 import me.andre111.d20server.util.DiceRoller;
 
 public class Dice implements Expression {
@@ -12,7 +16,7 @@ public class Dice implements Expression {
 	}
 
 	@Override
-	public Result eval() {
+	public Result eval(Game game, Map map, GamePlayer player) throws ScriptException {
 		int value = 0;
 		StringBuilder sb = new StringBuilder();
 		if(count > 1) sb.append("(");

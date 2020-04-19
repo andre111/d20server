@@ -1,4 +1,4 @@
-package me.andre111.d20server.expression;
+package me.andre111.d20server.scripting.expression;
 
 public class Result {
 	public final double v;

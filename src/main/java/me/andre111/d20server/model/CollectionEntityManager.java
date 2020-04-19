@@ -6,7 +6,7 @@ import java.util.stream.Stream;
 
 import com.google.gson.reflect.TypeToken;
 
-import me.andre111.d20server.util.Utils;
+import me.andre111.d20common.util.Utils;
 
 public class CollectionEntityManager<E extends BaseEntity> extends EntityManager<E> {
 	private Map<Long, E> entities = new HashMap<>();
@@ -14,7 +14,7 @@ public class CollectionEntityManager<E extends BaseEntity> extends EntityManager
 	protected CollectionEntityManager(String name, Class<E> c) {
 		super(name, c);
 		
-		entities = Utils.read("entity."+name, TypeToken.getParameterized(Map.class, Long.class, c).getType());
+		entities = Utils.readJson("entity."+name, TypeToken.getParameterized(Map.class, Long.class, c).getType());
 		if(entities == null) {
 			entities = new HashMap<>();
 		}
@@ -28,7 +28,7 @@ public class CollectionEntityManager<E extends BaseEntity> extends EntityManager
 	@Override
 	protected void saveElement(E e) {
 		entities.put(e.id(), e);
-		Utils.save("entity."+name, entities);
+		Utils.saveJson("entity."+name, entities);
 	}
 
 	@Override

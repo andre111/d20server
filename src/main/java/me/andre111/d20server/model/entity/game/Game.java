@@ -5,12 +5,12 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 
+import me.andre111.d20common.util.PostLoad;
 import me.andre111.d20server.model.BaseEntity;
 import me.andre111.d20server.model.EntityManager;
 import me.andre111.d20server.model.entity.ChatData;
 import me.andre111.d20server.model.entity.map.Map;
 import me.andre111.d20server.model.entity.profile.Profile;
-import me.andre111.d20server.util.PostLoad;
 
 public class Game extends BaseEntity implements PostLoad {
 	private List<GamePlayer> players = new ArrayList<>();

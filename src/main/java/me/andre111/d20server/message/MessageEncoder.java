@@ -5,7 +5,7 @@ import com.google.gson.FieldAttributes;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
-import me.andre111.d20server.util.IOEventEnabler;
+import me.andre111.d20common.util.IOEventEnabler;
 
 public class MessageEncoder {
 	private static final Gson gson;

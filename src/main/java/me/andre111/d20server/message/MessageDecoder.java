@@ -13,8 +13,8 @@ import com.google.gson.JsonSyntaxException;
 
 import io.github.classgraph.ClassInfo;
 import io.github.classgraph.ClassInfoList;
-import me.andre111.d20server.util.IOEventEnabler;
-import me.andre111.d20server.util.Utils;
+import me.andre111.d20common.util.IOEventEnabler;
+import me.andre111.d20common.util.Utils;
 
 public class MessageDecoder {
 	private static final Map<String, Class<? extends RecievableMessage>> MESSAGE_TYPES = new HashMap<>();

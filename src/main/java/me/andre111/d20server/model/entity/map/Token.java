@@ -1,32 +1,15 @@
 package me.andre111.d20server.model.entity.map;
 
-import java.util.Collections;
-import java.util.HashMap;
-
-import me.andre111.d20server.model.SubEntity;
+import me.andre111.d20common.model.property.Access;
+import me.andre111.d20common.model.property.Layer;
+import me.andre111.d20common.model.property.Property;
+import me.andre111.d20common.model.property.Type;
 import me.andre111.d20server.model.entity.game.GamePlayer;
-import me.andre111.d20server.model.entity.map.property.Access;
-import me.andre111.d20server.model.entity.map.property.Property;
-import me.andre111.d20server.model.entity.map.property.Type;
-import me.andre111.d20server.util.PostLoad;
+import me.andre111.d20server.model.property.PropertyHolder;
 
-public class Token extends SubEntity implements PostLoad {
-private java.util.Map<String, Property> properties = new HashMap<>();
-	
-	public Token() {
-		addDefaultProperties();
-	}
-
+public class Token extends PropertyHolder {
 	@Override
-	public void postLoad() {
-		addDefaultProperties();
-	}
-	
-	private void addDefaultProperties() {
-		if(properties == null) {
-			properties = new HashMap<>();
-		}
-		
+	protected void addDefaultProperties() {
 		addPropertyIfAbsent("imageID", new Property(Type.LONG, Access.GM, Access.EVERYONE, 0));
 		addPropertyIfAbsent("controllingPlayer", new Property(Type.PLAYER, Access.GM, Access.GM, 0));
 		addPropertyIfAbsent("mainToken", new Property(Type.BOOLEAN, Access.GM, Access.GM, true));
@@ -52,42 +35,9 @@ private java.util.Map<String, Property> properties = new HashMap<>();
 
 		addPropertyIfAbsent("gmNotes", new Property(Type.STRING, Access.GM, Access.GM, ""));
 	}
-	private void addPropertyIfAbsent(String name, Property property) {
-		if(!properties.containsKey(name)) {
-			properties.put(name, property);
-		}
-	}
 	
-	public void applyProperties(java.util.Map<String, Property> toApply, Access accessLevel) {
-		for(java.util.Map.Entry<String, Property> e : toApply.entrySet()) {
-			Property ownProperty = properties.get(e.getKey());
-			if(ownProperty == null) continue; //TODO: how to handle unknown properties?
-			if(ownProperty.getEditAccess().ordinal() > accessLevel.ordinal()) continue; // discard unallowed edits
-			
-			// transfer value
-			try {
-				e.getValue().transferTo(ownProperty);
-			} catch(UnsupportedOperationException ex) {
-				ex.printStackTrace(); //TODO: how to handle incorrect property updates
-			}
-			
-			// transfer access (GM only)
-			if(accessLevel == Access.GM) {
-				ownProperty.setEditAccess(e.getValue().getEditAccess());
-				ownProperty.setViewAccess(e.getValue().getViewAccess());
-			}
-		}
-	}
-	
-	public Property getProperty(String name) {
-		return properties.get(name);
-	}
-	
-	public java.util.Map<String, Property> getProperties() {
-		return Collections.unmodifiableMap(properties);
-	}
-
-	public Access getAccesLevel(GamePlayer player) {
+	@Override
+	public Access getAccessLevel(GamePlayer player) {
 		Access accessLevel = Access.EVERYONE;
 		if(getProperty("controllingPlayer").getPlayerID() == player.getProfileID()) {
 			accessLevel = Access.CONTROLLING_PLAYER;
@@ -96,5 +46,11 @@ private java.util.Map<String, Property> properties = new HashMap<>();
 			accessLevel = Access.GM;
 		}
 		return accessLevel;
+	}
+
+	@Override
+	public void save() { 
+		// Not saved on its own -> map saves the token
+		throw new UnsupportedOperationException("This entity cann't be saved on its own!");
 	}
 }

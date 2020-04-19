@@ -2,8 +2,8 @@ package me.andre111.d20server.model;
 
 import java.util.stream.Stream;
 
+import me.andre111.d20common.util.Utils;
 import me.andre111.d20server.model.entity.Image;
-import me.andre111.d20server.util.Utils;
 
 public class ImageEntityManager extends EntityManager<Image> {
 	public ImageEntityManager(String name) {

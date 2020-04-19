@@ -5,12 +5,12 @@ import java.util.Map;
 
 import com.google.gson.reflect.TypeToken;
 
-import me.andre111.d20server.util.Utils;
+import me.andre111.d20common.util.Utils;
 
 public abstract class ID {
 	private static Map<String, Long> NEXT_IDS = new HashMap<>();
 	static {
-		NEXT_IDS = Utils.read("ids", new TypeToken<Map<String, Long>>(){}.getType());
+		NEXT_IDS = Utils.readJson("ids", new TypeToken<Map<String, Long>>(){}.getType());
 		if(NEXT_IDS == null) NEXT_IDS = new HashMap<>();
 	}
 	
@@ -22,7 +22,7 @@ public abstract class ID {
 			id = NEXT_IDS.get(entry);
 		}
 		NEXT_IDS.put(entry, id+1);
-		Utils.save("ids", NEXT_IDS);
+		Utils.saveJson("ids", NEXT_IDS);
 		
 		return id;
 	}

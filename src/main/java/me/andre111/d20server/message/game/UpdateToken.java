@@ -2,10 +2,10 @@ package me.andre111.d20server.message.game;
 
 import java.util.Map;
 
+import me.andre111.d20common.model.property.Access;
+import me.andre111.d20common.model.property.Property;
 import me.andre111.d20server.message.Message;
 import me.andre111.d20server.model.entity.map.Token;
-import me.andre111.d20server.model.entity.map.property.Access;
-import me.andre111.d20server.model.entity.map.property.Property;
 import me.andre111.d20server.service.MessageService;
 
 public class UpdateToken extends GameMessage {
@@ -23,7 +23,7 @@ public class UpdateToken extends GameMessage {
 		if(token == null || properties == null || properties.isEmpty()) return null;
 		
 		// determine access level
-		Access accessLevel = token.getAccesLevel(getPlayer());
+		Access accessLevel = token.getAccessLevel(getPlayer());
 		
 		// transfer values
 		token.applyProperties(properties, accessLevel);

@@ -1,15 +1,18 @@
 package me.andre111.d20server.model.entity.map;
 
+import me.andre111.d20common.util.ReplacingLinkedHashSet;
 import me.andre111.d20server.model.BaseEntity;
 import me.andre111.d20server.model.EntityManager;
-import me.andre111.d20server.util.ReplacingLinkedHashSet;
 
 public class Map extends BaseEntity {
+	//TODO: move to properties system
 	private String name;
 	private MapSettings mapSettings = new MapSettings();
 
 	private ReplacingLinkedHashSet<Wall> walls = new ReplacingLinkedHashSet<>();
 	private ReplacingLinkedHashSet<Token> tokens = new ReplacingLinkedHashSet<>();
+	
+	private ReplacingLinkedHashSet<TokenList> lists = new ReplacingLinkedHashSet<>();
 	
 	public Map(String name) {
 		this.name = name;
@@ -17,6 +20,10 @@ public class Map extends BaseEntity {
 	
 	public MapSettings getSettings() {
 		return mapSettings;
+	}
+	public void setSettings(MapSettings mapSettings) {
+		this.mapSettings = mapSettings;
+		save();
 	}
 	
 	public void addOrUpdateWall(Wall wall) {
@@ -54,6 +61,23 @@ public class Map extends BaseEntity {
 		for(Token token : tokens) {
 			if(token.id() == id) {
 				return token;
+			}
+		}
+		return null;
+	}
+	
+	public void addOrUpdateTokenList(TokenList list) {
+		lists.update(list);
+		save();
+	}
+	public void removeTokenList(TokenList list) {
+		lists.remove(list);
+		save();
+	}
+	public TokenList getTokenList(String name) {
+		for(TokenList list : lists) {
+			if(list.getName().equals(name)) {
+				return list;
 			}
 		}
 		return null;
