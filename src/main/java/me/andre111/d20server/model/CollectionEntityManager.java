@@ -6,6 +6,7 @@ import java.util.stream.Stream;
 
 import com.google.gson.reflect.TypeToken;
 
+import me.andre111.d20common.model.BaseEntity;
 import me.andre111.d20common.util.Utils;
 
 public class CollectionEntityManager<E extends BaseEntity> extends EntityManager<E> {

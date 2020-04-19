@@ -10,8 +10,8 @@ import io.netty.channel.Channel;
 import io.netty.channel.group.ChannelGroup;
 import io.netty.channel.group.DefaultChannelGroup;
 import io.netty.util.concurrent.GlobalEventExecutor;
-import me.andre111.d20server.model.entity.profile.LoginLog;
-import me.andre111.d20server.model.entity.profile.Profile;
+import me.andre111.d20common.model.entity.profile.Profile;
+import me.andre111.d20server.model.EntityManager;
 
 /**
  * Keeps track of all connections to the server, as well as the corresponding
@@ -74,8 +74,7 @@ public abstract class UserService {
 		
 		// save lastLogin time and log
 		profile.setLastLogin();
-		profile.save();
-		new LoginLog(profile).save();
+		EntityManager.PROFILE.save(profile);
 		
 		//TODO: remove test stuff
 		System.out.println("SignIn: "+profile.id());
@@ -117,5 +116,13 @@ public abstract class UserService {
 
 	public static boolean isConnected(Profile profile) {
 		return getChannelFor(profile) != null;
+	}
+	
+	// Profile finding methods
+	public static Profile findByEmail(String email) {
+		return EntityManager.PROFILE.stream().filter(p -> p.getEmail().equals(email)).findAny().orElse(null);
+	}
+	public static Profile findByUsername(String username) {
+		return EntityManager.PROFILE.stream().filter(p -> p.getUsername().equals(username)).findAny().orElse(null);
 	}
 }

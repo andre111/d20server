@@ -6,12 +6,13 @@ import java.util.stream.Stream;
 
 import com.google.gson.reflect.TypeToken;
 
+import me.andre111.d20common.model.BaseEntity;
+import me.andre111.d20common.model.entity.ChatData;
+import me.andre111.d20common.model.entity.Image;
+import me.andre111.d20common.model.entity.game.Game;
+import me.andre111.d20common.model.entity.map.Map;
+import me.andre111.d20common.model.entity.profile.Profile;
 import me.andre111.d20common.util.Utils;
-import me.andre111.d20server.model.entity.ChatData;
-import me.andre111.d20server.model.entity.Image;
-import me.andre111.d20server.model.entity.game.Game;
-import me.andre111.d20server.model.entity.map.Map;
-import me.andre111.d20server.model.entity.profile.Profile;
 
 public abstract class EntityManager<E extends BaseEntity> {
 	public static final EntityManager<Map> MAP = new FileEntityManager<>("map", Map.class);

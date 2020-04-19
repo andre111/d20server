@@ -1,21 +1,24 @@
 package me.andre111.d20server.service;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
+import me.andre111.d20common.message.game.chat.ChatEntries;
+import me.andre111.d20common.model.entity.ChatData;
+import me.andre111.d20common.model.entity.ChatEntry;
+import me.andre111.d20common.model.entity.game.Game;
+import me.andre111.d20common.model.entity.game.GamePlayer;
 import me.andre111.d20server.command.Command;
-import me.andre111.d20server.message.game.chat.ChatEntries;
 import me.andre111.d20server.model.EntityManager;
-import me.andre111.d20server.model.entity.ChatData;
-import me.andre111.d20server.model.entity.ChatEntry;
-import me.andre111.d20server.model.entity.game.Game;
-import me.andre111.d20server.model.entity.game.GamePlayer;
 
 public abstract class ChatService {
 	public static final String STYLE_SENDER = "[style \"font=Arial-BOLD-14\"]";
 	public static final String STYLE_INFO = "[style \"font=Arial-ITALIC-12\"]";
 
 	public static final long SYSTEM_SOURCE = 0;
+	
+	private static final java.util.Map<Long, ChatData> loadedChats = new HashMap<>();
 	
 	public static void onMessage(Game game, GamePlayer player, String message) {
 		// strip formatting stuff
@@ -62,11 +65,11 @@ public abstract class ChatService {
 	
 	public static void append(Game game, ChatEntry... entries) {
 		// store chat entries on server side
-		ChatData chatData = game.getChatData();
+		ChatData chatData = getChatData(game);
 		for(ChatEntry entry : entries) {
 			chatData.append(entry);
 		}
-		chatData.save();
+		EntityManager.CHAT.save(chatData);
 		
 		// send chat entries to client
 		sendToClients(game, true, entries);
@@ -76,7 +79,7 @@ public abstract class ChatService {
 		List<ChatEntry> playerEntries = new ArrayList<>();
 		
 		// determine all relevant entries
-		ChatData chatData = game.getChatData();
+		ChatData chatData = getChatData(game);
 		int start = Math.max(0, chatData.getEntries().size() - amount);
 		for(int i=start; i<chatData.getEntries().size(); i++) {
 			ChatEntry entry = chatData.getEntries().get(i);
@@ -118,5 +121,18 @@ public abstract class ChatService {
 		}
 		
 		return false;
+	}
+	
+	private static ChatData getChatData(Game game) {
+		if(!loadedChats.containsKey(game.id())) {
+			ChatData chatData = EntityManager.CHAT.find(game.id());
+			if(chatData == null) {
+				chatData = new ChatData(game);
+			}
+			
+			loadedChats.put(game.id(), chatData);
+		}
+		
+		return loadedChats.get(game.id());
 	}
 }

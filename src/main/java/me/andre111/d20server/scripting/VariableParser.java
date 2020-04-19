@@ -7,14 +7,14 @@ public abstract class VariableParser {
 	static {
 		rootParser = new VariableParserParent()
 				.addChild("selected", new VariableParserParent()
-						.addChild("property", new VariableParserSelectedTokenProperty())
+						.addChild("property", new VariableParserPropertySelectedToken())
 						.addChild("list", null) //TODO: implement
 				)
 				.addChild("list", new VariableParserParent()
 						.addChild("property", null) //TODO: implement
 				)
 				.addChild("map", new VariableParserParent()
-						.addChild("property", null) //TODO: implement
+						.addChild("property", new VariableParserPropertyMap())
 				);
 	}
 	

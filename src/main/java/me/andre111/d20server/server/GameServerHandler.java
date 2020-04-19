@@ -3,8 +3,8 @@ package me.andre111.d20server.server;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
 import io.netty.handler.timeout.IdleStateEvent;
-import me.andre111.d20server.message.MessageDecoder;
-import me.andre111.d20server.message.RecievableMessage;
+import me.andre111.d20common.message.Message;
+import me.andre111.d20common.message.MessageDecoder;
 import me.andre111.d20server.service.MessageService;
 import me.andre111.d20server.service.UserService;
 
@@ -45,9 +45,8 @@ public class GameServerHandler extends ChannelInboundHandlerAdapter {
 	public void channelRead(ChannelHandlerContext ctx, Object object) throws Exception {
 		try {
 			//TODO: logging (with time tracking?)
-			RecievableMessage message = MessageDecoder.decode((String) object);
-			message.initSource(ctx.channel());
-			MessageService.recieve(message);
+			Message message = MessageDecoder.decode((String) object);
+			MessageService.recieve(ctx.channel(), message);
 		} catch(Exception e) {
 			throw e;
 		} finally {

@@ -1,10 +1,10 @@
 package me.andre111.d20server.scripting.variable;
 
+import me.andre111.d20common.model.entity.game.Game;
+import me.andre111.d20common.model.entity.game.GamePlayer;
+import me.andre111.d20common.model.entity.map.Map;
 import me.andre111.d20common.model.property.Access;
 import me.andre111.d20common.model.property.Property;
-import me.andre111.d20server.model.entity.game.Game;
-import me.andre111.d20server.model.entity.game.GamePlayer;
-import me.andre111.d20server.model.entity.map.Map;
 import me.andre111.d20server.scripting.ScriptException;
 
 public abstract class PropertyVariable extends Variable {
@@ -32,7 +32,8 @@ public abstract class PropertyVariable extends Variable {
 
 		// TODO: set value (by type)
 		
-		// TODO: save (somehow)
+		// save
+		saveSourceAfterSet(game, map, player);
 	}
 
 	@Override
@@ -57,6 +58,8 @@ public abstract class PropertyVariable extends Variable {
 			return property.getDouble();
 		case LAYER:
 			return property.getLayer();
+		case LIGHT:
+			return property.getLight();
 		case LONG:
 			return property.getLong();
 		case PLAYER:
@@ -70,4 +73,5 @@ public abstract class PropertyVariable extends Variable {
 	
 	protected abstract Property getProperty(Game game, Map map, GamePlayer player) throws ScriptException;
 	protected abstract Access getAccessLevel(Game game, Map map, GamePlayer player) throws ScriptException;
+	protected abstract void saveSourceAfterSet(Game game, Map map, GamePlayer player);
 }

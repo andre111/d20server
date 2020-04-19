@@ -31,8 +31,8 @@ import io.netty.handler.codec.http.multipart.FileUpload;
 import io.netty.handler.codec.http.multipart.HttpDataFactory;
 import io.netty.handler.codec.http.multipart.HttpPostRequestDecoder;
 import io.netty.handler.codec.http.multipart.InterfaceHttpData;
+import me.andre111.d20common.model.entity.Image;
 import me.andre111.d20server.model.EntityManager;
-import me.andre111.d20server.model.entity.Image;
 import me.andre111.d20server.service.GameService;
 
 public class HttpServerHandler extends ChannelInboundHandlerAdapter {
@@ -145,7 +145,7 @@ public class HttpServerHandler extends ChannelInboundHandlerAdapter {
 								byte[] imageData = fileUpload.get();
 								Image image = new Image(imageName, imageData);
 								if(image.isValid()) {
-									image.save();
+									EntityManager.IMAGE.save(image);
 									GameService.updateImageList();
 								}
 							} catch (IOException e) {

@@ -3,8 +3,8 @@ package me.andre111.d20server.command;
 import java.util.HashMap;
 import java.util.Map;
 
-import me.andre111.d20server.model.entity.game.Game;
-import me.andre111.d20server.model.entity.game.GamePlayer;
+import me.andre111.d20common.model.entity.game.Game;
+import me.andre111.d20common.model.entity.game.GamePlayer;
 
 public abstract class Command {
 	private static final Map<String, Command> COMMANDS = new HashMap<>();

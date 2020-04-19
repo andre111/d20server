@@ -2,6 +2,7 @@ package me.andre111.d20server.model;
 
 import java.util.stream.Stream;
 
+import me.andre111.d20common.model.BaseEntity;
 import me.andre111.d20common.util.Utils;
 
 public class FileEntityManager<E extends BaseEntity> extends EntityManager<E> {

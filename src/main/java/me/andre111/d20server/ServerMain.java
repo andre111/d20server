@@ -1,5 +1,6 @@
 package me.andre111.d20server;
 
+import me.andre111.d20common.AppType;
 import me.andre111.d20common.D20Common;
 import me.andre111.d20server.server.GameServer;
 import me.andre111.d20server.server.HttpServer;
@@ -10,7 +11,7 @@ public class ServerMain {
 	public static void main(String[] args) {
 		//TODO: replace all System.out.*
 		System.out.println("Initializing...");
-		D20Common.init();
+		D20Common.init(AppType.SERVER);
 		GameService.init();
 		
 		System.out.println("Starting game server...");

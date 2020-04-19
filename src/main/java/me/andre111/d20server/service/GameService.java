@@ -1,29 +1,38 @@
 package me.andre111.d20server.service;
 
 import java.util.HashMap;
-import java.util.Map;
 
-import me.andre111.d20server.message.game.LoadMap;
-import me.andre111.d20server.message.game.PlayerList;
-import me.andre111.d20server.message.game.lists.ImageList;
-import me.andre111.d20server.message.game.lists.MapList;
-import me.andre111.d20server.message.game.EnterGame;
+import me.andre111.d20common.message.game.EnterGame;
+import me.andre111.d20common.message.game.LoadMap;
+import me.andre111.d20common.message.game.PlayerList;
+import me.andre111.d20common.message.game.lists.ImageList;
+import me.andre111.d20common.message.game.lists.MapList;
+import me.andre111.d20common.model.entity.game.Game;
+import me.andre111.d20common.model.entity.game.GamePlayer;
+import me.andre111.d20common.model.entity.map.Map;
+import me.andre111.d20common.model.entity.profile.Profile;
 import me.andre111.d20server.model.EntityManager;
-import me.andre111.d20server.model.entity.game.Game;
-import me.andre111.d20server.model.entity.game.GamePlayer;
-import me.andre111.d20server.model.entity.profile.Profile;
 
 public abstract class GameService {
 	//TODO: remove this and use an actual game creation and joining system
 	private static Game baseGame;
-	private static Map<Profile, Game> gameMap = new HashMap<>();
+	private static java.util.Map<Profile, Game> gameMap = new HashMap<>();
 	
 	public static void init() {
 		baseGame = EntityManager.GAME.findFirst();
 		if(baseGame == null) {
 			baseGame = new Game();
-			baseGame.postLoad();
-			baseGame.save();
+			EntityManager.GAME.save(baseGame);
+		}
+		
+		// add atleast one map
+		if(baseGame.getMaps().isEmpty()) {
+			Map map = baseGame.createMap("New Map");
+			EntityManager.MAP.save(map);
+			EntityManager.GAME.save(baseGame);
+		}
+		if(baseGame.getMap(baseGame.getPlayerMapID(), EntityManager.MAP::find) == null) {
+			baseGame.setPlayerMapID(baseGame.getMaps().get(0));
 		}
 	}
 	
@@ -33,7 +42,9 @@ public abstract class GameService {
 		
 		// join new game
 		gameMap.put(profile, game);
-		game.join(profile);
+		if(game.join(profile)) {
+			EntityManager.GAME.save(game);
+		}
 
 		updateClientState(profile);
 	}
@@ -50,7 +61,7 @@ public abstract class GameService {
 		
 		//TODO: send gamestate to player (->LoadMap message and last X chat entries)
 		GamePlayer player = game.getPlayer(profile);
-		me.andre111.d20server.model.entity.map.Map map = game.getPlayerMap(player);
+		Map map = game.getPlayerMap(player, EntityManager.MAP::find);
 		if(map != null) {
 			MessageService.send(new LoadMap(map), profile);
 		}
@@ -84,8 +95,8 @@ public abstract class GameService {
 			GamePlayer player = game.getPlayer(profile);
 			
 			if(player.getRole() == GamePlayer.Role.GM && player.isJoined()) {
-				Map<Long, String> mapIndex = EntityManager.MAP.getIndex();
-				Map<Long, String> mapMap = new HashMap<>();
+				java.util.Map<Long, String> mapIndex = EntityManager.MAP.getIndex();
+				java.util.Map<Long, String> mapMap = new HashMap<>();
 				for(long mapID : game.getMaps()) {
 					mapMap.put(mapID, mapIndex.get(mapID));
 				}
@@ -100,14 +111,14 @@ public abstract class GameService {
 			for(Profile profile : gameMap.keySet()) {
 				player = game.getPlayer(profile);
 				
-				me.andre111.d20server.model.entity.map.Map map = game.getPlayerMap(player);
+				Map map = game.getPlayerMap(player, EntityManager.MAP::find);
 				if(map != null) {
 					MessageService.send(new LoadMap(map), profile);
 				}
 			}
 		} else {
 			// update single player
-			me.andre111.d20server.model.entity.map.Map map = game.getPlayerMap(player);
+			Map map = game.getPlayerMap(player, EntityManager.MAP::find);
 			if(map != null) {
 				MessageService.send(new LoadMap(map), EntityManager.PROFILE.find(player.getProfileID()));
 			}

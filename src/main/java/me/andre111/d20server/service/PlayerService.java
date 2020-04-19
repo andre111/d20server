@@ -2,9 +2,9 @@ package me.andre111.d20server.service;
 
 import java.util.List;
 
-import me.andre111.d20server.model.entity.game.GamePlayer;
-import me.andre111.d20server.model.entity.map.Map;
-import me.andre111.d20server.model.entity.map.Token;
+import me.andre111.d20common.model.entity.game.GamePlayer;
+import me.andre111.d20common.model.entity.map.Map;
+import me.andre111.d20common.model.entity.map.Token;
 
 public abstract class PlayerService {
 

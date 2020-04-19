@@ -3,29 +3,28 @@ package me.andre111.d20server.service;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.group.ChannelGroupFuture;
-import me.andre111.d20server.message.IllegalMessageException;
-import me.andre111.d20server.message.Message;
-import me.andre111.d20server.message.MessageEncoder;
-import me.andre111.d20server.message.RecievableMessage;
-import me.andre111.d20server.message.util.ErrorMessage;
+import me.andre111.d20common.message.IllegalMessageException;
+import me.andre111.d20common.message.Message;
+import me.andre111.d20common.message.MessageEncoder;
+import me.andre111.d20common.model.entity.game.Game;
+import me.andre111.d20common.model.entity.game.GamePlayer;
+import me.andre111.d20common.model.entity.map.Map;
+import me.andre111.d20common.model.entity.profile.Profile;
+import me.andre111.d20server.handler.MessageHandler;
 import me.andre111.d20server.model.EntityManager;
-import me.andre111.d20server.model.entity.game.Game;
-import me.andre111.d20server.model.entity.game.GamePlayer;
-import me.andre111.d20server.model.entity.map.Map;
-import me.andre111.d20server.model.entity.profile.Profile;
 
 public abstract class MessageService {
 	
-	public static void recieve(RecievableMessage message) {
+	public static void recieve(Channel channel, Message message) {
 		Message reply = null;
 		try {
-			reply = message.handle();
+			reply = MessageHandler.handle(channel, message);
 		} catch(IllegalMessageException e) {
-			reply = new ErrorMessage(e.getMessage());
+			//reply = new ErrorMessage(e.getMessage());
 		}
 		
 		if (reply != null) {
-			send(reply, message.getChannel());
+			send(reply, channel);
 		}
 	}
 	
@@ -40,7 +39,7 @@ public abstract class MessageService {
 	public static void send(Message message, Game game, Map map) {
 		for(GamePlayer player : game.getPlayers()) {
 			if(player.isJoined()) {
-				if(map != null && !map.equals(game.getPlayerMap(player))) continue;
+				if(map != null && !map.equals(game.getPlayerMap(player, EntityManager.MAP::find))) continue;
 				
 				send(message, EntityManager.PROFILE.find(player.getProfileID()));
 			}

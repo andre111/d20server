@@ -1,8 +1,9 @@
 package me.andre111.d20server.command;
 
-import me.andre111.d20server.model.entity.ChatEntry;
-import me.andre111.d20server.model.entity.game.Game;
-import me.andre111.d20server.model.entity.game.GamePlayer;
+import me.andre111.d20common.model.entity.ChatEntry;
+import me.andre111.d20common.model.entity.game.Game;
+import me.andre111.d20common.model.entity.game.GamePlayer;
+import me.andre111.d20server.model.EntityManager;
 import me.andre111.d20server.scripting.ScriptException;
 import me.andre111.d20server.scripting.VariableParser;
 import me.andre111.d20server.scripting.variable.Variable;
@@ -18,7 +19,7 @@ public class GetCommand extends Command {
 		// TODO Auto-generated method stub
 		try {
 			Variable variable = VariableParser.parseVariable(arguments);
-			Object value = variable.get(game, game.getPlayerMap(player), player);
+			Object value = variable.get(game, game.getPlayerMap(player, EntityManager.MAP::find), player);
 			
 			StringBuilder sb = new StringBuilder();
 			sb.append(ChatService.STYLE_INFO);
