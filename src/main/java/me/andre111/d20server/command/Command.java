@@ -29,7 +29,10 @@ public abstract class Command {
 		new RollCommand("gmroll", new String[] {"gmr"}, false, true);
 		new RollCommand("hiddenroll", new String[] {"hr"}, false, false);
 		
-		new GetCommand("get", new String[] {});
+		new GetCommand("get", new String[] {"g"});
+		new SetCommand("set", new String[] {"s"}, true, false);
+		new SetCommand("gmset", new String[] {"gs"}, false, false);
+		new SetCommand("hiddenset", new String[] {"hs"}, false, true);
 	}
 	
 	public static final Command get(String name) {
@@ -50,4 +53,16 @@ public abstract class Command {
 	}
 	
 	public abstract void execute(Game game, GamePlayer player, String arguments);
+	
+	protected long[] buildRecipents(GamePlayer sender, boolean showPublic, boolean showSelf) {
+		long[] recipents = null;
+		if(!showPublic) {
+			if(showSelf) {
+				recipents = new long[] { sender.getProfileID() };
+			} else {
+				recipents = new long[] { -1 };
+			}
+		}
+		return recipents;
+	}
 }
