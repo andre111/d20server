@@ -44,6 +44,6 @@ public class RollCommand extends Command {
 		long[] recipents = buildRecipents(player, showPublic, showSelf);
 		
 		// append message
-		ChatService.append(game, new ChatEntry(rollMessage, player.getProfileID(), true, recipents));
+		ChatService.append(game, true, new ChatEntry(rollMessage, player.getProfileID(), true, recipents));
 	}
 }

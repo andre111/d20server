@@ -9,6 +9,8 @@ import me.andre111.d20common.model.entity.ChatData;
 import me.andre111.d20common.model.entity.ChatEntry;
 import me.andre111.d20common.model.entity.game.Game;
 import me.andre111.d20common.model.entity.game.GamePlayer;
+import me.andre111.d20common.model.entity.map.Token;
+import me.andre111.d20common.model.property.Access;
 import me.andre111.d20server.command.Command;
 import me.andre111.d20server.model.EntityManager;
 
@@ -39,6 +41,35 @@ public abstract class ChatService {
 				command.execute(game, player, arguments);
 			} else {
 				appendError(game, player, "Unknown command: "+commandName);
+				return;
+			}
+		} else if(message.startsWith("!")) {
+			// extract macro name
+			String macroName = message.substring(1);
+			
+			// find token and check access
+			Token token = PlayerService.getSelectedToken(game.getPlayerMap(player, EntityManager.MAP::find), player, true);
+			if(token == null) {
+				appendError(game, player, "No (single) token selected");
+				return;
+			}
+			Access accessLevel = token.getAccessLevel(player);
+			if(!token.canUseMacro(accessLevel)) {
+				appendError(game, player, "No access to macros on this token");
+				return;
+			}
+			
+			// find macro
+			String macro = token.getMacro(macroName);
+			if(macro == null) {
+				appendError(game, player, "Could not find macro: "+macroName);
+				return;
+			}
+			
+			// execute macro
+			String[] macroLines = macro.split("\n");
+			for(String macroLine : macroLines) {
+				ChatService.onMessage(game, player, macroLine);
 			}
 		} else {
 			// handle simple message
@@ -48,7 +79,7 @@ public abstract class ChatService {
 			sb.append(": \n");
 			sb.append(message);
 			
-			append(game, new ChatEntry(sb.toString(), player.getProfileID()));
+			append(game, true, new ChatEntry(sb.toString(), player.getProfileID()));
 		}
 	}
 	
@@ -60,16 +91,18 @@ public abstract class ChatService {
 			sb.append("\n");
 		}
 		
-		append(game, new ChatEntry(sb.toString(), SYSTEM_SOURCE, false, player.getProfileID()));
+		append(game, false, new ChatEntry(sb.toString(), SYSTEM_SOURCE, false, player.getProfileID()));
 	}
 	
-	public static void append(Game game, ChatEntry... entries) {
+	public static void append(Game game, boolean store, ChatEntry... entries) {
 		// store chat entries on server side
-		ChatData chatData = getChatData(game);
-		for(ChatEntry entry : entries) {
-			chatData.append(entry);
+		if(store) {
+			ChatData chatData = getChatData(game);
+			for(ChatEntry entry : entries) {
+				chatData.append(entry);
+			}
+			EntityManager.CHAT.save(chatData);
 		}
-		EntityManager.CHAT.save(chatData);
 		
 		// send chat entries to client
 		sendToClients(game, true, entries);

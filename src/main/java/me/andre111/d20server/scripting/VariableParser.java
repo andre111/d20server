@@ -6,12 +6,18 @@ public abstract class VariableParser {
 	private static final VariableParser rootParser;
 	static {
 		rootParser = new VariableParserParent()
-				.addChild("selected", new VariableParserParent()
-						.addChild("property", new VariableParserPropertySelectedToken())
-						.addChild("list", null) //TODO: implement
+				.addChild("selected", new VariableParserTokenParentSelected()
+						.addChild("property", new VariableParserPropertyToken())
+						.addChild("list", new VariableParserTokenList())
+						.addChild("id", new VariableParserTokenID())
+				)
+				.addChild("token", new VariableParserTokenParentID()
+						.addChild("property", new VariableParserPropertyToken())
+						.addChild("list", new VariableParserTokenList())
+						.addChild("id", new VariableParserTokenID())
 				)
 				.addChild("list", new VariableParserParent()
-						.addChild("property", null) //TODO: implement
+						.addChild("property", new VariableParserPropertyList())
 				)
 				.addChild("map", new VariableParserParent()
 						.addChild("property", new VariableParserPropertyMap())

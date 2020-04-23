@@ -5,8 +5,8 @@ import java.util.HashMap;
 import me.andre111.d20common.message.game.EnterGame;
 import me.andre111.d20common.message.game.LoadMap;
 import me.andre111.d20common.message.game.PlayerList;
-import me.andre111.d20common.message.game.lists.ImageList;
-import me.andre111.d20common.message.game.lists.MapList;
+import me.andre111.d20common.message.game.index.ImageIndex;
+import me.andre111.d20common.message.game.index.MapIndex;
 import me.andre111.d20common.model.entity.game.Game;
 import me.andre111.d20common.model.entity.game.GamePlayer;
 import me.andre111.d20common.model.entity.map.Map;
@@ -86,7 +86,7 @@ public abstract class GameService {
 			GamePlayer player = game.getPlayer(profile);
 			
 			if(player.getRole() == GamePlayer.Role.GM && player.isJoined()) {
-				MessageService.send(new ImageList(EntityManager.IMAGE.getIndex()), profile);
+				MessageService.send(new ImageIndex(EntityManager.IMAGE.getIndex()), profile);
 			}
 		}
 	}
@@ -100,7 +100,7 @@ public abstract class GameService {
 				for(long mapID : game.getMaps()) {
 					mapMap.put(mapID, mapIndex.get(mapID));
 				}
-				MessageService.send(new MapList(mapMap), profile);
+				MessageService.send(new MapIndex(mapMap), profile);
 			}
 		}
 	}

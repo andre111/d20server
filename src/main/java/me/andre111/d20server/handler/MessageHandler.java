@@ -17,7 +17,7 @@ import me.andre111.d20server.service.UserService;
 
 public abstract class MessageHandler {
 	
-	public static Message handle(Channel channel, Message message) {
+	public static void handle(Channel channel, Message message) {
 		// get profile
 		Profile profile = null;
 		if (!(message instanceof UnauthenticatedMessage)) {
@@ -29,13 +29,13 @@ public abstract class MessageHandler {
 		
 		// handle message
 		if(message instanceof GameMessage) {
-			return handleGameMessage(channel, profile, (GameMessage) message);
+			handleGameMessage(channel, profile, (GameMessage) message);
 		} else {
-			return SimpleMessageHandler.handle(channel, profile, message);
+			SimpleMessageHandler.handle(channel, profile, message);
 		}
 	}
 	
-	private static Message handleGameMessage(Channel channel, Profile profile, GameMessage message) {
+	private static void handleGameMessage(Channel channel, Profile profile, GameMessage message) {
 		// check for game present and throw error when it does not exist
 		Game game = GameService.getGame(profile);
 		if(game == null) {
@@ -60,6 +60,6 @@ public abstract class MessageHandler {
 		}
 		
 		// handle message
-		return GameMessageHandler.handle(channel, profile, game, player, map, message);
+		GameMessageHandler.handle(channel, profile, game, player, map, message);
 	}
 }

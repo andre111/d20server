@@ -18,20 +18,19 @@ public abstract class SimpleMessageHandler {
 	private static final Pattern EMAIL_PATTERN = Pattern.compile("[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?");
 	private static final Pattern NAME_PATTERN = Pattern.compile("\\w{3,}");
 	
-	protected static Message handle(Channel channel, Profile profile, Message message) {
+	protected static void handle(Channel channel, Profile profile, Message message) {
 		if(message instanceof RegisterAccount) {
-			return handleRegisterAccount((RegisterAccount) message);
+			handleRegisterAccount(channel, (RegisterAccount) message);
 		} else if(message instanceof SignIn) {
-			return handleSignIn(channel, (SignIn) message);
+			handleSignIn(channel, (SignIn) message);
 		} else if(message instanceof SignOut) {
-			return handleSignOut(profile, (SignOut) message);
+			handleSignOut(profile, (SignOut) message);
 		} else {
 			System.out.println("Warning: Recieved unhandled message: "+message);
-			return null;
 		}
 	}
 	
-	private static Message handleRegisterAccount(RegisterAccount message) {
+	private static void handleRegisterAccount(Channel channel, RegisterAccount message) {
 		// remove outer whitespace
 		String email = message.getEmail().trim();
 		String username = message.getUsername().trim();
@@ -39,30 +38,35 @@ public abstract class SimpleMessageHandler {
 		
 		// validate
 		if(!EMAIL_PATTERN.matcher(email).matches()) {
-			return responseFail(message, "Invalid email.");
+			responseFail(channel, message, "Invalid email.");
+			return;
 		}
 		if(!NAME_PATTERN.matcher(username).matches()) {
-			return responseFail(message, "Invalid username.");
+			responseFail(channel, message, "Invalid username.");
+			return;
 		}
 		if(password.length() < 8) {
-			return responseFail(message, "Password cannot be shorter than 8 characters.");
+			responseFail(channel, message, "Password cannot be shorter than 8 characters.");
+			return;
 		}
 		
 		// check for existing profiles
 		if(UserService.findByEmail(email) != null) {
-			return responseFail(message, "Email is allready registered.");
+			responseFail(channel, message, "Email is allready registered.");
+			return;
 		}
 		if(UserService.findByUsername(username) != null) {
-			return responseFail(message, "Username taken.");
+			responseFail(channel, message, "Username taken.");
+			return;
 		}
 		
 		// create profile and save
 		Profile profile = new Profile(email, password, username);
 		EntityManager.PROFILE.save(profile);
-		return responseOk(message);
+		responseOk(channel, message);
 	}
 	
-	private static Message handleSignIn(Channel channel, SignIn message) {
+	private static void handleSignIn(Channel channel, SignIn message) {
 		// remove outer whitespace
 		String email = message.getEmail().trim();
 		String password = message.getPassword().trim();
@@ -73,25 +77,24 @@ public abstract class SimpleMessageHandler {
 			profile = null;
 		}
 		if(profile == null) {
-			return responseFail(message, "Incorrect email or password.");
+			responseFail(channel, message, "Incorrect email or password.");
+			return;
 		}
 		
 		// sign in on userservice
-		MessageService.send(responseOk(message), channel);
+		responseOk(channel, message);
 		UserService.onSignIn(profile, channel);
-		return null;
 	}
 	
-	private static Message handleSignOut(Profile profile, SignOut message) {
+	private static void handleSignOut(Profile profile, SignOut message) {
 		UserService.onSignOut(profile);
-		return null;
 	}
 	
 	
-	private static Message responseOk(Message to) {
-		return new ResponseOk(to);
+	private static void responseOk(Channel channel, Message to) {
+		MessageService.send(new ResponseOk(to), channel);
 	}
-	private static Message responseFail(Message to, String description) {
-		return new ResponseFail(to, description);
+	private static void responseFail(Channel channel, Message to, String description) {
+		MessageService.send(new ResponseFail(to, description), channel);
 	}
 }

@@ -58,7 +58,7 @@ public class SetCommand extends Command {
 				if(!hidden) {
 					String rollMessage = RollFormatter.formatDiceRoll(player, valueString, showPublic, value, null);
 					long[] recipents = buildRecipents(player, showPublic, true);
-					ChatService.append(game, new ChatEntry(rollMessage, player.getProfileID(), true, recipents));
+					ChatService.append(game, true, new ChatEntry(rollMessage, player.getProfileID(), true, recipents));
 				}
 			} else if(type == Type.STRING) {
 				variable.set(game, map, player, valueString);

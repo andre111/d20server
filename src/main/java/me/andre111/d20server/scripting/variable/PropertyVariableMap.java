@@ -1,6 +1,6 @@
 package me.andre111.d20server.scripting.variable;
 
-import me.andre111.d20common.message.game.UpdateMap;
+import me.andre111.d20common.message.game.UpdateMapProperties;
 import me.andre111.d20common.model.entity.game.Game;
 import me.andre111.d20common.model.entity.game.GamePlayer;
 import me.andre111.d20common.model.entity.map.Map;
@@ -10,8 +10,8 @@ import me.andre111.d20server.model.EntityManager;
 import me.andre111.d20server.scripting.ScriptException;
 import me.andre111.d20server.service.MessageService;
 
-public class MapPropertyVariable extends PropertyVariable {
-	public MapPropertyVariable(String fullName, String propertyName) {
+public class PropertyVariableMap extends PropertyVariable {
+	public PropertyVariableMap(String fullName, String propertyName) {
 		super(fullName, propertyName);
 	}
 
@@ -33,6 +33,6 @@ public class MapPropertyVariable extends PropertyVariable {
 	@Override
 	protected void saveSourceAfterSet(Game game, Map map, GamePlayer player) throws ScriptException {
 		EntityManager.MAP.save(map);
-		MessageService.send(new UpdateMap(map), game, map);
+		MessageService.send(new UpdateMapProperties(map), game, map);
 	}
 }

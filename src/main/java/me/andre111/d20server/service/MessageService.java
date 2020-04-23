@@ -16,15 +16,10 @@ import me.andre111.d20server.model.EntityManager;
 public abstract class MessageService {
 	
 	public static void recieve(Channel channel, Message message) {
-		Message reply = null;
 		try {
-			reply = MessageHandler.handle(channel, message);
+			MessageHandler.handle(channel, message);
 		} catch(IllegalMessageException e) {
 			//reply = new ErrorMessage(e.getMessage());
-		}
-		
-		if (reply != null) {
-			send(reply, channel);
 		}
 	}
 	

@@ -27,7 +27,7 @@ public class GetCommand extends Command {
 			sb.append(" = ");
 			sb.append(value);
 			
-			ChatService.append(game, new ChatEntry(sb.toString(), ChatService.SYSTEM_SOURCE, false, player.getProfileID()));
+			ChatService.append(game, false, new ChatEntry(sb.toString(), ChatService.SYSTEM_SOURCE, false, player.getProfileID()));
 		} catch (ScriptException e) {
 			ChatService.appendError(game, player, "Could not get "+arguments+":", e.getMessage());
 		}
