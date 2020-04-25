@@ -5,6 +5,7 @@ import java.util.HashMap;
 import me.andre111.d20common.message.game.EnterGame;
 import me.andre111.d20common.message.game.LoadMap;
 import me.andre111.d20common.message.game.PlayerList;
+import me.andre111.d20common.message.game.index.AudioIndex;
 import me.andre111.d20common.message.game.index.ImageIndex;
 import me.andre111.d20common.message.game.index.MapIndex;
 import me.andre111.d20common.model.entity.game.Game;
@@ -66,6 +67,7 @@ public abstract class GameService {
 			MessageService.send(new LoadMap(map), profile);
 		}
 		updateImageList();
+		updateAudioList();
 		updateMapList(game);
 		ChatService.sendHistory(game, player, 100);
 	}
@@ -87,6 +89,16 @@ public abstract class GameService {
 			
 			if(player.getRole() == GamePlayer.Role.GM && player.isJoined()) {
 				MessageService.send(new ImageIndex(EntityManager.IMAGE.getIndex()), profile);
+			}
+		}
+	}
+	public static void updateAudioList() {
+		for(Profile profile : gameMap.keySet()) {
+			Game game = gameMap.get(profile);
+			GamePlayer player = game.getPlayer(profile);
+			
+			if(player.getRole() == GamePlayer.Role.GM && player.isJoined()) {
+				MessageService.send(new AudioIndex(EntityManager.AUDIO.getIndex()), profile);
 			}
 		}
 	}

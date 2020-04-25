@@ -31,6 +31,7 @@ import io.netty.handler.codec.http.multipart.FileUpload;
 import io.netty.handler.codec.http.multipart.HttpDataFactory;
 import io.netty.handler.codec.http.multipart.HttpPostRequestDecoder;
 import io.netty.handler.codec.http.multipart.InterfaceHttpData;
+import me.andre111.d20common.model.entity.Audio;
 import me.andre111.d20common.model.entity.Image;
 import me.andre111.d20server.model.EntityManager;
 import me.andre111.d20server.service.GameService;
@@ -38,9 +39,12 @@ import me.andre111.d20server.service.GameService;
 public class HttpServerHandler extends ChannelInboundHandlerAdapter {
 	private static final String IMAGE_PATH = "/img/";
 	private static final String UPLOAD_IMAGE_PATH = "/upload_img";
+	private static final String AUDIO_PATH = "/audio/";
+	private static final String UPLOAD_AUDIO_PATH = "/upload_audio";
 
 	private static final HttpDataFactory factory = new DefaultHttpDataFactory(false);
 	private HttpPostRequestDecoder decoder;
+	private String uploadPath;
 
 	@Override
 	public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
@@ -80,6 +84,14 @@ public class HttpServerHandler extends ChannelInboundHandlerAdapter {
 				data = image.getData();
 				contentType = "image/png";
 			}
+		} else if(path.startsWith(AUDIO_PATH)) {
+			String idString = path.substring(AUDIO_PATH.length());
+			long id = Long.parseLong(idString);
+			Audio audio = EntityManager.AUDIO.find(id);
+			if(audio != null) {
+				data = audio.getData();
+				contentType = "application/ogg";
+			}
 		}
 
 		// send response
@@ -115,10 +127,11 @@ public class HttpServerHandler extends ChannelInboundHandlerAdapter {
 
 			// read and check path
 			String path = URLDecoder.decode(request.uri(), "UTF-8");
-			if(path == null || !path.startsWith(UPLOAD_IMAGE_PATH)) {
+			if(path == null || (!path.startsWith(UPLOAD_IMAGE_PATH) && !path.startsWith(UPLOAD_AUDIO_PATH))) {
 				sendError(ctx, HttpResponseStatus.NOT_FOUND);
 				return;
 			}
+			uploadPath = path;
 
 			// create decoder
 			if(decoder != null) {
@@ -141,12 +154,22 @@ public class HttpServerHandler extends ChannelInboundHandlerAdapter {
 						FileUpload fileUpload = (FileUpload) data;
 						if(fileUpload.isCompleted()) {
 							try {
-								String imageName = fileUpload.getFilename();
-								byte[] imageData = fileUpload.get();
-								Image image = new Image(imageName, imageData);
-								if(image.isValid()) {
-									EntityManager.IMAGE.save(image);
-									GameService.updateImageList();
+								if(uploadPath.startsWith(UPLOAD_IMAGE_PATH)) {
+									String imageName = fileUpload.getFilename();
+									byte[] imageData = fileUpload.get();
+									Image image = new Image(imageName, imageData);
+									if(image.isValid()) {
+										EntityManager.IMAGE.save(image);
+										GameService.updateImageList();
+									}
+								} else if(uploadPath.startsWith(UPLOAD_AUDIO_PATH)) {
+									String audioName = fileUpload.getFilename();
+									byte[] audioData = fileUpload.get();
+									Audio audio = new Audio(audioName, audioData);
+									if(audio.isValid()) {
+										EntityManager.AUDIO.save(audio);
+										GameService.updateAudioList();
+									}
 								}
 							} catch (IOException e) {
 								// TODO Auto-generated catch block
@@ -173,7 +196,7 @@ public class HttpServerHandler extends ChannelInboundHandlerAdapter {
 	}
 
 	private boolean isValidPath(String path) {
-		return path != null && path.startsWith(IMAGE_PATH);
+		return path != null && (path.startsWith(IMAGE_PATH) || path.startsWith(AUDIO_PATH));
 	}
 
 	@Override

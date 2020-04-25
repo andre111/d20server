@@ -7,6 +7,7 @@ import java.util.stream.Stream;
 import com.google.gson.reflect.TypeToken;
 
 import me.andre111.d20common.model.BaseEntity;
+import me.andre111.d20common.model.entity.Audio;
 import me.andre111.d20common.model.entity.ChatData;
 import me.andre111.d20common.model.entity.Image;
 import me.andre111.d20common.model.entity.game.Game;
@@ -17,6 +18,7 @@ import me.andre111.d20common.util.Utils;
 public abstract class EntityManager<E extends BaseEntity> {
 	public static final EntityManager<Map> MAP = new FileEntityManager<>("map", Map.class);
 	public static final EntityManager<Image> IMAGE = new ImageEntityManager("image");
+	public static final EntityManager<Audio> AUDIO = new AudioEntityManager("audio");
 	
 	public static final EntityManager<ChatData> CHAT = new FileEntityManager<>("chat", ChatData.class);
 	
