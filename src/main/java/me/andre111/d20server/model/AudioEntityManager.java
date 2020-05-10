@@ -30,4 +30,11 @@ public class AudioEntityManager extends EntityManager<Audio> {
 	public Stream<Audio> stream() {
 		throw new UnsupportedOperationException();
 	}
+	
+	public void rename(long id, String name) {
+		if(index.containsKey(id)) {
+			index.put(id, name);
+			saveIndex();
+		}
+	}
 }

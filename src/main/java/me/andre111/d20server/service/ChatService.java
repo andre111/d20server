@@ -16,6 +16,7 @@ import me.andre111.d20server.model.EntityManager;
 
 public abstract class ChatService {
 	public static final String STYLE_SENDER = "[style \"font=Arial-BOLD-14\"]";
+	public static final String STYLE_SENDER_ITALIC = "[style \"font=Arial-ITALIC-14\"]";
 	public static final String STYLE_INFO = "[style \"font=Arial-ITALIC-12\"]";
 
 	public static final long SYSTEM_SOURCE = 0;

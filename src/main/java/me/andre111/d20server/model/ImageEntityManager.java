@@ -30,4 +30,11 @@ public class ImageEntityManager extends EntityManager<Image> {
 	public Stream<Image> stream() {
 		throw new UnsupportedOperationException();
 	}
+	
+	public void rename(long id, String name) {
+		if(index.containsKey(id)) {
+			index.put(id, name);
+			saveIndex();
+		}
+	}
 }

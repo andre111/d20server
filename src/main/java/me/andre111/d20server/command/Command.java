@@ -33,6 +33,8 @@ public abstract class Command {
 		new SetCommand("set", new String[] {"s"}, true, false);
 		new SetCommand("gmset", new String[] {"gs"}, false, false);
 		new SetCommand("hiddenset", new String[] {"hs"}, false, true);
+		
+		new WhisperCommand("whisper", new String[] {"w"});
 	}
 	
 	public static final Command get(String name) {

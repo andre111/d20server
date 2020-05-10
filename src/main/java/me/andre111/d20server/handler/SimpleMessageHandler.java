@@ -3,6 +3,7 @@ package me.andre111.d20server.handler;
 import java.util.regex.Pattern;
 
 import io.netty.channel.Channel;
+import me.andre111.d20common.D20Common;
 import me.andre111.d20common.message.Message;
 import me.andre111.d20common.message.account.RegisterAccount;
 import me.andre111.d20common.message.account.SignIn;
@@ -31,6 +32,12 @@ public abstract class SimpleMessageHandler {
 	}
 	
 	private static void handleRegisterAccount(Channel channel, RegisterAccount message) {
+		// check version
+		if(message.getAppVersion() != D20Common.APP_VERSION) {
+			responseFail(channel, message, "Version not matching server.");
+			return;
+		}
+		
 		// remove outer whitespace
 		String email = message.getEmail().trim();
 		String username = message.getUsername().trim();
@@ -67,6 +74,12 @@ public abstract class SimpleMessageHandler {
 	}
 	
 	private static void handleSignIn(Channel channel, SignIn message) {
+		// check version
+		if(message.getAppVersion() != D20Common.APP_VERSION) {
+			responseFail(channel, message, "Version not matching server.");
+			return;
+		}
+		
 		// remove outer whitespace
 		String email = message.getEmail().trim();
 		String password = message.getPassword().trim();

@@ -4,13 +4,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 import io.netty.channel.Channel;
-import me.andre111.d20common.message.Message;
 import me.andre111.d20common.message.game.MovePlayerToMap;
 import me.andre111.d20common.message.game.GameMessage;
 import me.andre111.d20common.message.game.NewMap;
 import me.andre111.d20common.message.game.SelectedTokens;
+import me.andre111.d20common.message.game.ShowImage;
 import me.andre111.d20common.message.game.UpdateMapProperties;
 import me.andre111.d20common.message.game.chat.SendChatMessage;
+import me.andre111.d20common.message.game.index.RenameAudio;
+import me.andre111.d20common.message.game.index.RenameImage;
 import me.andre111.d20common.message.game.token.AddToken;
 import me.andre111.d20common.message.game.token.RemoveToken;
 import me.andre111.d20common.message.game.token.UpdateToken;
@@ -19,6 +21,7 @@ import me.andre111.d20common.message.game.token.list.AddTokenList;
 import me.andre111.d20common.message.game.token.list.RemoveTokenList;
 import me.andre111.d20common.message.game.token.list.TokenListValue;
 import me.andre111.d20common.message.game.token.list.UpdateTokenList;
+import me.andre111.d20common.message.game.util.Ping;
 import me.andre111.d20common.message.game.wall.AddOrUpdateWall;
 import me.andre111.d20common.message.game.wall.RemoveWall;
 import me.andre111.d20common.model.entity.game.Game;
@@ -73,12 +76,23 @@ public abstract class GameMessageHandler {
 			handleAddOrUpdateWall(game, player, map, (AddOrUpdateWall) message);
 		} else if(message instanceof RemoveWall) {
 			handleRemoveWall(game, player, map, (RemoveWall) message);
-
+			
+		// OTHERS: --------------------
+		} else if(message instanceof RenameAudio) {
+			handleRenameAudio(game, player, map, (RenameAudio) message);
+		} else if(message instanceof RenameImage) {
+			handleRenameImage(game, player, map, (RenameImage) message);
+		} else if(message instanceof ShowImage) {
+			handleShowImage(game, player, map, (ShowImage) message);
+			
+			
 		// CHAT: --------------------
 		} else if(message instanceof SendChatMessage) {
 			handleChatMessage(game, player, map, (SendChatMessage) message);
 
 		// --------------------
+		} else if(message instanceof Ping) {
+			handlePingMessage(game, player, map, (Ping) message);
 		} else {
 			System.out.println("Warning: Recieved unhandled message: "+message);
 		}
@@ -89,6 +103,8 @@ public abstract class GameMessageHandler {
 		long playerID = message.getPlayerID();
 		if(game.hasMap(mapID)) {
 			if(playerID == 0) {
+				if(player.getRole() != GamePlayer.Role.GM) return;
+				
 				// set player map id and reset overridden values for all non gams
 				game.setPlayerMapID(mapID);
 				for(GamePlayer otherPlayer : game.getPlayers()) {
@@ -100,11 +116,13 @@ public abstract class GameMessageHandler {
 				// (re)load maps for clients
 				GameService.reloadMaps(game, null);
 			} else {
-				// set player override map id and (re)load map
-				GamePlayer otherPlayer = game.getPlayer(playerID);
-				if(otherPlayer != null) {
-					otherPlayer.setOverrideMapID(mapID);;
-					GameService.reloadMaps(game, otherPlayer);
+				if(player.getRole() == GamePlayer.Role.GM || (playerID == player.getProfileID() && game.getMap(mapID, EntityManager.MAP::find).getPlayersCanEnter())) {
+					// set player override map id and (re)load map
+					GamePlayer otherPlayer = game.getPlayer(playerID);
+					if(otherPlayer != null) {
+						otherPlayer.setOverrideMapID(mapID);;
+						GameService.reloadMaps(game, otherPlayer);
+					}
 				}
 			}
 		}
@@ -136,6 +154,7 @@ public abstract class GameMessageHandler {
 		
 		// broadcast new map properties (DO NOT REUSE MESSAGE, because clients do not apply access levels)
 		MessageService.send(new UpdateMapProperties(map), game, map);
+		GameService.updateMapList(game);
 	}
 	
 
@@ -274,8 +293,26 @@ public abstract class GameMessageHandler {
 	
 
 	// ---------------------------------------------------------
-	private static Message handleChatMessage(Game game, GamePlayer player, Map map, SendChatMessage message) {
+	private static void handleRenameAudio(Game game, GamePlayer player, Map map, RenameAudio message) {
+		EntityManager.AUDIO.rename(message.getAudioID(), message.getName());
+		GameService.updateAudioList();
+	}
+	private static void handleRenameImage(Game game, GamePlayer player, Map map, RenameImage message) {
+		EntityManager.IMAGE.rename(message.getImageID(), message.getName());
+		GameService.updateImageList();
+	}
+	private static void handleShowImage(Game game, GamePlayer player, Map map, ShowImage message) {
+		if(EntityManager.IMAGE.has(message.getImageID())) {
+			MessageService.send(message, game, map);
+		}
+	}
+	
+
+	// ---------------------------------------------------------
+	private static void handleChatMessage(Game game, GamePlayer player, Map map, SendChatMessage message) {
 		ChatService.onMessage(game, player, message.getMessage());
-		return null;
+	}
+	private static void handlePingMessage(Game game, GamePlayer player, Map map, Ping message) {
+		MessageService.send(message, EntityManager.PROFILE.find(player.getProfileID()));
 	}
 }
