@@ -69,7 +69,7 @@ public abstract class GameService {
 		updateImageList();
 		updateAudioList();
 		updateMapList(game);
-		ChatService.sendHistory(game, player, 100);
+		ChatService.sendHistory(game, player, 200);
 	}
 	
 	public static void leaveGame(Profile profile) {

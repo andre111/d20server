@@ -35,7 +35,7 @@ public abstract class Variable implements Expression {
 		
 		// return result
 		String valueString = (value == Math.round(value)) ? Long.toString((long) value) : Double.toString(value);
-		return new Result(value, "{"+valueString+"}");
+		return new Result(value, "{"+valueString+"}", false, false);
 	}
 	
 	public String getFullName() {

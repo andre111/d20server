@@ -13,14 +13,16 @@ import me.andre111.d20server.util.RollFormatter;
 public class RollCommand extends Command {
 	private final boolean showPublic;
 	private final boolean showSelf;
+	private final boolean showGM;
 	
 	private final Parser parser;
 	
-	public RollCommand(String name, String[] aliases, boolean showPublic, boolean showSelf) {
+	public RollCommand(String name, String[] aliases, boolean showPublic, boolean showSelf, boolean showGM) {
 		super(name, aliases);
 		
 		this.showPublic = showPublic;
 		this.showSelf = showSelf;
+		this.showGM = showGM;
 		
 		this.parser = new Parser();
 	}
@@ -44,6 +46,6 @@ public class RollCommand extends Command {
 		long[] recipents = buildRecipents(player, showPublic, showSelf);
 		
 		// append message
-		ChatService.append(game, true, new ChatEntry(rollMessage, player.getProfileID(), true, recipents));
+		ChatService.append(game, true, new ChatEntry(rollMessage, player.getProfileID(), showGM, recipents));
 	}
 }

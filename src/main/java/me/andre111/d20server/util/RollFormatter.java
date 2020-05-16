@@ -29,11 +29,7 @@ public class RollFormatter {
 			
 			sb.append("[style \"font=Arial-BOLD-18\"]");
 			sb.append(" = ");
-			if(Math.round(result.getValue()) == result.getValue()) {
-				sb.append(Integer.toString((int) result.getValue()));
-			} else {
-				sb.append(Double.toString(result.getValue()));
-			}
+			appendResultValue(sb, result);
 			sb.append(" \n");
 		} else {
 			sb.append("[style \"font=Arial-BOLD-18\"]");
@@ -48,5 +44,60 @@ public class RollFormatter {
 		}
 		
 		return sb.toString();
+	}
+	
+	public static String formatInlineDiceRoll(GamePlayer player, String rollExpression, Result result, Exception e) {
+		StringBuilder sb = new StringBuilder();
+		sb.append("[group ");
+		
+		sb.append("[table \"bg-color=#EEEEEE;stroke-color=#000000;stroke-width=2;margin=4\" ");
+		
+		// color format
+		String color = "#000000";
+		if(result != null) {
+			if(result.hadMinRoll && result.hadMaxRoll) {
+				color = "#0000FF";
+			} else if(result.hadMinRoll) {
+				color = "#FF0000";
+			} else if(result.hadMaxRoll) {
+				color = "#008800";
+			}
+		}
+		sb.append("[style \"color=");
+		sb.append(color);
+		sb.append("\"]");
+		
+		// total value
+		if(result != null) {
+			appendResultValue(sb, result);
+		} else {
+			sb.append("?");
+		}
+		sb.append("]");
+		
+		// show full expression on hover
+		sb.append("|");
+		sb.append("[table \"bg-color=#EEEEEE;stroke-color=#000000;stroke-width=2;margin=4;align-vertical=CENTER\" ");
+		sb.append("[group \"forced-width=300;auto-wrap=true;align-vertical=CENTER\" ");
+		sb.append("[style \"color=#000000;font=Arial-18\"]");
+		if(result != null) {
+			sb.append(result.getString());
+		} else {
+			sb.append(rollExpression);
+		}
+		sb.append("[style \"font=Arial-12\"]");
+		sb.append("]");
+		sb.append("]");
+		
+		sb.append("]");
+		return sb.toString();
+	}
+	
+	private static void appendResultValue(StringBuilder sb, Result result) {
+		if(Math.round(result.getValue()) == result.getValue()) {
+			sb.append(Integer.toString((int) result.getValue()));
+		} else {
+			sb.append(Double.toString(result.getValue()));
+		}
 	}
 }

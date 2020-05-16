@@ -19,12 +19,16 @@ public class Dice implements Expression {
 	public Result eval(Game game, Map map, GamePlayer player) throws ScriptException {
 		int value = 0;
 		StringBuilder sb = new StringBuilder();
+		boolean hadMinRoll = false;
+		boolean hadMaxRoll = false;
 		if(count > 1) sb.append("(");
 		
 		for(int i=0; i<count; i++) {
 			// calculate roll
 			int roll = DiceRoller.roll(sides);
 			value += roll;
+			if(roll == 1) hadMinRoll = true;
+			if(roll == sides) hadMaxRoll = true;
 			
 			// build string (with colored misses/crits)
 			// TODO: replace <> with image based? dice formatting 
@@ -44,7 +48,7 @@ public class Dice implements Expression {
 		}
 		
 		if(count > 1) sb.append(")");
-		return new Result(value, sb.toString());
+		return new Result(value, sb.toString(), hadMinRoll, hadMaxRoll);
 	}
 
 	private void appendRollValue(StringBuilder sb, int roll) {

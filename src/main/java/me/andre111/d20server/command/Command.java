@@ -25,9 +25,9 @@ public abstract class Command {
 	}
 	static {
 		// Create all Commands:
-		new RollCommand("roll", new String[] {"r"}, true, true);
-		new RollCommand("gmroll", new String[] {"gmr"}, false, true);
-		new RollCommand("hiddenroll", new String[] {"hr"}, false, false);
+		new RollCommand("roll", new String[] {"r"}, true, true, true);
+		new RollCommand("gmroll", new String[] {"gmr"}, false, false, true);
+		new RollCommand("hiddenroll", new String[] {"hr"}, false, true, false);
 		
 		new GetCommand("get", new String[] {"g"});
 		new SetCommand("set", new String[] {"s"}, true, false);
@@ -35,6 +35,10 @@ public abstract class Command {
 		new SetCommand("hiddenset", new String[] {"hs"}, false, true);
 		
 		new WhisperCommand("whisper", new String[] {"w"});
+		
+		new TemplateCommand("template", new String[] {"t"}, true, true, true);
+		new TemplateCommand("gmtemplate", new String[] {"gmt"}, false, false, true);
+		new TemplateCommand("hiddentemplate", new String[] {"ht"}, false, true, false);
 	}
 	
 	public static final Command get(String name) {

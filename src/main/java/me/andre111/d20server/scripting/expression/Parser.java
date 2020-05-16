@@ -49,7 +49,7 @@ public class Parser {
 				x = ((g,m,p) -> {
 					Result ar = a.eval(g,m,p);
 					Result br = b.eval(g,m,p);
-					return new Result(ar.v + br.v, ar.s + " + " + br.s);
+					return new Result(ar.v + br.v, ar.s + " + " + br.s, ar.hadMinRoll || br.hadMinRoll, ar.hadMaxRoll || br.hadMaxRoll);
 				});
 			} else if(eat('-')) {
 				// parse subtraction
@@ -59,7 +59,7 @@ public class Parser {
 				x = ((g,m,p) -> {
 					Result ar = a.eval(g,m,p);
 					Result br = b.eval(g,m,p);
-					return new Result(ar.v - br.v, ar.s + " - " + br.s);
+					return new Result(ar.v - br.v, ar.s + " - " + br.s, ar.hadMinRoll || br.hadMinRoll, ar.hadMaxRoll || br.hadMaxRoll);
 				});
 			} else {
 				return x;
@@ -79,7 +79,7 @@ public class Parser {
 				x = ((g,m,p) -> {
 					Result ar = a.eval(g,m,p);
 					Result br = b.eval(g,m,p);
-					return new Result(ar.v * br.v, ar.s + " * " + br.s);
+					return new Result(ar.v * br.v, ar.s + " * " + br.s, ar.hadMinRoll || br.hadMinRoll, ar.hadMaxRoll || br.hadMaxRoll);
 				});
 			} else if(eat('/')) {
 				// parse division
@@ -89,7 +89,7 @@ public class Parser {
 				x = ((g,m,p) -> {
 					Result ar = a.eval(g,m,p);
 					Result br = b.eval(g,m,p);
-					return new Result(ar.v / br.v, ar.s + " / " + br.s);
+					return new Result(ar.v / br.v, ar.s + " / " + br.s, ar.hadMinRoll || br.hadMinRoll, ar.hadMaxRoll || br.hadMaxRoll);
 				});
 			} else {
 				return x;
@@ -107,7 +107,7 @@ public class Parser {
 			Expression a = parseFactor();
 			return ((g,m,p) -> {
 				Result ar = a.eval(g,m,p);
-				return new Result(-ar.v, "-"+ar.s);
+				return new Result(-ar.v, "-"+ar.s, ar.hadMinRoll, ar.hadMinRoll);
 			});
 		}
 		
@@ -118,7 +118,7 @@ public class Parser {
 			
 			return ((g,m,p) -> {
 				Result ar = a.eval(g,m,p);
-				return new Result(ar.v, "("+ar.s+")");
+				return new Result(ar.v, "("+ar.s+")", ar.hadMinRoll, ar.hadMaxRoll);
 			});
 		}
 		
@@ -158,7 +158,7 @@ public class Parser {
 		} else {
 			// parse number
 			int number = Integer.parseInt(valueString);
-			return ((g,m,p) -> new Result(number, Integer.toString(number)));
+			return ((g,m,p) -> new Result(number, Integer.toString(number), false, false));
 		}
 	}
 }
