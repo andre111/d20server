@@ -5,8 +5,10 @@ import java.util.List;
 
 import io.netty.channel.Channel;
 import me.andre111.d20common.message.game.MovePlayerToMap;
+import me.andre111.d20common.message.game.ActionCommand;
 import me.andre111.d20common.message.game.GameMessage;
 import me.andre111.d20common.message.game.NewMap;
+import me.andre111.d20common.message.game.PlayEffect;
 import me.andre111.d20common.message.game.SelectedTokens;
 import me.andre111.d20common.message.game.ShowImage;
 import me.andre111.d20common.message.game.UpdateMapProperties;
@@ -84,6 +86,8 @@ public abstract class GameMessageHandler {
 			handleRenameImage(game, player, map, (RenameImage) message);
 		} else if(message instanceof ShowImage) {
 			handleShowImage(game, player, map, (ShowImage) message);
+		} else if(message instanceof ActionCommand) {
+			handleActionCommand(game, player, map, (ActionCommand) message);
 			
 			
 		// CHAT: --------------------
@@ -304,6 +308,13 @@ public abstract class GameMessageHandler {
 	private static void handleShowImage(Game game, GamePlayer player, Map map, ShowImage message) {
 		if(EntityManager.IMAGE.has(message.getImageID())) {
 			MessageService.send(message, game, map);
+		}
+	}
+	private static void handleActionCommand(Game game, GamePlayer player, Map map, ActionCommand message) {
+		switch(message.getCommand()) {
+		case ActionCommand.PING:
+			MessageService.send(new PlayEffect("PING", message.getX(), message.getY(), 0, 1, true, player.getRole()==GamePlayer.Role.GM && message.isModified()), game, map);
+			break;
 		}
 	}
 	

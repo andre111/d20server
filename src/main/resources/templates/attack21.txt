@@ -1,0 +1,28 @@
+[group "order=TOP_TO_BOTTOM;align-horizontal=CENTER"
+
+
+[table "bg-color=$0;margin=8;stroke-width=2;rounded-corners=12"
+[group "order=TOP_TO_BOTTOM;align-horizontal=CENTER;forced-width=300" 
+[style "color=#FFFFFF;font=Arial-24"][group %text%]
+[style "color=#FFFFFF;font=Arial-12"][group %text%][style "color=#000000;font=Arial-12"]
+]
+]
+
+
+[table "margin=8;stroke-width=2;bg-color=#FFFFFF"
+[group "forced-width=280;auto-wrap=true"
+
+[table "columns=2;align-vertical=CENTER"
+[group "forced-width=80;auto-wrap=true" [style "font=Arial-BOLD-12"]%text%:[style "font=Arial-12"]]|
+[group "forced-width=200;auto-wrap=true;align-vertical=CENTER" %roll-inline% / %roll-inline%]|
+
+[group "forced-width=80;auto-wrap=true" [style "font=Arial-BOLD-12"]%text%:[style "font=Arial-12"]]|
+[group "forced-width=200;auto-wrap=true;align-vertical=CENTER" %roll-inline%]
+]
+
+%text%
+]
+]
+
+
+]

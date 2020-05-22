@@ -5,8 +5,8 @@ import me.andre111.d20common.model.entity.game.Game;
 import me.andre111.d20common.model.entity.game.GamePlayer;
 import me.andre111.d20server.model.EntityManager;
 import me.andre111.d20server.scripting.ScriptException;
-import me.andre111.d20server.scripting.VariableParser;
 import me.andre111.d20server.scripting.variable.Variable;
+import me.andre111.d20server.scripting.variable.parser.VariableParser;
 import me.andre111.d20server.service.ChatService;
 
 public class GetCommand extends Command {

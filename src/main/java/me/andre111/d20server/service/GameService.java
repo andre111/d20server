@@ -35,6 +35,11 @@ public abstract class GameService {
 		if(baseGame.getMap(baseGame.getPlayerMapID(), EntityManager.MAP::find) == null) {
 			baseGame.setPlayerMapID(baseGame.getMaps().get(0));
 		}
+		
+		// reset player states
+		for(GamePlayer player : baseGame.getPlayers()) {
+			player.setJoined(false);
+		}
 	}
 	
 	public static void joinGame(Profile profile, Game game) {

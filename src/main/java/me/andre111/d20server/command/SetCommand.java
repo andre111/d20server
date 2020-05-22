@@ -7,11 +7,11 @@ import me.andre111.d20common.model.entity.map.Map;
 import me.andre111.d20common.model.property.Type;
 import me.andre111.d20server.model.EntityManager;
 import me.andre111.d20server.scripting.ScriptException;
-import me.andre111.d20server.scripting.VariableParser;
 import me.andre111.d20server.scripting.expression.Expression;
 import me.andre111.d20server.scripting.expression.Parser;
 import me.andre111.d20server.scripting.expression.Result;
 import me.andre111.d20server.scripting.variable.Variable;
+import me.andre111.d20server.scripting.variable.parser.VariableParser;
 import me.andre111.d20server.service.ChatService;
 import me.andre111.d20server.util.RollFormatter;
 

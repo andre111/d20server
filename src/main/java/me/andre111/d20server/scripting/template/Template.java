@@ -17,7 +17,18 @@ import me.andre111.d20server.scripting.ScriptException;
 public class Template {
 	private static Map<String, Template> TEMPLATES = new HashMap<>();
 	static {
-		TEMPLATES.put("attack", loadInternalTemplate("attack"));
+		TEMPLATES.put("attack", loadInternalTemplate("attack21", "#888888"));
+
+		TEMPLATES.put("attack0", loadInternalTemplate("attack0", "#888888"));
+		TEMPLATES.put("attack1", loadInternalTemplate("attack1", "#888888"));
+		TEMPLATES.put("attack11", loadInternalTemplate("attack11", "#888888"));
+		TEMPLATES.put("attack21", loadInternalTemplate("attack21", "#888888"));
+
+		TEMPLATES.put("magic0", loadInternalTemplate("attack0", "#57007F"));
+		TEMPLATES.put("magic1", loadInternalTemplate("attack1", "#57007F"));
+		TEMPLATES.put("magic11", loadInternalTemplate("attack11", "#57007F"));
+		TEMPLATES.put("magic21", loadInternalTemplate("attack21", "#57007F"));
+		
 		TEMPLATES.put("button", loadInternalTemplate("button"));
 	}
 	
@@ -25,16 +36,23 @@ public class Template {
 		return TEMPLATES.get(name);
 	}
 	
-	private static Template loadInternalTemplate(String name) {
+	private static Template loadInternalTemplate(String name, String...values) {
 		try(BufferedReader reader = new BufferedReader(new InputStreamReader(Template.class.getResourceAsStream("/templates/"+name+".txt")))) {
-			return parseTemplate(reader.lines().collect(Collectors.joining()));
+			return parseTemplate(reader.lines().collect(Collectors.joining()), values);
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		}
 	}
-	private static Template parseTemplate(String string) {
+	private static Template parseTemplate(String string, String...values) {
 		List<TemplateComponent> components = new ArrayList<>();
 		
+		// replace "preset placeholder"
+		for(int i=0; i<values.length; i++) {
+			string = string.replace("$"+i, values[i]);
+		}
+		if(string.contains("$")) throw new RuntimeException("Unfilled $ value in template!");
+		
+		// find normal text and "dynamic placeholder" parts
 		int startIndex = 0;
 		int currentIndex = 0;
 		boolean inPlaceholder = false;

@@ -1,8 +1,9 @@
-package me.andre111.d20server.scripting;
+package me.andre111.d20server.scripting.variable.parser;
 
 import java.util.HashMap;
 import java.util.Map;
 
+import me.andre111.d20server.scripting.ScriptException;
 import me.andre111.d20server.scripting.variable.Variable;
 
 public class VariableParserParent extends VariableParser {

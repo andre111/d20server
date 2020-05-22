@@ -55,11 +55,11 @@ public class RollFormatter {
 		// color format
 		String color = "#000000";
 		if(result != null) {
-			if(result.hadMinRoll && result.hadMaxRoll) {
+			if(result.hadCriticalFailure && result.hadCriticalSuccess) {
 				color = "#0000FF";
-			} else if(result.hadMinRoll) {
+			} else if(result.hadCriticalFailure) {
 				color = "#FF0000";
-			} else if(result.hadMaxRoll) {
+			} else if(result.hadCriticalSuccess) {
 				color = "#008800";
 			}
 		}

@@ -1,5 +1,6 @@
-package me.andre111.d20server.scripting;
+package me.andre111.d20server.scripting.variable.parser;
 
+import me.andre111.d20server.scripting.ScriptException;
 import me.andre111.d20server.scripting.variable.PropertyVariableMap;
 import me.andre111.d20server.scripting.variable.Variable;
 

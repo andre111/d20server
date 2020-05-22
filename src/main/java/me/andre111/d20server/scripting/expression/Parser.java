@@ -1,13 +1,13 @@
 package me.andre111.d20server.scripting.expression;
 
 import me.andre111.d20server.scripting.ScriptException;
-import me.andre111.d20server.scripting.VariableParser;
+import me.andre111.d20server.scripting.variable.parser.VariableParser;
 
 //Grammar:
 // expression = term | expression `+` term | expression `-` term
 // term = factor | term `*` factor | term `/` factor
 // factor = `+` factor | `-` factor | `(` expression `)` | value
-// value = `{`variable`}` | dice | number
+// value = `{` variable `}` | dice | number
 public class Parser {
 	private String string;
 	private int pos;
@@ -49,7 +49,7 @@ public class Parser {
 				x = ((g,m,p) -> {
 					Result ar = a.eval(g,m,p);
 					Result br = b.eval(g,m,p);
-					return new Result(ar.v + br.v, ar.s + " + " + br.s, ar.hadMinRoll || br.hadMinRoll, ar.hadMaxRoll || br.hadMaxRoll);
+					return new Result(ar.v + br.v, ar.s + " + " + br.s, ar.hadCriticalFailure || br.hadCriticalFailure, ar.hadCriticalSuccess || br.hadCriticalSuccess);
 				});
 			} else if(eat('-')) {
 				// parse subtraction
@@ -59,7 +59,7 @@ public class Parser {
 				x = ((g,m,p) -> {
 					Result ar = a.eval(g,m,p);
 					Result br = b.eval(g,m,p);
-					return new Result(ar.v - br.v, ar.s + " - " + br.s, ar.hadMinRoll || br.hadMinRoll, ar.hadMaxRoll || br.hadMaxRoll);
+					return new Result(ar.v - br.v, ar.s + " - " + br.s, ar.hadCriticalFailure || br.hadCriticalFailure, ar.hadCriticalSuccess || br.hadCriticalSuccess);
 				});
 			} else {
 				return x;
@@ -79,7 +79,7 @@ public class Parser {
 				x = ((g,m,p) -> {
 					Result ar = a.eval(g,m,p);
 					Result br = b.eval(g,m,p);
-					return new Result(ar.v * br.v, ar.s + " * " + br.s, ar.hadMinRoll || br.hadMinRoll, ar.hadMaxRoll || br.hadMaxRoll);
+					return new Result(ar.v * br.v, ar.s + " * " + br.s, ar.hadCriticalFailure || br.hadCriticalFailure, ar.hadCriticalSuccess || br.hadCriticalSuccess);
 				});
 			} else if(eat('/')) {
 				// parse division
@@ -89,7 +89,7 @@ public class Parser {
 				x = ((g,m,p) -> {
 					Result ar = a.eval(g,m,p);
 					Result br = b.eval(g,m,p);
-					return new Result(ar.v / br.v, ar.s + " / " + br.s, ar.hadMinRoll || br.hadMinRoll, ar.hadMaxRoll || br.hadMaxRoll);
+					return new Result(ar.v / br.v, ar.s + " / " + br.s, ar.hadCriticalFailure || br.hadCriticalFailure, ar.hadCriticalSuccess || br.hadCriticalSuccess);
 				});
 			} else {
 				return x;
@@ -107,7 +107,7 @@ public class Parser {
 			Expression a = parseFactor();
 			return ((g,m,p) -> {
 				Result ar = a.eval(g,m,p);
-				return new Result(-ar.v, "-"+ar.s, ar.hadMinRoll, ar.hadMinRoll);
+				return new Result(-ar.v, "-"+ar.s, ar.hadCriticalFailure, ar.hadCriticalFailure);
 			});
 		}
 		
@@ -118,7 +118,7 @@ public class Parser {
 			
 			return ((g,m,p) -> {
 				Result ar = a.eval(g,m,p);
-				return new Result(ar.v, "("+ar.s+")", ar.hadMinRoll, ar.hadMaxRoll);
+				return new Result(ar.v, "("+ar.s+")", ar.hadCriticalFailure, ar.hadCriticalSuccess);
 			});
 		}
 		
@@ -126,7 +126,7 @@ public class Parser {
 		return parseValue();
 	}
 
-	// value = dice | number
+	// value = `{` variable `}` | dice | number
 	private Expression parseValue() throws ScriptException {
 		// variable
 		if(eat('{')) {
@@ -140,25 +140,21 @@ public class Parser {
 		
 		// find substring
 		int startPos = pos;
-		while((c >= '0' && c <= '9') || c == 'D' || c == 'd' || c == 'W' || c == 'w') nextChar();
+		while((c >= '0' && c <= '9') || (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') || c == '<' || c == '>' || c == '=' || c == '!') nextChar();
 		String valueString = string.substring(startPos, pos);
 		
-		// adjust to "normalized" dice format
-		valueString = valueString.toUpperCase();
-		valueString = valueString.replace("W", "D");
-		
 		// parse string
-		if(valueString.contains("D")) {
-			// parse dice //TODO: split into own method
-			String[] split = valueString.split("D");
-			int count = Integer.parseInt(split[0]);
-			int sides = Integer.parseInt(split[1]);
-			
-			return new Dice(count, sides);
-		} else {
+		if(valueString.matches("\\d+")) {
 			// parse number
 			int number = Integer.parseInt(valueString);
 			return ((g,m,p) -> new Result(number, Integer.toString(number), false, false));
+		} else {
+			// adjust to "normalized" dice format
+			valueString = valueString.toUpperCase();
+			valueString = valueString.replace("W", "D");
+			
+			DiceParser diceParser = new DiceParser();
+			return diceParser.parse(valueString);
 		}
 	}
 }
