@@ -21,6 +21,11 @@ public class FileEntityManager<E extends BaseEntity> extends EntityManager<E> {
 	}
 	
 	@Override
+	protected void deleteElement(long id) {
+		Utils.deleteJson("entity."+name+"."+id);
+	}
+	
+	@Override
 	public Stream<E> stream() {
 		throw new UnsupportedOperationException();
 	}

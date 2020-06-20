@@ -1,5 +1,6 @@
 package me.andre111.d20server.model;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Stream;
@@ -31,9 +32,19 @@ public class CollectionEntityManager<E extends BaseEntity> extends EntityManager
 		entities.put(e.id(), e);
 		Utils.saveJson("entity."+name, entities);
 	}
+	
+	@Override
+	protected void deleteElement(long id) {
+		entities.remove(id);
+		Utils.saveJson("entity."+name, entities);
+	}
 
 	@Override
 	public Stream<E> stream() {
 		return entities.values().stream();
+	}
+	
+	public Map<Long, E> getCollectionView() {
+		return Collections.unmodifiableMap(entities);
 	}
 }

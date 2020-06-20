@@ -1,8 +1,7 @@
 package me.andre111.d20server.command;
 
 import me.andre111.d20common.model.entity.ChatEntry;
-import me.andre111.d20common.model.entity.game.Game;
-import me.andre111.d20common.model.entity.game.GamePlayer;
+import me.andre111.d20common.model.entity.profile.Profile;
 import me.andre111.d20server.scripting.ScriptException;
 import me.andre111.d20server.scripting.template.Template;
 import me.andre111.d20server.service.ChatService;
@@ -21,10 +20,10 @@ public class TemplateCommand extends Command {
 	}
 
 	@Override
-	public void execute(Game game, GamePlayer player, String arguments) {
+	public void execute(Profile profile, String arguments) {
 		String[] split = arguments.split(" ", 2);
 		if(split.length != 2) {
-			ChatService.appendError(game, player, "Usage: /template <name> <argument>[;<argument>[;...]]");
+			ChatService.appendError(profile, "Usage: /template <name> <argument>[;<argument>[;...]]");
 			return;
 		}
 		
@@ -34,31 +33,30 @@ public class TemplateCommand extends Command {
 		// find template
 		Template template = Template.getTemplate(name);
 		if(template == null) {
-			ChatService.appendError(game, player, "Unknown template: "+name);
+			ChatService.appendError(profile, "Unknown template: "+name);
 			return;
 		}
 		
 		// parse template
 		String parsed = "";
 		try {
-			parsed = template.parse(game, player, templateArguments.split(";", -1));
+			parsed = template.parse(profile, templateArguments.split(";", -1));
 		} catch (ScriptException e) {
-			ChatService.appendError(game, player, "Template parsing error: "+e.getMessage());
+			ChatService.appendError(profile, "Template parsing error: "+e.getMessage());
 			return;
 		}
 		
 		// build message
 		StringBuilder sb = new StringBuilder();
 		sb.append(ChatService.STYLE_SENDER);
-		sb.append(player.getNickname());
+		sb.append(profile.getName());
 		sb.append(": \n");
 		sb.append(parsed);
 		
 		// determine recipents
-		long[] recipents = buildRecipents(player, showPublic, showSelf);
+		long[] recipents = buildRecipents(profile, showPublic, showSelf);
 		
 		// append message
-		ChatService.append(game, true, new ChatEntry(sb.toString(), player.getProfileID(), showGM, recipents));
+		ChatService.append(true, new ChatEntry(sb.toString(), profile.id(), showGM, recipents));
 	}
-
 }

@@ -1,7 +1,9 @@
 package me.andre111.d20server.service;
 
 import java.util.ArrayList;
-import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
@@ -21,8 +23,16 @@ import me.andre111.d20server.model.EntityManager;
  */
 public abstract class UserService {
 	private static final ChannelGroup allChannels = new DefaultChannelGroup(GlobalEventExecutor.INSTANCE);
+	private static final Map<Long, Profile> allProfiles = new HashMap<>();
 	private static final BiMap<Profile, Channel> channelMap = HashBiMap.create();
 	private static final Object lock = new Object();
+	static {
+		// load all profiles
+		EntityManager.PROFILE.stream().forEach(p -> {
+			p.setConnected(false);
+			allProfiles.put(p.id(), p);
+		});
+	}
 
 	/**
 	 * Call whenever a new connection to the server is made. Adds the channel to the
@@ -75,16 +85,18 @@ public abstract class UserService {
 		// save lastLogin time and log
 		profile.setLastLogin();
 		EntityManager.PROFILE.save(profile);
+		profile.setConnected(true);
 		
 		//TODO: remove test stuff
 		System.out.println("SignIn: "+profile.id());
-		GameService.joinGame(profile, GameService.getBaseGame());
+		GameService.joinGame(profile);
 		
 		// TODO: logging, notify battles, ...
 	}
 
 	public static void onSignOut(Profile profile) {
-		// TODO: logging, cleanup (exit room(s), cancel trades, notify battles, ...)
+		// TODO: logging
+		profile.setConnected(false);
 		GameService.leaveGame(profile);
 		
 		synchronized (lock) {
@@ -107,10 +119,22 @@ public abstract class UserService {
 	public static ChannelGroup getAllChannels() {
 		return allChannels;
 	}
+	
+	public static List<Profile> getAllProfiles() {
+		synchronized (lock) {
+			return new ArrayList<>(allProfiles.values());
+		}
+	}
 
-	public static Collection<Profile> getAllConnectedProfiles() {
+	public static List<Profile> getAllConnectedProfiles() {
 		synchronized (lock) {
 			return new ArrayList<>(channelMap.keySet());
+		}
+	}
+	
+	public static Profile getProfile(long id) {
+		synchronized (lock) {
+			return allProfiles.get(id);
 		}
 	}
 
@@ -120,9 +144,9 @@ public abstract class UserService {
 	
 	// Profile finding methods
 	public static Profile findByEmail(String email) {
-		return EntityManager.PROFILE.stream().filter(p -> p.getEmail().equals(email)).findAny().orElse(null);
+		return allProfiles.values().stream().filter(p -> p.getEmail().equals(email)).findAny().orElse(null);
 	}
 	public static Profile findByUsername(String username) {
-		return EntityManager.PROFILE.stream().filter(p -> p.getUsername().equals(username)).findAny().orElse(null);
+		return allProfiles.values().stream().filter(p -> p.getUsername().equals(username)).findAny().orElse(null);
 	}
 }

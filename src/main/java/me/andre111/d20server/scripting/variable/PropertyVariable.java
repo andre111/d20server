@@ -1,8 +1,7 @@
 package me.andre111.d20server.scripting.variable;
 
-import me.andre111.d20common.model.entity.game.Game;
-import me.andre111.d20common.model.entity.game.GamePlayer;
 import me.andre111.d20common.model.entity.map.Map;
+import me.andre111.d20common.model.entity.profile.Profile;
 import me.andre111.d20common.model.property.Access;
 import me.andre111.d20common.model.property.Layer;
 import me.andre111.d20common.model.property.Light;
@@ -19,15 +18,15 @@ public abstract class PropertyVariable extends Variable {
 	}
 
 	@Override
-	public final void set(Game game, Map map, GamePlayer player, Object value) throws ScriptException {
+	public final void set(Map map, Profile profile, Object value) throws ScriptException {
 		// get property
-		Property property = getProperty(game, map, player);
+		Property property = getProperty(map, profile);
 		if(property == null) {
 			throw new ScriptException("No property "+propertyName);
 		}
 
 		// check access
-		Access accessLevel = getAccessLevel(game, map, player);
+		Access accessLevel = getAccessLevel(map, profile);
 		if(!property.canEdit(accessLevel)) {
 			throw new ScriptException("No edit access to "+getFullName());
 		}
@@ -60,19 +59,19 @@ public abstract class PropertyVariable extends Variable {
 		}
 		
 		// save
-		saveSourceAfterSet(game, map, player);
+		saveSourceAfterSet(map, profile);
 	}
 
 	@Override
-	public final Object get(Game game, Map map, GamePlayer player) throws ScriptException {
+	public final Object get(Map map, Profile profile) throws ScriptException {
 		// get property
-		Property property = getProperty(game, map, player);
+		Property property = getProperty(map, profile);
 		if(property == null) {
 			throw new ScriptException("No property "+propertyName);
 		}
 
 		// check access
-		Access accessLevel = getAccessLevel(game, map, player);
+		Access accessLevel = getAccessLevel(map, profile);
 		if(!property.canView(accessLevel)) {
 			throw new ScriptException("No view access to "+getFullName());
 		}
@@ -98,7 +97,7 @@ public abstract class PropertyVariable extends Variable {
 		}
 	}
 	
-	protected abstract Property getProperty(Game game, Map map, GamePlayer player) throws ScriptException;
-	protected abstract Access getAccessLevel(Game game, Map map, GamePlayer player) throws ScriptException;
-	protected abstract void saveSourceAfterSet(Game game, Map map, GamePlayer player) throws ScriptException;
+	protected abstract Property getProperty(Map map, Profile profile) throws ScriptException;
+	protected abstract Access getAccessLevel(Map map, Profile profile) throws ScriptException;
+	protected abstract void saveSourceAfterSet(Map map, Profile profile) throws ScriptException;
 }

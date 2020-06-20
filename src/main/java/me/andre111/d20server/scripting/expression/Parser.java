@@ -46,9 +46,9 @@ public class Parser {
 				Expression a = x;
 				Expression b = parseTerm();
 				
-				x = ((g,m,p) -> {
-					Result ar = a.eval(g,m,p);
-					Result br = b.eval(g,m,p);
+				x = ((m,p) -> {
+					Result ar = a.eval(m,p);
+					Result br = b.eval(m,p);
 					return new Result(ar.v + br.v, ar.s + " + " + br.s, ar.hadCriticalFailure || br.hadCriticalFailure, ar.hadCriticalSuccess || br.hadCriticalSuccess);
 				});
 			} else if(eat('-')) {
@@ -56,9 +56,9 @@ public class Parser {
 				Expression a = x;
 				Expression b = parseTerm();
 				
-				x = ((g,m,p) -> {
-					Result ar = a.eval(g,m,p);
-					Result br = b.eval(g,m,p);
+				x = ((m,p) -> {
+					Result ar = a.eval(m,p);
+					Result br = b.eval(m,p);
 					return new Result(ar.v - br.v, ar.s + " - " + br.s, ar.hadCriticalFailure || br.hadCriticalFailure, ar.hadCriticalSuccess || br.hadCriticalSuccess);
 				});
 			} else {
@@ -76,9 +76,9 @@ public class Parser {
 				Expression a = x;
 				Expression b = parseFactor();
 				
-				x = ((g,m,p) -> {
-					Result ar = a.eval(g,m,p);
-					Result br = b.eval(g,m,p);
+				x = ((m,p) -> {
+					Result ar = a.eval(m,p);
+					Result br = b.eval(m,p);
 					return new Result(ar.v * br.v, ar.s + " * " + br.s, ar.hadCriticalFailure || br.hadCriticalFailure, ar.hadCriticalSuccess || br.hadCriticalSuccess);
 				});
 			} else if(eat('/')) {
@@ -86,9 +86,9 @@ public class Parser {
 				Expression a = x;
 				Expression b = parseFactor();
 				
-				x = ((g,m,p) -> {
-					Result ar = a.eval(g,m,p);
-					Result br = b.eval(g,m,p);
+				x = ((m,p) -> {
+					Result ar = a.eval(m,p);
+					Result br = b.eval(m,p);
 					return new Result(ar.v / br.v, ar.s + " / " + br.s, ar.hadCriticalFailure || br.hadCriticalFailure, ar.hadCriticalSuccess || br.hadCriticalSuccess);
 				});
 			} else {
@@ -105,8 +105,8 @@ public class Parser {
 		}
 		if(eat('-')) {
 			Expression a = parseFactor();
-			return ((g,m,p) -> {
-				Result ar = a.eval(g,m,p);
+			return ((m,p) -> {
+				Result ar = a.eval(m,p);
 				return new Result(-ar.v, "-"+ar.s, ar.hadCriticalFailure, ar.hadCriticalFailure);
 			});
 		}
@@ -116,8 +116,8 @@ public class Parser {
 			Expression a = parseExpression();
 			if(!eat(')')) throw new ScriptException("Unclosed parentheses");
 			
-			return ((g,m,p) -> {
-				Result ar = a.eval(g,m,p);
+			return ((m,p) -> {
+				Result ar = a.eval(m,p);
 				return new Result(ar.v, "("+ar.s+")", ar.hadCriticalFailure, ar.hadCriticalSuccess);
 			});
 		}
@@ -147,7 +147,7 @@ public class Parser {
 		if(valueString.matches("\\d+")) {
 			// parse number
 			int number = Integer.parseInt(valueString);
-			return ((g,m,p) -> new Result(number, Integer.toString(number), false, false));
+			return ((m,p) -> new Result(number, Integer.toString(number), false, false));
 		} else {
 			// adjust to "normalized" dice format
 			valueString = valueString.toUpperCase();

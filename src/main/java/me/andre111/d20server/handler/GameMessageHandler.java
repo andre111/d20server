@@ -12,6 +12,9 @@ import me.andre111.d20common.message.game.PlayEffect;
 import me.andre111.d20common.message.game.SelectedTokens;
 import me.andre111.d20common.message.game.ShowImage;
 import me.andre111.d20common.message.game.UpdateMapProperties;
+import me.andre111.d20common.message.game.actor.AddActor;
+import me.andre111.d20common.message.game.actor.RemoveActor;
+import me.andre111.d20common.message.game.actor.UpdateActor;
 import me.andre111.d20common.message.game.chat.SendChatMessage;
 import me.andre111.d20common.message.game.index.RenameAudio;
 import me.andre111.d20common.message.game.index.RenameImage;
@@ -26,8 +29,7 @@ import me.andre111.d20common.message.game.token.list.UpdateTokenList;
 import me.andre111.d20common.message.game.util.Ping;
 import me.andre111.d20common.message.game.wall.AddOrUpdateWall;
 import me.andre111.d20common.message.game.wall.RemoveWall;
-import me.andre111.d20common.model.entity.game.Game;
-import me.andre111.d20common.model.entity.game.GamePlayer;
+import me.andre111.d20common.model.entity.actor.Actor;
 import me.andre111.d20common.model.entity.map.Map;
 import me.andre111.d20common.model.entity.map.Token;
 import me.andre111.d20common.model.entity.map.TokenList;
@@ -39,291 +41,330 @@ import me.andre111.d20server.model.EntityManager;
 import me.andre111.d20server.service.ChatService;
 import me.andre111.d20server.service.GameService;
 import me.andre111.d20server.service.MessageService;
+import me.andre111.d20server.service.UserService;
 
 //TODO: move most code (except for mostly the access checks) to separate services (so stuff like addToken/removeToken can be reused by other code without duplication)
 public abstract class GameMessageHandler {
-	protected static void handle(Channel channel, Profile profile, Game game, GamePlayer player, Map map, GameMessage message) {
+	protected static void handle(Channel channel, Profile profile, Map map, GameMessage message) {
 		//
 		if(message instanceof MovePlayerToMap) {
-			handleEnterMap(game, player, map, (MovePlayerToMap) message);
+			handleEnterMap(profile, map, (MovePlayerToMap) message);
 		} else if(message instanceof NewMap) {
-			handleNewMap(game, player, map, (NewMap) message);
+			handleNewMap(profile, map, (NewMap) message);
 		} else if(message instanceof SelectedTokens) {
-			handleSelectedTokens(game, player, map, (SelectedTokens) message);
+			handleSelectedTokens(profile, map, (SelectedTokens) message);
 		} else if(message instanceof UpdateMapProperties) {
-			handleUpdateMap(game, player, map, (UpdateMapProperties) message);
-		
-		// TOKENS: --------------------
-		} else if(message instanceof AddToken) {
-			handleAddToken(game, player, map, (AddToken) message);
-		} else if(message instanceof RemoveToken) {
-			handleRemoveToken(game, player, map, (RemoveToken) message);
-		} else if(message instanceof UpdateToken) {
-			handleUpdateToken(game, player, map, (UpdateToken) message);
-		} else if(message instanceof UpdateTokenMacros) {
-			handleUpdateTokenMacros(game, player, map, (UpdateTokenMacros) message);
-			
-		// TOKEN-LISTS: --------------------
-		} else if(message instanceof AddTokenList) {
-			handleAddTokenList(game, player, map, (AddTokenList) message);
-		} else if(message instanceof RemoveTokenList) {
-			handleRemoveTokenList(game, player, map, (RemoveTokenList) message);
-		} else if(message instanceof TokenListValue) {
-			handleTokenListValue(game, player, map, (TokenListValue) message);
-		} else if(message instanceof UpdateTokenList) {
-			handleUpdateTokenList(game, player, map, (UpdateTokenList) message);
-		
-		// WALLS: --------------------
-		} else if(message instanceof AddOrUpdateWall) {
-			handleAddOrUpdateWall(game, player, map, (AddOrUpdateWall) message);
-		} else if(message instanceof RemoveWall) {
-			handleRemoveWall(game, player, map, (RemoveWall) message);
-			
-		// OTHERS: --------------------
-		} else if(message instanceof RenameAudio) {
-			handleRenameAudio(game, player, map, (RenameAudio) message);
-		} else if(message instanceof RenameImage) {
-			handleRenameImage(game, player, map, (RenameImage) message);
-		} else if(message instanceof ShowImage) {
-			handleShowImage(game, player, map, (ShowImage) message);
-		} else if(message instanceof ActionCommand) {
-			handleActionCommand(game, player, map, (ActionCommand) message);
-			
-			
-		// CHAT: --------------------
-		} else if(message instanceof SendChatMessage) {
-			handleChatMessage(game, player, map, (SendChatMessage) message);
+			handleUpdateMap(profile, map, (UpdateMapProperties) message);
 
-		// --------------------
+			// TOKENS: --------------------
+		} else if(message instanceof AddToken) {
+			handleAddToken(profile, map, (AddToken) message);
+		} else if(message instanceof RemoveToken) {
+			handleRemoveToken(profile, map, (RemoveToken) message);
+		} else if(message instanceof UpdateToken) {
+			handleUpdateToken(profile, map, (UpdateToken) message);
+		} else if(message instanceof UpdateTokenMacros) {
+			handleUpdateTokenMacros(profile, map, (UpdateTokenMacros) message);
+
+			// TOKEN-LISTS: --------------------
+		} else if(message instanceof AddTokenList) {
+			handleAddTokenList(profile, map, (AddTokenList) message);
+		} else if(message instanceof RemoveTokenList) {
+			handleRemoveTokenList(profile, map, (RemoveTokenList) message);
+		} else if(message instanceof TokenListValue) {
+			handleTokenListValue(profile, map, (TokenListValue) message);
+		} else if(message instanceof UpdateTokenList) {
+			handleUpdateTokenList(profile, map, (UpdateTokenList) message);
+
+			// WALLS: --------------------
+		} else if(message instanceof AddOrUpdateWall) {
+			handleAddOrUpdateWall(profile, map, (AddOrUpdateWall) message);
+		} else if(message instanceof RemoveWall) {
+			handleRemoveWall(profile, map, (RemoveWall) message);
+
+			// ACTORS: --------------------
+		} else if(message instanceof AddActor) {
+			handleAddActor(profile, map, (AddActor) message);
+		} else if(message instanceof RemoveActor) {
+			handleRemoveActor(profile, map, (RemoveActor) message);
+		} else if(message instanceof UpdateActor) {
+			handleUpdateActor(profile, map, (UpdateActor) message);
+
+			// OTHERS: --------------------
+		} else if(message instanceof RenameAudio) {
+			handleRenameAudio(profile, map, (RenameAudio) message);
+		} else if(message instanceof RenameImage) {
+			handleRenameImage(profile, map, (RenameImage) message);
+		} else if(message instanceof ShowImage) {
+			handleShowImage(profile, map, (ShowImage) message);
+		} else if(message instanceof ActionCommand) {
+			handleActionCommand(profile, map, (ActionCommand) message);
+
+
+			// CHAT: --------------------
+		} else if(message instanceof SendChatMessage) {
+			handleChatMessage(profile, map, (SendChatMessage) message);
+
+			// --------------------
 		} else if(message instanceof Ping) {
-			handlePingMessage(game, player, map, (Ping) message);
+			handlePingMessage(profile, map, (Ping) message);
 		} else {
 			System.out.println("Warning: Recieved unhandled message: "+message);
 		}
 	}
-	
-	private static void handleEnterMap(Game game, GamePlayer player, Map map, MovePlayerToMap message) {
+
+	private static void handleEnterMap(Profile profile, Map map, MovePlayerToMap message) {
 		long mapID = message.getMapID();
 		long playerID = message.getPlayerID();
-		if(game.hasMap(mapID)) {
+		if(EntityManager.MAP.has(mapID)) {
 			if(playerID == 0) {
-				if(player.getRole() != GamePlayer.Role.GM) return;
-				
+				if(profile.getRole() != Profile.Role.GM) return;
+
 				// set player map id and reset overridden values for all non gams
-				game.setPlayerMapID(mapID);
-				for(GamePlayer otherPlayer : game.getPlayers()) {
-					if(otherPlayer.getRole() != GamePlayer.Role.GM) {
-						otherPlayer.setOverrideMapID(0);
+				GameService.setBaseMapID(mapID);
+				for(Profile otherProfile : UserService.getAllConnectedProfiles()) {
+					if(otherProfile.getRole() != Profile.Role.GM) {
+						GameService.setPlayerOverrideMapID(otherProfile, mapID);
 					}
 				}
-				
+
 				// (re)load maps for clients
-				GameService.reloadMaps(game, null);
+				GameService.reloadMaps(null);
 			} else {
-				if(player.getRole() == GamePlayer.Role.GM || (playerID == player.getProfileID() && game.getMap(mapID, EntityManager.MAP::find).getPlayersCanEnter())) {
+				if(profile.getRole() == Profile.Role.GM || (playerID == profile.id() && GameService.getMap(mapID).getPlayersCanEnter())) {
 					// set player override map id and (re)load map
-					GamePlayer otherPlayer = game.getPlayer(playerID);
-					if(otherPlayer != null) {
-						otherPlayer.setOverrideMapID(mapID);;
-						GameService.reloadMaps(game, otherPlayer);
+					Profile otherProfile = UserService.getProfile(playerID);
+					if(otherProfile != null) {
+						GameService.setPlayerOverrideMapID(otherProfile, mapID);
+						GameService.reloadMaps(otherProfile);
 					}
 				}
 			}
 		}
 	}
-	
-	private static void handleNewMap(Game game, GamePlayer player, Map map, NewMap message) {
-		Map newMap = game.createMap(message.getName());
+
+	private static void handleNewMap(Profile profile, Map map, NewMap message) {
+		Map newMap = new Map(message.getName());
 		EntityManager.MAP.save(newMap);
-		EntityManager.GAME.save(game);
-		GameService.updateMapList(game);
+		GameService.updateMapList();
 	}
-	
-	private static void handleSelectedTokens(Game game, GamePlayer player, Map map, SelectedTokens message) {
+
+	private static void handleSelectedTokens(Profile profile, Map map, SelectedTokens message) {
 		List<Long> selectedTokens = message.getSelectedTokens();
 		if(selectedTokens == null) {
 			selectedTokens = new ArrayList<>();
 		}
-		
-		player.setSelectedTokens(selectedTokens);
+
+		GameService.setSelectedTokens(profile, selectedTokens);
 	}
-	
-	private static void handleUpdateMap(Game game, GamePlayer player, Map map, UpdateMapProperties message) {
+
+	private static void handleUpdateMap(Profile profile, Map map, UpdateMapProperties message) {
 		// determine access level
-		Access accessLevel = map.getAccessLevel(player);
-				
+		Access accessLevel = map.getAccessLevel(profile);
+
 		// transfer values
 		map.applyProperties(message.getProperties(), accessLevel);
 		EntityManager.MAP.save(map);
-		
+
 		// broadcast new map properties (DO NOT REUSE MESSAGE, because clients do not apply access levels)
-		MessageService.send(new UpdateMapProperties(map), game, map);
-		GameService.updateMapList(game);
+		MessageService.send(new UpdateMapProperties(map), map);
+		GameService.updateMapList();
 	}
-	
+
 
 	// ---------------------------------------------------------
-	private static void handleAddToken(Game game, GamePlayer player, Map map, AddToken message) {
+	private static void handleAddToken(Profile profile, Map map, AddToken message) {
 		Token token = message.getToken();
-		if(map.getToken(token.id()) == null) {
-			token.resetID(); // reset ID to generate one from the DB
-		}
-		
+		token.resetID(); // reset ID to generate one from the DB
+
 		// and and save
 		map.addOrUpdateToken(token); // update token and get correct id //TODO: only add token, not update?
 		EntityManager.MAP.save(map);
-		MessageService.send(message, game, map); // and broadcast change
+		MessageService.send(message, map); // and broadcast change
 	}
-	private static void handleRemoveToken(Game game, GamePlayer player, Map map, RemoveToken message) {
+	private static void handleRemoveToken(Profile profile, Map map, RemoveToken message) {
 		Token token = map.getToken(message.getTokenID());
 		if(token == null) return;
-		
+
 		// remove token from lists
 		for(TokenList list : map.getTokenLists()) {
 			list.removeToken(token);
-			MessageService.send(new TokenListValue(list, token, 0, true), game, map);
+			MessageService.send(new TokenListValue(list, token, 0, true), map);
 		}
-		
+
 		// remove token
 		map.removeToken(token);
 		EntityManager.MAP.save(map);
-		MessageService.send(message, game, map);
+		MessageService.send(message, map);
 	}
-	private static void handleUpdateToken(Game game, GamePlayer player, Map map, UpdateToken message) {
+	private static void handleUpdateToken(Profile profile, Map map, UpdateToken message) {
 		Token token = map.getToken(message.getTokenID());
 		java.util.Map<String, Property> properties = message.getProperties();
 		if(token == null || properties == null || properties.isEmpty()) return;
-		
+
 		// determine access level
-		Access accessLevel = token.getAccessLevel(player);
-		
+		Access accessLevel = token.getAccessLevel(profile);
+
 		// transfer values
 		token.applyProperties(properties, accessLevel);
 		EntityManager.MAP.save(map);
-		
+
 		// broadcast new token properties (DO NOT REUSE MESSAGE, because clients do not apply access levels)
-		MessageService.send(new UpdateToken(token), game, map);
+		MessageService.send(new UpdateToken(token), map);
 	}
-	private static void handleUpdateTokenMacros(Game game, GamePlayer player, Map map, UpdateTokenMacros message) {
+	private static void handleUpdateTokenMacros(Profile profile, Map map, UpdateTokenMacros message) {
 		Token token = map.getToken(message.getTokenID());
 		java.util.Map<String, String> macros = message.getMacros();
 		if(token == null || macros == null) return;
-		
+
 		// determine access level
-		Access accessLevel = token.getAccessLevel(player);
-		
+		Access accessLevel = token.getAccessLevel(profile);
+
 		if(token.canEditMacro(accessLevel)) {
 			// transfer values
 			token.setMacros(macros);
 			EntityManager.MAP.save(map);
-			
+
 			// broadcast new token properties (DO NOT REUSE MESSAGE, because clients do not apply access levels)
-			MessageService.send(new UpdateTokenMacros(token), game, map);
+			MessageService.send(new UpdateTokenMacros(token), map);
 		}
 	}
-	
-	
+
+
 	// ---------------------------------------------------------
-	private static void handleAddTokenList(Game game, GamePlayer player, Map map, AddTokenList message) {
+	private static void handleAddTokenList(Profile profile, Map map, AddTokenList message) {
 		TokenList list = message.getTokenList();
 		if(map.getTokenList(list.id()) == null) {
 			list.resetID(); // reset ID to generate one from the DB
 		}
-		
+
 		// add and save
 		map.addOrUpdateTokenList(list);
 		EntityManager.MAP.save(map);
-		MessageService.send(message, game, map); // and broadcast change
+		MessageService.send(message, map); // and broadcast change
 	}
-	private static void handleRemoveTokenList(Game game, GamePlayer player, Map map, RemoveTokenList message) {
+	private static void handleRemoveTokenList(Profile profile, Map map, RemoveTokenList message) {
 		map.removeTokenList(map.getTokenList(message.getListID()));
 		EntityManager.MAP.save(map);
-		MessageService.send(message, game, map);
+		MessageService.send(message, map);
 	}
-	private static void handleTokenListValue(Game game, GamePlayer player, Map map, TokenListValue message) {
+	private static void handleTokenListValue(Profile profile, Map map, TokenListValue message) {
 		TokenList list = map.getTokenList(message.getListID());
 		Token token = map.getToken(message.getTokenID());
 		if(list != null && token != null) {
 			// determine access level
-			Access accessLevel = list.getAccessLevel(player, token);
+			Access accessLevel = list.getAccessLevel(profile, token);
 			if(list.canEdit(accessLevel)) {
-				
+
 				// apply change
 				if(message.doReset()) {
 					list.removeToken(token);
 				} else {
 					list.addOrUpdateToken(token, message.getValue());
 				}
-				
+
 				EntityManager.MAP.save(map);
-				MessageService.send(message, game, map); // and broadcast change
+				MessageService.send(message, map); // and broadcast change
 			}
 		}
 	}
-	private static void handleUpdateTokenList(Game game, GamePlayer player, Map map, UpdateTokenList message) {
+	private static void handleUpdateTokenList(Profile profile, Map map, UpdateTokenList message) {
 		TokenList list = map.getTokenList(message.getListID());
 		java.util.Map<String, Property> properties = message.getProperties();
 		if(list == null || properties == null || properties.isEmpty()) return;
-		
+
 		// determine access level
-		Access accessLevel = list.getAccessLevel(player);
-		
+		Access accessLevel = list.getAccessLevel(profile);
+
 		// transfer values
 		list.applyProperties(properties, accessLevel);
 		EntityManager.MAP.save(map);
-		
+
 		// broadcast new tokenlist properties (DO NOT REUSE MESSAGE, because clients do not apply access levels)
-		MessageService.send(new UpdateTokenList(list), game, map);
+		MessageService.send(new UpdateTokenList(list), map);
 	}
-	
+
 
 	// ---------------------------------------------------------
-	private static void handleAddOrUpdateWall(Game game, GamePlayer player, Map map, AddOrUpdateWall message) {
+	private static void handleAddOrUpdateWall(Profile profile, Map map, AddOrUpdateWall message) {
 		Wall wall = message.getWall();
 		if(map.getWall(wall.id()) == null) {
 			wall.resetID(); // reset ID to generate one from the DB
 		}
-		
+
 		// add and save
 		map.addOrUpdateWall(wall); // update wall and get correct id
 		EntityManager.MAP.save(map);
-		MessageService.send(message, game, map); // and broadcast change
+		MessageService.send(message, map); // and broadcast change
 	}
-	private static void handleRemoveWall(Game game, GamePlayer player, Map map, RemoveWall message) {
+	private static void handleRemoveWall(Profile profile, Map map, RemoveWall message) {
 		map.removeWall(map.getWall(message.getWallID()));
 		EntityManager.MAP.save(map);
-		MessageService.send(message, game, map);
+		MessageService.send(message, map);
 	}
-	
+
 
 	// ---------------------------------------------------------
-	private static void handleRenameAudio(Game game, GamePlayer player, Map map, RenameAudio message) {
+	private static void handleAddActor(Profile profile, Map map, AddActor message) {
+		Actor actor = message.getActor();
+		actor.resetID(); // reset ID to generate one from the DB
+
+		// and and save
+		EntityManager.ACTOR.save(actor);
+		MessageService.broadcast(message); // and broadcast change
+	}
+	private static void handleRemoveActor(Profile profile, Map map, RemoveActor message) {
+		if(!EntityManager.ACTOR.has(message.getActorID())) return;
+
+		// remove actor
+		EntityManager.ACTOR.delete(message.getActorID());
+		MessageService.broadcast(message);
+	}
+	private static void handleUpdateActor(Profile profile, Map map, UpdateActor message) {
+		Actor actor = EntityManager.ACTOR.find(message.getActorID());
+		java.util.Map<String, Property> properties = message.getProperties();
+		if(actor == null || properties == null || properties.isEmpty()) return;
+
+		// determine access level
+		Access accessLevel = actor.getAccessLevel(profile);
+
+		// transfer values
+		actor.applyProperties(properties, accessLevel);
+		EntityManager.ACTOR.save(actor);
+
+		// broadcast new token properties (DO NOT REUSE MESSAGE, because clients do not apply access levels)
+		MessageService.broadcast(new UpdateActor(actor));
+	}
+
+
+	// ---------------------------------------------------------
+	private static void handleRenameAudio(Profile profile, Map map, RenameAudio message) {
 		EntityManager.AUDIO.rename(message.getAudioID(), message.getName());
 		GameService.updateAudioList();
 	}
-	private static void handleRenameImage(Game game, GamePlayer player, Map map, RenameImage message) {
+	private static void handleRenameImage(Profile profile, Map map, RenameImage message) {
 		EntityManager.IMAGE.rename(message.getImageID(), message.getName());
 		GameService.updateImageList();
 	}
-	private static void handleShowImage(Game game, GamePlayer player, Map map, ShowImage message) {
+	private static void handleShowImage(Profile profile, Map map, ShowImage message) {
 		if(EntityManager.IMAGE.has(message.getImageID())) {
-			MessageService.send(message, game, map);
+			MessageService.broadcast(message);
 		}
 	}
-	private static void handleActionCommand(Game game, GamePlayer player, Map map, ActionCommand message) {
+	private static void handleActionCommand(Profile profile, Map map, ActionCommand message) {
 		switch(message.getCommand()) {
 		case ActionCommand.PING:
-			MessageService.send(new PlayEffect("PING", message.getX(), message.getY(), 0, 1, true, player.getRole()==GamePlayer.Role.GM && message.isModified()), game, map);
+			MessageService.send(new PlayEffect("PING", message.getX(), message.getY(), 0, 1, true, profile.getRole()==Profile.Role.GM && message.isModified()), map);
 			break;
 		}
 	}
-	
+
 
 	// ---------------------------------------------------------
-	private static void handleChatMessage(Game game, GamePlayer player, Map map, SendChatMessage message) {
-		ChatService.onMessage(game, player, message.getMessage());
+	private static void handleChatMessage(Profile profile, Map map, SendChatMessage message) {
+		ChatService.onMessage(profile, message.getMessage());
 	}
-	private static void handlePingMessage(Game game, GamePlayer player, Map map, Ping message) {
-		MessageService.send(message, EntityManager.PROFILE.find(player.getProfileID()));
+	private static void handlePingMessage(Profile profile, Map map, Ping message) {
+		MessageService.send(message, profile);
 	}
 }

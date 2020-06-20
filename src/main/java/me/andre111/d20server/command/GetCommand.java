@@ -1,13 +1,12 @@
 package me.andre111.d20server.command;
 
 import me.andre111.d20common.model.entity.ChatEntry;
-import me.andre111.d20common.model.entity.game.Game;
-import me.andre111.d20common.model.entity.game.GamePlayer;
-import me.andre111.d20server.model.EntityManager;
+import me.andre111.d20common.model.entity.profile.Profile;
 import me.andre111.d20server.scripting.ScriptException;
 import me.andre111.d20server.scripting.variable.Variable;
 import me.andre111.d20server.scripting.variable.parser.VariableParser;
 import me.andre111.d20server.service.ChatService;
+import me.andre111.d20server.service.GameService;
 
 public class GetCommand extends Command {
 	public GetCommand(String name, String[] aliases) {
@@ -15,11 +14,11 @@ public class GetCommand extends Command {
 	}
 
 	@Override
-	public void execute(Game game, GamePlayer player, String arguments) {
+	public void execute(Profile profile, String arguments) {
 		// TODO Auto-generated method stub
 		try {
 			Variable variable = VariableParser.parseVariable(arguments);
-			Object value = variable.get(game, game.getPlayerMap(player, EntityManager.MAP::find), player);
+			Object value = variable.get(GameService.getPlayerMap(profile), profile);
 			
 			StringBuilder sb = new StringBuilder();
 			sb.append(ChatService.STYLE_INFO);
@@ -27,9 +26,9 @@ public class GetCommand extends Command {
 			sb.append(" = ");
 			sb.append(value);
 			
-			ChatService.append(game, false, new ChatEntry(sb.toString(), ChatService.SYSTEM_SOURCE, false, player.getProfileID()));
+			ChatService.append(false, new ChatEntry(sb.toString(), ChatService.SYSTEM_SOURCE, false, profile.id()));
 		} catch (ScriptException e) {
-			ChatService.appendError(game, player, "Could not get "+arguments+":", e.getMessage());
+			ChatService.appendError(profile, "Could not get "+arguments+":", e.getMessage());
 		}
 	}
 }

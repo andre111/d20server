@@ -14,10 +14,13 @@
 
 [table "columns=2;align-vertical=CENTER"
 [group "forced-width=80;auto-wrap=true" [style "font=Arial-BOLD-12"]%2:text%:[style "font=Arial-12"]]|
-[group "forced-width=200;auto-wrap=true;align-vertical=CENTER" %3:roll-inline%]
+[group "forced-width=200;auto-wrap=true;align-vertical=CENTER" %3:roll-inline% / %4:roll-inline%]|
+
+[group "forced-width=80;auto-wrap=true" [style "font=Arial-BOLD-12"]%5:text%:[style "font=Arial-12"]]|
+[group "forced-width=200;auto-wrap=true;align-vertical=CENTER" %6:roll-inline%]
 ]
 
-%4:text%
+%7:text%
 ]
 ]
 

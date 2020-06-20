@@ -3,8 +3,7 @@ package me.andre111.d20server.command;
 import java.util.HashMap;
 import java.util.Map;
 
-import me.andre111.d20common.model.entity.game.Game;
-import me.andre111.d20common.model.entity.game.GamePlayer;
+import me.andre111.d20common.model.entity.profile.Profile;
 
 public abstract class Command {
 	private static final Map<String, Command> COMMANDS = new HashMap<>();
@@ -58,13 +57,13 @@ public abstract class Command {
 		Command.register(this);
 	}
 	
-	public abstract void execute(Game game, GamePlayer player, String arguments);
+	public abstract void execute(Profile profile, String arguments);
 	
-	protected long[] buildRecipents(GamePlayer sender, boolean showPublic, boolean showSelf) {
+	protected long[] buildRecipents(Profile sender, boolean showPublic, boolean showSelf) {
 		long[] recipents = null;
 		if(!showPublic) {
 			if(showSelf) {
-				recipents = new long[] { sender.getProfileID() };
+				recipents = new long[] { sender.id() };
 			} else {
 				recipents = new long[] { -1 };
 			}

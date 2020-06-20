@@ -6,12 +6,9 @@ import io.netty.channel.group.ChannelGroupFuture;
 import me.andre111.d20common.message.IllegalMessageException;
 import me.andre111.d20common.message.Message;
 import me.andre111.d20common.message.MessageEncoder;
-import me.andre111.d20common.model.entity.game.Game;
-import me.andre111.d20common.model.entity.game.GamePlayer;
 import me.andre111.d20common.model.entity.map.Map;
 import me.andre111.d20common.model.entity.profile.Profile;
 import me.andre111.d20server.handler.MessageHandler;
-import me.andre111.d20server.model.EntityManager;
 
 public abstract class MessageService {
 	
@@ -31,13 +28,11 @@ public abstract class MessageService {
 	 * @param game    the game
 	 * @param map     the map or null
 	 */
-	public static void send(Message message, Game game, Map map) {
-		for(GamePlayer player : game.getPlayers()) {
-			if(player.isJoined()) {
-				if(map != null && !map.equals(game.getPlayerMap(player, EntityManager.MAP::find))) continue;
-				
-				send(message, EntityManager.PROFILE.find(player.getProfileID()));
-			}
+	public static void send(Message message, Map map) {
+		for(Profile profile : UserService.getAllConnectedProfiles()) {
+			if(map != null && !map.equals(GameService.getPlayerMap(profile))) continue;
+			
+			send(message, profile);
 		}
 	}
 

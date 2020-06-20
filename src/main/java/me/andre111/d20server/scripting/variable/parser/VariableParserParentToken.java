@@ -7,10 +7,10 @@ import me.andre111.d20server.scripting.ScriptException;
 import me.andre111.d20server.scripting.TokenFinder;
 import me.andre111.d20server.scripting.variable.Variable;
 
-public abstract class VariableParserTokenParent extends VariableParser {
+public abstract class VariableParserParentToken extends VariableParser {
 	private Map<String, VariableParserToken> children = new HashMap<>();
 	
-	public VariableParserTokenParent addChild(String name, VariableParserToken child) {
+	public VariableParserParentToken addChild(String name, VariableParserToken child) {
 		children.put(name, child);
 		return this;
 	}

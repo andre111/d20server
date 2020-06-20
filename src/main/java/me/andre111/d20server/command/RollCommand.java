@@ -1,13 +1,12 @@
 package me.andre111.d20server.command;
 
 import me.andre111.d20common.model.entity.ChatEntry;
-import me.andre111.d20common.model.entity.game.Game;
-import me.andre111.d20common.model.entity.game.GamePlayer;
-import me.andre111.d20server.model.EntityManager;
+import me.andre111.d20common.model.entity.profile.Profile;
 import me.andre111.d20server.scripting.expression.Expression;
 import me.andre111.d20server.scripting.expression.Parser;
 import me.andre111.d20server.scripting.expression.Result;
 import me.andre111.d20server.service.ChatService;
+import me.andre111.d20server.service.GameService;
 import me.andre111.d20server.util.RollFormatter;
 
 public class RollCommand extends Command {
@@ -29,23 +28,23 @@ public class RollCommand extends Command {
 
 	
 	@Override
-	public void execute(Game game, GamePlayer player, String arguments) {
+	public void execute(Profile profile, String arguments) {
 		// parse roll and execute
 		Result result = null;
 		Exception exception = null;
 		try {
 			Expression expr = parser.parse(arguments);
-			result = expr.eval(game, game.getPlayerMap(player, EntityManager.MAP::find), player);
+			result = expr.eval(GameService.getPlayerMap(profile), profile);
 		} catch(Exception e) {
 			exception = e;
 		}
 		
-		String rollMessage = RollFormatter.formatDiceRoll(player, arguments, showPublic, result, exception);
+		String rollMessage = RollFormatter.formatDiceRoll(profile, arguments, showPublic, result, exception);
 		
 		// determine recipents
-		long[] recipents = buildRecipents(player, showPublic, showSelf);
+		long[] recipents = buildRecipents(profile, showPublic, showSelf);
 		
 		// append message
-		ChatService.append(game, true, new ChatEntry(rollMessage, player.getProfileID(), showGM, recipents));
+		ChatService.append(true, new ChatEntry(rollMessage, profile.id(), showGM, recipents));
 	}
 }

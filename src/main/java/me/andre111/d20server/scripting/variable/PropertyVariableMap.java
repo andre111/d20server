@@ -1,9 +1,8 @@
 package me.andre111.d20server.scripting.variable;
 
 import me.andre111.d20common.message.game.UpdateMapProperties;
-import me.andre111.d20common.model.entity.game.Game;
-import me.andre111.d20common.model.entity.game.GamePlayer;
 import me.andre111.d20common.model.entity.map.Map;
+import me.andre111.d20common.model.entity.profile.Profile;
 import me.andre111.d20common.model.property.Access;
 import me.andre111.d20common.model.property.Property;
 import me.andre111.d20server.model.EntityManager;
@@ -16,7 +15,7 @@ public class PropertyVariableMap extends PropertyVariable {
 	}
 
 	@Override
-	protected Property getProperty(Game game, Map map, GamePlayer player) throws ScriptException {
+	protected Property getProperty(Map map, Profile profile) throws ScriptException {
 		// get property
 		Property property = map.getProperty(propertyName);
 		if(property == null) {
@@ -26,13 +25,13 @@ public class PropertyVariableMap extends PropertyVariable {
 	}
 
 	@Override
-	protected Access getAccessLevel(Game game, Map map, GamePlayer player) throws ScriptException {
-		return map.getAccessLevel(player);
+	protected Access getAccessLevel(Map map, Profile profile) throws ScriptException {
+		return map.getAccessLevel(profile);
 	}
 
 	@Override
-	protected void saveSourceAfterSet(Game game, Map map, GamePlayer player) throws ScriptException {
+	protected void saveSourceAfterSet(Map map, Profile profile) throws ScriptException {
 		EntityManager.MAP.save(map);
-		MessageService.send(new UpdateMapProperties(map), game, map);
+		MessageService.send(new UpdateMapProperties(map), map);
 	}
 }

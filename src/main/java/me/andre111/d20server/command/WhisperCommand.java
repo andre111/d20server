@@ -1,9 +1,9 @@
 package me.andre111.d20server.command;
 
 import me.andre111.d20common.model.entity.ChatEntry;
-import me.andre111.d20common.model.entity.game.Game;
-import me.andre111.d20common.model.entity.game.GamePlayer;
+import me.andre111.d20common.model.entity.profile.Profile;
 import me.andre111.d20server.service.ChatService;
+import me.andre111.d20server.service.UserService;
 
 public class WhisperCommand extends Command {
 
@@ -12,10 +12,10 @@ public class WhisperCommand extends Command {
 	}
 
 	@Override
-	public void execute(Game game, GamePlayer player, String arguments) {
+	public void execute(Profile profile, String arguments) {
 		String[] split = arguments.split(" ", 2);
 		if(split.length != 2) {
-			ChatService.appendError(game, player, "Usage: /whisper <name> <message>");
+			ChatService.appendError(profile, "Usage: /whisper <name> <message>");
 			return;
 		}
 		
@@ -23,31 +23,31 @@ public class WhisperCommand extends Command {
 		String message = split[1];
 		
 		// find receiver
-		GamePlayer reciever = null;
-		for(GamePlayer gamePlayer : game.getPlayers()) {
-			if(name.equals(gamePlayer.getNickname().toLowerCase())) {
-				reciever = gamePlayer;
+		Profile reciever = null;
+		for(Profile other : UserService.getAllConnectedProfiles()) {
+			if(name.equals(other.getName().toLowerCase())) {
+				reciever = other;
 			}
 		}
 		if(reciever == null) {
-			ChatService.appendError(game, player, "Unknown player: "+name);
+			ChatService.appendError(profile, "Unknown player: "+name);
 			return;
 		}
 		
 		// build message
 		StringBuilder sb = new StringBuilder();
 		sb.append(ChatService.STYLE_SENDER_ITALIC);
-		sb.append(player.getNickname());
+		sb.append(profile.getName());
 		sb.append(" to ");
-		sb.append(reciever.getNickname());
+		sb.append(reciever.getName());
 		sb.append(": \n");
 		sb.append(message);
 		
 		// determine recipents
-		long[] recipents = new long[] { player.getProfileID(), reciever.getProfileID() };
+		long[] recipents = new long[] { profile.id(), reciever.id() };
 		
 		// append message
-		ChatService.append(game, true, new ChatEntry(sb.toString(), player.getProfileID(), false, recipents));
+		ChatService.append(true, new ChatEntry(sb.toString(), profile.id(), false, recipents));
 	}
 
 }

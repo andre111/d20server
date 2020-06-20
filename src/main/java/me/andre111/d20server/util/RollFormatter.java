@@ -1,16 +1,16 @@
 package me.andre111.d20server.util;
 
-import me.andre111.d20common.model.entity.game.GamePlayer;
+import me.andre111.d20common.model.entity.profile.Profile;
 import me.andre111.d20server.scripting.expression.Result;
 import me.andre111.d20server.service.ChatService;
 
 public class RollFormatter {
-
-	public static String formatDiceRoll(GamePlayer player, String rollExpression, boolean showPublic, Result result, Exception e) {
+	//TODO: this should not include the player specific part
+	public static String formatDiceRoll(Profile profile, String rollExpression, boolean showPublic, Result result, Exception e) {
 		// build "header"
 		StringBuilder sb = new StringBuilder();
 		sb.append(ChatService.STYLE_SENDER);
-		sb.append(player.getNickname());
+		sb.append(profile.getName());
 		if(!showPublic) {
 			sb.append(" (to GM)");
 		}
@@ -46,7 +46,7 @@ public class RollFormatter {
 		return sb.toString();
 	}
 	
-	public static String formatInlineDiceRoll(GamePlayer player, String rollExpression, Result result, Exception e) {
+	public static String formatInlineDiceRoll(String rollExpression, Result result, Exception e) {
 		StringBuilder sb = new StringBuilder();
 		sb.append("[group ");
 		

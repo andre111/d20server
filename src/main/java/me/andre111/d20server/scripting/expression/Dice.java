@@ -4,9 +4,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import me.andre111.d20common.model.entity.game.Game;
-import me.andre111.d20common.model.entity.game.GamePlayer;
 import me.andre111.d20common.model.entity.map.Map;
+import me.andre111.d20common.model.entity.profile.Profile;
 import me.andre111.d20server.scripting.ScriptException;
 import me.andre111.d20server.util.DiceRoller;
 
@@ -77,7 +76,7 @@ public class Dice implements Expression {
 	}
 
 	@Override
-	public Result eval(Game game, Map map, GamePlayer player) throws ScriptException {
+	public Result eval(Map map, Profile profile) throws ScriptException {
 		// calculate all required dice
 		List<DiceResult> results = new ArrayList<>();
 		for(int i=0; i<count; i++) {
@@ -153,11 +152,9 @@ public class Dice implements Expression {
 			if(!result.shouldBeIncluded()) sb.append("-----");
 			if(sides == 4 || sides == 6 || sides == 8 || sides == 10 || sides == 12 || sides == 20) {
 				sb.append("[image \"path=/dice/small/d"+sides+".png\"]");
-				appendRollValue(sb, result);
+				appendRollValue(sb, "", result, "");
 			} else {
-				sb.append("<");
-				appendRollValue(sb, result);
-				sb.append(">");
+				appendRollValue(sb, "<", result, ">");
 			}
 			sb.append("]");
 		}
@@ -166,8 +163,9 @@ public class Dice implements Expression {
 		return new Result(value, sb.toString(), hadCriticalFailure, hadCriticalSuccess);
 	}
 
-	private void appendRollValue(StringBuilder sb, DiceResult result) {
+	private void appendRollValue(StringBuilder sb, String prefix, DiceResult result, String postfix) {
 		sb.append("[group ");
+		sb.append(prefix);
 		boolean changedStyle = false;
 		if(result.criticalFailure) {
 			sb.append("[style \"color=#FF0000\"]");
@@ -180,6 +178,7 @@ public class Dice implements Expression {
 		if(changedStyle) {
 			sb.append("[style \"color=#000000\"]");
 		}
+		sb.append(postfix);
 		sb.append("]");
 	}
 	

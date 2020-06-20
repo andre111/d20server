@@ -3,7 +3,7 @@ package me.andre111.d20server.scripting.variable.parser;
 import me.andre111.d20server.scripting.TokenFinder;
 import me.andre111.d20server.scripting.TokenFinderSelected;
 
-public class VariableParserTokenParentSelected extends VariableParserTokenParent {
+public class VariableParserParentTokenSelected extends VariableParserParentToken {
 	private static final TokenFinder FINDER = new TokenFinderSelected();
 	
 	@Override

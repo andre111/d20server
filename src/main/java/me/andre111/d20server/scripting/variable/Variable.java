@@ -1,8 +1,7 @@
 package me.andre111.d20server.scripting.variable;
 
-import me.andre111.d20common.model.entity.game.Game;
-import me.andre111.d20common.model.entity.game.GamePlayer;
 import me.andre111.d20common.model.entity.map.Map;
+import me.andre111.d20common.model.entity.profile.Profile;
 import me.andre111.d20server.scripting.ScriptException;
 import me.andre111.d20server.scripting.expression.Expression;
 import me.andre111.d20server.scripting.expression.Result;
@@ -14,14 +13,14 @@ public abstract class Variable implements Expression {
 		this.fullName = fullName;
 	}
 	
-	public abstract void set(Game game, Map map, GamePlayer player, Object value) throws ScriptException;
+	public abstract void set(Map map, Profile profile, Object value) throws ScriptException;
 	
-	public abstract Object get(Game game, Map map, GamePlayer player) throws ScriptException;
+	public abstract Object get(Map map, Profile profile) throws ScriptException;
 	
 	@Override
-	public Result eval(Game game, Map map, GamePlayer player) throws ScriptException {
+	public Result eval(Map map, Profile profile) throws ScriptException {
 		// get value
-		Object valueObject = get(game, map, player);
+		Object valueObject = get(map, profile);
 		double value = 0;
 		
 		// try to interpret as number

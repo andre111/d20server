@@ -1,19 +1,24 @@
 package me.andre111.d20server.scripting.template;
 
-import me.andre111.d20common.model.entity.game.Game;
-import me.andre111.d20common.model.entity.game.GamePlayer;
+import me.andre111.d20common.model.entity.profile.Profile;
 import me.andre111.d20server.scripting.ScriptException;
 
 public final class TemplateComponentPlaceholder extends TemplateComponent {
+	private final int index;
 	private final Placeholder placeholder;
 	private String string = null;
 	
-	public TemplateComponentPlaceholder(Placeholder placeholder) {
+	public TemplateComponentPlaceholder(int index, Placeholder placeholder) {
+		this.index = index;
 		this.placeholder = placeholder;
 	}
 	
-	public void parse(Game game, GamePlayer player, String input) throws ScriptException {
-		string = placeholder.parse(game, player, input);
+	public int getIndex() {
+		return index;
+	}
+	
+	public void parse(Profile profile, String input) throws ScriptException {
+		string = placeholder.parse(profile, input);
 	}
 	
 	@Override

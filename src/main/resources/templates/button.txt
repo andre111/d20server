@@ -1,7 +1,7 @@
-[group "on-click=chat:%text%" 
+[group "on-click=chat:%0:text%" 
 [table "stroke-width=3;margin=6;rounded-corners=8;bg-color=#FFDD99;stroke-color=#886644;shadow-size=4;shadow-color=#443322"
-%text%
+%1:text%
 ]
 |
-[group "bg-color=#FFFFFF" %text%]
+[group "bg-color=#FFFFFF" %2:text%]
 ]

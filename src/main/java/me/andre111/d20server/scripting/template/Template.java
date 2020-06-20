@@ -10,14 +10,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import me.andre111.d20common.model.entity.game.Game;
-import me.andre111.d20common.model.entity.game.GamePlayer;
+import me.andre111.d20common.model.entity.profile.Profile;
 import me.andre111.d20server.scripting.ScriptException;
 
 public class Template {
 	private static Map<String, Template> TEMPLATES = new HashMap<>();
 	static {
-		TEMPLATES.put("attack", loadInternalTemplate("attack21", "#888888"));
+		TEMPLATES.put("attack", loadInternalTemplate("old_attack21", "#888888"));
 
 		TEMPLATES.put("attack0", loadInternalTemplate("attack0", "#888888"));
 		TEMPLATES.put("attack1", loadInternalTemplate("attack1", "#888888"));
@@ -28,6 +27,11 @@ public class Template {
 		TEMPLATES.put("magic1", loadInternalTemplate("attack1", "#57007F"));
 		TEMPLATES.put("magic11", loadInternalTemplate("attack11", "#57007F"));
 		TEMPLATES.put("magic21", loadInternalTemplate("attack21", "#57007F"));
+
+		TEMPLATES.put("generic0", loadInternalTemplate("attack0", "#4A7C00"));
+		TEMPLATES.put("generic1", loadInternalTemplate("attack1", "#4A7C00"));
+
+		TEMPLATES.put("text", loadInternalTemplate("text"));
 		
 		TEMPLATES.put("button", loadInternalTemplate("button"));
 	}
@@ -65,7 +69,8 @@ public class Template {
 					if(part.equals("%")) {
 						components.add(new TemplateComponentText("%"));
 					} else {
-						components.add(new TemplateComponentPlaceholder(Placeholder.get(part)));
+						String[] splitPart = part.substring(1).split(":");
+						components.add(new TemplateComponentPlaceholder(Integer.parseInt(splitPart[0]), Placeholder.get(splitPart[1])));
 					}
 					inPlaceholder = false;
 					startIndex = currentIndex+1;
@@ -92,20 +97,16 @@ public class Template {
 		this.components = Collections.unmodifiableList(new ArrayList<>(components));
 	}
 	
-	public String parse(Game game, GamePlayer player, String[] inputs) throws ScriptException {
+	public String parse(Profile profile, String[] inputs) throws ScriptException {
 		// parse arguments
-		int currentInput = 0;
 		for(TemplateComponent component : components) {
 			if(component instanceof TemplateComponentPlaceholder placeholder) {
+				int currentInput = placeholder.getIndex();
 				if(currentInput >= inputs.length) {
 					throw new ScriptException("Too little arguments for placeholder.");
 				}
-				placeholder.parse(game, player, inputs[currentInput]);
-				currentInput++;
+				placeholder.parse(profile, inputs[currentInput]);
 			}
-		}
-		if(currentInput != inputs.length) {
-			throw new ScriptException("Too many arguments for placeholder.");
 		}
 		
 		// build string

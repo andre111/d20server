@@ -1,15 +1,14 @@
 package me.andre111.d20server.service;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 import me.andre111.d20common.message.game.chat.ChatEntries;
 import me.andre111.d20common.model.entity.ChatData;
 import me.andre111.d20common.model.entity.ChatEntry;
-import me.andre111.d20common.model.entity.game.Game;
-import me.andre111.d20common.model.entity.game.GamePlayer;
+import me.andre111.d20common.model.entity.actor.Actor;
 import me.andre111.d20common.model.entity.map.Token;
+import me.andre111.d20common.model.entity.profile.Profile;
 import me.andre111.d20common.model.property.Access;
 import me.andre111.d20server.command.Command;
 import me.andre111.d20server.model.EntityManager;
@@ -21,9 +20,9 @@ public abstract class ChatService {
 
 	public static final long SYSTEM_SOURCE = 0;
 	
-	private static final java.util.Map<Long, ChatData> loadedChats = new HashMap<>();
+	private static ChatData loadedChat = null;
 	
-	public static void onMessage(Game game, GamePlayer player, String message) {
+	public static void onMessage(Profile profile, String message) {
 		// strip formatting stuff
 		message = message.replace("[", "");
 		message = message.replace("]", "");
@@ -39,9 +38,9 @@ public abstract class ChatService {
 			Command command = Command.get(commandName);
 			if(command != null) {
 				// handle command
-				command.execute(game, player, arguments);
+				command.execute(profile, arguments);
 			} else {
-				appendError(game, player, "Unknown command: "+commandName);
+				appendError(profile, "Unknown command: "+commandName);
 				return;
 			}
 		} else if(message.startsWith("!")) {
@@ -49,42 +48,50 @@ public abstract class ChatService {
 			String macroName = message.substring(1);
 			
 			// find token and check access
-			Token token = PlayerService.getSelectedToken(game.getPlayerMap(player, EntityManager.MAP::find), player, true);
+			Token token = GameService.getSelectedToken(GameService.getPlayerMap(profile), profile, true);
 			if(token == null) {
-				appendError(game, player, "No (single) token selected");
+				appendError(profile, "No (single) token selected");
 				return;
 			}
-			Access accessLevel = token.getAccessLevel(player);
+			Access accessLevel = token.getAccessLevel(profile);
 			if(!token.canUseMacro(accessLevel)) {
-				appendError(game, player, "No access to macros on this token");
+				appendError(profile, "No access to macros on this token");
 				return;
 			}
 			
-			// find macro
-			String macro = token.getMacro(macroName);
+			// find macro (!<name> -> custom in token, !!<name> -> premade in actor)
+			String macro = null;
+			if(macroName.startsWith("!")) {
+				Actor actor = EntityManager.ACTOR.find(token.getActorID());
+				if(actor != null) {
+					macro = actor.getType().getMacroCommands(macroName.substring(1));
+				}
+			} else {
+				macro = token.getMacro(macroName);
+			}
 			if(macro == null) {
-				appendError(game, player, "Could not find macro: "+macroName);
+				appendError(profile, "Could not find macro: "+macroName);
 				return;
 			}
 			
 			// execute macro
 			String[] macroLines = macro.split("\n");
 			for(String macroLine : macroLines) {
-				ChatService.onMessage(game, player, macroLine);
+				ChatService.onMessage(profile, macroLine);
 			}
 		} else {
 			// handle simple message
 			StringBuilder sb = new StringBuilder();
 			sb.append(STYLE_SENDER);
-			sb.append(player.getNickname());
+			sb.append(profile.getName());
 			sb.append(": \n");
 			sb.append(message);
 			
-			append(game, true, new ChatEntry(sb.toString(), player.getProfileID()));
+			append(true, new ChatEntry(sb.toString(), profile.id()));
 		}
 	}
 	
-	public static void appendError(Game game, GamePlayer player, String... lines) {
+	public static void appendError(Profile profile, String... lines) {
 		StringBuilder sb = new StringBuilder();
 		for(String line : lines) {
 			sb.append(STYLE_INFO);
@@ -92,13 +99,24 @@ public abstract class ChatService {
 			sb.append("\n");
 		}
 		
-		append(game, false, new ChatEntry(sb.toString(), SYSTEM_SOURCE, false, player.getProfileID()));
+		append(false, new ChatEntry(sb.toString(), SYSTEM_SOURCE, false, profile.id()));
 	}
 	
-	public static void append(Game game, boolean store, ChatEntry... entries) {
+	public static void appendNote(String... lines) {
+		StringBuilder sb = new StringBuilder();
+		for(String line : lines) {
+			sb.append(STYLE_INFO);
+			sb.append(line);
+			sb.append("\n");
+		}
+		
+		append(false, new ChatEntry(sb.toString(), SYSTEM_SOURCE, true));
+	}
+	
+	public static void append(boolean store, ChatEntry... entries) {
 		// store chat entries on server side
 		if(store) {
-			ChatData chatData = getChatData(game);
+			ChatData chatData = getChatData();
 			for(ChatEntry entry : entries) {
 				chatData.append(entry);
 			}
@@ -106,50 +124,48 @@ public abstract class ChatService {
 		}
 		
 		// send chat entries to client
-		sendToClients(game, true, entries);
+		sendToClients(true, entries);
 	}
 	
-	public static void sendHistory(Game game, GamePlayer player, int amount) {
+	public static void sendHistory(Profile profile, int amount) {
 		List<ChatEntry> playerEntries = new ArrayList<>();
 		
 		// determine all relevant entries
-		ChatData chatData = getChatData(game);
+		ChatData chatData = getChatData();
 		int start = Math.max(0, chatData.getEntries().size() - amount);
 		for(int i=start; i<chatData.getEntries().size(); i++) {
 			ChatEntry entry = chatData.getEntries().get(i);
-			if(canRecieve(player, entry)) {
+			if(canRecieve(profile, entry)) {
 				playerEntries.add(entry);
 			}
 		}
 		
 		// send message
-		MessageService.send(new ChatEntries(playerEntries, false), EntityManager.PROFILE.find(player.getProfileID()));
+		MessageService.send(new ChatEntries(playerEntries, false), profile);
 	}
 	
-	public static void sendToClients(Game game, boolean append, ChatEntry... entries) {
+	public static void sendToClients(boolean append, ChatEntry... entries) {
 		List<ChatEntry> playerEntries = new ArrayList<>();
-		for(GamePlayer player : game.getPlayers()) {
-			if(player.isJoined()) {
-				// determine all relevant entries
-				playerEntries.clear();
-				for(ChatEntry entry : entries) {
-					if(canRecieve(player, entry)) {
-						playerEntries.add(entry);
-					}
+		for(Profile profile : UserService.getAllConnectedProfiles()) {
+			// determine all relevant entries
+			playerEntries.clear();
+			for(ChatEntry entry : entries) {
+				if(canRecieve(profile, entry)) {
+					playerEntries.add(entry);
 				}
-				
-				// send message
-				MessageService.send(new ChatEntries(playerEntries, append), EntityManager.PROFILE.find(player.getProfileID()));
 			}
+			
+			// send message
+			MessageService.send(new ChatEntries(playerEntries, append), profile);
 		}
 	}
 	
-	private static boolean canRecieve(GamePlayer player, ChatEntry entry) {
+	private static boolean canRecieve(Profile profile, ChatEntry entry) {
 		if(entry.getRecipents() == null || entry.getRecipents().length == 0) return true;
-		if(entry.doIncludeGMs() && player.getRole() == GamePlayer.Role.GM) return true;
+		if(entry.doIncludeGMs() && profile.getRole() == Profile.Role.GM) return true;
 		
 		for(long recipent : entry.getRecipents()) {
-			if(recipent == player.getProfileID()) {
+			if(recipent == profile.id()) {
 				return true;
 			}
 		}
@@ -157,16 +173,15 @@ public abstract class ChatService {
 		return false;
 	}
 	
-	private static ChatData getChatData(Game game) {
-		if(!loadedChats.containsKey(game.id())) {
-			ChatData chatData = EntityManager.CHAT.find(game.id());
+	private static ChatData getChatData() {
+		if(loadedChat == null) {
+			ChatData chatData = EntityManager.CHAT.find(1);
 			if(chatData == null) {
-				chatData = new ChatData(game);
+				chatData = new ChatData(1);
 			}
-			
-			loadedChats.put(game.id(), chatData);
+			loadedChat = chatData;
 		}
 		
-		return loadedChats.get(game.id());
+		return loadedChat;
 	}
 }
