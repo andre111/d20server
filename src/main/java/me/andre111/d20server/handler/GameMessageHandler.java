@@ -14,6 +14,7 @@ import me.andre111.d20common.message.game.ShowImage;
 import me.andre111.d20common.message.game.UpdateMapProperties;
 import me.andre111.d20common.message.game.actor.AddActor;
 import me.andre111.d20common.message.game.actor.RemoveActor;
+import me.andre111.d20common.message.game.actor.SetActorDefaultToken;
 import me.andre111.d20common.message.game.actor.UpdateActor;
 import me.andre111.d20common.message.game.chat.SendChatMessage;
 import me.andre111.d20common.message.game.index.RenameAudio;
@@ -89,6 +90,8 @@ public abstract class GameMessageHandler {
 			handleRemoveActor(profile, map, (RemoveActor) message);
 		} else if(message instanceof UpdateActor) {
 			handleUpdateActor(profile, map, (UpdateActor) message);
+		} else if(message instanceof SetActorDefaultToken) {
+			handleSetActorDefaultToken(profile, map, (SetActorDefaultToken) message);
 
 			// OTHERS: --------------------
 		} else if(message instanceof RenameAudio) {
@@ -334,6 +337,18 @@ public abstract class GameMessageHandler {
 
 		// broadcast new token properties (DO NOT REUSE MESSAGE, because clients do not apply access levels)
 		MessageService.broadcast(new UpdateActor(actor));
+	}
+	private static void handleSetActorDefaultToken(Profile profile, Map map, SetActorDefaultToken message) {
+		Actor actor = EntityManager.ACTOR.find(message.getActorID());
+		Token token = GameService.getSelectedToken(map, profile, true);
+		if(actor == null || token == null) return;
+		
+		// set default token
+		actor.setDefaultToken(token);
+		EntityManager.ACTOR.save(actor);
+		
+		// broadcast "new" actor
+		MessageService.broadcast(new AddActor(actor));
 	}
 
 
