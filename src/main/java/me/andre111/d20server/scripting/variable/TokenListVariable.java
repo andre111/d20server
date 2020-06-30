@@ -1,12 +1,11 @@
 package me.andre111.d20server.scripting.variable;
 
 import me.andre111.d20common.message.game.token.list.TokenListValue;
-import me.andre111.d20common.model.entity.map.Map;
 import me.andre111.d20common.model.entity.map.Token;
 import me.andre111.d20common.model.entity.map.TokenList;
-import me.andre111.d20common.model.entity.profile.Profile;
 import me.andre111.d20common.model.property.Access;
 import me.andre111.d20server.model.EntityManager;
+import me.andre111.d20server.scripting.Context;
 import me.andre111.d20server.scripting.ScriptException;
 import me.andre111.d20server.scripting.TokenFinder;
 import me.andre111.d20server.service.MessageService;
@@ -23,12 +22,12 @@ public class TokenListVariable extends Variable {
 	}
 
 	@Override
-	public final void set(Map map, Profile profile, Object value) throws ScriptException {
-		Token token = tokenFinder.findToken(map, profile);
-		TokenList list = getList(map);
+	public final void set(Context context, Object value) throws ScriptException {
+		Token token = tokenFinder.findToken(context);
+		TokenList list = getList(context);
 		
 		// check access
-		Access accessLevel = list.getAccessLevel(profile, token);
+		Access accessLevel = list.getAccessLevel(context.getProfile(), token);
 		if(!list.canEdit(accessLevel)) {
 			throw new ScriptException("No edit access to "+getFullName());
 		}
@@ -41,16 +40,16 @@ public class TokenListVariable extends Variable {
 		list.addOrUpdateToken(token, (Long) value);
 		
 		// save and broadcast
-		EntityManager.MAP.save(map);
-		MessageService.send(new TokenListValue(list, token, (Long) value, false), map);
+		EntityManager.MAP.save(context.getMap());
+		MessageService.send(new TokenListValue(list, token, (Long) value, false), context.getMap());
 	}
 
 	@Override
-	public final Object get(Map map, Profile profile) throws ScriptException {
-		Token token = tokenFinder.findToken(map, profile);
-		TokenList list = getList(map);
+	public final Object get(Context context) throws ScriptException {
+		Token token = tokenFinder.findToken(context);
+		TokenList list = getList(context);
 		
-		Access accessLevel = list.getAccessLevel(profile, token);
+		Access accessLevel = list.getAccessLevel(context.getProfile(), token);
 		if(!list.canView(accessLevel)) {
 			throw new ScriptException("No view access to "+getFullName());
 		}
@@ -58,8 +57,8 @@ public class TokenListVariable extends Variable {
 		return list.getValue(token);
 	}
 	
-	private TokenList getList(Map map) throws ScriptException {
-		TokenList list = map.getTokenList(listName);
+	private TokenList getList(Context context) throws ScriptException {
+		TokenList list = context.getMap().getTokenList(listName);
 		if(list != null) {
 			return list;
 		}

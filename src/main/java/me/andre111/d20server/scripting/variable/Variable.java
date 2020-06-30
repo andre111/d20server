@@ -1,7 +1,6 @@
 package me.andre111.d20server.scripting.variable;
 
-import me.andre111.d20common.model.entity.map.Map;
-import me.andre111.d20common.model.entity.profile.Profile;
+import me.andre111.d20server.scripting.Context;
 import me.andre111.d20server.scripting.ScriptException;
 import me.andre111.d20server.scripting.expression.Expression;
 import me.andre111.d20server.scripting.expression.Result;
@@ -13,14 +12,14 @@ public abstract class Variable implements Expression {
 		this.fullName = fullName;
 	}
 	
-	public abstract void set(Map map, Profile profile, Object value) throws ScriptException;
+	public abstract void set(Context context, Object value) throws ScriptException;
 	
-	public abstract Object get(Map map, Profile profile) throws ScriptException;
+	public abstract Object get(Context context) throws ScriptException;
 	
 	@Override
-	public Result eval(Map map, Profile profile) throws ScriptException {
+	public Result eval(Context context) throws ScriptException {
 		// get value
-		Object valueObject = get(map, profile);
+		Object valueObject = get(context);
 		double value = 0;
 		
 		// try to interpret as number

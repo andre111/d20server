@@ -46,9 +46,9 @@ public class Parser {
 				Expression a = x;
 				Expression b = parseTerm();
 				
-				x = ((m,p) -> {
-					Result ar = a.eval(m,p);
-					Result br = b.eval(m,p);
+				x = (c -> {
+					Result ar = a.eval(c);
+					Result br = b.eval(c);
 					return new Result(ar.v + br.v, ar.s + " + " + br.s, ar.hadCriticalFailure || br.hadCriticalFailure, ar.hadCriticalSuccess || br.hadCriticalSuccess);
 				});
 			} else if(eat('-')) {
@@ -56,9 +56,9 @@ public class Parser {
 				Expression a = x;
 				Expression b = parseTerm();
 				
-				x = ((m,p) -> {
-					Result ar = a.eval(m,p);
-					Result br = b.eval(m,p);
+				x = (c -> {
+					Result ar = a.eval(c);
+					Result br = b.eval(c);
 					return new Result(ar.v - br.v, ar.s + " - " + br.s, ar.hadCriticalFailure || br.hadCriticalFailure, ar.hadCriticalSuccess || br.hadCriticalSuccess);
 				});
 			} else {
@@ -76,9 +76,9 @@ public class Parser {
 				Expression a = x;
 				Expression b = parseFactor();
 				
-				x = ((m,p) -> {
-					Result ar = a.eval(m,p);
-					Result br = b.eval(m,p);
+				x = (c -> {
+					Result ar = a.eval(c);
+					Result br = b.eval(c);
 					return new Result(ar.v * br.v, ar.s + " * " + br.s, ar.hadCriticalFailure || br.hadCriticalFailure, ar.hadCriticalSuccess || br.hadCriticalSuccess);
 				});
 			} else if(eat('/')) {
@@ -86,9 +86,9 @@ public class Parser {
 				Expression a = x;
 				Expression b = parseFactor();
 				
-				x = ((m,p) -> {
-					Result ar = a.eval(m,p);
-					Result br = b.eval(m,p);
+				x = (c -> {
+					Result ar = a.eval(c);
+					Result br = b.eval(c);
 					return new Result(ar.v / br.v, ar.s + " / " + br.s, ar.hadCriticalFailure || br.hadCriticalFailure, ar.hadCriticalSuccess || br.hadCriticalSuccess);
 				});
 			} else {
@@ -105,8 +105,8 @@ public class Parser {
 		}
 		if(eat('-')) {
 			Expression a = parseFactor();
-			return ((m,p) -> {
-				Result ar = a.eval(m,p);
+			return (c -> {
+				Result ar = a.eval(c);
 				return new Result(-ar.v, "-"+ar.s, ar.hadCriticalFailure, ar.hadCriticalFailure);
 			});
 		}
@@ -116,8 +116,8 @@ public class Parser {
 			Expression a = parseExpression();
 			if(!eat(')')) throw new ScriptException("Unclosed parentheses");
 			
-			return ((m,p) -> {
-				Result ar = a.eval(m,p);
+			return (c -> {
+				Result ar = a.eval(c);
 				return new Result(ar.v, "("+ar.s+")", ar.hadCriticalFailure, ar.hadCriticalSuccess);
 			});
 		}
@@ -147,7 +147,7 @@ public class Parser {
 		if(valueString.matches("\\d+")) {
 			// parse number
 			int number = Integer.parseInt(valueString);
-			return ((m,p) -> new Result(number, Integer.toString(number), false, false));
+			return (c -> new Result(number, Integer.toString(number), false, false));
 		} else {
 			// adjust to "normalized" dice format
 			valueString = valueString.toUpperCase();

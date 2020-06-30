@@ -1,6 +1,7 @@
 package me.andre111.d20server.scripting.template;
 
 import me.andre111.d20common.model.entity.profile.Profile;
+import me.andre111.d20server.scripting.Context;
 import me.andre111.d20server.scripting.ScriptException;
 import me.andre111.d20server.scripting.expression.Expression;
 import me.andre111.d20server.scripting.expression.Parser;
@@ -18,7 +19,7 @@ public class PlaceholderRollInline extends Placeholder {
 		Exception exception = null;
 		try {
 			Expression expr = parser.parse(input);
-			result = expr.eval(GameService.getPlayerMap(profile), profile);
+			result = expr.eval(new Context(profile, GameService.getPlayerMap(profile)));
 		} catch(Exception e) {
 			exception = e;
 		}

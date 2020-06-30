@@ -4,8 +4,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import me.andre111.d20common.model.entity.map.Map;
-import me.andre111.d20common.model.entity.profile.Profile;
+import me.andre111.d20server.scripting.Context;
 import me.andre111.d20server.scripting.ScriptException;
 import me.andre111.d20server.util.DiceRoller;
 
@@ -76,7 +75,7 @@ public class Dice implements Expression {
 	}
 
 	@Override
-	public Result eval(Map map, Profile profile) throws ScriptException {
+	public Result eval(Context context) throws ScriptException {
 		// calculate all required dice
 		List<DiceResult> results = new ArrayList<>();
 		for(int i=0; i<count; i++) {

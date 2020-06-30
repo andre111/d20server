@@ -2,6 +2,7 @@ package me.andre111.d20server.command;
 
 import me.andre111.d20common.model.entity.ChatEntry;
 import me.andre111.d20common.model.entity.profile.Profile;
+import me.andre111.d20server.scripting.Context;
 import me.andre111.d20server.scripting.expression.Expression;
 import me.andre111.d20server.scripting.expression.Parser;
 import me.andre111.d20server.scripting.expression.Result;
@@ -34,7 +35,7 @@ public class RollCommand extends Command {
 		Exception exception = null;
 		try {
 			Expression expr = parser.parse(arguments);
-			result = expr.eval(GameService.getPlayerMap(profile), profile);
+			result = expr.eval(new Context(profile, GameService.getPlayerMap(profile)));
 		} catch(Exception e) {
 			exception = e;
 		}

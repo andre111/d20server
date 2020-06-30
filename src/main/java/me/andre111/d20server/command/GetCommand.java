@@ -2,6 +2,7 @@ package me.andre111.d20server.command;
 
 import me.andre111.d20common.model.entity.ChatEntry;
 import me.andre111.d20common.model.entity.profile.Profile;
+import me.andre111.d20server.scripting.Context;
 import me.andre111.d20server.scripting.ScriptException;
 import me.andre111.d20server.scripting.variable.Variable;
 import me.andre111.d20server.scripting.variable.parser.VariableParser;
@@ -18,7 +19,7 @@ public class GetCommand extends Command {
 		// TODO Auto-generated method stub
 		try {
 			Variable variable = VariableParser.parseVariable(arguments);
-			Object value = variable.get(GameService.getPlayerMap(profile), profile);
+			Object value = variable.get(new Context(profile, GameService.getPlayerMap(profile)));
 			
 			StringBuilder sb = new StringBuilder();
 			sb.append(ChatService.STYLE_INFO);

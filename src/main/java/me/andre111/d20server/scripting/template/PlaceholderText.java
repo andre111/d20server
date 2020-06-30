@@ -1,6 +1,7 @@
 package me.andre111.d20server.scripting.template;
 
 import me.andre111.d20common.model.entity.profile.Profile;
+import me.andre111.d20server.scripting.Context;
 import me.andre111.d20server.scripting.ScriptException;
 import me.andre111.d20server.scripting.variable.Variable;
 import me.andre111.d20server.scripting.variable.parser.VariableParser;
@@ -10,7 +11,7 @@ public class PlaceholderText extends Placeholder {
 
 	@Override
 	public String parse(Profile profile, String input) throws ScriptException {
-		// find and parse {variables} in string
+		// find and parse {variables} in string //TODO: Should this happen in normal chat messages or only in templates?
 		StringBuilder sb = new StringBuilder();
 		int index = 0;
 		int startIndex = 0;
@@ -30,7 +31,7 @@ public class PlaceholderText extends Placeholder {
 				startIndex = index;
 				
 				Variable variable = VariableParser.parseVariable(variableName);
-				Object value = variable.get(GameService.getPlayerMap(profile), profile);
+				Object value = variable.get(new Context(profile, GameService.getPlayerMap(profile)));
 				sb.append(value);
 			}
 		}

@@ -1,11 +1,10 @@
 package me.andre111.d20server.scripting.variable;
 
 import me.andre111.d20common.message.game.token.UpdateToken;
-import me.andre111.d20common.model.entity.map.Map;
-import me.andre111.d20common.model.entity.profile.Profile;
 import me.andre111.d20common.model.property.Access;
 import me.andre111.d20common.model.property.Property;
 import me.andre111.d20server.model.EntityManager;
+import me.andre111.d20server.scripting.Context;
 import me.andre111.d20server.scripting.ScriptException;
 import me.andre111.d20server.scripting.TokenFinder;
 import me.andre111.d20server.service.MessageService;
@@ -20,9 +19,9 @@ public class PropertyVariableToken extends PropertyVariable {
 	}
 
 	@Override
-	protected Property getProperty(Map map, Profile profile) throws ScriptException {
+	protected Property getProperty(Context context) throws ScriptException {
 		// get property
-		Property property = tokenFinder.findToken(map, profile).getProperty(propertyName);
+		Property property = tokenFinder.findToken(context).getProperty(propertyName);
 		if(property == null) {
 			throw new ScriptException("Token has no property "+propertyName);
 		}
@@ -30,13 +29,13 @@ public class PropertyVariableToken extends PropertyVariable {
 	}
 
 	@Override
-	protected Access getAccessLevel(Map map, Profile profile) throws ScriptException {
-		return tokenFinder.findToken(map, profile).getAccessLevel(profile);
+	protected Access getAccessLevel(Context context) throws ScriptException {
+		return tokenFinder.findToken(context).getAccessLevel(context.getProfile());
 	}
 
 	@Override
-	protected void saveSourceAfterSet(Map map, Profile profile) throws ScriptException {
-		EntityManager.MAP.save(map);
-		MessageService.send(new UpdateToken(tokenFinder.findToken(map, profile)), map);
+	protected void saveSourceAfterSet(Context context) throws ScriptException {
+		EntityManager.MAP.save(context.getMap());
+		MessageService.send(new UpdateToken(tokenFinder.findToken(context)), context.getMap());
 	}
 }

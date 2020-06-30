@@ -1,8 +1,6 @@
 package me.andre111.d20server.scripting;
 
-import me.andre111.d20common.model.entity.map.Map;
 import me.andre111.d20common.model.entity.map.Token;
-import me.andre111.d20common.model.entity.profile.Profile;
 
 public class TokenFinderID extends TokenFinder {
 	private final long tokenID;
@@ -12,8 +10,8 @@ public class TokenFinderID extends TokenFinder {
 	}
 	
 	@Override
-	public Token findToken(Map map, Profile profile) throws ScriptException {
-		Token token = map.getToken(tokenID);
+	public Token findToken(Context context) throws ScriptException {
+		Token token = context.getMap().getToken(tokenID);
 		if(token == null) {
 			throw new ScriptException("Token with id "+tokenID+" not found");
 		}

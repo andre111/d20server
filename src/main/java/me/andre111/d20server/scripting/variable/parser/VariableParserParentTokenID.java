@@ -1,10 +1,9 @@
 package me.andre111.d20server.scripting.variable.parser;
 
-import me.andre111.d20server.scripting.TokenFinder;
+import me.andre111.d20server.scripting.ParserContext;
 import me.andre111.d20server.scripting.TokenFinderID;
 
-public class VariableParserParentTokenID extends VariableParserParentToken {
-
+public class VariableParserParentTokenID extends VariableParserParent {
 	@Override
 	protected String getChildParserName(String name) {
 		String[] split = name.split("\\.", 3);
@@ -18,13 +17,13 @@ public class VariableParserParentTokenID extends VariableParserParentToken {
 	}
 
 	@Override
-	protected TokenFinder getTokenFinder(String name) {
+	protected void updateContext(ParserContext context, String name) {
 		String[] split = name.split("\\.", 3);
 		long tokenID = -1;
 		try {
 			tokenID = Long.parseLong(split[0]);
 		} catch(NumberFormatException e) {
 		}
-		return new TokenFinderID(tokenID);
+		context.setTokenFinder(new TokenFinderID(tokenID));
 	}
 }

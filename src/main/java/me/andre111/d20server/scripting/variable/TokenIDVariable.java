@@ -1,7 +1,6 @@
 package me.andre111.d20server.scripting.variable;
 
-import me.andre111.d20common.model.entity.map.Map;
-import me.andre111.d20common.model.entity.profile.Profile;
+import me.andre111.d20server.scripting.Context;
 import me.andre111.d20server.scripting.ScriptException;
 import me.andre111.d20server.scripting.TokenFinder;
 
@@ -15,12 +14,12 @@ public class TokenIDVariable extends Variable {
 	}
 
 	@Override
-	public void set(Map map, Profile profile, Object value) throws ScriptException {
+	public void set(Context context, Object value) throws ScriptException {
 		throw new ScriptException("Token id is read only!");
 	}
 
 	@Override
-	public Object get(Map map, Profile profile) throws ScriptException {
-		return tokenFinder.findToken(map, profile).id();
+	public Object get(Context context) throws ScriptException {
+		return tokenFinder.findToken(context).id();
 	}
 }

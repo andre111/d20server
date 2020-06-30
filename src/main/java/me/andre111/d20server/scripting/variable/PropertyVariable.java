@@ -1,11 +1,10 @@
 package me.andre111.d20server.scripting.variable;
 
-import me.andre111.d20common.model.entity.map.Map;
-import me.andre111.d20common.model.entity.profile.Profile;
 import me.andre111.d20common.model.property.Access;
 import me.andre111.d20common.model.property.Layer;
 import me.andre111.d20common.model.property.Light;
 import me.andre111.d20common.model.property.Property;
+import me.andre111.d20server.scripting.Context;
 import me.andre111.d20server.scripting.ScriptException;
 
 public abstract class PropertyVariable extends Variable {
@@ -18,15 +17,15 @@ public abstract class PropertyVariable extends Variable {
 	}
 
 	@Override
-	public final void set(Map map, Profile profile, Object value) throws ScriptException {
+	public final void set(Context context, Object value) throws ScriptException {
 		// get property
-		Property property = getProperty(map, profile);
+		Property property = getProperty(context);
 		if(property == null) {
 			throw new ScriptException("No property "+propertyName);
 		}
 
 		// check access
-		Access accessLevel = getAccessLevel(map, profile);
+		Access accessLevel = getAccessLevel(context);
 		if(!property.canEdit(accessLevel)) {
 			throw new ScriptException("No edit access to "+getFullName());
 		}
@@ -59,19 +58,19 @@ public abstract class PropertyVariable extends Variable {
 		}
 		
 		// save
-		saveSourceAfterSet(map, profile);
+		saveSourceAfterSet(context);
 	}
 
 	@Override
-	public final Object get(Map map, Profile profile) throws ScriptException {
+	public final Object get(Context context) throws ScriptException {
 		// get property
-		Property property = getProperty(map, profile);
+		Property property = getProperty(context);
 		if(property == null) {
 			throw new ScriptException("No property "+propertyName);
 		}
 
 		// check access
-		Access accessLevel = getAccessLevel(map, profile);
+		Access accessLevel = getAccessLevel(context);
 		if(!property.canView(accessLevel)) {
 			throw new ScriptException("No view access to "+getFullName());
 		}
@@ -97,7 +96,7 @@ public abstract class PropertyVariable extends Variable {
 		}
 	}
 	
-	protected abstract Property getProperty(Map map, Profile profile) throws ScriptException;
-	protected abstract Access getAccessLevel(Map map, Profile profile) throws ScriptException;
-	protected abstract void saveSourceAfterSet(Map map, Profile profile) throws ScriptException;
+	protected abstract Property getProperty(Context context) throws ScriptException;
+	protected abstract Access getAccessLevel(Context context) throws ScriptException;
+	protected abstract void saveSourceAfterSet(Context context) throws ScriptException;
 }

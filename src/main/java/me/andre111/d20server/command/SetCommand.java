@@ -4,6 +4,7 @@ import me.andre111.d20common.model.entity.ChatEntry;
 import me.andre111.d20common.model.entity.map.Map;
 import me.andre111.d20common.model.entity.profile.Profile;
 import me.andre111.d20common.model.property.Type;
+import me.andre111.d20server.scripting.Context;
 import me.andre111.d20server.scripting.ScriptException;
 import me.andre111.d20server.scripting.expression.Expression;
 import me.andre111.d20server.scripting.expression.Parser;
@@ -36,6 +37,7 @@ public class SetCommand extends Command {
 			if(split.length != 3) throw new ScriptException("Wrong argument count: <variable> <type> <expression>");
 			
 			Map map = GameService.getPlayerMap(profile);
+			Context context = new Context(profile, map);
 			
 			Variable variable = VariableParser.parseVariable(split[0]);
 			Type type = Type.valueOf(split[1].toUpperCase());
@@ -44,13 +46,13 @@ public class SetCommand extends Command {
 			if(type == Type.LONG || type == Type.DOUBLE) {
 				// evaluate as expression
 				Expression expr = parser.parse(valueString);
-				Result value = expr.eval(map, profile);
+				Result value = expr.eval(context);
 				
 				// cast and set
 				if(type == Type.LONG) {
-					variable.set(map, profile, ((long) value.v));
+					variable.set(context, ((long) value.v));
 				} else if(type == Type.DOUBLE) {
-					variable.set(map, profile, value.v);
+					variable.set(context, value.v);
 				}
 				
 				// send roll message
@@ -60,7 +62,7 @@ public class SetCommand extends Command {
 					ChatService.append(true, new ChatEntry(rollMessage, profile.id(), true, recipents));
 				}
 			} else if(type == Type.STRING) {
-				variable.set(map, profile, valueString);
+				variable.set(context, valueString);
 				//TODO: send info messsage
 			} else {
 				//TODO: handle more types (LIGHT,LAYER,...)

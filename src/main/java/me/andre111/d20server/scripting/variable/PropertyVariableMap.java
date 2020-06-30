@@ -1,11 +1,10 @@
 package me.andre111.d20server.scripting.variable;
 
 import me.andre111.d20common.message.game.UpdateMapProperties;
-import me.andre111.d20common.model.entity.map.Map;
-import me.andre111.d20common.model.entity.profile.Profile;
 import me.andre111.d20common.model.property.Access;
 import me.andre111.d20common.model.property.Property;
 import me.andre111.d20server.model.EntityManager;
+import me.andre111.d20server.scripting.Context;
 import me.andre111.d20server.scripting.ScriptException;
 import me.andre111.d20server.service.MessageService;
 
@@ -15,9 +14,9 @@ public class PropertyVariableMap extends PropertyVariable {
 	}
 
 	@Override
-	protected Property getProperty(Map map, Profile profile) throws ScriptException {
+	protected Property getProperty(Context context) throws ScriptException {
 		// get property
-		Property property = map.getProperty(propertyName);
+		Property property = context.getMap().getProperty(propertyName);
 		if(property == null) {
 			throw new ScriptException("Map has no property "+propertyName);
 		}
@@ -25,13 +24,13 @@ public class PropertyVariableMap extends PropertyVariable {
 	}
 
 	@Override
-	protected Access getAccessLevel(Map map, Profile profile) throws ScriptException {
-		return map.getAccessLevel(profile);
+	protected Access getAccessLevel(Context context) throws ScriptException {
+		return context.getMap().getAccessLevel(context.getProfile());
 	}
 
 	@Override
-	protected void saveSourceAfterSet(Map map, Profile profile) throws ScriptException {
-		EntityManager.MAP.save(map);
-		MessageService.send(new UpdateMapProperties(map), map);
+	protected void saveSourceAfterSet(Context context) throws ScriptException {
+		EntityManager.MAP.save(context.getMap());
+		MessageService.send(new UpdateMapProperties(context.getMap()), context.getMap());
 	}
 }

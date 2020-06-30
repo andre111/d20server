@@ -1,12 +1,11 @@
 package me.andre111.d20server.scripting.variable;
 
 import me.andre111.d20common.message.game.token.list.UpdateTokenList;
-import me.andre111.d20common.model.entity.map.Map;
 import me.andre111.d20common.model.entity.map.TokenList;
-import me.andre111.d20common.model.entity.profile.Profile;
 import me.andre111.d20common.model.property.Access;
 import me.andre111.d20common.model.property.Property;
 import me.andre111.d20server.model.EntityManager;
+import me.andre111.d20server.scripting.Context;
 import me.andre111.d20server.scripting.ScriptException;
 import me.andre111.d20server.service.MessageService;
 
@@ -20,9 +19,9 @@ public class PropertyVariableList extends PropertyVariable {
 	}
 
 	@Override
-	protected Property getProperty(Map map, Profile profile) throws ScriptException {
+	protected Property getProperty(Context context) throws ScriptException {
 		// get property
-		Property property = getList(map).getProperty(propertyName);
+		Property property = getList(context).getProperty(propertyName);
 		if(property == null) {
 			throw new ScriptException("List has no property "+propertyName);
 		}
@@ -30,18 +29,18 @@ public class PropertyVariableList extends PropertyVariable {
 	}
 
 	@Override
-	protected Access getAccessLevel(Map map, Profile profile) throws ScriptException {
-		return getList(map).getAccessLevel(profile);
+	protected Access getAccessLevel(Context context) throws ScriptException {
+		return getList(context).getAccessLevel(context.getProfile());
 	}
 
 	@Override
-	protected void saveSourceAfterSet(Map map, Profile profile) throws ScriptException {
-		EntityManager.MAP.save(map);
-		MessageService.send(new UpdateTokenList(getList(map)), map);
+	protected void saveSourceAfterSet(Context context) throws ScriptException {
+		EntityManager.MAP.save(context.getMap());
+		MessageService.send(new UpdateTokenList(getList(context)), context.getMap());
 	}
 	
-	private TokenList getList(Map map) throws ScriptException {
-		TokenList list = map.getTokenList(listName);
+	private TokenList getList(Context context) throws ScriptException {
+		TokenList list = context.getMap().getTokenList(listName);
 		if(list != null) {
 			return list;
 		}

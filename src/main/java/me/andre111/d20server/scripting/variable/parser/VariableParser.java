@@ -1,5 +1,6 @@
 package me.andre111.d20server.scripting.variable.parser;
 
+import me.andre111.d20server.scripting.ParserContext;
 import me.andre111.d20server.scripting.ScriptException;
 import me.andre111.d20server.scripting.variable.Variable;
 
@@ -36,8 +37,8 @@ public abstract class VariableParser {
 	
 
 	public static Variable parseVariable(String name) throws ScriptException {
-		return rootParser.parse(name, name);
+		return rootParser.parse(new ParserContext(), name, name);
 	}
 	
-	public abstract Variable parse(String fullName, String name) throws ScriptException;
+	public abstract Variable parse(ParserContext context, String fullName, String name) throws ScriptException;
 }
