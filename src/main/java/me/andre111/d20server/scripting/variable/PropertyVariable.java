@@ -26,7 +26,7 @@ public abstract class PropertyVariable extends Variable {
 		BaseEntity entity = getEntity(context);
 		
 		// get property
-		Property property = entity.getProperty(propertyName);
+		Property property = entity.prop(propertyName);
 		if(property == null) {
 			throw new ScriptException("No property "+propertyName);
 		}
@@ -79,7 +79,7 @@ public abstract class PropertyVariable extends Variable {
 		BaseEntity entity = getEntity(context);
 		
 		// get property
-		Property property = entity.getProperty(propertyName);
+		Property property = entity.prop(propertyName);
 		if(property == null) {
 			throw new ScriptException("No property "+propertyName);
 		}

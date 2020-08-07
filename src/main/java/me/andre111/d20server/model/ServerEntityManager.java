@@ -1,8 +1,14 @@
 package me.andre111.d20server.model;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.function.Consumer;
 import java.util.stream.Stream;
+
+import com.google.gson.reflect.TypeToken;
 
 import me.andre111.d20common.message.game.entity.AddEntity;
 import me.andre111.d20common.message.game.entity.ClearEntities;
@@ -23,13 +29,20 @@ public class ServerEntityManager<E extends BaseEntity> implements EntityManager<
 	protected final boolean synched;
 	protected final Access addRemoveAccess;
 	
-	private final Map<Long, E> entities = new HashMap<>();
+	private final Map<Long, E> entities;
+	
+	private final List<Consumer<Map<Long, E>>> listeners = new ArrayList<>();
+	private final List<Consumer<E>> entityListeners = new ArrayList<>();
+	private final List<Consumer<Long>> removalListeners = new ArrayList<>();
 	
 	public ServerEntityManager(String name, Class<E> c, boolean synched, Access addRemoveAccess) {
 		this.name = name;
 		this.c = c;
 		this.synched = synched;
 		this.addRemoveAccess = addRemoveAccess;
+		
+		Map<Long, E> loadedEntities = Utils.readJson("entity."+name, TypeToken.getParameterized(HashMap.class, Long.class, c).getType());
+		entities = loadedEntities != null ? loadedEntities : new HashMap<>();
 		
 		EntityManagers.registerEntityManager(this);
 	}
@@ -57,6 +70,11 @@ public class ServerEntityManager<E extends BaseEntity> implements EntityManager<
 		UserService.forEach(profile -> {
 			if(entity.canView(profile)) MessageService.send(new AddEntity(entity), profile);
 		});
+		
+		notifyListeners();
+		for(var listener : entityListeners) {
+			listener.accept(entity);
+		}
 	}
 
 	@Override
@@ -69,6 +87,11 @@ public class ServerEntityManager<E extends BaseEntity> implements EntityManager<
 		UserService.forEach(profile -> {
 			MessageService.send(new RemoveEntity(c, id), profile);
 		});
+		
+		notifyListeners();
+		for(var listener : removalListeners) {
+			listener.accept(id);
+		}
 	}
 
 	@Override
@@ -79,7 +102,7 @@ public class ServerEntityManager<E extends BaseEntity> implements EntityManager<
 		// transfer properties respecting access settings and keeping track of which changed
 		Map<String, Property> changedProperties = new HashMap<>();
 		for(Map.Entry<String, Property> e : map.entrySet()) {
-			Property ownProperty = entity.getProperty(e.getKey());
+			Property ownProperty = entity.prop(e.getKey());
 			if(ownProperty == null) continue; //TODO: how to handle unknown properties?
 			
 			// transfer value
@@ -110,8 +133,29 @@ public class ServerEntityManager<E extends BaseEntity> implements EntityManager<
 		UserService.forEach(profile -> {
 			MessageService.send(new UpdateEntityProperties(c, id, changedProperties), profile);
 		});
+		
+		notifyListeners();
 	}
 
+	
+	public final void addListener(Consumer<Map<Long, E>> listener) {
+		listeners.add(listener);
+	}
+	
+	public final void addEntityListener(Consumer<E> listener) {
+		entityListeners.add(listener);
+	}
+	
+	public final void addRemovalListener(Consumer<Long> listener) {
+		removalListeners.add(listener);
+	}
+	
+	private final void notifyListeners() {
+		Map<Long, E> unmodifiable = Collections.unmodifiableMap(entities);
+		for(var listener : listeners) {
+			listener.accept(unmodifiable);
+		}
+	}
 	
 	
 	public final boolean canAddRemove(Profile profile) {

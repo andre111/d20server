@@ -35,11 +35,10 @@ public class TokenListVariable extends Variable {
 		}
 		
 		// set
-		list.addOrUpdateToken(token, (double) (Number) value);
+		list.addOrUpdateToken(token.id(), ((Number) value).doubleValue());
 		
 		// save and broadcast
 		EntityManagers.TOKEN_LIST.add(list);
-		//MessageService.send(new TokenListValue(list, token, (double) (Number) value, false), context.map());
 	}
 
 	@Override
@@ -51,11 +50,11 @@ public class TokenListVariable extends Variable {
 		if(!list.canView(accessLevel)) {
 			throw new ScriptException("No view access to "+getFullName());
 		}
-		if(!list.hasValue(token)) {
+		if(!list.hasValue(token.id())) {
 			throw new ScriptException("No value for selected token");
 		}
 		
-		return list.getValue(token);
+		return list.getValue(token.id());
 	}
 	
 	private TokenList getList(Context context) throws ScriptException {

@@ -55,7 +55,7 @@ public abstract class ChatService {
 				return;
 			}
 			Access accessLevel = token.getAccessLevel(profile);
-			if(!token.canUseMacro(accessLevel)) {
+			if(token.prop("macroUse").getAccessValue().ordinal() > accessLevel.ordinal()) {
 				appendError(profile, "No access to macros on this token");
 				return;
 			}
@@ -63,7 +63,7 @@ public abstract class ChatService {
 			// find macro (!<name> -> custom in token, !!<name> -> premade in actor)
 			String macro = null;
 			if(macroName.startsWith("!")) {
-				Actor actor = EntityManagers.ACTOR.find(token.getActorID());
+				Actor actor = EntityManagers.ACTOR.find(token.prop("actorID").getLong());
 				if(actor != null) {
 					macro = actor.getType().getMacroCommands(macroName.substring(1));
 				}

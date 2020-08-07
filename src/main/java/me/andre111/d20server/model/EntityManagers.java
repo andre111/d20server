@@ -43,4 +43,16 @@ public class EntityManagers {
 			manager.fullSync(profile);
 		}
 	}
+	
+	static {
+		// remove token list entries on token remove
+		EntityManagers.TOKEN.addRemovalListener(id -> {
+			EntityManagers.TOKEN_LIST.stream().forEach(tokenList -> {
+				if(tokenList.hasValue(id)) {
+					tokenList.removeToken(id);
+					EntityManagers.TOKEN_LIST.add(tokenList);
+				}
+			});
+		});
+	}
 }

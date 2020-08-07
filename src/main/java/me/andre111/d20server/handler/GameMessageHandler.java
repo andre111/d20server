@@ -100,7 +100,7 @@ public abstract class GameMessageHandler {
 				// (re)load maps for clients
 				GameService.reloadMaps(null);
 			} else {
-				if(profile.getRole() == Profile.Role.GM || (playerID == profile.id() && GameService.getMap(mapID).getPlayersCanEnter())) {
+				if(profile.getRole() == Profile.Role.GM || (playerID == profile.id() && GameService.getMap(mapID).prop("playersCanEnter").getBoolean())) {
 					// set player override map id and (re)load map
 					Profile otherProfile = UserService.getProfile(playerID);
 					if(otherProfile != null) {
@@ -136,7 +136,7 @@ public abstract class GameMessageHandler {
 		// determine access level
 		Access accessLevel = token.getAccessLevel(profile);
 
-		if(token.canEditMacro(accessLevel)) {
+		if(token.prop("macroEdit").getAccessValue().ordinal() <= accessLevel.ordinal()) {
 			// transfer values
 			token.setMacros(macros);
 			EntityManagers.TOKEN.add(token);
@@ -155,9 +155,9 @@ public abstract class GameMessageHandler {
 
 				// apply change
 				if(message.doReset()) {
-					list.removeToken(token);
+					list.removeToken(token.id());
 				} else {
-					list.addOrUpdateToken(token, message.getValue());
+					list.addOrUpdateToken(token.id(), message.getValue());
 				}
 
 				EntityManagers.TOKEN_LIST.add(list);
@@ -217,7 +217,7 @@ public abstract class GameMessageHandler {
 	private static void handleUpdateEntityProperties(Profile profile, Map map, UpdateEntityProperties message) {
 		// search for entity, check access and delete if valid request
 		ServerEntityManager<?> manager = EntityManagers.get(message.getEntityClass());
-		if(manager != null && manager.canAddRemove(profile)) {
+		if(manager != null) {
 			BaseEntity entity = manager.find(message.getID());
 			if(entity != null && entity.canEdit(profile)) {
 				manager.updateProperties(entity.id(), message.getProperties(), entity.getAccessLevel(profile));

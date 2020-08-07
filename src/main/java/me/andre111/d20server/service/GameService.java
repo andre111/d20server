@@ -43,11 +43,12 @@ public abstract class GameService {
 	}
 	
 	public static void updateClientState(Profile profile) {
-		// sync data
-		EntityManagers.fullSync(profile);
-		
 		// send enter message -> moves client into main state and sets client role (PLAYER/GM)
 		MessageService.send(new EnterGame(profile), profile);
+				
+		// sync data
+		//TODO: might need loading indicator on client?
+		EntityManagers.fullSync(profile);
 		
 		// update players (to all)
 		MessageService.send(new PlayerList(UserService.getAllProfiles()), (Map) null);
