@@ -7,7 +7,6 @@ import io.netty.channel.Channel;
 import me.andre111.d20common.message.game.MovePlayerToMap;
 import me.andre111.d20common.message.game.ActionCommand;
 import me.andre111.d20common.message.game.GameMessage;
-import me.andre111.d20common.message.game.NewMap;
 import me.andre111.d20common.message.game.PlayEffect;
 import me.andre111.d20common.message.game.SelectedTokens;
 import me.andre111.d20common.message.game.ShowImage;
@@ -20,6 +19,7 @@ import me.andre111.d20common.message.game.token.UpdateTokenMacros;
 import me.andre111.d20common.message.game.token.list.TokenListValue;
 import me.andre111.d20common.message.game.util.Ping;
 import me.andre111.d20common.model.BaseEntity;
+import me.andre111.d20common.model.entity.Image;
 import me.andre111.d20common.model.entity.actor.Actor;
 import me.andre111.d20common.model.entity.map.Map;
 import me.andre111.d20common.model.entity.map.Token;
@@ -33,14 +33,11 @@ import me.andre111.d20server.service.GameService;
 import me.andre111.d20server.service.MessageService;
 import me.andre111.d20server.service.UserService;
 
-//TODO: move most code (except for mostly the access checks) to separate services (so stuff like addToken/removeToken can be reused by other code without duplication)
 public abstract class GameMessageHandler {
 	protected static void handle(Channel channel, Profile profile, Map map, GameMessage message) {
 		//
 		if(message instanceof MovePlayerToMap) {
-			handleEnterMap(profile, map, (MovePlayerToMap) message);
-		} else if(message instanceof NewMap) {
-			handleNewMap(profile, map, (NewMap) message);
+			handleMovePlayerToMap(profile, map, (MovePlayerToMap) message);
 		} else if(message instanceof SelectedTokens) {
 			handleSelectedTokens(profile, map, (SelectedTokens) message);
 
@@ -82,14 +79,14 @@ public abstract class GameMessageHandler {
 		}
 	}
 
-	private static void handleEnterMap(Profile profile, Map map, MovePlayerToMap message) {
+	private static void handleMovePlayerToMap(Profile profile, Map map, MovePlayerToMap message) {
 		long mapID = message.getMapID();
 		long playerID = message.getPlayerID();
-		if(EntityManagers.MAP.has(mapID)) {
+		if(EntityManagers.get(Map.class).has(mapID)) {
 			if(playerID == 0) {
 				if(profile.getRole() != Profile.Role.GM) return;
 
-				// set player map id and reset overridden values for all non gams
+				// set player map id and reset overridden values for all non gms
 				GameService.setBaseMapID(mapID);
 				for(Profile otherProfile : UserService.getAllConnectedProfiles()) {
 					if(otherProfile.getRole() != Profile.Role.GM) {
@@ -100,7 +97,7 @@ public abstract class GameMessageHandler {
 				// (re)load maps for clients
 				GameService.reloadMaps(null);
 			} else {
-				if(profile.getRole() == Profile.Role.GM || (playerID == profile.id() && GameService.getMap(mapID).prop("playersCanEnter").getBoolean())) {
+				if(profile.getRole() == Profile.Role.GM || (playerID == profile.id() && EntityManagers.get(Map.class).find(mapID).prop("playersCanEnter").getBoolean())) {
 					// set player override map id and (re)load map
 					Profile otherProfile = UserService.getProfile(playerID);
 					if(otherProfile != null) {
@@ -110,11 +107,6 @@ public abstract class GameMessageHandler {
 				}
 			}
 		}
-	}
-
-	private static void handleNewMap(Profile profile, Map map, NewMap message) {
-		Map newMap = new Map(message.getName());
-		EntityManagers.MAP.add(newMap);
 	}
 
 	private static void handleSelectedTokens(Profile profile, Map map, SelectedTokens message) {
@@ -129,7 +121,7 @@ public abstract class GameMessageHandler {
 
 	// ---------------------------------------------------------
 	private static void handleUpdateTokenMacros(Profile profile, Map map, UpdateTokenMacros message) {
-		Token token = EntityManagers.TOKEN.find(message.getTokenID());
+		Token token = EntityManagers.get(Token.class).find(message.getTokenID());
 		java.util.Map<String, String> macros = message.getMacros();
 		if(token == null || macros == null) return;
 
@@ -139,15 +131,15 @@ public abstract class GameMessageHandler {
 		if(token.prop("macroEdit").getAccessValue().ordinal() <= accessLevel.ordinal()) {
 			// transfer values
 			token.setMacros(macros);
-			EntityManagers.TOKEN.add(token);
+			EntityManagers.get(Token.class).add(token);
 		}
 	}
 
 
 	// ---------------------------------------------------------
 	private static void handleTokenListValue(Profile profile, Map map, TokenListValue message) {
-		TokenList list = EntityManagers.TOKEN_LIST.find(message.getListID());
-		Token token = EntityManagers.TOKEN.find(message.getTokenID());
+		TokenList list = EntityManagers.get(TokenList.class).find(message.getListID());
+		Token token = EntityManagers.get(Token.class).find(message.getTokenID());
 		if(list != null && token != null) {
 			// determine access level
 			Access accessLevel = list.getAccessLevel(profile, token);
@@ -160,7 +152,7 @@ public abstract class GameMessageHandler {
 					list.addOrUpdateToken(token.id(), message.getValue());
 				}
 
-				EntityManagers.TOKEN_LIST.add(list);
+				EntityManagers.get(TokenList.class).add(list);
 			}
 		}
 	}
@@ -168,19 +160,19 @@ public abstract class GameMessageHandler {
 
 	// ---------------------------------------------------------
 	private static void handleSetActorDefaultToken(Profile profile, Map map, SetActorDefaultToken message) {
-		Actor actor = EntityManagers.ACTOR.find(message.getActorID());
+		Actor actor = EntityManagers.get(Actor.class).find(message.getActorID());
 		Token token = GameService.getSelectedToken(map, profile, true);
 		if(actor == null || token == null) return;
 		
 		// set default token
 		actor.setDefaultToken(token);
-		EntityManagers.ACTOR.add(actor);
+		EntityManagers.get(Actor.class).add(actor);
 	}
 
 
 	// ---------------------------------------------------------
 	private static void handleShowImage(Profile profile, Map map, ShowImage message) {
-		if(EntityManagers.IMAGE.has(message.getImageID())) {
+		if(EntityManagers.get(Image.class).has(message.getImageID())) {
 			MessageService.broadcast(message);
 		}
 	}

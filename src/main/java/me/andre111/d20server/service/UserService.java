@@ -29,7 +29,7 @@ public abstract class UserService {
 	private static final Object lock = new Object();
 	static {
 		// load all profiles
-		EntityManagers.PROFILE.stream().forEach(p -> {
+		EntityManagers.get(Profile.class).all().forEach(p -> {
 			p.setConnected(false);
 			allProfiles.put(p.id(), p);
 		});
@@ -85,7 +85,7 @@ public abstract class UserService {
 		
 		// save lastLogin time and log
 		profile.setLastLogin();
-		EntityManagers.PROFILE.add(profile);
+		EntityManagers.get(Profile.class).add(profile);
 		profile.setConnected(true);
 		
 		//TODO: remove test stuff

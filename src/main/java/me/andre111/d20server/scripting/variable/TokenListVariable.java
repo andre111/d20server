@@ -38,7 +38,7 @@ public class TokenListVariable extends Variable {
 		list.addOrUpdateToken(token.id(), ((Number) value).doubleValue());
 		
 		// save and broadcast
-		EntityManagers.TOKEN_LIST.add(list);
+		EntityManagers.get(TokenList.class).add(list);
 	}
 
 	@Override
@@ -58,7 +58,7 @@ public class TokenListVariable extends Variable {
 	}
 	
 	private TokenList getList(Context context) throws ScriptException {
-		TokenList list = EntityManagers.TOKEN_LIST.stream().filter(l -> l.getName().equals(listName)).findFirst().orElse(null);
+		TokenList list = EntityManagers.get(TokenList.class).all().stream().filter(l -> l.getName().equals(listName)).findFirst().orElse(null);
 		if(list != null) {
 			return list;
 		}

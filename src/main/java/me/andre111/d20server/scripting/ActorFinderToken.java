@@ -13,7 +13,7 @@ public class ActorFinderToken extends ActorFinder {
 	@Override
 	public Actor findActor(Context context) throws ScriptException {
 		long actorID = tokenFinder.findToken(context).prop("actorID").getLong();
-		Actor actor = EntityManagers.ACTOR.find(actorID);
+		Actor actor = EntityManagers.get(Actor.class).find(actorID);
 		if(actor == null) {
 			throw new ScriptException("Token has no assigned actor");
 		}

@@ -16,16 +16,15 @@ public abstract class GameService {
 	private static java.util.Map<Long, ProfileStatus> joinedProfiles = new HashMap<>();
 	
 	private static long baseMapID = -1;
-	private static java.util.Map<Long, Map> loadedMaps = new HashMap<>();
 	
 	public static void init() {
 		// add atleast one map
-		if(EntityManagers.MAP.stream().findFirst().isEmpty()) {
+		if(EntityManagers.get(Map.class).all().isEmpty()) {
 			Map map = new Map("New Map");
-			EntityManagers.MAP.add(map);
+			EntityManagers.get(Map.class).add(map);
 		}
-		if(getMap(getBaseMapID()) == null) {
-			setBaseMapID(EntityManagers.MAP.stream().findFirst().get().id());
+		if(EntityManagers.get(Map.class).find(getBaseMapID()) == null) {
+			setBaseMapID(EntityManagers.get(Map.class).all().get(0).id());
 		}
 		
 		// reset player states
@@ -101,18 +100,6 @@ public abstract class GameService {
 		baseMapID = mapID;
 	}
 	
-	public static Map getMap(long id) {
-		// load map
-		if(!loadedMaps.containsKey(id)) {
-			Map map = EntityManagers.MAP.find(id);
-			if(map != null) {
-				loadedMaps.put(map.id(), map);
-			}
-		}
-		
-		// return
-		return loadedMaps.get(id);
-	}
 	public static Map getPlayerMap(Profile profile) {
 		long mapID = getBaseMapID();
 		ProfileStatus status = joinedProfiles.get(profile.id());
@@ -120,7 +107,7 @@ public abstract class GameService {
 			mapID = status.overrideMapID;
 		}
 		
-		return getMap(mapID);
+		return EntityManagers.get(Map.class).find(mapID);
 	}
 	public static void setPlayerOverrideMapID(Profile profile, long overrideMapID) {
 		joinedProfiles.get(profile.id()).overrideMapID = overrideMapID;
@@ -131,7 +118,7 @@ public abstract class GameService {
 		if(selectedTokens == null || selectedTokens.isEmpty()) return null;
 		if(forceSingle && selectedTokens.size() != 1) return null;
 		
-		Token token = EntityManagers.TOKEN.find(selectedTokens.get(0));
+		Token token = EntityManagers.get(Token.class).find(selectedTokens.get(0));
 		return token;
 	}
 	public static void setSelectedTokens(Profile profile, List<Long> selectedTokens) {

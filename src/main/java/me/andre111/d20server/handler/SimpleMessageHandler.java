@@ -69,7 +69,7 @@ public abstract class SimpleMessageHandler {
 		
 		// create profile and save
 		Profile profile = new Profile(email, password, username);
-		EntityManagers.PROFILE.add(profile);
+		EntityManagers.get(Profile.class).add(profile);
 		responseOk(channel, message);
 	}
 	

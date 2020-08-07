@@ -63,7 +63,7 @@ public abstract class ChatService {
 			// find macro (!<name> -> custom in token, !!<name> -> premade in actor)
 			String macro = null;
 			if(macroName.startsWith("!")) {
-				Actor actor = EntityManagers.ACTOR.find(token.prop("actorID").getLong());
+				Actor actor = EntityManagers.get(Actor.class).find(token.prop("actorID").getLong());
 				if(actor != null) {
 					macro = actor.getType().getMacroCommands(macroName.substring(1));
 				}
@@ -121,7 +121,7 @@ public abstract class ChatService {
 			for(ChatEntry entry : entries) {
 				chatData.append(entry);
 			}
-			EntityManagers.CHAT.add(chatData);
+			EntityManagers.get(ChatData.class).add(chatData);
 		}
 		
 		// send chat entries to client
@@ -176,7 +176,7 @@ public abstract class ChatService {
 	
 	private static ChatData getChatData() {
 		if(loadedChat == null) {
-			ChatData chatData = EntityManagers.CHAT.find(1);
+			ChatData chatData = EntityManagers.get(ChatData.class).find(1);
 			if(chatData == null) {
 				chatData = new ChatData(1);
 			}

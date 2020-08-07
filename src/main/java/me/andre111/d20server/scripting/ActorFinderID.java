@@ -12,7 +12,7 @@ public class ActorFinderID extends ActorFinder {
 
 	@Override
 	public Actor findActor(Context context) throws ScriptException {
-		Actor actor = EntityManagers.ACTOR.find(actorID);
+		Actor actor = EntityManagers.get(Actor.class).find(actorID);
 		if(actor == null) {
 			throw new ScriptException("Actor with id "+actorID+" not found");
 		}

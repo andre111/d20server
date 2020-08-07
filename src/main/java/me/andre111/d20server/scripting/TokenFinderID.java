@@ -12,7 +12,7 @@ public class TokenFinderID extends TokenFinder {
 	
 	@Override
 	public Token findToken(Context context) throws ScriptException {
-		Token token = EntityManagers.TOKEN.find(tokenID);
+		Token token = EntityManagers.get(Token.class).find(tokenID);
 		if(token == null) {
 			throw new ScriptException("Token with id "+tokenID+" not found");
 		}

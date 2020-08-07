@@ -80,7 +80,7 @@ public class HttpServerHandler extends ChannelInboundHandlerAdapter {
 		if(path.startsWith(IMAGE_PATH)) {
 			String idString = path.substring(IMAGE_PATH.length());
 			long id = Long.parseLong(idString);
-			Image image = EntityManagers.IMAGE.find(id);
+			Image image = EntityManagers.get(Image.class).find(id);
 			if(image != null) {
 				data = Utils.readBinary("entity.image."+id);
 				contentType = "image/png";
@@ -88,7 +88,7 @@ public class HttpServerHandler extends ChannelInboundHandlerAdapter {
 		} else if(path.startsWith(AUDIO_PATH)) {
 			String idString = path.substring(AUDIO_PATH.length());
 			long id = Long.parseLong(idString);
-			Audio audio = EntityManagers.AUDIO.find(id);
+			Audio audio = EntityManagers.get(Audio.class).find(id);
 			if(audio != null) {
 				data = Utils.readBinary("entity.audio."+id);
 				contentType = "application/ogg";
@@ -161,7 +161,7 @@ public class HttpServerHandler extends ChannelInboundHandlerAdapter {
 									if(DataUtils.isValidImage(imageData)) {
 										Image image = new Image(imageName);
 										Utils.saveBinary("entity.image."+image.id(), imageData);
-										EntityManagers.IMAGE.add(image);
+										EntityManagers.get(Image.class).add(image);
 									}
 								} else if(uploadPath.startsWith(UPLOAD_AUDIO_PATH)) {
 									String audioName = fileUpload.getFilename();
@@ -169,7 +169,7 @@ public class HttpServerHandler extends ChannelInboundHandlerAdapter {
 									if(DataUtils.isValidAudio(audioData)) {
 										Audio audio = new Audio(audioName);
 										Utils.saveBinary("entity.audio."+audio.id(), audioData);
-										EntityManagers.AUDIO.add(audio);
+										EntityManagers.get(Audio.class).add(audio);
 									}
 								}
 							} catch (IOException e) {

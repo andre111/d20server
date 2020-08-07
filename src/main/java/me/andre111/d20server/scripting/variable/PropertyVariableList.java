@@ -17,7 +17,7 @@ public class PropertyVariableList extends PropertyVariable {
 
 	@Override
 	protected BaseEntity getEntity(Context context) throws ScriptException {
-		TokenList list = EntityManagers.TOKEN_LIST.stream().filter(l -> l.getName().equals(listName)).findFirst().orElse(null);
+		TokenList list = EntityManagers.get(TokenList.class).all().stream().filter(l -> l.getName().equals(listName)).findFirst().orElse(null);
 		if(list != null) {
 			return list;
 		}

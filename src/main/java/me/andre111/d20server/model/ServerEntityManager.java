@@ -6,7 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
-import java.util.stream.Stream;
+import java.util.function.Predicate;
 
 import com.google.gson.reflect.TypeToken;
 
@@ -43,8 +43,6 @@ public class ServerEntityManager<E extends BaseEntity> implements EntityManager<
 		
 		Map<Long, E> loadedEntities = Utils.readJson("entity."+name, TypeToken.getParameterized(HashMap.class, Long.class, c).getType());
 		entities = loadedEntities != null ? loadedEntities : new HashMap<>();
-		
-		EntityManagers.registerEntityManager(this);
 	}
 	
 	@Override
@@ -58,8 +56,8 @@ public class ServerEntityManager<E extends BaseEntity> implements EntityManager<
 	}
 	
 	@Override
-	public final Stream<E> stream() {
-		return entities.values().stream();
+	public final List<E> all() {
+		return new ArrayList<>(entities.values());
 	}
 
 	@Override
@@ -173,6 +171,12 @@ public class ServerEntityManager<E extends BaseEntity> implements EntityManager<
 			if(entity.canView(profile)) {
 				MessageService.send(new AddEntity(entity), profile);
 			}
+		}
+	}
+	
+	protected final void removeAll(Predicate<E> predicate) {
+		for(E e : new ArrayList<>(entities.values())) {
+			if(predicate.test(e)) remove(e.id());
 		}
 	}
 }
