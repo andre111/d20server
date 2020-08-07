@@ -1,9 +1,11 @@
 /bin/
 /data/
 /data - Kopie/
-/data_real/
 /data_test/
+/data_test - Kopie/
+/data_real/
 /data_real - Kopie/
+/data_real - Kopie Old/
 /target/
 
 # Created by https://www.gitignore.io/api/java,eclipse

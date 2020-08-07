@@ -30,12 +30,12 @@ public class PropertyVariableToken extends PropertyVariable {
 
 	@Override
 	protected Access getAccessLevel(Context context) throws ScriptException {
-		return tokenFinder.findToken(context).getAccessLevel(context.getProfile());
+		return tokenFinder.findToken(context).getAccessLevel(context.profile());
 	}
 
 	@Override
 	protected void saveSourceAfterSet(Context context) throws ScriptException {
-		EntityManager.MAP.save(context.getMap());
-		MessageService.send(new UpdateToken(tokenFinder.findToken(context)), context.getMap());
+		EntityManager.MAP.save(context.map());
+		MessageService.send(new UpdateToken(tokenFinder.findToken(context)), context.map());
 	}
 }

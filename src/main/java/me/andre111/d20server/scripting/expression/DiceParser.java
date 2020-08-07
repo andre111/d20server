@@ -2,7 +2,7 @@ package me.andre111.d20server.scripting.expression;
 
 import me.andre111.d20server.scripting.ScriptException;
 
-//Grammar:
+//Grammar (after "normalization": Uppercase,W->D):
 // dice = base | base modifiers
 // base = number `D` number | `D` number
 // modifiers = modifier | modifier modifiers
@@ -15,6 +15,10 @@ public class DiceParser {
 
 	// dice = base | base modifiers
 	public Dice parse(String string) throws ScriptException {
+		// adjust to "normalized" dice format
+		string = string.toUpperCase();
+		string = string.replace("W", "D");
+		
 		// init
 		this.string = string;
 		this.pos = -1;

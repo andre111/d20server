@@ -27,21 +27,21 @@ public class TokenListVariable extends Variable {
 		TokenList list = getList(context);
 		
 		// check access
-		Access accessLevel = list.getAccessLevel(context.getProfile(), token);
+		Access accessLevel = list.getAccessLevel(context.profile(), token);
 		if(!list.canEdit(accessLevel)) {
 			throw new ScriptException("No edit access to "+getFullName());
 		}
 		
-		if(!(value instanceof Long)) {
+		if(!(value instanceof Number)) {
 			throw new ScriptException("Value is not a valid list entry: "+value);
 		}
 		
 		// set
-		list.addOrUpdateToken(token, (Long) value);
+		list.addOrUpdateToken(token, (double) (Number) value);
 		
 		// save and broadcast
-		EntityManager.MAP.save(context.getMap());
-		MessageService.send(new TokenListValue(list, token, (Long) value, false), context.getMap());
+		EntityManager.MAP.save(context.map());
+		MessageService.send(new TokenListValue(list, token, (double) (Number) value, false), context.map());
 	}
 
 	@Override
@@ -49,16 +49,19 @@ public class TokenListVariable extends Variable {
 		Token token = tokenFinder.findToken(context);
 		TokenList list = getList(context);
 		
-		Access accessLevel = list.getAccessLevel(context.getProfile(), token);
+		Access accessLevel = list.getAccessLevel(context.profile(), token);
 		if(!list.canView(accessLevel)) {
 			throw new ScriptException("No view access to "+getFullName());
+		}
+		if(!list.hasValue(token)) {
+			throw new ScriptException("No value for selected token");
 		}
 		
 		return list.getValue(token);
 	}
 	
 	private TokenList getList(Context context) throws ScriptException {
-		TokenList list = context.getMap().getTokenList(listName);
+		TokenList list = context.map().getTokenList(listName);
 		if(list != null) {
 			return list;
 		}

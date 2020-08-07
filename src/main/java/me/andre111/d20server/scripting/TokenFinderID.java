@@ -11,7 +11,7 @@ public class TokenFinderID extends TokenFinder {
 	
 	@Override
 	public Token findToken(Context context) throws ScriptException {
-		Token token = context.getMap().getToken(tokenID);
+		Token token = context.map().getToken(tokenID);
 		if(token == null) {
 			throw new ScriptException("Token with id "+tokenID+" not found");
 		}

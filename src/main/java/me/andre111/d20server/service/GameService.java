@@ -7,10 +7,6 @@ import java.util.List;
 import me.andre111.d20common.message.game.EnterGame;
 import me.andre111.d20common.message.game.LoadMap;
 import me.andre111.d20common.message.game.PlayerList;
-import me.andre111.d20common.message.game.actor.ActorList;
-import me.andre111.d20common.message.game.index.AudioIndex;
-import me.andre111.d20common.message.game.index.ImageIndex;
-import me.andre111.d20common.message.game.index.MapIndex;
 import me.andre111.d20common.model.entity.map.Map;
 import me.andre111.d20common.model.entity.map.Token;
 import me.andre111.d20common.model.entity.profile.Profile;
@@ -54,14 +50,8 @@ public abstract class GameService {
 		MessageService.send(new PlayerList(UserService.getAllProfiles()), (Map) null);
 		
 		//TODO: send gamestate (to player) (->LoadMap message, last X chat entries, ...)
-		Map map = getPlayerMap(profile);
-		if(map != null) {
-			MessageService.send(new LoadMap(map), profile);
-		}
-		updateImageList();
-		updateAudioList();
-		updateMapList();
-		updateActorList(profile);
+		EntityManager.syncIndices(profile);
+		reloadMaps(profile);
 		ChatService.sendHistory(profile, 200);
 		ChatService.appendNote(profile.getName()+" joined!");
 	}
@@ -76,31 +66,6 @@ public abstract class GameService {
 	
 	public static boolean isJoined(Profile profile) {
 		return joinedProfiles.containsKey(profile.id());
-	}
-	
-	public static void updateImageList() {
-		for(Profile profile : UserService.getAllConnectedProfiles()) {
-			if(profile.getRole() == Profile.Role.GM && isJoined(profile)) {
-				MessageService.send(new ImageIndex(EntityManager.IMAGE.getIndex()), profile);
-			}
-		}
-	}
-	public static void updateAudioList() {
-		for(Profile profile : UserService.getAllConnectedProfiles()) {
-			if(profile.getRole() == Profile.Role.GM && isJoined(profile)) {
-				MessageService.send(new AudioIndex(EntityManager.AUDIO.getIndex()), profile);
-			}
-		}
-	}
-	public static void updateMapList() {
-		for(Profile profile : UserService.getAllConnectedProfiles()) {
-			if(profile.getRole() == Profile.Role.GM && isJoined(profile)) {
-				MessageService.send(new MapIndex(EntityManager.MAP.getIndex()), profile);
-			}
-		}
-	}
-	public static void updateActorList(Profile profile) {
-		MessageService.send(new ActorList(EntityManager.ACTOR.getCollectionView()), profile);
 	}
 	
 	
@@ -170,7 +135,6 @@ public abstract class GameService {
 		joinedProfiles.get(profile.id()).selectedTokens = selectedTokens;
 	}
 	
-	//TODO: use this instead of the GamePlayer stuff
 	private static final class ProfileStatus {
 		private long overrideMapID = -1;
 		private List<Long> selectedTokens = new ArrayList<>();

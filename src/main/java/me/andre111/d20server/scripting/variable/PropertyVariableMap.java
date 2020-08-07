@@ -16,7 +16,7 @@ public class PropertyVariableMap extends PropertyVariable {
 	@Override
 	protected Property getProperty(Context context) throws ScriptException {
 		// get property
-		Property property = context.getMap().getProperty(propertyName);
+		Property property = context.map().getProperty(propertyName);
 		if(property == null) {
 			throw new ScriptException("Map has no property "+propertyName);
 		}
@@ -25,12 +25,12 @@ public class PropertyVariableMap extends PropertyVariable {
 
 	@Override
 	protected Access getAccessLevel(Context context) throws ScriptException {
-		return context.getMap().getAccessLevel(context.getProfile());
+		return context.map().getAccessLevel(context.profile());
 	}
 
 	@Override
 	protected void saveSourceAfterSet(Context context) throws ScriptException {
-		EntityManager.MAP.save(context.getMap());
-		MessageService.send(new UpdateMapProperties(context.getMap()), context.getMap());
+		EntityManager.MAP.save(context.map());
+		MessageService.send(new UpdateMapProperties(context.map()), context.map());
 	}
 }

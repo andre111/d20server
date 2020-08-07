@@ -1,6 +1,7 @@
 package me.andre111.d20server.scripting.variable;
 
 import me.andre111.d20common.model.property.Access;
+import me.andre111.d20common.model.property.Effect;
 import me.andre111.d20common.model.property.Layer;
 import me.andre111.d20common.model.property.Light;
 import me.andre111.d20common.model.property.Property;
@@ -30,7 +31,7 @@ public abstract class PropertyVariable extends Variable {
 			throw new ScriptException("No edit access to "+getFullName());
 		}
 
-		// TODO: set value (by type)
+		// set value (by type)
 		switch(property.getType()) {
 		case BOOLEAN:
 			property.setBoolean((Boolean) value);
@@ -53,8 +54,14 @@ public abstract class PropertyVariable extends Variable {
 		case STRING:
 			property.setString(value.toString());
 			break;
-		default:
+		case EFFECT:
+			property.setEffect((Effect) value);
 			break;
+		case ACCESS:
+			property.setAccessValue((Access) value);
+			break;
+		default:
+			throw new ScriptException("Missing implementation for type "+property.getType());
 		}
 		
 		// save
@@ -91,6 +98,10 @@ public abstract class PropertyVariable extends Variable {
 			return property.getPlayerID();
 		case STRING:
 			return property.getString();
+		case EFFECT:
+			return property.getEffect();
+		case ACCESS:
+			return property.getAccessValue();
 		default:
 			throw new ScriptException("Missing implementation for type "+property.getType());
 		}

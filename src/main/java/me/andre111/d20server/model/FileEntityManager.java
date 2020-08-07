@@ -3,11 +3,12 @@ package me.andre111.d20server.model;
 import java.util.stream.Stream;
 
 import me.andre111.d20common.model.BaseEntity;
+import me.andre111.d20common.model.property.Access;
 import me.andre111.d20common.util.Utils;
 
 public class FileEntityManager<E extends BaseEntity> extends EntityManager<E> {
-	public FileEntityManager(String name, Class<E> c) {
-		super(name, c);
+	public FileEntityManager(String name, Class<E> c, boolean indexSynced, boolean requestable, Access addRemoveAccess) {
+		super(name, c, indexSynced, requestable, addRemoveAccess);
 	}
 	
 	@Override

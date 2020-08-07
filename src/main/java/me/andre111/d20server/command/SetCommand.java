@@ -3,6 +3,10 @@ package me.andre111.d20server.command;
 import me.andre111.d20common.model.entity.ChatEntry;
 import me.andre111.d20common.model.entity.map.Map;
 import me.andre111.d20common.model.entity.profile.Profile;
+import me.andre111.d20common.model.property.Access;
+import me.andre111.d20common.model.property.Effect;
+import me.andre111.d20common.model.property.Layer;
+import me.andre111.d20common.model.property.Light;
 import me.andre111.d20common.model.property.Type;
 import me.andre111.d20server.scripting.Context;
 import me.andre111.d20server.scripting.ScriptException;
@@ -63,14 +67,32 @@ public class SetCommand extends Command {
 				}
 			} else if(type == Type.STRING) {
 				variable.set(context, valueString);
-				//TODO: send info messsage
+			} else if(type == Type.BOOLEAN) {
+				//TODO: maybe also allow expressions -> 0=false; true otherwise?
+				variable.set(context, Boolean.parseBoolean(valueString));
+			} else if(type == Type.LAYER) {
+				setEnumVariable(context, variable, Layer.class, valueString);
+			} else if(type == Type.LIGHT) {
+				setEnumVariable(context, variable, Light.class, valueString);
+			} else if(type == Type.EFFECT) {
+				setEnumVariable(context, variable, Effect.class, valueString);
+			} else if(type == Type.ACCESS) {
+				setEnumVariable(context, variable, Access.class, valueString);
 			} else {
-				//TODO: handle more types (LIGHT,LAYER,...)
-				ChatService.appendError(profile, "Cannot set value of Type: "+type);
+				//TODO: handle more types (PLAYER)
+				throw new ScriptException("Cannot set value of Type: "+type);
 			}
+			//TODO: send info messsage
 		} catch (ScriptException e) {
 			ChatService.appendError(profile, "Could not set "+arguments.split(" ", 2)[0]+":", e.getMessage());
 		}
 	}
 
+	private static <T extends Enum<T>> void setEnumVariable(Context context, Variable variable, Class<T> enumType, String valueString) throws ScriptException {
+		try {
+			variable.set(context, Enum.valueOf(enumType, valueString));
+		} catch(IllegalArgumentException e) {
+			throw new ScriptException(e.getMessage());
+		}
+	}
 }

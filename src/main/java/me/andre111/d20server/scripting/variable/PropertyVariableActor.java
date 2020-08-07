@@ -31,7 +31,7 @@ public class PropertyVariableActor extends PropertyVariable {
 
 	@Override
 	protected Access getAccessLevel(Context context) throws ScriptException {
-		return actorFinder.findActor(context).getAccessLevel(context.getProfile());
+		return actorFinder.findActor(context).getAccessLevel(context.profile());
 	}
 
 	@Override

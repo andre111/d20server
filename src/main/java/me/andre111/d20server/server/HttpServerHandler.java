@@ -34,13 +34,12 @@ import io.netty.handler.codec.http.multipart.InterfaceHttpData;
 import me.andre111.d20common.model.entity.Audio;
 import me.andre111.d20common.model.entity.Image;
 import me.andre111.d20server.model.EntityManager;
-import me.andre111.d20server.service.GameService;
 
 public class HttpServerHandler extends ChannelInboundHandlerAdapter {
-	private static final String IMAGE_PATH = "/img/";
-	private static final String UPLOAD_IMAGE_PATH = "/upload_img";
+	private static final String IMAGE_PATH = "/image/";
+	private static final String UPLOAD_IMAGE_PATH = "/upload/image";
 	private static final String AUDIO_PATH = "/audio/";
-	private static final String UPLOAD_AUDIO_PATH = "/upload_audio";
+	private static final String UPLOAD_AUDIO_PATH = "/upload/audio";
 
 	private static final HttpDataFactory factory = new DefaultHttpDataFactory(false);
 	private HttpPostRequestDecoder decoder;
@@ -160,7 +159,6 @@ public class HttpServerHandler extends ChannelInboundHandlerAdapter {
 									Image image = new Image(imageName, imageData);
 									if(image.isValid()) {
 										EntityManager.IMAGE.save(image);
-										GameService.updateImageList();
 									}
 								} else if(uploadPath.startsWith(UPLOAD_AUDIO_PATH)) {
 									String audioName = fileUpload.getFilename();
@@ -168,7 +166,6 @@ public class HttpServerHandler extends ChannelInboundHandlerAdapter {
 									Audio audio = new Audio(audioName, audioData);
 									if(audio.isValid()) {
 										EntityManager.AUDIO.save(audio);
-										GameService.updateAudioList();
 									}
 								}
 							} catch (IOException e) {

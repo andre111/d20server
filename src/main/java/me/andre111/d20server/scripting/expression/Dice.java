@@ -138,8 +138,8 @@ public class Dice implements Expression {
 			// apply value
 			if(result.shouldBeIncluded()) {
 				value += result.value;
-				if(criticalFailureCondition.matches(value)) hadCriticalFailure = true;
-				else if(criticalSuccessCondition.matches(value)) hadCriticalSuccess = true;
+				if(result.criticalFailure) hadCriticalFailure = true;
+				else if(result.criticalSuccess) hadCriticalSuccess = true;
 			}
 			
 			// build string (with colored misses/crits)

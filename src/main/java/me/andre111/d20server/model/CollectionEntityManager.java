@@ -8,13 +8,14 @@ import java.util.stream.Stream;
 import com.google.gson.reflect.TypeToken;
 
 import me.andre111.d20common.model.BaseEntity;
+import me.andre111.d20common.model.property.Access;
 import me.andre111.d20common.util.Utils;
 
 public class CollectionEntityManager<E extends BaseEntity> extends EntityManager<E> {
 	private Map<Long, E> entities = new HashMap<>();
 	
-	protected CollectionEntityManager(String name, Class<E> c) {
-		super(name, c);
+	protected CollectionEntityManager(String name, Class<E> c, boolean indexSynced, boolean requestable, Access addRemoveAccess) {
+		super(name, c, indexSynced, requestable, addRemoveAccess);
 		
 		entities = Utils.readJson("entity."+name, TypeToken.getParameterized(Map.class, Long.class, c).getType());
 		if(entities == null) {

@@ -6,7 +6,7 @@ import me.andre111.d20server.service.GameService;
 public class TokenFinderSelected extends TokenFinder {
 	@Override
 	public Token findToken(Context context) throws ScriptException {
-		Token token = GameService.getSelectedToken(context.getMap(), context.getProfile(), true);
+		Token token = GameService.getSelectedToken(context.map(), context.profile(), true);
 		if(token == null) {
 			throw new ScriptException("No (single) token selected");
 		}

@@ -34,10 +34,13 @@ public abstract class Command {
 		new SetCommand("hiddenset", new String[] {"hs"}, false, true);
 		
 		new WhisperCommand("whisper", new String[] {"w"});
+		new SayCommand("say", new String[] {});
 		
 		new TemplateCommand("template", new String[] {"t"}, true, true, true);
 		new TemplateCommand("gmtemplate", new String[] {"gmt"}, false, false, true);
 		new TemplateCommand("hiddentemplate", new String[] {"ht"}, false, true, false);
+		
+		new EffectCommand("effect", new String[] {});
 	}
 	
 	public static final Command get(String name) {

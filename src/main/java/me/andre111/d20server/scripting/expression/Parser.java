@@ -99,7 +99,7 @@ public class Parser {
 	
 	// factor = `+` factor | `-` factor | `(` expression `)` | value
 	private Expression parseFactor() throws ScriptException {
-		// parse signed facotr
+		// parse signed factor
 		if(eat('+')) {
 			return parseFactor();
 		}
@@ -140,7 +140,7 @@ public class Parser {
 		
 		// find substring
 		int startPos = pos;
-		while((c >= '0' && c <= '9') || (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') || c == '<' || c == '>' || c == '=' || c == '!') nextChar();
+		while((c >= '0' && c <= '9') || c == '.' || (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') || c == '<' || c == '>' || c == '=' || c == '!') nextChar();
 		String valueString = string.substring(startPos, pos);
 		
 		// parse string
@@ -148,11 +148,12 @@ public class Parser {
 			// parse number
 			int number = Integer.parseInt(valueString);
 			return (c -> new Result(number, Integer.toString(number), false, false));
+		} else if(valueString.matches("[\\d\\.]+")) {
+			// parse number
+			double number = Double.parseDouble(valueString);
+			return (c -> new Result(number, Double.toString(number), false, false));
 		} else {
-			// adjust to "normalized" dice format
-			valueString = valueString.toUpperCase();
-			valueString = valueString.replace("W", "D");
-			
+			// parse dice
 			DiceParser diceParser = new DiceParser();
 			return diceParser.parse(valueString);
 		}

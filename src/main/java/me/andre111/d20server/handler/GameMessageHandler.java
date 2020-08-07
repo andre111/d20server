@@ -12,11 +12,13 @@ import me.andre111.d20common.message.game.PlayEffect;
 import me.andre111.d20common.message.game.SelectedTokens;
 import me.andre111.d20common.message.game.ShowImage;
 import me.andre111.d20common.message.game.UpdateMapProperties;
-import me.andre111.d20common.message.game.actor.AddActor;
-import me.andre111.d20common.message.game.actor.RemoveActor;
 import me.andre111.d20common.message.game.actor.SetActorDefaultToken;
 import me.andre111.d20common.message.game.actor.UpdateActor;
 import me.andre111.d20common.message.game.chat.SendChatMessage;
+import me.andre111.d20common.message.game.entity.AddEntity;
+import me.andre111.d20common.message.game.entity.EntityRequest;
+import me.andre111.d20common.message.game.entity.EntityRequestDenied;
+import me.andre111.d20common.message.game.entity.RemoveEntity;
 import me.andre111.d20common.message.game.index.RenameAudio;
 import me.andre111.d20common.message.game.index.RenameImage;
 import me.andre111.d20common.message.game.token.AddToken;
@@ -30,6 +32,7 @@ import me.andre111.d20common.message.game.token.list.UpdateTokenList;
 import me.andre111.d20common.message.game.util.Ping;
 import me.andre111.d20common.message.game.wall.AddOrUpdateWall;
 import me.andre111.d20common.message.game.wall.RemoveWall;
+import me.andre111.d20common.model.BaseEntity;
 import me.andre111.d20common.model.entity.actor.Actor;
 import me.andre111.d20common.model.entity.map.Map;
 import me.andre111.d20common.model.entity.map.Token;
@@ -84,10 +87,6 @@ public abstract class GameMessageHandler {
 			handleRemoveWall(profile, map, (RemoveWall) message);
 
 			// ACTORS: --------------------
-		} else if(message instanceof AddActor) {
-			handleAddActor(profile, map, (AddActor) message);
-		} else if(message instanceof RemoveActor) {
-			handleRemoveActor(profile, map, (RemoveActor) message);
 		} else if(message instanceof UpdateActor) {
 			handleUpdateActor(profile, map, (UpdateActor) message);
 		} else if(message instanceof SetActorDefaultToken) {
@@ -103,6 +102,13 @@ public abstract class GameMessageHandler {
 		} else if(message instanceof ActionCommand) {
 			handleActionCommand(profile, map, (ActionCommand) message);
 
+			// ENTITIES: --------------------
+		} else if(message instanceof EntityRequest) {
+			handleEntityDataRequest(profile, map, (EntityRequest) message);
+		} else if(message instanceof AddEntity) {
+			handleAddEntity(profile, map, (AddEntity) message);
+		} else if(message instanceof RemoveEntity) {
+			handleRemoveEntity(profile, map, (RemoveEntity) message);
 
 			// CHAT: --------------------
 		} else if(message instanceof SendChatMessage) {
@@ -149,7 +155,6 @@ public abstract class GameMessageHandler {
 	private static void handleNewMap(Profile profile, Map map, NewMap message) {
 		Map newMap = new Map(message.getName());
 		EntityManager.MAP.save(newMap);
-		GameService.updateMapList();
 	}
 
 	private static void handleSelectedTokens(Profile profile, Map map, SelectedTokens message) {
@@ -162,16 +167,12 @@ public abstract class GameMessageHandler {
 	}
 
 	private static void handleUpdateMap(Profile profile, Map map, UpdateMapProperties message) {
-		// determine access level
-		Access accessLevel = map.getAccessLevel(profile);
-
-		// transfer values
-		map.applyProperties(message.getProperties(), accessLevel);
+		// transfer values (includes access check)
+		map.applyProperties(message.getProperties(), profile);
 		EntityManager.MAP.save(map);
 
 		// broadcast new map properties (DO NOT REUSE MESSAGE, because clients do not apply access levels)
 		MessageService.send(new UpdateMapProperties(map), map);
-		GameService.updateMapList();
 	}
 
 
@@ -205,11 +206,8 @@ public abstract class GameMessageHandler {
 		java.util.Map<String, Property> properties = message.getProperties();
 		if(token == null || properties == null || properties.isEmpty()) return;
 
-		// determine access level
-		Access accessLevel = token.getAccessLevel(profile);
-
-		// transfer values
-		token.applyProperties(properties, accessLevel);
+		// transfer values (includes access check)
+		token.applyProperties(properties, profile);
 		EntityManager.MAP.save(map);
 
 		// broadcast new token properties (DO NOT REUSE MESSAGE, because clients do not apply access levels)
@@ -275,12 +273,9 @@ public abstract class GameMessageHandler {
 		TokenList list = map.getTokenList(message.getListID());
 		java.util.Map<String, Property> properties = message.getProperties();
 		if(list == null || properties == null || properties.isEmpty()) return;
-
-		// determine access level
-		Access accessLevel = list.getAccessLevel(profile);
-
-		// transfer values
-		list.applyProperties(properties, accessLevel);
+		
+		// transfer values (includes access check)
+		list.applyProperties(properties, profile);
 		EntityManager.MAP.save(map);
 
 		// broadcast new tokenlist properties (DO NOT REUSE MESSAGE, because clients do not apply access levels)
@@ -308,58 +303,38 @@ public abstract class GameMessageHandler {
 
 
 	// ---------------------------------------------------------
-	private static void handleAddActor(Profile profile, Map map, AddActor message) {
-		Actor actor = message.getActor();
-		actor.resetID(); // reset ID to generate one from the DB
-
-		// and and save
-		EntityManager.ACTOR.save(actor);
-		MessageService.broadcast(message); // and broadcast change
-	}
-	private static void handleRemoveActor(Profile profile, Map map, RemoveActor message) {
-		if(!EntityManager.ACTOR.has(message.getActorID())) return;
-
-		// remove actor
-		EntityManager.ACTOR.delete(message.getActorID());
-		MessageService.broadcast(message);
-	}
 	private static void handleUpdateActor(Profile profile, Map map, UpdateActor message) {
 		Actor actor = EntityManager.ACTOR.find(message.getActorID());
 		java.util.Map<String, Property> properties = message.getProperties();
 		if(actor == null || properties == null || properties.isEmpty()) return;
+		
+		//TODO: remove once generic update system that also updates clients exists
+		MessageService.broadcast(new RemoveEntity(Actor.class, actor.id()));
 
-		// determine access level
-		Access accessLevel = actor.getAccessLevel(profile);
-
-		// transfer values
-		actor.applyProperties(properties, accessLevel);
+		// transfer values (includes access check)
+		actor.applyProperties(properties, profile);
 		EntityManager.ACTOR.save(actor);
-
-		// broadcast new token properties (DO NOT REUSE MESSAGE, because clients do not apply access levels)
-		MessageService.broadcast(new UpdateActor(actor));
 	}
 	private static void handleSetActorDefaultToken(Profile profile, Map map, SetActorDefaultToken message) {
 		Actor actor = EntityManager.ACTOR.find(message.getActorID());
 		Token token = GameService.getSelectedToken(map, profile, true);
 		if(actor == null || token == null) return;
 		
+		//TODO: remove once generic update system that also updates clients exists
+		MessageService.broadcast(new RemoveEntity(Actor.class, actor.id()));
+		
 		// set default token
 		actor.setDefaultToken(token);
 		EntityManager.ACTOR.save(actor);
-		
-		// broadcast "new" actor
-		MessageService.broadcast(new AddActor(actor));
 	}
 
 
 	// ---------------------------------------------------------
 	private static void handleRenameAudio(Profile profile, Map map, RenameAudio message) {
 		EntityManager.AUDIO.rename(message.getAudioID(), message.getName());
-		GameService.updateAudioList();
 	}
 	private static void handleRenameImage(Profile profile, Map map, RenameImage message) {
 		EntityManager.IMAGE.rename(message.getImageID(), message.getName());
-		GameService.updateImageList();
 	}
 	private static void handleShowImage(Profile profile, Map map, ShowImage message) {
 		if(EntityManager.IMAGE.has(message.getImageID())) {
@@ -371,6 +346,46 @@ public abstract class GameMessageHandler {
 		case ActionCommand.PING:
 			MessageService.send(new PlayEffect("PING", message.getX(), message.getY(), 0, 1, true, profile.getRole()==Profile.Role.GM && message.isModified()), map);
 			break;
+		}
+	}
+	
+
+	// ---------------------------------------------------------
+	private static void handleEntityDataRequest(Profile profile, Map map, EntityRequest message) {
+		// search for entity, check access and reply with data if valid request
+		EntityManager<?> manager = EntityManager.get(message.getEntityClass());
+		if(manager != null && manager.isRequestable()) {
+			BaseEntity entity = manager.find(message.getID());
+			if(entity != null && entity.canView(profile)) {
+				MessageService.send(new AddEntity(entity), profile);
+				return;
+			}
+		}
+		
+		// if not replied -> send deny message
+		if(message.getEntityClass() != null) {
+			MessageService.send(new EntityRequestDenied(message.getEntityClass(), message.getID()), profile);
+		}
+	}
+	@SuppressWarnings({ "rawtypes", "unchecked" })
+	private static void handleAddEntity(Profile profile, Map map, AddEntity message) {
+		// search for manager, check access and reset id before adding if valid request
+		EntityManager manager = EntityManager.get(message.getEntityClass());
+		if(manager != null && manager.canAddRemove(profile)) {
+			BaseEntity entity = message.getEntity();
+			entity.resetID();
+			manager.save(entity);
+		}
+	}
+	private static void handleRemoveEntity(Profile profile, Map map, RemoveEntity message) {
+		// search for entity, check access and delete if valid request
+		EntityManager<?> manager = EntityManager.get(message.getEntityClass());
+		if(manager != null && manager.canAddRemove(profile)) {
+			BaseEntity entity = manager.find(message.getID());
+			if(entity != null && entity.canEdit(profile)) {
+				manager.delete(message.getID());
+				MessageService.broadcast(message);
+			}
 		}
 	}
 

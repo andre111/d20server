@@ -2,21 +2,24 @@ package me.andre111.d20server.model;
 
 import java.util.stream.Stream;
 
+import me.andre111.d20common.model.IndexEntry;
 import me.andre111.d20common.model.entity.BinaryEntity;
+import me.andre111.d20common.model.property.Access;
 import me.andre111.d20common.util.Utils;
 
 public class BinaryEntityManager<E extends BinaryEntity> extends EntityManager<E> {
 	private EntityFactory<E> factory;
 	
-	public BinaryEntityManager(String name, Class<E> c, EntityFactory<E> factory) {
-		super(name, c);
+	public BinaryEntityManager(String name, Class<E> c, boolean indexSynced, boolean requestable, Access addRemoveAccess, EntityFactory<E> factory) {
+		super(name, c, indexSynced, requestable, addRemoveAccess);
 		
 		this.factory = factory;
 	}
 	
 	@Override
 	public E find(long id) {
-		String entityName = getIndex().get(id);
+		IndexEntry entry = getIndex().get(id);
+		String entityName = entry.name();
 		byte[] data = Utils.readBinary("entity."+name+"."+id);
 		if(data != null) {
 			return factory.create(entityName, data);
@@ -42,8 +45,9 @@ public class BinaryEntityManager<E extends BinaryEntity> extends EntityManager<E
 	
 	public void rename(long id, String name) {
 		if(index.containsKey(id)) {
-			index.put(id, name);
+			index.put(id, new IndexEntry(name, index.get(id).access(), index.get(id).controllingPlayer()));
 			saveIndex();
+			syncIndexEntry(id);
 		}
 	}
 	

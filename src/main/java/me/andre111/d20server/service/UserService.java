@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Consumer;
 
 import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
@@ -136,6 +137,10 @@ public abstract class UserService {
 		synchronized (lock) {
 			return allProfiles.get(id);
 		}
+	}
+	
+	public static void forEach(Consumer<Profile> action) {
+		getAllConnectedProfiles().forEach(action);
 	}
 
 	public static boolean isConnected(Profile profile) {

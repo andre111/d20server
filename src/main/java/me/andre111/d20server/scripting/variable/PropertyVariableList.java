@@ -30,17 +30,17 @@ public class PropertyVariableList extends PropertyVariable {
 
 	@Override
 	protected Access getAccessLevel(Context context) throws ScriptException {
-		return getList(context).getAccessLevel(context.getProfile());
+		return getList(context).getAccessLevel(context.profile());
 	}
 
 	@Override
 	protected void saveSourceAfterSet(Context context) throws ScriptException {
-		EntityManager.MAP.save(context.getMap());
-		MessageService.send(new UpdateTokenList(getList(context)), context.getMap());
+		EntityManager.MAP.save(context.map());
+		MessageService.send(new UpdateTokenList(getList(context)), context.map());
 	}
 	
 	private TokenList getList(Context context) throws ScriptException {
-		TokenList list = context.getMap().getTokenList(listName);
+		TokenList list = context.map().getTokenList(listName);
 		if(list != null) {
 			return list;
 		}
