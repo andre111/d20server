@@ -3,8 +3,10 @@ package me.andre111.d20server.model;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
 
@@ -97,6 +99,12 @@ public class ServerEntityManager<E extends BaseEntity> implements EntityManager<
 		BaseEntity entity = find(id);
 		if(entity == null) return;
 		
+		// keep track of all profiles that could see this entity
+		Set<Profile> couldView = new HashSet<>();
+		for(Profile profile : UserService.getAllConnectedProfiles()) {
+			if(entity.canView(profile)) couldView.add(profile);
+		}
+		
 		// transfer properties respecting access settings and keeping track of which changed
 		Map<String, Property> changedProperties = new HashMap<>();
 		for(Map.Entry<String, Property> e : map.entrySet()) {
@@ -126,10 +134,16 @@ public class ServerEntityManager<E extends BaseEntity> implements EntityManager<
 			}
 		}
 
-		// save and transfer (only changed properties)
+		// save and transfer (depending on (changing) access: add, remove or only changed properties)
 		Utils.saveJson("entity."+name, entities);
 		UserService.forEach(profile -> {
-			MessageService.send(new UpdateEntityProperties(c, id, changedProperties), profile);
+			if(entity.canView(profile) && !couldView.contains(profile)) {
+				MessageService.send(new AddEntity(entity), profile);
+			} else if(!entity.canView(profile) && couldView.contains(profile)) {
+				MessageService.send(new RemoveEntity(c, id), profile); 
+			} else if(entity.canView(profile)) {
+				MessageService.send(new UpdateEntityProperties(c, id, changedProperties), profile);
+			}
 		});
 		
 		notifyListeners();
@@ -163,6 +177,16 @@ public class ServerEntityManager<E extends BaseEntity> implements EntityManager<
 	
 	protected final Class<E> getEntityClass() {
 		return c;
+	}
+	
+	protected final int getAccessibleCount(Profile profile) {
+		int count = 0;
+		for(E entity : entities.values()) {
+			if(entity.canView(profile)) {
+				count++;
+			}
+		}
+		return count;
 	}
 	
 	protected final void fullSync(Profile profile) {

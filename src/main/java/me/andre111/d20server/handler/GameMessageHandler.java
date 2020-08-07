@@ -87,10 +87,10 @@ public abstract class GameMessageHandler {
 				if(profile.getRole() != Profile.Role.GM) return;
 
 				// set player map id and reset overridden values for all non gms
-				GameService.setBaseMapID(mapID);
-				for(Profile otherProfile : UserService.getAllConnectedProfiles()) {
+				for(Profile otherProfile : UserService.getAllProfiles()) {
 					if(otherProfile.getRole() != Profile.Role.GM) {
-						GameService.setPlayerOverrideMapID(otherProfile, mapID);
+						GameService.setPlayerMapID(otherProfile, mapID);
+						EntityManagers.get(Profile.class).add(otherProfile);
 					}
 				}
 
@@ -101,8 +101,9 @@ public abstract class GameMessageHandler {
 					// set player override map id and (re)load map
 					Profile otherProfile = UserService.getProfile(playerID);
 					if(otherProfile != null) {
-						GameService.setPlayerOverrideMapID(otherProfile, mapID);
+						GameService.setPlayerMapID(otherProfile, mapID);
 						GameService.reloadMaps(otherProfile);
+						EntityManagers.get(Profile.class).add(otherProfile);
 					}
 				}
 			}

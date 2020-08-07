@@ -7,6 +7,7 @@ import java.util.List;
 import me.andre111.d20common.message.game.EnterGame;
 import me.andre111.d20common.message.game.EnterMap;
 import me.andre111.d20common.message.game.PlayerList;
+import me.andre111.d20common.message.game.entity.AddEntity;
 import me.andre111.d20common.model.entity.map.Map;
 import me.andre111.d20common.model.entity.map.Token;
 import me.andre111.d20common.model.entity.profile.Profile;
@@ -15,16 +16,11 @@ import me.andre111.d20server.model.EntityManagers;
 public abstract class GameService {
 	private static java.util.Map<Long, ProfileStatus> joinedProfiles = new HashMap<>();
 	
-	private static long baseMapID = -1;
-	
 	public static void init() {
 		// add atleast one map
 		if(EntityManagers.get(Map.class).all().isEmpty()) {
 			Map map = new Map("New Map");
 			EntityManagers.get(Map.class).add(map);
-		}
-		if(EntityManagers.get(Map.class).find(getBaseMapID()) == null) {
-			setBaseMapID(EntityManagers.get(Map.class).all().get(0).id());
 		}
 		
 		// reset player states
@@ -46,7 +42,6 @@ public abstract class GameService {
 		MessageService.send(new EnterGame(profile), profile);
 				
 		// sync data
-		//TODO: might need loading indicator on client?
 		EntityManagers.fullSync(profile);
 		
 		// update players (to all)
@@ -78,6 +73,7 @@ public abstract class GameService {
 			for(Profile otherProfile : UserService.getAllConnectedProfiles()) {
 				Map map = getPlayerMap(otherProfile);
 				if(map != null) {
+					MessageService.send(new AddEntity(map), otherProfile); // send map because client could have no independent access
 					MessageService.send(new EnterMap(map), otherProfile);
 				}
 			}
@@ -85,32 +81,19 @@ public abstract class GameService {
 			// update single player
 			Map map = getPlayerMap(profile);
 			if(map != null) {
+				MessageService.send(new AddEntity(map), profile); // send map because client could have no independent access
 				MessageService.send(new EnterMap(map), profile);
 			}
 		}
 	}
 
-
-	
-	public static long getBaseMapID() {
-		return baseMapID;
-	}
-	
-	public static void setBaseMapID(long mapID) {
-		baseMapID = mapID;
-	}
 	
 	public static Map getPlayerMap(Profile profile) {
-		long mapID = getBaseMapID();
-		ProfileStatus status = joinedProfiles.get(profile.id());
-		if(status != null && status.overrideMapID > 0) {
-			mapID = status.overrideMapID;
-		}
-		
+		long mapID = profile.getCurrentMap();
 		return EntityManagers.get(Map.class).find(mapID);
 	}
-	public static void setPlayerOverrideMapID(Profile profile, long overrideMapID) {
-		joinedProfiles.get(profile.id()).overrideMapID = overrideMapID;
+	public static void setPlayerMapID(Profile profile, long overrideMapID) {
+		profile.setCurrentMap(overrideMapID);
 	}
 	
 	public static Token getSelectedToken(Map map, Profile profile, boolean forceSingle) {
@@ -126,7 +109,6 @@ public abstract class GameService {
 	}
 	
 	private static final class ProfileStatus {
-		private long overrideMapID = -1;
 		private List<Long> selectedTokens = new ArrayList<>();
 	}
 }

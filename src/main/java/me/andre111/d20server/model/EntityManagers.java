@@ -2,6 +2,7 @@ package me.andre111.d20server.model;
 
 import java.util.HashMap;
 
+import me.andre111.d20common.message.game.util.EntityLoadingStatus;
 import me.andre111.d20common.model.BaseEntity;
 import me.andre111.d20common.model.Entities;
 import me.andre111.d20common.model.entity.map.Map;
@@ -9,6 +10,7 @@ import me.andre111.d20common.model.entity.map.Token;
 import me.andre111.d20common.model.entity.map.TokenList;
 import me.andre111.d20common.model.entity.map.Wall;
 import me.andre111.d20common.model.entity.profile.Profile;
+import me.andre111.d20server.service.MessageService;
 
 public class EntityManagers {
 	private static final java.util.Map<Class<? extends BaseEntity>, ServerEntityManager<? extends BaseEntity>> MANAGERS = new HashMap<>();
@@ -30,9 +32,20 @@ public class EntityManagers {
 		return (ServerEntityManager<E>) MANAGERS.get(c);
 	}
 	public static void fullSync(Profile profile) {
+		// count and send loading info
+		int count = 0;
+		for(ServerEntityManager<? extends BaseEntity> manager : MANAGERS.values()) {
+			count += manager.getAccessibleCount(profile);
+		}
+		MessageService.send(new EntityLoadingStatus(count), profile);
+		
+		// send actual data
 		for(ServerEntityManager<? extends BaseEntity> manager : MANAGERS.values()) {
 			manager.fullSync(profile);
 		}
+		
+		// send loading complete
+		MessageService.send(new EntityLoadingStatus(0), profile);
 	}
 	
 	static {
