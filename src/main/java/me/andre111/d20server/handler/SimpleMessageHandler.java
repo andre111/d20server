@@ -11,7 +11,7 @@ import me.andre111.d20common.message.account.SignOut;
 import me.andre111.d20common.message.response.ResponseFail;
 import me.andre111.d20common.message.response.ResponseOk;
 import me.andre111.d20common.model.entity.profile.Profile;
-import me.andre111.d20server.model.EntityManager;
+import me.andre111.d20server.model.EntityManagers;
 import me.andre111.d20server.service.MessageService;
 import me.andre111.d20server.service.UserService;
 
@@ -69,7 +69,7 @@ public abstract class SimpleMessageHandler {
 		
 		// create profile and save
 		Profile profile = new Profile(email, password, username);
-		EntityManager.PROFILE.save(profile);
+		EntityManagers.PROFILE.add(profile);
 		responseOk(channel, message);
 	}
 	

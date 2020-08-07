@@ -14,7 +14,7 @@ import io.netty.channel.group.ChannelGroup;
 import io.netty.channel.group.DefaultChannelGroup;
 import io.netty.util.concurrent.GlobalEventExecutor;
 import me.andre111.d20common.model.entity.profile.Profile;
-import me.andre111.d20server.model.EntityManager;
+import me.andre111.d20server.model.EntityManagers;
 
 /**
  * Keeps track of all connections to the server, as well as the corresponding
@@ -29,7 +29,7 @@ public abstract class UserService {
 	private static final Object lock = new Object();
 	static {
 		// load all profiles
-		EntityManager.PROFILE.stream().forEach(p -> {
+		EntityManagers.PROFILE.stream().forEach(p -> {
 			p.setConnected(false);
 			allProfiles.put(p.id(), p);
 		});
@@ -85,7 +85,7 @@ public abstract class UserService {
 		
 		// save lastLogin time and log
 		profile.setLastLogin();
-		EntityManager.PROFILE.save(profile);
+		EntityManagers.PROFILE.add(profile);
 		profile.setConnected(true);
 		
 		//TODO: remove test stuff

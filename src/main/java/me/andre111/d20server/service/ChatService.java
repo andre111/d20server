@@ -11,7 +11,7 @@ import me.andre111.d20common.model.entity.map.Token;
 import me.andre111.d20common.model.entity.profile.Profile;
 import me.andre111.d20common.model.property.Access;
 import me.andre111.d20server.command.Command;
-import me.andre111.d20server.model.EntityManager;
+import me.andre111.d20server.model.EntityManagers;
 
 public abstract class ChatService {
 	public static final String STYLE_SENDER = "[style \"font=Arial-BOLD-14\"]";
@@ -63,7 +63,7 @@ public abstract class ChatService {
 			// find macro (!<name> -> custom in token, !!<name> -> premade in actor)
 			String macro = null;
 			if(macroName.startsWith("!")) {
-				Actor actor = EntityManager.ACTOR.find(token.getActorID());
+				Actor actor = EntityManagers.ACTOR.find(token.getActorID());
 				if(actor != null) {
 					macro = actor.getType().getMacroCommands(macroName.substring(1));
 				}
@@ -121,7 +121,7 @@ public abstract class ChatService {
 			for(ChatEntry entry : entries) {
 				chatData.append(entry);
 			}
-			EntityManager.CHAT.save(chatData);
+			EntityManagers.CHAT.add(chatData);
 		}
 		
 		// send chat entries to client
@@ -176,7 +176,7 @@ public abstract class ChatService {
 	
 	private static ChatData getChatData() {
 		if(loadedChat == null) {
-			ChatData chatData = EntityManager.CHAT.find(1);
+			ChatData chatData = EntityManagers.CHAT.find(1);
 			if(chatData == null) {
 				chatData = new ChatData(1);
 			}

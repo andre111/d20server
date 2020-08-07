@@ -1,14 +1,12 @@
 package me.andre111.d20server.scripting.variable;
 
-import me.andre111.d20common.message.game.token.list.TokenListValue;
 import me.andre111.d20common.model.entity.map.Token;
 import me.andre111.d20common.model.entity.map.TokenList;
 import me.andre111.d20common.model.property.Access;
-import me.andre111.d20server.model.EntityManager;
+import me.andre111.d20server.model.EntityManagers;
 import me.andre111.d20server.scripting.Context;
 import me.andre111.d20server.scripting.ScriptException;
 import me.andre111.d20server.scripting.TokenFinder;
-import me.andre111.d20server.service.MessageService;
 
 public class TokenListVariable extends Variable {
 	private final String listName;
@@ -40,8 +38,8 @@ public class TokenListVariable extends Variable {
 		list.addOrUpdateToken(token, (double) (Number) value);
 		
 		// save and broadcast
-		EntityManager.MAP.save(context.map());
-		MessageService.send(new TokenListValue(list, token, (double) (Number) value, false), context.map());
+		EntityManagers.TOKEN_LIST.add(list);
+		//MessageService.send(new TokenListValue(list, token, (double) (Number) value, false), context.map());
 	}
 
 	@Override
@@ -61,7 +59,7 @@ public class TokenListVariable extends Variable {
 	}
 	
 	private TokenList getList(Context context) throws ScriptException {
-		TokenList list = context.map().getTokenList(listName);
+		TokenList list = EntityManagers.TOKEN_LIST.stream().filter(l -> l.getName().equals(listName)).findFirst().orElse(null);
 		if(list != null) {
 			return list;
 		}

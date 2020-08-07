@@ -1,15 +1,19 @@
 package me.andre111.d20server.scripting.variable;
 
+import java.util.Map;
+
+import me.andre111.d20common.model.BaseEntity;
+import me.andre111.d20common.model.Property;
 import me.andre111.d20common.model.property.Access;
 import me.andre111.d20common.model.property.Effect;
 import me.andre111.d20common.model.property.Layer;
 import me.andre111.d20common.model.property.Light;
-import me.andre111.d20common.model.property.Property;
+import me.andre111.d20server.model.EntityManagers;
 import me.andre111.d20server.scripting.Context;
 import me.andre111.d20server.scripting.ScriptException;
 
 public abstract class PropertyVariable extends Variable {
-	protected final String propertyName;
+	private final String propertyName;
 
 	public PropertyVariable(String fullName, String propertyName) {
 		super(fullName);
@@ -19,14 +23,16 @@ public abstract class PropertyVariable extends Variable {
 
 	@Override
 	public final void set(Context context, Object value) throws ScriptException {
+		BaseEntity entity = getEntity(context);
+		
 		// get property
-		Property property = getProperty(context);
+		Property property = entity.getProperty(propertyName);
 		if(property == null) {
 			throw new ScriptException("No property "+propertyName);
 		}
 
 		// check access
-		Access accessLevel = getAccessLevel(context);
+		Access accessLevel = entity.getAccessLevel(context.profile());
 		if(!property.canEdit(accessLevel)) {
 			throw new ScriptException("No edit access to "+getFullName());
 		}
@@ -64,20 +70,22 @@ public abstract class PropertyVariable extends Variable {
 			throw new ScriptException("Missing implementation for type "+property.getType());
 		}
 		
-		// save
-		saveSourceAfterSet(context);
+		// update
+		EntityManagers.get(entity.getClass()).updateProperties(entity.id(), Map.of(propertyName, property), accessLevel);
 	}
 
 	@Override
 	public final Object get(Context context) throws ScriptException {
+		BaseEntity entity = getEntity(context);
+		
 		// get property
-		Property property = getProperty(context);
+		Property property = entity.getProperty(propertyName);
 		if(property == null) {
 			throw new ScriptException("No property "+propertyName);
 		}
 
 		// check access
-		Access accessLevel = getAccessLevel(context);
+		Access accessLevel = entity.getAccessLevel(context.profile());
 		if(!property.canView(accessLevel)) {
 			throw new ScriptException("No view access to "+getFullName());
 		}
@@ -107,7 +115,5 @@ public abstract class PropertyVariable extends Variable {
 		}
 	}
 	
-	protected abstract Property getProperty(Context context) throws ScriptException;
-	protected abstract Access getAccessLevel(Context context) throws ScriptException;
-	protected abstract void saveSourceAfterSet(Context context) throws ScriptException;
+	protected abstract BaseEntity getEntity(Context context) throws ScriptException;
 }

@@ -33,7 +33,9 @@ import io.netty.handler.codec.http.multipart.HttpPostRequestDecoder;
 import io.netty.handler.codec.http.multipart.InterfaceHttpData;
 import me.andre111.d20common.model.entity.Audio;
 import me.andre111.d20common.model.entity.Image;
-import me.andre111.d20server.model.EntityManager;
+import me.andre111.d20common.util.DataUtils;
+import me.andre111.d20common.util.Utils;
+import me.andre111.d20server.model.EntityManagers;
 
 public class HttpServerHandler extends ChannelInboundHandlerAdapter {
 	private static final String IMAGE_PATH = "/image/";
@@ -78,17 +80,17 @@ public class HttpServerHandler extends ChannelInboundHandlerAdapter {
 		if(path.startsWith(IMAGE_PATH)) {
 			String idString = path.substring(IMAGE_PATH.length());
 			long id = Long.parseLong(idString);
-			Image image = EntityManager.IMAGE.find(id);
+			Image image = EntityManagers.IMAGE.find(id);
 			if(image != null) {
-				data = image.getData();
+				data = Utils.readBinary("entity.image."+id);
 				contentType = "image/png";
 			}
 		} else if(path.startsWith(AUDIO_PATH)) {
 			String idString = path.substring(AUDIO_PATH.length());
 			long id = Long.parseLong(idString);
-			Audio audio = EntityManager.AUDIO.find(id);
+			Audio audio = EntityManagers.AUDIO.find(id);
 			if(audio != null) {
-				data = audio.getData();
+				data = Utils.readBinary("entity.audio."+id);
 				contentType = "application/ogg";
 			}
 		}
@@ -156,16 +158,18 @@ public class HttpServerHandler extends ChannelInboundHandlerAdapter {
 								if(uploadPath.startsWith(UPLOAD_IMAGE_PATH)) {
 									String imageName = fileUpload.getFilename();
 									byte[] imageData = fileUpload.get();
-									Image image = new Image(imageName, imageData);
-									if(image.isValid()) {
-										EntityManager.IMAGE.save(image);
+									if(DataUtils.isValidImage(imageData)) {
+										Image image = new Image(imageName);
+										Utils.saveBinary("entity.image."+image.id(), imageData);
+										EntityManagers.IMAGE.add(image);
 									}
 								} else if(uploadPath.startsWith(UPLOAD_AUDIO_PATH)) {
 									String audioName = fileUpload.getFilename();
 									byte[] audioData = fileUpload.get();
-									Audio audio = new Audio(audioName, audioData);
-									if(audio.isValid()) {
-										EntityManager.AUDIO.save(audio);
+									if(DataUtils.isValidAudio(audioData)) {
+										Audio audio = new Audio(audioName);
+										Utils.saveBinary("entity.audio."+audio.id(), audioData);
+										EntityManagers.AUDIO.add(audio);
 									}
 								}
 							} catch (IOException e) {

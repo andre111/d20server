@@ -1,6 +1,7 @@
 package me.andre111.d20server.scripting;
 
 import me.andre111.d20common.model.entity.map.Token;
+import me.andre111.d20server.model.EntityManagers;
 
 public class TokenFinderID extends TokenFinder {
 	private final long tokenID;
@@ -11,7 +12,7 @@ public class TokenFinderID extends TokenFinder {
 	
 	@Override
 	public Token findToken(Context context) throws ScriptException {
-		Token token = context.map().getToken(tokenID);
+		Token token = EntityManagers.TOKEN.find(tokenID);
 		if(token == null) {
 			throw new ScriptException("Token with id "+tokenID+" not found");
 		}

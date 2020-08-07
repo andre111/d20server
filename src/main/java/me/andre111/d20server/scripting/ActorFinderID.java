@@ -1,7 +1,7 @@
 package me.andre111.d20server.scripting;
 
 import me.andre111.d20common.model.entity.actor.Actor;
-import me.andre111.d20server.model.EntityManager;
+import me.andre111.d20server.model.EntityManagers;
 
 public class ActorFinderID extends ActorFinder {
 	private final long actorID;
@@ -12,7 +12,7 @@ public class ActorFinderID extends ActorFinder {
 
 	@Override
 	public Actor findActor(Context context) throws ScriptException {
-		Actor actor = EntityManager.ACTOR.find(actorID);
+		Actor actor = EntityManagers.ACTOR.find(actorID);
 		if(actor == null) {
 			throw new ScriptException("Actor with id "+actorID+" not found");
 		}

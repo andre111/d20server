@@ -5,12 +5,12 @@ import java.util.HashMap;
 import java.util.List;
 
 import me.andre111.d20common.message.game.EnterGame;
-import me.andre111.d20common.message.game.LoadMap;
+import me.andre111.d20common.message.game.EnterMap;
 import me.andre111.d20common.message.game.PlayerList;
 import me.andre111.d20common.model.entity.map.Map;
 import me.andre111.d20common.model.entity.map.Token;
 import me.andre111.d20common.model.entity.profile.Profile;
-import me.andre111.d20server.model.EntityManager;
+import me.andre111.d20server.model.EntityManagers;
 
 public abstract class GameService {
 	private static java.util.Map<Long, ProfileStatus> joinedProfiles = new HashMap<>();
@@ -20,12 +20,12 @@ public abstract class GameService {
 	
 	public static void init() {
 		// add atleast one map
-		if(EntityManager.MAP.getIndex().isEmpty()) {
+		if(EntityManagers.MAP.stream().findFirst().isEmpty()) {
 			Map map = new Map("New Map");
-			EntityManager.MAP.save(map);
+			EntityManagers.MAP.add(map);
 		}
 		if(getMap(getBaseMapID()) == null) {
-			setBaseMapID(EntityManager.MAP.getIndex().keySet().iterator().next());
+			setBaseMapID(EntityManagers.MAP.stream().findFirst().get().id());
 		}
 		
 		// reset player states
@@ -43,6 +43,9 @@ public abstract class GameService {
 	}
 	
 	public static void updateClientState(Profile profile) {
+		// sync data
+		EntityManagers.fullSync(profile);
+		
 		// send enter message -> moves client into main state and sets client role (PLAYER/GM)
 		MessageService.send(new EnterGame(profile), profile);
 		
@@ -50,7 +53,6 @@ public abstract class GameService {
 		MessageService.send(new PlayerList(UserService.getAllProfiles()), (Map) null);
 		
 		//TODO: send gamestate (to player) (->LoadMap message, last X chat entries, ...)
-		EntityManager.syncIndices(profile);
 		reloadMaps(profile);
 		ChatService.sendHistory(profile, 200);
 		ChatService.appendNote(profile.getName()+" joined!");
@@ -76,14 +78,14 @@ public abstract class GameService {
 			for(Profile otherProfile : UserService.getAllConnectedProfiles()) {
 				Map map = getPlayerMap(otherProfile);
 				if(map != null) {
-					MessageService.send(new LoadMap(map), otherProfile);
+					MessageService.send(new EnterMap(map), otherProfile);
 				}
 			}
 		} else {
 			// update single player
 			Map map = getPlayerMap(profile);
 			if(map != null) {
-				MessageService.send(new LoadMap(map), profile);
+				MessageService.send(new EnterMap(map), profile);
 			}
 		}
 	}
@@ -101,7 +103,7 @@ public abstract class GameService {
 	public static Map getMap(long id) {
 		// load map
 		if(!loadedMaps.containsKey(id)) {
-			Map map = EntityManager.MAP.find(id);
+			Map map = EntityManagers.MAP.find(id);
 			if(map != null) {
 				loadedMaps.put(map.id(), map);
 			}
@@ -128,7 +130,7 @@ public abstract class GameService {
 		if(selectedTokens == null || selectedTokens.isEmpty()) return null;
 		if(forceSingle && selectedTokens.size() != 1) return null;
 		
-		Token token = map.getToken(selectedTokens.get(0));
+		Token token = EntityManagers.TOKEN.find(selectedTokens.get(0));
 		return token;
 	}
 	public static void setSelectedTokens(Profile profile, List<Long> selectedTokens) {
