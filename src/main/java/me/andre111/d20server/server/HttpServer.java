@@ -19,7 +19,7 @@ public class HttpServer {
 		bootstrap.group(bossGroup, workerGroup);
 		bootstrap.channel(NioServerSocketChannel.class);
 
-		bootstrap.childHandler(new HttpChannelInitializer());
+		bootstrap.childHandler(new HttpServerChannelInitializer());
 
 		bootstrap.bind(port).syncUninterruptibly();
 	}

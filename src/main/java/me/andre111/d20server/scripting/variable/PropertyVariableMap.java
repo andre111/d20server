@@ -1,6 +1,6 @@
 package me.andre111.d20server.scripting.variable;
 
-import me.andre111.d20common.model.BaseEntity;
+import me.andre111.d20common.model.Entity;
 import me.andre111.d20server.scripting.Context;
 import me.andre111.d20server.scripting.ScriptException;
 
@@ -10,7 +10,7 @@ public class PropertyVariableMap extends PropertyVariable {
 	}
 
 	@Override
-	protected BaseEntity getEntity(Context context) throws ScriptException {
+	protected Entity getEntity(Context context) throws ScriptException {
 		return context.map();
 	}
 }

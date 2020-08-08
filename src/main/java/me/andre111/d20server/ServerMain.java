@@ -6,7 +6,6 @@ import me.andre111.d20server.server.GameServer;
 import me.andre111.d20server.server.HttpServer;
 import me.andre111.d20server.service.GameService;
 
-//TODO: Move "functionality" from the Entities to Services (to keep entities simple data classes)
 public class ServerMain {
 	public static void main(String[] args) {
 		//TODO: replace all System.out.*

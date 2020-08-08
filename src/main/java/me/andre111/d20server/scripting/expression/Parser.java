@@ -49,7 +49,7 @@ public class Parser {
 				x = (c -> {
 					Result ar = a.eval(c);
 					Result br = b.eval(c);
-					return new Result(ar.v + br.v, ar.s + " + " + br.s, ar.hadCriticalFailure || br.hadCriticalFailure, ar.hadCriticalSuccess || br.hadCriticalSuccess);
+					return new Result(ar.v + br.v, ar.s + " + " + br.s, ar.cf || br.cf, ar.cs || br.cs);
 				});
 			} else if(eat('-')) {
 				// parse subtraction
@@ -59,7 +59,7 @@ public class Parser {
 				x = (c -> {
 					Result ar = a.eval(c);
 					Result br = b.eval(c);
-					return new Result(ar.v - br.v, ar.s + " - " + br.s, ar.hadCriticalFailure || br.hadCriticalFailure, ar.hadCriticalSuccess || br.hadCriticalSuccess);
+					return new Result(ar.v - br.v, ar.s + " - " + br.s, ar.cf || br.cf, ar.cs || br.cs);
 				});
 			} else {
 				return x;
@@ -79,7 +79,7 @@ public class Parser {
 				x = (c -> {
 					Result ar = a.eval(c);
 					Result br = b.eval(c);
-					return new Result(ar.v * br.v, ar.s + " * " + br.s, ar.hadCriticalFailure || br.hadCriticalFailure, ar.hadCriticalSuccess || br.hadCriticalSuccess);
+					return new Result(ar.v * br.v, ar.s + " * " + br.s, ar.cf || br.cf, ar.cs || br.cs);
 				});
 			} else if(eat('/')) {
 				// parse division
@@ -89,7 +89,7 @@ public class Parser {
 				x = (c -> {
 					Result ar = a.eval(c);
 					Result br = b.eval(c);
-					return new Result(ar.v / br.v, ar.s + " / " + br.s, ar.hadCriticalFailure || br.hadCriticalFailure, ar.hadCriticalSuccess || br.hadCriticalSuccess);
+					return new Result(ar.v / br.v, ar.s + " / " + br.s, ar.cf || br.cf, ar.cs || br.cs);
 				});
 			} else {
 				return x;
@@ -107,7 +107,7 @@ public class Parser {
 			Expression a = parseFactor();
 			return (c -> {
 				Result ar = a.eval(c);
-				return new Result(-ar.v, "-"+ar.s, ar.hadCriticalFailure, ar.hadCriticalFailure);
+				return new Result(-ar.v, "-"+ar.s, ar.cf, ar.cf);
 			});
 		}
 		
@@ -118,7 +118,7 @@ public class Parser {
 			
 			return (c -> {
 				Result ar = a.eval(c);
-				return new Result(ar.v, "("+ar.s+")", ar.hadCriticalFailure, ar.hadCriticalSuccess);
+				return new Result(ar.v, "("+ar.s+")", ar.cf, ar.cs);
 			});
 		}
 		

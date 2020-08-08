@@ -1,6 +1,6 @@
 package me.andre111.d20server.scripting.variable;
 
-import me.andre111.d20common.model.BaseEntity;
+import me.andre111.d20common.model.Entity;
 import me.andre111.d20common.model.entity.map.TokenList;
 import me.andre111.d20server.model.EntityManagers;
 import me.andre111.d20server.scripting.Context;
@@ -16,7 +16,7 @@ public class PropertyVariableList extends PropertyVariable {
 	}
 
 	@Override
-	protected BaseEntity getEntity(Context context) throws ScriptException {
+	protected Entity getEntity(Context context) throws ScriptException {
 		TokenList list = EntityManagers.get(TokenList.class).all().stream().filter(l -> l.getName().equals(listName)).findFirst().orElse(null);
 		if(list != null) {
 			return list;

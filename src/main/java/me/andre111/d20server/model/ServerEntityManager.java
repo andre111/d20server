@@ -16,7 +16,7 @@ import me.andre111.d20common.message.game.entity.AddEntity;
 import me.andre111.d20common.message.game.entity.ClearEntities;
 import me.andre111.d20common.message.game.entity.RemoveEntity;
 import me.andre111.d20common.message.game.entity.UpdateEntityProperties;
-import me.andre111.d20common.model.BaseEntity;
+import me.andre111.d20common.model.Entity;
 import me.andre111.d20common.model.EntityManager;
 import me.andre111.d20common.model.Property;
 import me.andre111.d20common.model.entity.profile.Profile;
@@ -25,7 +25,7 @@ import me.andre111.d20common.util.Utils;
 import me.andre111.d20server.service.MessageService;
 import me.andre111.d20server.service.UserService;
 
-public class ServerEntityManager<E extends BaseEntity> implements EntityManager<E> {
+public class ServerEntityManager<E extends Entity> implements EntityManager<E> {
 	protected final String name;
 	protected final Class<E> c;
 	protected final boolean synched;
@@ -96,7 +96,7 @@ public class ServerEntityManager<E extends BaseEntity> implements EntityManager<
 
 	@Override
 	public final void updateProperties(long id, Map<String, Property> map, Access accessLevel) {
-		BaseEntity entity = find(id);
+		E entity = find(id);
 		if(entity == null) return;
 		
 		// keep track of all profiles that could see this entity
@@ -109,7 +109,7 @@ public class ServerEntityManager<E extends BaseEntity> implements EntityManager<
 		Map<String, Property> changedProperties = new HashMap<>();
 		for(Map.Entry<String, Property> e : map.entrySet()) {
 			Property ownProperty = entity.prop(e.getKey());
-			if(ownProperty == null) continue; //TODO: how to handle unknown properties?
+			if(ownProperty == null) continue; // server discards new/unknown properties from client
 			
 			// transfer value
 			if(accessLevel.ordinal() >= ownProperty.getEditAccess().ordinal()) {
@@ -121,13 +121,13 @@ public class ServerEntityManager<E extends BaseEntity> implements EntityManager<
 				}
 			}
 			
-			// transfer access (GM only)
+			// transfer access (GM only, and do not allow changing of SYSTEM level access)
 			if(accessLevel == Access.GM) {
-				if(e.getValue().getViewAccess() != Access.NOONE && e.getValue().getViewAccess() != ownProperty.getViewAccess()) {
+				if(e.getValue().getViewAccess() != Access.SYSTEM && ownProperty.getViewAccess() != Access.SYSTEM && e.getValue().getViewAccess() != ownProperty.getViewAccess()) {
 					ownProperty.setViewAccess(e.getValue().getViewAccess());
 					changedProperties.put(e.getKey(), ownProperty);
 				}
-				if(e.getValue().getEditAccess() != Access.NOONE && e.getValue().getEditAccess() != ownProperty.getEditAccess()) {
+				if(e.getValue().getEditAccess() != Access.SYSTEM && ownProperty.getEditAccess() != Access.SYSTEM  && e.getValue().getEditAccess() != ownProperty.getEditAccess()) {
 					ownProperty.setEditAccess(e.getValue().getEditAccess());
 					changedProperties.put(e.getKey(), ownProperty);
 				}
@@ -147,6 +147,9 @@ public class ServerEntityManager<E extends BaseEntity> implements EntityManager<
 		});
 		
 		notifyListeners();
+		for(var listener : entityListeners) {
+			listener.accept(entity);
+		}
 	}
 
 	

@@ -6,7 +6,7 @@ import io.netty.channel.ChannelPipeline;
 import io.netty.handler.codec.http.HttpRequestDecoder;
 import io.netty.handler.codec.http.HttpResponseEncoder;
 
-public class HttpChannelInitializer extends ChannelInitializer<Channel> {
+public class HttpServerChannelInitializer extends ChannelInitializer<Channel> {
     public void initChannel(Channel channel) throws Exception {
         ChannelPipeline pipeline = channel.pipeline();
         

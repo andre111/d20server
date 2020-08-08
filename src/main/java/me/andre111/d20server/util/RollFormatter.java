@@ -55,11 +55,11 @@ public class RollFormatter {
 		// color format
 		String color = "#000000";
 		if(result != null) {
-			if(result.hadCriticalFailure && result.hadCriticalSuccess) {
+			if(result.cf && result.cs) {
 				color = "#0000FF";
-			} else if(result.hadCriticalFailure) {
+			} else if(result.cf) {
 				color = "#FF0000";
-			} else if(result.hadCriticalSuccess) {
+			} else if(result.cs) {
 				color = "#008800";
 			}
 		}

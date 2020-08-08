@@ -26,7 +26,7 @@ public abstract class Variable implements Expression {
 		if(valueObject instanceof Long) {
 			value = (long) valueObject;
 		} else if(valueObject instanceof Double) {
-			value = (long) (double) valueObject;
+			value = (double) valueObject;
 		} else {
 			throw new ScriptException("Variable "+fullName+" is not a number");
 		}

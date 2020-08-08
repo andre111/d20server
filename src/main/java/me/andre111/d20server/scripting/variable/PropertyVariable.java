@@ -2,7 +2,7 @@ package me.andre111.d20server.scripting.variable;
 
 import java.util.Map;
 
-import me.andre111.d20common.model.BaseEntity;
+import me.andre111.d20common.model.Entity;
 import me.andre111.d20common.model.Property;
 import me.andre111.d20common.model.property.Access;
 import me.andre111.d20common.model.property.Effect;
@@ -23,7 +23,7 @@ public abstract class PropertyVariable extends Variable {
 
 	@Override
 	public final void set(Context context, Object value) throws ScriptException {
-		BaseEntity entity = getEntity(context);
+		Entity entity = getEntity(context);
 		
 		// get property
 		Property property = entity.prop(propertyName);
@@ -76,7 +76,7 @@ public abstract class PropertyVariable extends Variable {
 
 	@Override
 	public final Object get(Context context) throws ScriptException {
-		BaseEntity entity = getEntity(context);
+		Entity entity = getEntity(context);
 		
 		// get property
 		Property property = entity.prop(propertyName);
@@ -115,5 +115,5 @@ public abstract class PropertyVariable extends Variable {
 		}
 	}
 	
-	protected abstract BaseEntity getEntity(Context context) throws ScriptException;
+	protected abstract Entity getEntity(Context context) throws ScriptException;
 }

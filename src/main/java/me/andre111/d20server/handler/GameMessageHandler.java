@@ -18,7 +18,7 @@ import me.andre111.d20common.message.game.entity.UpdateEntityProperties;
 import me.andre111.d20common.message.game.token.UpdateTokenMacros;
 import me.andre111.d20common.message.game.token.list.TokenListValue;
 import me.andre111.d20common.message.game.util.Ping;
-import me.andre111.d20common.model.BaseEntity;
+import me.andre111.d20common.model.Entity;
 import me.andre111.d20common.model.entity.Image;
 import me.andre111.d20common.model.entity.actor.Actor;
 import me.andre111.d20common.model.entity.map.Map;
@@ -89,7 +89,7 @@ public abstract class GameMessageHandler {
 				// set player map id and reset overridden values for all non gms
 				for(Profile otherProfile : UserService.getAllProfiles()) {
 					if(otherProfile.getRole() != Profile.Role.GM) {
-						GameService.setPlayerMapID(otherProfile, mapID);
+						otherProfile.setCurrentMap(mapID);
 						EntityManagers.get(Profile.class).add(otherProfile);
 					}
 				}
@@ -101,7 +101,7 @@ public abstract class GameMessageHandler {
 					// set player override map id and (re)load map
 					Profile otherProfile = UserService.getProfile(playerID);
 					if(otherProfile != null) {
-						GameService.setPlayerMapID(otherProfile, mapID);
+						otherProfile.setCurrentMap(mapID);
 						GameService.reloadMaps(otherProfile);
 						EntityManagers.get(Profile.class).add(otherProfile);
 					}
@@ -192,7 +192,7 @@ public abstract class GameMessageHandler {
 		// search for manager, check access and reset id before adding if valid request
 		ServerEntityManager manager = EntityManagers.get(message.getEntityClass());
 		if(manager != null && manager.canAddRemove(profile)) {
-			BaseEntity entity = message.getEntity();
+			Entity entity = message.getEntity();
 			entity.resetID();
 			manager.add(entity);
 		}
@@ -201,7 +201,7 @@ public abstract class GameMessageHandler {
 		// search for entity, check access and delete if valid request
 		ServerEntityManager<?> manager = EntityManagers.get(message.getEntityClass());
 		if(manager != null && manager.canAddRemove(profile)) {
-			BaseEntity entity = manager.find(message.getID());
+			Entity entity = manager.find(message.getID());
 			if(entity != null && entity.canEdit(profile)) {
 				manager.remove(message.getID());
 			}
@@ -211,7 +211,7 @@ public abstract class GameMessageHandler {
 		// search for entity, check access and delete if valid request
 		ServerEntityManager<?> manager = EntityManagers.get(message.getEntityClass());
 		if(manager != null) {
-			BaseEntity entity = manager.find(message.getID());
+			Entity entity = manager.find(message.getID());
 			if(entity != null && entity.canEdit(profile)) {
 				manager.updateProperties(entity.id(), message.getProperties(), entity.getAccessLevel(profile));
 			}

@@ -68,21 +68,14 @@ public abstract class GameService {
 	
 	
 	public static void reloadMaps(Profile profile) {
-		if(profile == null) {
-			// update all players
-			for(Profile otherProfile : UserService.getAllConnectedProfiles()) {
-				Map map = getPlayerMap(otherProfile);
-				if(map != null) {
-					MessageService.send(new AddEntity(map), otherProfile); // send map because client could have no independent access
-					MessageService.send(new EnterMap(map), otherProfile);
-				}
-			}
-		} else {
-			// update single player
-			Map map = getPlayerMap(profile);
+		List<Profile> profiles = profile != null ? List.of(profile) : UserService.getAllConnectedProfiles();
+		
+		// update all players
+		for(Profile otherProfile : profiles) {
+			Map map = getPlayerMap(otherProfile);
 			if(map != null) {
-				MessageService.send(new AddEntity(map), profile); // send map because client could have no independent access
-				MessageService.send(new EnterMap(map), profile);
+				MessageService.send(new AddEntity(map), otherProfile); // send map because client could have no independent access
+				MessageService.send(new EnterMap(map), otherProfile);
 			}
 		}
 	}
@@ -91,9 +84,6 @@ public abstract class GameService {
 	public static Map getPlayerMap(Profile profile) {
 		long mapID = profile.getCurrentMap();
 		return EntityManagers.get(Map.class).find(mapID);
-	}
-	public static void setPlayerMapID(Profile profile, long overrideMapID) {
-		profile.setCurrentMap(overrideMapID);
 	}
 	
 	public static Token getSelectedToken(Map map, Profile profile, boolean forceSingle) {
