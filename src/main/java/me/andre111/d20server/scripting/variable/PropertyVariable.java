@@ -1,5 +1,6 @@
 package me.andre111.d20server.scripting.variable;
 
+import java.util.List;
 import java.util.Map;
 
 import me.andre111.d20common.model.Entity;
@@ -22,6 +23,7 @@ public abstract class PropertyVariable extends Variable {
 	}
 
 	@Override
+	@SuppressWarnings("unchecked")
 	public final void set(Context context, Object value) throws ScriptException {
 		Entity entity = getEntity(context);
 		
@@ -40,31 +42,39 @@ public abstract class PropertyVariable extends Variable {
 		// set value (by type)
 		switch(property.getType()) {
 		case BOOLEAN:
-			property.setBoolean((Boolean) value);
+			if(value instanceof Boolean b) property.setBoolean(b);
+			else throw new ScriptException("Value is not of correct type, needs "+property.getType());
 			break;
 		case DOUBLE:
-			property.setDouble((Double) value);
+			if(value instanceof Double d) property.setDouble(d);
+			else throw new ScriptException("Value is not of correct type, needs "+property.getType());
 			break;
 		case LAYER:
-			property.setLayer((Layer) value);
+			if(value instanceof Layer l) property.setLayer(l);
+			else throw new ScriptException("Value is not of correct type, needs "+property.getType());
 			break;
 		case LIGHT:
-			property.setLight((Light) value);
+			if(value instanceof Light l) property.setLight(l);
+			else throw new ScriptException("Value is not of correct type, needs "+property.getType());
 			break;
 		case LONG:
-			property.setLong((Long) value);
+			if(value instanceof Long l) property.setLong(l);
+			else throw new ScriptException("Value is not of correct type, needs "+property.getType());
 			break;
-		case PLAYER:
-			property.setPlayerID((Long) value);
+		case LONG_LIST:
+			if(value instanceof List<?> l) property.setLongList((List<Long>) l);
+			else throw new ScriptException("Value is not of correct type, needs "+property.getType());
 			break;
 		case STRING:
 			property.setString(value.toString());
 			break;
 		case EFFECT:
-			property.setEffect((Effect) value);
+			if(value instanceof Effect e) property.setEffect(e);
+			else throw new ScriptException("Value is not of correct type, needs "+property.getType());
 			break;
 		case ACCESS:
-			property.setAccessValue((Access) value);
+			if(value instanceof Access a) property.setAccessValue(a);
+			else throw new ScriptException("Value is not of correct type, needs "+property.getType());
 			break;
 		default:
 			throw new ScriptException("Missing implementation for type "+property.getType());
@@ -102,8 +112,8 @@ public abstract class PropertyVariable extends Variable {
 			return property.getLight();
 		case LONG:
 			return property.getLong();
-		case PLAYER:
-			return property.getPlayerID();
+		case LONG_LIST:
+			return property.getLongList();
 		case STRING:
 			return property.getString();
 		case EFFECT:

@@ -9,7 +9,6 @@ import me.andre111.d20common.message.game.ActionCommand;
 import me.andre111.d20common.message.game.GameMessage;
 import me.andre111.d20common.message.game.PlayEffect;
 import me.andre111.d20common.message.game.SelectedTokens;
-import me.andre111.d20common.message.game.ShowImage;
 import me.andre111.d20common.message.game.actor.SetActorDefaultToken;
 import me.andre111.d20common.message.game.chat.SendChatMessage;
 import me.andre111.d20common.message.game.entity.AddEntity;
@@ -54,8 +53,6 @@ public abstract class GameMessageHandler {
 			handleSetActorDefaultToken(profile, map, (SetActorDefaultToken) message);
 
 			// OTHERS: --------------------
-		} else if(message instanceof ShowImage) {
-			handleShowImage(profile, map, (ShowImage) message);
 		} else if(message instanceof ActionCommand) {
 			handleActionCommand(profile, map, (ActionCommand) message);
 
@@ -172,15 +169,15 @@ public abstract class GameMessageHandler {
 
 
 	// ---------------------------------------------------------
-	private static void handleShowImage(Profile profile, Map map, ShowImage message) {
-		if(EntityManagers.get(Image.class).has(message.getImageID())) {
-			MessageService.broadcast(message);
-		}
-	}
 	private static void handleActionCommand(Profile profile, Map map, ActionCommand message) {
 		switch(message.getCommand()) {
 		case ActionCommand.PING:
 			MessageService.send(new PlayEffect("PING", message.getX(), message.getY(), 0, 1, true, profile.getRole()==Profile.Role.GM && message.isModified()), map);
+			break;
+		case ActionCommand.SHOW_IMAGE:
+			if(profile.getRole() == Profile.Role.GM && EntityManagers.get(Image.class).has(message.getID())) {
+				MessageService.broadcast(message);
+			}
 			break;
 		}
 	}
