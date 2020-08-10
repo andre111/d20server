@@ -5,6 +5,7 @@ import java.util.HashMap;
 import me.andre111.d20common.message.game.util.EntityLoadingStatus;
 import me.andre111.d20common.model.Entity;
 import me.andre111.d20common.model.Entities;
+import me.andre111.d20common.model.entity.map.Drawing;
 import me.andre111.d20common.model.entity.map.Map;
 import me.andre111.d20common.model.entity.map.Token;
 import me.andre111.d20common.model.entity.map.TokenList;
@@ -63,6 +64,7 @@ public class EntityManagers {
 		EntityManagers.get(Map.class).addRemovalListener(id -> {
 			EntityManagers.get(Token.class).removeAll(token -> token.prop("map").getLong() == id);
 			EntityManagers.get(Wall.class).removeAll(wall -> wall.prop("map").getLong() == id);
+			EntityManagers.get(Drawing.class).removeAll(drawing -> drawing.prop("map").getLong() == id);
 		});
 	}
 }

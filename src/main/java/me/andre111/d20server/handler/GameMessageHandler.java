@@ -179,6 +179,14 @@ public abstract class GameMessageHandler {
 				MessageService.broadcast(message);
 			}
 			break;
+		case ActionCommand.LOAD_MUSIC:
+		case ActionCommand.PLAY_MUSIC:
+		case ActionCommand.PAUSE_MUSIC:
+		case ActionCommand.STOP_MUSIC:
+			if(profile.getRole() == Profile.Role.GM) {
+				MessageService.broadcast(message);
+			}
+			break;
 		}
 	}
 	
@@ -188,18 +196,20 @@ public abstract class GameMessageHandler {
 	private static void handleAddEntity(Profile profile, Map map, AddEntity message) {
 		// search for manager, check access and reset id before adding if valid request
 		ServerEntityManager manager = EntityManagers.get(message.getEntityClass());
-		if(manager != null && manager.canAddRemove(profile)) {
+		if(manager != null) {
 			Entity entity = message.getEntity();
-			entity.resetID();
-			manager.add(entity);
+			if(manager.canAddRemove(profile, entity)) {
+				entity.resetID();
+				manager.add(entity);
+			}
 		}
 	}
 	private static void handleRemoveEntity(Profile profile, Map map, RemoveEntity message) {
 		// search for entity, check access and delete if valid request
 		ServerEntityManager<?> manager = EntityManagers.get(message.getEntityClass());
-		if(manager != null && manager.canAddRemove(profile)) {
+		if(manager != null) {
 			Entity entity = manager.find(message.getID());
-			if(entity != null && entity.canEdit(profile)) {
+			if(entity != null && entity.canEdit(profile) && manager.canAddRemove(profile, entity)) {
 				manager.remove(message.getID());
 			}
 		}

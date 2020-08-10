@@ -173,8 +173,8 @@ public class ServerEntityManager<E extends Entity> implements EntityManager<E> {
 	}
 	
 	
-	public final boolean canAddRemove(Profile profile) {
-		Access accessLevel = profile.getRole() == Profile.Role.GM ? Access.GM : Access.EVERYONE;
+	public final boolean canAddRemove(Profile profile, Entity entity) {
+		Access accessLevel = entity.getAccessLevel(profile);
 		return addRemoveAccess.ordinal() <= accessLevel.ordinal();
 	}
 	
