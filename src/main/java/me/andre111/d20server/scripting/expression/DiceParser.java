@@ -116,7 +116,6 @@ public class DiceParser {
 				throw new ScriptException("Unknown modifier at "+(pos-1));
 			}
 		} else {
-			//TODO ...
 			throw new ScriptException("Unknown modifier at "+pos);
 		}
 	}

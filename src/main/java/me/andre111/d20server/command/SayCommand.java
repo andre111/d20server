@@ -16,7 +16,6 @@ public class SayCommand extends Command {
 
 	@Override
 	public void execute(Profile profile, String arguments) {
-		// TODO Auto-generated method stub
 		try {
 			Variable variable = VariableParser.parseVariable("selected.property.name");
 			Object name = variable.get(new Context(profile, GameService.getPlayerMap(profile)));

@@ -44,7 +44,6 @@ public abstract class MessageService {
 	 */
 	public static void send(Message message, Profile... profiles) {
 		for (Profile profile : profiles) {
-			// TODO: redirect messages for the ai instead of sending them
 			send(message, UserService.getChannelFor(profile));
 		}
 	}

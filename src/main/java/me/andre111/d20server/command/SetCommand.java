@@ -79,7 +79,7 @@ public class SetCommand extends Command {
 			} else if(type == Type.ACCESS) {
 				setEnumVariable(context, variable, Access.class, valueString);
 			} else {
-				//TODO: handle more types (PLAYER)
+				//TODO: handle more types (LONG_LIST?)
 				throw new ScriptException("Cannot set value of Type: "+type);
 			}
 			//TODO: send info messsage

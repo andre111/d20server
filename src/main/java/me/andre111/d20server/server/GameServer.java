@@ -8,8 +8,7 @@ import io.netty.channel.socket.nio.NioServerSocketChannel;
 public class GameServer {
 
 	public static void start(int port) {
-		// TODO: logging, test db connection, init services, clear logged in state of
-		// all players
+		// TODO: logging
 
 		bootstrap(port);
 		Runtime.getRuntime().addShutdownHook(new Thread(GameServer::onShutdown, "server-shutdown"));
@@ -35,6 +34,5 @@ public class GameServer {
 
 	private static void onShutdown() {
 		// TODO: broadcast shutdown message (and await sending)
-		// TODO: clear logged in state of all players
 	}
 }

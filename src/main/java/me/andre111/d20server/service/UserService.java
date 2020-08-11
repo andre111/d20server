@@ -88,11 +88,8 @@ public abstract class UserService {
 		EntityManagers.get(Profile.class).add(profile);
 		profile.setConnected(true);
 		
-		//TODO: remove test stuff
 		System.out.println("SignIn: "+profile.id());
 		GameService.joinGame(profile);
-		
-		// TODO: logging, notify battles, ...
 	}
 
 	public static void onSignOut(Profile profile) {

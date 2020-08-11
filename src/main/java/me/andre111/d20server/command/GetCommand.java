@@ -16,7 +16,6 @@ public class GetCommand extends Command {
 
 	@Override
 	public void execute(Profile profile, String arguments) {
-		// TODO Auto-generated method stub
 		try {
 			Variable variable = VariableParser.parseVariable(arguments);
 			Object value = variable.get(new Context(profile, GameService.getPlayerMap(profile)));

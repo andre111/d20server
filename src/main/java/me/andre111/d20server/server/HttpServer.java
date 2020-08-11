@@ -6,7 +6,6 @@ import io.netty.channel.socket.nio.NioServerSocketChannel;
 
 public class HttpServer {
 	public static void start(int port) {
-
 		bootstrap(port);
 		Runtime.getRuntime().addShutdownHook(new Thread(HttpServer::onShutdown, "server-shutdown-2"));
 	}
@@ -25,7 +24,5 @@ public class HttpServer {
 	}
 
 	private static void onShutdown() {
-		// TODO: broadcast shutdown message (and await sending)
-		// TODO: clear logged in state of all players
 	}
 }
