@@ -16,8 +16,6 @@ import me.andre111.d20server.scripting.ScriptException;
 public class Template {
 	private static Map<String, Template> TEMPLATES = new HashMap<>();
 	static {
-		TEMPLATES.put("attack", loadInternalTemplate("old_attack21", "#888888"));
-
 		TEMPLATES.put("attack0", loadInternalTemplate("attack0", "#888888"));
 		TEMPLATES.put("attack1", loadInternalTemplate("attack1", "#888888"));
 		TEMPLATES.put("attack11", loadInternalTemplate("attack11", "#888888"));
