@@ -2,7 +2,7 @@ package me.andre111.d20server.model;
 
 import java.util.HashMap;
 
-import me.andre111.d20common.message.game.util.EntityLoadingStatus;
+import me.andre111.d20common.message.game.util.StartEntityLoading;
 import me.andre111.d20common.model.Entity;
 import me.andre111.d20common.model.Entities;
 import me.andre111.d20common.model.entity.map.Drawing;
@@ -32,21 +32,19 @@ public class EntityManagers {
 	public static <E extends Entity> ServerEntityManager<E> get(Class<E> c) {
 		return (ServerEntityManager<E>) MANAGERS.get(c);
 	}
+	//NOTE: This sends the client into the loading state -> send EnterGame after calling this!
 	public static void fullSync(Profile profile) {
 		// count and send loading info
 		int count = 0;
 		for(ServerEntityManager<? extends Entity> manager : MANAGERS.values()) {
 			count += manager.getAccessibleCount(profile);
 		}
-		MessageService.send(new EntityLoadingStatus(count), profile);
+		MessageService.send(new StartEntityLoading(count), profile);
 		
 		// send actual data
 		for(ServerEntityManager<? extends Entity> manager : MANAGERS.values()) {
 			manager.fullSync(profile);
 		}
-		
-		// send loading complete
-		MessageService.send(new EntityLoadingStatus(0), profile);
 	}
 	
 	static {

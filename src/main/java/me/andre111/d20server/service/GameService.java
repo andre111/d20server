@@ -29,20 +29,21 @@ public abstract class GameService {
 	
 	public static void joinGame(Profile profile) {
 		// leave current game
-		leaveGame(profile);
+		if(joinedProfiles.containsKey(profile.id())) leaveGame(profile);
+
+		// update state before joining into game (-> do not recieve messages before loading is finished?)
+		updateClientState(profile);
 		
 		// join new game
 		joinedProfiles.put(profile.id(), new ProfileStatus());
-
-		updateClientState(profile);
 	}
 	
 	public static void updateClientState(Profile profile) {
+		// sync data -> moves client into loading state
+		EntityManagers.fullSync(profile);
+		
 		// send enter message -> moves client into main state and sets client role (PLAYER/GM)
 		MessageService.send(new EnterGame(profile), profile);
-				
-		// sync data
-		EntityManagers.fullSync(profile);
 		
 		// update players (to all)
 		MessageService.send(new PlayerList(UserService.getAllProfiles()), (Map) null);

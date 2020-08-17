@@ -37,6 +37,8 @@ public class ServerEntityManager<E extends Entity> implements EntityManager<E> {
 	private final List<Consumer<E>> entityListeners = new ArrayList<>();
 	private final List<Consumer<Long>> removalListeners = new ArrayList<>();
 	
+	private boolean saveEnabled = true;
+	
 	public ServerEntityManager(String name, Class<E> c, boolean synched, Access addRemoveAccess) {
 		this.name = name;
 		this.c = c;
@@ -65,7 +67,7 @@ public class ServerEntityManager<E extends Entity> implements EntityManager<E> {
 	@Override
 	public final void add(E entity) {
 		entities.put(entity.id(), entity);
-		Utils.saveJson("entity."+name, entities);
+		if(saveEnabled) Utils.saveJson("entity."+name, entities);
 		
 		UserService.forEach(profile -> {
 			if(entity.canView(profile)) MessageService.send(new AddEntity(entity), profile);
@@ -82,7 +84,7 @@ public class ServerEntityManager<E extends Entity> implements EntityManager<E> {
 		if(!entities.containsKey(id)) return;
 		
 		entities.remove(id);
-		Utils.saveJson("entity."+name, entities);
+		if(saveEnabled) Utils.saveJson("entity."+name, entities);
 		
 		UserService.forEach(profile -> {
 			MessageService.send(new RemoveEntity(c, id), profile);
@@ -135,7 +137,7 @@ public class ServerEntityManager<E extends Entity> implements EntityManager<E> {
 		}
 
 		// save and transfer (depending on (changing) access: add, remove or only changed properties)
-		Utils.saveJson("entity."+name, entities);
+		if(saveEnabled) Utils.saveJson("entity."+name, entities);
 		UserService.forEach(profile -> {
 			if(entity.canView(profile) && !couldView.contains(profile)) {
 				MessageService.send(new AddEntity(entity), profile);
@@ -204,6 +206,13 @@ public class ServerEntityManager<E extends Entity> implements EntityManager<E> {
 	protected final void removeAll(Predicate<E> predicate) {
 		for(E e : new ArrayList<>(entities.values())) {
 			if(predicate.test(e)) remove(e.id());
+		}
+	}
+	
+	public final void setSaveEnabled(boolean saveEnabled) {
+		this.saveEnabled = saveEnabled;
+		if(saveEnabled) {
+			Utils.saveJson("entity."+name, entities);
 		}
 	}
 }
