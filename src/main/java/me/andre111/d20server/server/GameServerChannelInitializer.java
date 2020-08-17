@@ -6,6 +6,8 @@ import java.util.concurrent.TimeUnit;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelPipeline;
+import io.netty.handler.codec.LengthFieldBasedFrameDecoder;
+import io.netty.handler.codec.LengthFieldPrepender;
 import io.netty.handler.codec.compression.JdkZlibDecoder;
 import io.netty.handler.codec.compression.JdkZlibEncoder;
 import io.netty.handler.codec.json.JsonObjectDecoder;
@@ -31,12 +33,14 @@ public class GameServerChannelInitializer extends ChannelInitializer<Channel> {
 		// add decoder stack
 		pipeline.addLast("idleStateHandler", new IdleStateHandler(IDLE_TIMEOUT_SECONDS, 0, 0, TimeUnit.SECONDS));
 		pipeline.addLast("zlibDecoder", new JdkZlibDecoder());
+		pipeline.addLast("lengthDecoder", new LengthFieldBasedFrameDecoder(1024 * 1024, 0, 4, 0, 4)); // check length to ensure JsonObjectDecoder does not get combined objects
 		pipeline.addLast("jsonObjectDecoder", new JsonObjectDecoder());
 		pipeline.addLast("stringDecoder", new StringDecoder(StandardCharsets.UTF_8));
 		pipeline.addLast(HANLDER_GROUP, "serverHandler", new GameServerHandler());
 		
 		// add encoder stack
 		pipeline.addLast("zlibEncoder", new JdkZlibEncoder());
+		pipeline.addLast("lengthEncoder", new LengthFieldPrepender(4)); // add length to ensure JsonObjectDecoder does not get combined objects
 		pipeline.addLast("stringEncoder", new StringEncoder(StandardCharsets.UTF_8));
 	}
 
