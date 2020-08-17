@@ -196,9 +196,20 @@ public class ServerEntityManager<E extends Entity> implements EntityManager<E> {
 	
 	protected final void fullSync(Profile profile) {
 		MessageService.send(new ClearEntities(c), profile);
+		int count = 0;
 		for(E entity : entities.values()) {
 			if(entity.canView(profile)) {
 				MessageService.send(new AddEntity(entity), profile);
+				count++;
+				
+				// THIS IS IMPORTANT:
+				// sleep for a tiny amount (as the client getting messages faster than it can handle causes the JsonObjectDecoder to drop out and crash)
+				if(count % 5 == 0) {
+					try {
+						Thread.sleep(1);
+					} catch (InterruptedException e) {
+					}
+				}
 			}
 		}
 	}

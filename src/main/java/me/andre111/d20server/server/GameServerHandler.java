@@ -22,9 +22,10 @@ public class GameServerHandler extends ChannelInboundHandlerAdapter {
 	@Override
 	public void channelInactive(ChannelHandlerContext ctx) throws Exception {
 		try {
-			super.channelInactive(ctx);
 			UserService.onDisconnect(ctx.channel());
+			super.channelInactive(ctx);
 		} finally {
+			ctx.channel().close();
 		}
 	}
 	
