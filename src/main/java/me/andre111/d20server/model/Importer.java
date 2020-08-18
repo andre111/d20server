@@ -2,8 +2,10 @@ package me.andre111.d20server.model;
 
 import java.io.File;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.function.BiConsumer;
+import java.util.stream.Collectors;
 
 import com.google.gson.reflect.TypeToken;
 
@@ -30,7 +32,7 @@ public class Importer {
 		});
 		
 		// import attachments
-		importEntities(directory, overwriteExisting, Attachment.class, (originalID, attachment) -> {
+		Map<Long, Long> attachmentIDMap = importEntities(directory, overwriteExisting, Attachment.class, (originalID, attachment) -> {
 			long imageID = attachment.prop("imageID").getLong();
 			if(imageID > 0) {
 				attachment.prop("imageID").setLong(imageIDMap.get(imageID));
@@ -39,8 +41,15 @@ public class Importer {
 		
 		// import actors
 		importEntities(directory, overwriteExisting, Actor.class, (originalID, actor) -> {
+			// adjust attachments
+			List<Long> attachmentIDs = actor.prop("attachments").getLongList().stream().map(oldID -> attachmentIDMap.get(oldID)).collect(Collectors.toList());
+			actor.prop("attachments").setLongList(attachmentIDs);
+			
+			// adjust default token
 			Token defaultToken = actor.getDefaultToken();
 			if(defaultToken != null) {
+				defaultToken.prop("actorID").setLong(actor.id());
+				
 				long imageID = defaultToken.prop("imageID").getLong();
 				if(imageID > 0) {
 					defaultToken.prop("imageID").setLong(imageIDMap.get(imageID));
@@ -54,6 +63,8 @@ public class Importer {
 		});
 		
 		// TODO: import more stuff
+		
+		System.out.println("Done");
 	}
 	
 	private static <E extends Entity> Map<Long, Long> importEntities(File directory, boolean overwriteExisting, Class<E> entityType, BiConsumer<Long, E> entityModifier) {
