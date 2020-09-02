@@ -6,6 +6,10 @@
 	<artifactId>D20Server</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 
+	<properties>
+		<mainClass>me.andre111.d20server.ServerMain</mainClass>
+	</properties>
+
 	<dependencies>
 		<dependency>
 			<groupId>me.andre111</groupId>
@@ -35,6 +39,28 @@
 					<forceJavacCompilerUse>true</forceJavacCompilerUse>
 					<parameters>true</parameters>
 				</configuration>
+			</plugin>
+			<plugin>
+				<artifactId>maven-assembly-plugin</artifactId>
+				<configuration>
+					<archive>
+						<manifest>
+							<mainClass>${mainClass}</mainClass>
+						</manifest>
+					</archive>
+					<descriptors>
+						<descriptor>assembly.xml</descriptor>
+					</descriptors>
+				</configuration>
+				<executions>
+					<execution>
+						<id>make-assembly</id>
+						<phase>package</phase>
+						<goals>
+							<goal>single</goal>
+						</goals>
+					</execution>
+				</executions>
 			</plugin>
 		</plugins>
 	</build>

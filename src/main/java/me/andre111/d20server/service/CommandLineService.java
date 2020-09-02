@@ -14,8 +14,16 @@ public abstract class CommandLineService {
 					
 					//TODO: generalize
 					//TODO: remove
-					if(input.equals("debugImport")) {
+					switch(input) {
+					case "debugImport": {
 						Importer.importEntities(new File("../d20helper/generated/"), true);
+						break;
+					}
+					case "stop": {
+						//TODO: cleanly implement stopping
+						System.exit(0);
+						break;
+					}
 					}
 				}
 			}
