@@ -49,6 +49,7 @@ public class GameServerHandler extends ChannelInboundHandlerAdapter {
 			Message message = MessageDecoder.decode((String) object);
 			MessageService.recieve(ctx.channel(), message);
 		} catch(Exception e) {
+			e.printStackTrace();
 			throw e;
 		} finally {
 		}

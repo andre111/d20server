@@ -16,6 +16,7 @@ import me.andre111.d20common.message.game.entity.RemoveEntity;
 import me.andre111.d20common.message.game.entity.UpdateEntityProperties;
 import me.andre111.d20common.message.game.token.UpdateTokenMacros;
 import me.andre111.d20common.message.game.token.list.TokenListValue;
+import me.andre111.d20common.message.game.util.EntityLoading;
 import me.andre111.d20common.message.game.util.Ping;
 import me.andre111.d20common.model.Entity;
 import me.andre111.d20common.model.entity.Image;
@@ -71,6 +72,8 @@ public abstract class GameMessageHandler {
 			// --------------------
 		} else if(message instanceof Ping) {
 			handlePingMessage(profile, map, (Ping) message);
+		} else if(message instanceof EntityLoading) {
+			// discard client callbacks for now
 		} else {
 			System.out.println("Warning: Recieved unhandled message: "+message);
 		}
