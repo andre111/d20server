@@ -5,6 +5,7 @@ import java.util.HashMap;
 import me.andre111.d20common.message.game.util.EntityLoading;
 import me.andre111.d20common.model.Entity;
 import me.andre111.d20common.model.Entities;
+import me.andre111.d20common.model.entity.actor.Actor;
 import me.andre111.d20common.model.entity.map.Drawing;
 import me.andre111.d20common.model.entity.map.Map;
 import me.andre111.d20common.model.entity.map.Token;
@@ -57,7 +58,7 @@ public class EntityManagers {
 	
 	static {
 		// remove token list entries on token remove
-		EntityManagers.get(Token.class).addRemovalListener(id -> {
+		EntityManagers.get(Token.class).addRemovalListener((id, token) -> {
 			EntityManagers.get(TokenList.class).all().forEach(tokenList -> {
 				if(tokenList.hasValue(id)) {
 					tokenList.removeToken(id);
@@ -67,10 +68,17 @@ public class EntityManagers {
 		});
 		
 		// remove tokens and walls on map remove
-		EntityManagers.get(Map.class).addRemovalListener(id -> {
+		EntityManagers.get(Map.class).addRemovalListener((id, map) -> {
 			EntityManagers.get(Token.class).removeAll(token -> token.prop("map").getLong() == id);
 			EntityManagers.get(Wall.class).removeAll(wall -> wall.prop("map").getLong() == id);
 			EntityManagers.get(Drawing.class).removeAll(drawing -> drawing.prop("map").getLong() == id);
+		});
+		
+		// remove default token on actor remove
+		EntityManagers.get(Actor.class).addRemovalListener((id, actor) -> {
+			if(actor != null) {
+				EntityManagers.get(Token.class).remove(actor.prop("defaultToken").getLong());
+			}
 		});
 	}
 }

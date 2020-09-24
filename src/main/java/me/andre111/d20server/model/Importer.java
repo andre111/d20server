@@ -10,6 +10,7 @@ import java.util.stream.Collectors;
 import com.google.gson.reflect.TypeToken;
 
 import me.andre111.d20common.model.Entity;
+import me.andre111.d20common.model.EntityManager;
 import me.andre111.d20common.model.entity.Audio;
 import me.andre111.d20common.model.entity.Image;
 import me.andre111.d20common.model.entity.actor.Actor;
@@ -20,54 +21,68 @@ import me.andre111.d20common.util.Utils;
 public class Importer {
 	public static void importEntities(File directory, boolean overwriteExisting) {
 		// import images and audio (with copying of the actual data)
-		Map<Long, Long> imageIDMap = importEntities(directory, overwriteExisting, Image.class, (originalID, image) -> {
+		Map<Long, Long> imageIDMap = importEntities(directory, overwriteExisting, true, Image.class, (originalID, image) -> {
 			File sourceFile = new File(directory, "image"+File.separator+originalID+".bin");
 			byte[] data = Utils.readBinary(sourceFile);
 			Utils.saveBinary("entity.image."+image.id(), data);
 		});
-		Map<Long, Long> audioIDMap = importEntities(directory, overwriteExisting, Audio.class, (originalID, audio) -> {
+		Map<Long, Long> audioIDMap = importEntities(directory, overwriteExisting, true, Audio.class, (originalID, audio) -> {
 			File sourceFile = new File(directory, "audio"+File.separator+originalID+".bin");
 			byte[] data = Utils.readBinary(sourceFile);
 			Utils.saveBinary("entity.audio."+audio.id(), data);
 		});
 		
 		// import attachments
-		Map<Long, Long> attachmentIDMap = importEntities(directory, overwriteExisting, Attachment.class, (originalID, attachment) -> {
+		Map<Long, Long> attachmentIDMap = importEntities(directory, overwriteExisting, true, Attachment.class, (originalID, attachment) -> {
 			long imageID = attachment.prop("imageID").getLong();
 			if(imageID > 0) {
 				attachment.prop("imageID").setLong(imageIDMap.get(imageID));
 			}
 		});
 		
+		// import tokens
+		Map<Long, Long> tokenIDMap = importEntities(directory, overwriteExisting, false, Token.class, (originalID, token) -> {
+			long imageID = token.prop("imageID").getLong();
+			if(imageID > 0) {
+				token.prop("imageID").setLong(imageIDMap.get(imageID));
+			}
+			
+			long audioID = token.prop("audioID").getLong();
+			if(audioID > 0) {
+				token.prop("audioID").setLong(audioIDMap.get(audioID));
+			}
+		});
+		
 		// import actors
-		importEntities(directory, overwriteExisting, Actor.class, (originalID, actor) -> {
+		Map<Long, Long> actorIDMap = importEntities(directory, overwriteExisting, true, Actor.class, (originalID, actor) -> {
 			// adjust attachments
 			List<Long> attachmentIDs = actor.prop("attachments").getLongList().stream().map(oldID -> attachmentIDMap.get(oldID)).collect(Collectors.toList());
 			actor.prop("attachments").setLongList(attachmentIDs);
 			
 			// adjust default token
-			Token defaultToken = actor.getDefaultToken();
-			if(defaultToken != null) {
-				defaultToken.prop("actorID").setLong(actor.id());
-				
-				long imageID = defaultToken.prop("imageID").getLong();
-				if(imageID > 0) {
-					defaultToken.prop("imageID").setLong(imageIDMap.get(imageID));
-				}
-				
-				long audioID = defaultToken.prop("audioID").getLong();
-				if(audioID > 0) {
-					defaultToken.prop("audioID").setLong(audioIDMap.get(audioID));
-				}
+			long tokenID = actor.prop("defaultToken").getLong();
+			if(tokenID > 0) {
+				actor.prop("defaultToken").setLong(tokenIDMap.get(tokenID));
 			}
 		});
+		// adjust token actors
+		EntityManager<Token> tokenEM = EntityManagers.get(Token.class);
+		for(long tokenID : tokenIDMap.values()) {
+			Token token = tokenEM.find(tokenID);
+			
+			// adjust default token
+			long actorID = token.prop("actorID").getLong();
+			if(actorID > 0) {
+				token.prop("actorID").setLong(actorIDMap.get(actorID));
+			}
+		}
 		
 		// TODO: import more stuff
 		
 		System.out.println("Done");
 	}
 	
-	private static <E extends Entity> Map<Long, Long> importEntities(File directory, boolean overwriteExisting, Class<E> entityType, BiConsumer<Long, E> entityModifier) {
+	private static <E extends Entity> Map<Long, Long> importEntities(File directory, boolean overwriteExisting, boolean nameBased, Class<E> entityType, BiConsumer<Long, E> entityModifier) {
 		System.out.println("Importing "+entityType.getSimpleName());
 		Map<String, E> entityMap = new HashMap<>();
 		
@@ -91,7 +106,7 @@ public class Importer {
 			
 			// import entity
 			E importedEntity = null;
-			if(entityMap.containsKey(entityToImport.getName())) {
+			if(nameBased && entityMap.containsKey(entityToImport.getName())) {
 				// by overwriting or keeping existing entities
 				if(overwriteExisting) {
 					entityToImport.transferIDFrom(entityMap.get(entityToImport.getName()));

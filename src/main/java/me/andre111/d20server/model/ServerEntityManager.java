@@ -7,6 +7,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
 
@@ -35,7 +36,7 @@ public class ServerEntityManager<E extends Entity> implements EntityManager<E> {
 	
 	private final List<Consumer<Map<Long, E>>> listeners = new ArrayList<>();
 	private final List<Consumer<E>> entityListeners = new ArrayList<>();
-	private final List<Consumer<Long>> removalListeners = new ArrayList<>();
+	private final List<BiConsumer<Long, E>> removalListeners = new ArrayList<>();
 	
 	private boolean saveEnabled = true;
 	
@@ -83,7 +84,7 @@ public class ServerEntityManager<E extends Entity> implements EntityManager<E> {
 	public final void remove(long id) {
 		if(!entities.containsKey(id)) return;
 		
-		entities.remove(id);
+		E entity = entities.remove(id);
 		if(saveEnabled) Utils.saveJson("entity."+name, entities);
 		
 		UserService.forEach(profile -> {
@@ -92,7 +93,7 @@ public class ServerEntityManager<E extends Entity> implements EntityManager<E> {
 		
 		notifyListeners();
 		for(var listener : removalListeners) {
-			listener.accept(id);
+			listener.accept(id, entity);
 		}
 	}
 
@@ -163,7 +164,7 @@ public class ServerEntityManager<E extends Entity> implements EntityManager<E> {
 		entityListeners.add(listener);
 	}
 	
-	public final void addRemovalListener(Consumer<Long> listener) {
+	public final void addRemovalListener(BiConsumer<Long, E> listener) {
 		removalListeners.add(listener);
 	}
 	
