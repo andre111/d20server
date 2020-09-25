@@ -1,4 +1,4 @@
-package me.andre111.d20server.scripting.template;
+package me.andre111.d20server.template;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -11,7 +11,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import me.andre111.d20common.model.entity.profile.Profile;
-import me.andre111.d20server.scripting.ScriptException;
+import me.andre111.d20common.scripting.ScriptException;
 
 public class Template {
 	private static Map<String, Template> TEMPLATES = new HashMap<>();

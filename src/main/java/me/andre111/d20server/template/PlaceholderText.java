@@ -1,10 +1,10 @@
-package me.andre111.d20server.scripting.template;
+package me.andre111.d20server.template;
 
 import me.andre111.d20common.model.entity.profile.Profile;
-import me.andre111.d20server.scripting.Context;
-import me.andre111.d20server.scripting.ScriptException;
-import me.andre111.d20server.scripting.variable.Variable;
-import me.andre111.d20server.scripting.variable.parser.VariableParser;
+import me.andre111.d20common.scripting.Context;
+import me.andre111.d20common.scripting.ScriptException;
+import me.andre111.d20common.scripting.variable.Variable;
+import me.andre111.d20common.scripting.variable.parser.VariableParser;
 import me.andre111.d20server.service.GameService;
 
 public class PlaceholderText extends Placeholder {

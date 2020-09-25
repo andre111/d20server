@@ -2,10 +2,10 @@ package me.andre111.d20server.command;
 
 import me.andre111.d20common.model.entity.ChatEntry;
 import me.andre111.d20common.model.entity.profile.Profile;
-import me.andre111.d20server.scripting.Context;
-import me.andre111.d20server.scripting.expression.Expression;
-import me.andre111.d20server.scripting.expression.Parser;
-import me.andre111.d20server.scripting.expression.Result;
+import me.andre111.d20common.scripting.Context;
+import me.andre111.d20common.scripting.expression.Expression;
+import me.andre111.d20common.scripting.expression.Parser;
+import me.andre111.d20common.scripting.expression.Result;
 import me.andre111.d20server.service.ChatService;
 import me.andre111.d20server.service.GameService;
 import me.andre111.d20server.util.RollFormatter;

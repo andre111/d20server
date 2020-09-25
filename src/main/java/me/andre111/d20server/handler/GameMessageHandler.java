@@ -111,7 +111,7 @@ public abstract class GameMessageHandler {
 			selectedTokens = new ArrayList<>();
 		}
 
-		GameService.setSelectedTokens(profile, selectedTokens);
+		profile.setSelectedTokens(selectedTokens);
 	}
 
 
@@ -139,7 +139,7 @@ public abstract class GameMessageHandler {
 	// ---------------------------------------------------------
 	private static void handleSetActorDefaultToken(Profile profile, Map map, SetActorDefaultToken message) {
 		Actor actor = EntityManagers.get(Actor.class).find(message.getActorID());
-		Token token = GameService.getSelectedToken(map, profile, true);
+		Token token = profile.getSelectedToken(true);
 		if(actor == null || token == null) return;
 		
 		// set default token

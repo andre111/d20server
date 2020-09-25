@@ -50,7 +50,7 @@ public abstract class ChatService {
 			String macroName = message.substring(1);
 			
 			// find token and check access
-			Token token = GameService.getSelectedToken(GameService.getPlayerMap(profile), profile, true);
+			Token token = profile.getSelectedToken(true);
 			if(token == null) {
 				appendError(profile, "No (single) token selected");
 				return;

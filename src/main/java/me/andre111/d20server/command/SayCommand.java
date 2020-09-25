@@ -2,10 +2,10 @@ package me.andre111.d20server.command;
 
 import me.andre111.d20common.model.entity.ChatEntry;
 import me.andre111.d20common.model.entity.profile.Profile;
-import me.andre111.d20server.scripting.Context;
-import me.andre111.d20server.scripting.ScriptException;
-import me.andre111.d20server.scripting.variable.Variable;
-import me.andre111.d20server.scripting.variable.parser.VariableParser;
+import me.andre111.d20common.scripting.Context;
+import me.andre111.d20common.scripting.ScriptException;
+import me.andre111.d20common.scripting.variable.Variable;
+import me.andre111.d20common.scripting.variable.parser.VariableParser;
 import me.andre111.d20server.service.ChatService;
 import me.andre111.d20server.service.GameService;
 

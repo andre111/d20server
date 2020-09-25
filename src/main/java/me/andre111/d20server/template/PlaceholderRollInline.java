@@ -1,11 +1,11 @@
-package me.andre111.d20server.scripting.template;
+package me.andre111.d20server.template;
 
 import me.andre111.d20common.model.entity.profile.Profile;
-import me.andre111.d20server.scripting.Context;
-import me.andre111.d20server.scripting.ScriptException;
-import me.andre111.d20server.scripting.expression.Expression;
-import me.andre111.d20server.scripting.expression.Parser;
-import me.andre111.d20server.scripting.expression.Result;
+import me.andre111.d20common.scripting.Context;
+import me.andre111.d20common.scripting.ScriptException;
+import me.andre111.d20common.scripting.expression.Expression;
+import me.andre111.d20common.scripting.expression.Parser;
+import me.andre111.d20common.scripting.expression.Result;
 import me.andre111.d20server.service.GameService;
 import me.andre111.d20server.util.RollFormatter;
 

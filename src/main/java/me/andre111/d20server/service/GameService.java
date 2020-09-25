@@ -1,6 +1,5 @@
 package me.andre111.d20server.service;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -9,7 +8,6 @@ import me.andre111.d20common.message.game.EnterMap;
 import me.andre111.d20common.message.game.PlayerList;
 import me.andre111.d20common.message.game.entity.AddEntity;
 import me.andre111.d20common.model.entity.map.Map;
-import me.andre111.d20common.model.entity.map.Token;
 import me.andre111.d20common.model.entity.profile.Profile;
 import me.andre111.d20server.model.EntityManagers;
 
@@ -87,19 +85,6 @@ public abstract class GameService {
 		return EntityManagers.get(Map.class).find(mapID);
 	}
 	
-	public static Token getSelectedToken(Map map, Profile profile, boolean forceSingle) {
-		List<Long> selectedTokens = joinedProfiles.get(profile.id()).selectedTokens;
-		if(selectedTokens == null || selectedTokens.isEmpty()) return null;
-		if(forceSingle && selectedTokens.size() != 1) return null;
-		
-		Token token = EntityManagers.get(Token.class).find(selectedTokens.get(0));
-		return token;
-	}
-	public static void setSelectedTokens(Profile profile, List<Long> selectedTokens) {
-		joinedProfiles.get(profile.id()).selectedTokens = selectedTokens;
-	}
-	
 	private static final class ProfileStatus {
-		private List<Long> selectedTokens = new ArrayList<>();
 	}
 }

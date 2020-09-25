@@ -2,9 +2,9 @@ package me.andre111.d20server.command;
 
 import me.andre111.d20common.model.entity.ChatEntry;
 import me.andre111.d20common.model.entity.profile.Profile;
-import me.andre111.d20server.scripting.ScriptException;
-import me.andre111.d20server.scripting.template.Template;
+import me.andre111.d20common.scripting.ScriptException;
 import me.andre111.d20server.service.ChatService;
+import me.andre111.d20server.template.Template;
 
 public class TemplateCommand extends Command {
 	private final boolean showPublic;
