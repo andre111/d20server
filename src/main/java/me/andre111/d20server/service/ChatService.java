@@ -2,6 +2,7 @@ package me.andre111.d20server.service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import me.andre111.d20common.message.game.chat.ChatEntries;
 import me.andre111.d20common.model.entity.ChatData;
@@ -65,10 +66,11 @@ public abstract class ChatService {
 			if(macroName.startsWith("!")) {
 				Actor actor = EntityManagers.get(Actor.class).find(token.prop("actorID").getLong());
 				if(actor != null) {
-					macro = actor.getType().getMacroCommands(macroName.substring(1));
+					macro = actor.getActorType().getMacroCommands(macroName.substring(1));
 				}
 			} else {
-				macro = token.getMacro(macroName);
+				Map<String, String> tokenMacros = token.prop("macros").getStringMap();
+				macro = tokenMacros.get(macroName);
 			}
 			if(macro == null) {
 				appendError(profile, "Could not find macro: "+macroName);

@@ -31,7 +31,7 @@ public class PlaceholderText extends Placeholder {
 				startIndex = index;
 				
 				Variable variable = VariableParser.parseVariable(variableName);
-				Object value = variable.get(new Context(profile, GameService.getPlayerMap(profile)));
+				Object value = variable.get(new Context(profile, GameService.getPlayerMap(profile), null));
 				sb.append(value);
 			}
 		}

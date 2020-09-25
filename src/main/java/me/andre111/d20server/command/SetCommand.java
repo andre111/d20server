@@ -41,7 +41,7 @@ public class SetCommand extends Command {
 			if(split.length != 3) throw new ScriptException("Wrong argument count: <variable> <type> <expression>");
 			
 			Map map = GameService.getPlayerMap(profile);
-			Context context = new Context(profile, map);
+			Context context = new Context(profile, map, null);
 			
 			Variable variable = VariableParser.parseVariable(split[0]);
 			Type type = Type.valueOf(split[1].toUpperCase());

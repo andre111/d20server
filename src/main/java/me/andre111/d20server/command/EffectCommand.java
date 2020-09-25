@@ -31,7 +31,7 @@ public class EffectCommand extends Command {
 			if(split.length != 6) throw new ScriptException("Wrong argument count: <type> <x:expression> <y:expression> <rotation:expression> <scale:expression> <aboveOcc>");
 			
 			Map map = GameService.getPlayerMap(profile);
-			Context context = new Context(profile, map);
+			Context context = new Context(profile, map, null);
 			
 			String type = split[0];
 			if(!EFFECTS.contains(type)) throw new ScriptException("Unknown effect type: "+type);

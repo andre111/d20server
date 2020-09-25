@@ -18,7 +18,7 @@ public class GetCommand extends Command {
 	public void execute(Profile profile, String arguments) {
 		try {
 			Variable variable = VariableParser.parseVariable(arguments);
-			Object value = variable.get(new Context(profile, GameService.getPlayerMap(profile)));
+			Object value = variable.get(new Context(profile, GameService.getPlayerMap(profile), null));
 			
 			StringBuilder sb = new StringBuilder();
 			sb.append(ChatService.STYLE_INFO);

@@ -19,7 +19,7 @@ public class PlaceholderRollInline extends Placeholder {
 		Exception exception = null;
 		try {
 			Expression expr = parser.parse(input);
-			result = expr.eval(new Context(profile, GameService.getPlayerMap(profile)));
+			result = expr.eval(new Context(profile, GameService.getPlayerMap(profile), null));
 		} catch(Exception e) {
 			exception = e;
 		}

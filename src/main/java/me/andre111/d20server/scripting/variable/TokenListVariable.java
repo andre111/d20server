@@ -10,12 +10,14 @@ import me.andre111.d20server.scripting.TokenFinder;
 
 public class TokenListVariable extends Variable {
 	private final String listName;
+	private final boolean hidden;
 	private final TokenFinder tokenFinder;
 	
-	public TokenListVariable(String fullName, String listName, TokenFinder tokenFinder) {
+	public TokenListVariable(String fullName, String listName, boolean hidden, TokenFinder tokenFinder) {
 		super(fullName);
 		
 		this.listName = listName;
+		this.hidden = hidden;
 		this.tokenFinder = tokenFinder;
 	}
 
@@ -35,7 +37,7 @@ public class TokenListVariable extends Variable {
 		}
 		
 		// set
-		list.addOrUpdateToken(token.id(), ((Number) value).doubleValue());
+		list.addOrUpdateToken(token.id(), ((Number) value).doubleValue(), hidden);
 		
 		// save and broadcast
 		EntityManagers.get(TokenList.class).add(list);

@@ -1,5 +1,8 @@
 package me.andre111.d20server.scripting.expression;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import me.andre111.d20server.scripting.ScriptException;
 import me.andre111.d20server.scripting.variable.parser.VariableParser;
 
@@ -7,7 +10,9 @@ import me.andre111.d20server.scripting.variable.parser.VariableParser;
 // expression = term | expression `+` term | expression `-` term
 // term = factor | term `*` factor | term `/` factor
 // factor = `+` factor | `-` factor | `(` expression `)` | value
-// value = `{` variable `}` | dice | number
+// value = `{` variable `}` | function | dice | number
+// function = identifier `(` parameters `)`
+// parameters = expression | parameters `,` expression
 public class Parser {
 	private String string;
 	private int pos;
@@ -126,7 +131,7 @@ public class Parser {
 		return parseValue();
 	}
 
-	// value = `{` variable `}` | dice | number
+	// value = `{` variable `}` | function | dice | number
 	private Expression parseValue() throws ScriptException {
 		// variable
 		if(eat('{')) {
@@ -136,6 +141,11 @@ public class Parser {
 			if(!eat('}')) throw new ScriptException("Unclosed variable parentheses");
 			
 			return VariableParser.parseVariable(variableString);
+		}
+		
+		// function
+		if(Character.isAlphabetic(c)) {
+			return parseFunction();
 		}
 		
 		// find substring
@@ -157,5 +167,60 @@ public class Parser {
 			DiceParser diceParser = new DiceParser();
 			return diceParser.parse(valueString);
 		}
+	}
+
+	// function = identifier `(` parameters `)`
+	private Expression parseFunction() throws ScriptException {
+		String name = parseIdentifier();
+		if(!eat('(')) throw new ScriptException("Expected (");
+		List<Expression> parameters = parseParameters();
+		if(!eat(')')) throw new ScriptException("Expected )");
+		
+		// function implementation - might need a better generalized system in the future
+		switch(name) {
+		case "min": {
+			if(parameters.size() != 2) throw new ScriptException("Wrong parameter count for min, 2 expected, got "+parameters.size());
+			return (c -> {
+				Result r1 = parameters.get(0).eval(c);
+				Result r2 = parameters.get(1).eval(c);
+				return new Result(Math.min(r1.v, r2.v), "min("+r1.s+", "+r2.s+")", r1.cf || r2.cf, r1.cs || r2.cs);
+			});
+		}
+		case "max": {
+			if(parameters.size() != 2) throw new ScriptException("Wrong parameter count for max, 2 expected, got "+parameters.size());
+			return (c -> {
+				Result r1 = parameters.get(0).eval(c);
+				Result r2 = parameters.get(1).eval(c);
+				return new Result(Math.max(r1.v, r2.v), "max("+r1.s+", "+r2.s+")", r1.cf || r2.cf, r1.cs || r2.cs);
+			});
+		}
+		case "sqrt": {
+			if(parameters.size() != 1) throw new ScriptException("Wrong parameter count for sqrt, 1 expected, got "+parameters.size());
+			return (c -> {
+				Result r1 = parameters.get(0).eval(c);
+				return new Result(Math.sqrt(r1.v), "sqrt("+r1.s+")", r1.cf, r1.cs);
+			});
+		}
+		default:
+			throw new ScriptException("Unknown function "+name);
+		}
+	}
+	
+	private String parseIdentifier() throws ScriptException {
+		StringBuilder identifier = new StringBuilder();
+		while(Character.isAlphabetic(c) || Character.isDigit(c) || c == '_') {
+			identifier.append((char) c);
+			nextChar();
+		}
+		return identifier.toString();
+	}
+
+	// parameters = expression | parameters `,` expression
+	private List<Expression> parseParameters() throws ScriptException {
+		List<Expression> parameters = new ArrayList<>();
+		do {
+			parameters.add(parseExpression());
+		} while(eat(','));
+		return parameters;
 	}
 }

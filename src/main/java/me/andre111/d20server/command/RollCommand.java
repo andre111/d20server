@@ -35,7 +35,7 @@ public class RollCommand extends Command {
 		Exception exception = null;
 		try {
 			Expression expr = parser.parse(arguments);
-			result = expr.eval(new Context(profile, GameService.getPlayerMap(profile)));
+			result = expr.eval(new Context(profile, GameService.getPlayerMap(profile), null));
 		} catch(Exception e) {
 			exception = e;
 		}

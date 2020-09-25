@@ -7,12 +7,14 @@ import me.andre111.d20server.server.GameServer;
 import me.andre111.d20server.server.HttpServer;
 import me.andre111.d20server.service.CommandLineService;
 import me.andre111.d20server.service.GameService;
+import me.andre111.d20server.service.ModuleService;
 
 public class ServerMain {
 	public static void main(String[] args) {
 		//TODO: replace all System.out.*
 		System.out.println("Initializing...");
 		D20Common.init(AppType.SERVER, EntityManagers::get);
+		ModuleService.init();
 		GameService.init();
 		CommandLineService.init();
 		

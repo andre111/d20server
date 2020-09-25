@@ -3,7 +3,9 @@ package me.andre111.d20server.model;
 import java.util.HashMap;
 
 import me.andre111.d20common.message.game.util.EntityLoading;
+import me.andre111.d20common.message.game.util.ServerDefinitions;
 import me.andre111.d20common.model.Entity;
+import me.andre111.d20common.model.def.Definitions;
 import me.andre111.d20common.model.Entities;
 import me.andre111.d20common.model.entity.actor.Actor;
 import me.andre111.d20common.model.entity.map.Drawing;
@@ -42,13 +44,8 @@ public class EntityManagers {
 		}
 		MessageService.send(new EntityLoading(count), profile);
 		
-		// experiment: small delay to give client time to adjust?
-		try {
-			Thread.sleep(100);
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		// TODO: weird place, but sync definitions here
+		MessageService.send(new ServerDefinitions(Definitions.get()), profile);
 		
 		// send actual data
 		for(ServerEntityManager<? extends Entity> manager : MANAGERS.values()) {

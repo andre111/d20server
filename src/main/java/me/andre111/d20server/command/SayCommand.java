@@ -18,7 +18,7 @@ public class SayCommand extends Command {
 	public void execute(Profile profile, String arguments) {
 		try {
 			Variable variable = VariableParser.parseVariable("selected.property.name");
-			Object name = variable.get(new Context(profile, GameService.getPlayerMap(profile)));
+			Object name = variable.get(new Context(profile, GameService.getPlayerMap(profile), null));
 			
 			StringBuilder sb = new StringBuilder();
 			sb.append(ChatService.STYLE_SENDER);

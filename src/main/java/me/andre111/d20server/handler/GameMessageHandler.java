@@ -14,7 +14,6 @@ import me.andre111.d20common.message.game.chat.SendChatMessage;
 import me.andre111.d20common.message.game.entity.AddEntity;
 import me.andre111.d20common.message.game.entity.RemoveEntity;
 import me.andre111.d20common.message.game.entity.UpdateEntityProperties;
-import me.andre111.d20common.message.game.token.UpdateTokenMacros;
 import me.andre111.d20common.message.game.token.list.TokenListValue;
 import me.andre111.d20common.message.game.util.EntityLoading;
 import me.andre111.d20common.message.game.util.Ping;
@@ -40,10 +39,6 @@ public abstract class GameMessageHandler {
 			handleMovePlayerToMap(profile, map, (MovePlayerToMap) message);
 		} else if(message instanceof SelectedTokens) {
 			handleSelectedTokens(profile, map, (SelectedTokens) message);
-
-			// TOKENS: --------------------
-		} else if(message instanceof UpdateTokenMacros) {
-			handleUpdateTokenMacros(profile, map, (UpdateTokenMacros) message);
 
 			// TOKEN-LISTS: --------------------
 		} else if(message instanceof TokenListValue) {
@@ -121,23 +116,6 @@ public abstract class GameMessageHandler {
 
 
 	// ---------------------------------------------------------
-	private static void handleUpdateTokenMacros(Profile profile, Map map, UpdateTokenMacros message) {
-		Token token = EntityManagers.get(Token.class).find(message.getTokenID());
-		java.util.Map<String, String> macros = message.getMacros();
-		if(token == null || macros == null) return;
-
-		// determine access level
-		Access accessLevel = token.getAccessLevel(profile);
-
-		if(token.prop("macroEdit").getAccessValue().ordinal() <= accessLevel.ordinal()) {
-			// transfer values
-			token.setMacros(macros);
-			EntityManagers.get(Token.class).add(token);
-		}
-	}
-
-
-	// ---------------------------------------------------------
 	private static void handleTokenListValue(Profile profile, Map map, TokenListValue message) {
 		TokenList list = EntityManagers.get(TokenList.class).find(message.getListID());
 		Token token = EntityManagers.get(Token.class).find(message.getTokenID());
@@ -145,12 +123,11 @@ public abstract class GameMessageHandler {
 			// determine access level
 			Access accessLevel = list.getAccessLevel(profile, token);
 			if(list.canEdit(accessLevel)) {
-
 				// apply change
 				if(message.doReset()) {
 					list.removeToken(token.id());
 				} else {
-					list.addOrUpdateToken(token.id(), message.getValue());
+					list.addOrUpdateToken(token.id(), message.getValue(), accessLevel == Access.GM && message.isHidden());
 				}
 
 				EntityManagers.get(TokenList.class).add(list);

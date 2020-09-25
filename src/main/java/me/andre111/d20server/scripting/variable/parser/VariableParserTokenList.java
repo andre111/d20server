@@ -10,6 +10,6 @@ public class VariableParserTokenList extends VariableParser {
 	public Variable parse(ParserContext context, String fullName, String name) throws ScriptException {
 		if(context.getTokenFinder() == null) throw new ScriptException("Internal Error: No TokenFinder present!");
 		
-		return new TokenListVariable(fullName, name, context.getTokenFinder());
+		return new TokenListVariable(fullName, name, false, context.getTokenFinder()); //TODO: somehow parse and allow hidden sets
 	}
 }
