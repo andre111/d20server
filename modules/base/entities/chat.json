@@ -1,0 +1,15 @@
+{
+    "displayName": "",
+    "properties": [
+    ],
+    "updateRules": [
+    ],
+    "editorTabs": [
+    ],
+    "extensionPoints": [
+        {
+            "name": "base",
+            "mode": "ALL"
+        }
+    ]
+}

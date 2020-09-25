@@ -17,7 +17,8 @@ public abstract class GameService {
 	public static void init() {
 		// add atleast one map
 		if(EntityManagers.get(Map.class).all().isEmpty()) {
-			Map map = new Map("New Map");
+			Map map = new Map();
+			map.prop("name").setString("New Map");
 			EntityManagers.get(Map.class).add(map);
 		}
 		
@@ -71,7 +72,7 @@ public abstract class GameService {
 		
 		// update all players
 		for(Profile otherProfile : profiles) {
-			Map map = getPlayerMap(otherProfile);
+			Map map = otherProfile.getMap();
 			if(map != null) {
 				MessageService.send(new AddEntity(map), otherProfile); // send map because client could have no independent access
 				MessageService.send(new EnterMap(map), otherProfile);
@@ -79,11 +80,6 @@ public abstract class GameService {
 		}
 	}
 
-	
-	public static Map getPlayerMap(Profile profile) {
-		long mapID = profile.getCurrentMap();
-		return EntityManagers.get(Map.class).find(mapID);
-	}
 	
 	private static final class ProfileStatus {
 	}

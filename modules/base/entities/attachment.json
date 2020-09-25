@@ -1,0 +1,50 @@
+{
+    "displayName": "Attachment",
+    "properties": [
+        {
+            "name": "name",
+            "type": "STRING",
+            "editAccess": "GM",
+            "viewAccess": "EVERYONE",
+            "value": ""
+        },
+        {
+            "name": "imageID",
+            "type": "LONG",
+            "editAccess": "GM",
+            "viewAccess": "EVERYONE",
+            "value": "-1"
+        },
+        {
+            "name": "descShort",
+            "type": "STRING",
+            "editAccess": "GM",
+            "viewAccess": "EVERYONE",
+            "value": ""
+        },
+        {
+            "name": "descFull",
+            "type": "STRING",
+            "editAccess": "GM",
+            "viewAccess": "EVERYONE",
+            "value": ""
+        },
+        {
+            "name": "tags",
+            "type": "STRING",
+            "editAccess": "GM",
+            "viewAccess": "EVERYONE",
+            "value": ""
+        }
+    ],
+    "updateRules": [
+    ],
+    "editorTabs": [
+    ],
+    "extensionPoints": [
+        {
+            "name": "base",
+            "mode": "ALL"
+        }
+    ]
+}

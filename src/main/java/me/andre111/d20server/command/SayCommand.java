@@ -7,7 +7,6 @@ import me.andre111.d20common.scripting.ScriptException;
 import me.andre111.d20common.scripting.variable.Variable;
 import me.andre111.d20common.scripting.variable.parser.VariableParser;
 import me.andre111.d20server.service.ChatService;
-import me.andre111.d20server.service.GameService;
 
 public class SayCommand extends Command {
 	public SayCommand(String name, String[] aliases) {
@@ -18,7 +17,7 @@ public class SayCommand extends Command {
 	public void execute(Profile profile, String arguments) {
 		try {
 			Variable variable = VariableParser.parseVariable("selected.property.name");
-			Object name = variable.get(new Context(profile, GameService.getPlayerMap(profile), null));
+			Object name = variable.get(new Context(profile, profile.getMap(), null));
 			
 			StringBuilder sb = new StringBuilder();
 			sb.append(ChatService.STYLE_SENDER);

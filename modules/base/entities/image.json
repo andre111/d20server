@@ -1,0 +1,22 @@
+{
+    "displayName": "Image",
+    "properties": [
+        {
+            "name": "name",
+            "type": "STRING",
+            "editAccess": "CONTROLLING_PLAYER",
+            "viewAccess": "CONTROLLING_PLAYER",
+            "value": ""
+        }
+    ],
+    "updateRules": [
+    ],
+    "editorTabs": [
+    ],
+    "extensionPoints": [
+        {
+            "name": "base",
+            "mode": "ALL"
+        }
+    ]
+}

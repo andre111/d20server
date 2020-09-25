@@ -16,7 +16,6 @@ import me.andre111.d20common.scripting.expression.Result;
 import me.andre111.d20common.scripting.variable.Variable;
 import me.andre111.d20common.scripting.variable.parser.VariableParser;
 import me.andre111.d20server.service.ChatService;
-import me.andre111.d20server.service.GameService;
 import me.andre111.d20server.util.RollFormatter;
 
 public class SetCommand extends Command {
@@ -40,7 +39,7 @@ public class SetCommand extends Command {
 			String[] split = arguments.split(" ", 3);
 			if(split.length != 3) throw new ScriptException("Wrong argument count: <variable> <type> <expression>");
 			
-			Map map = GameService.getPlayerMap(profile);
+			Map map = profile.getMap();
 			Context context = new Context(profile, map, null);
 			
 			Variable variable = VariableParser.parseVariable(split[0]);

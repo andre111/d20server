@@ -11,7 +11,6 @@ import me.andre111.d20common.scripting.ScriptException;
 import me.andre111.d20common.scripting.expression.Parser;
 import me.andre111.d20common.scripting.expression.Result;
 import me.andre111.d20server.service.ChatService;
-import me.andre111.d20server.service.GameService;
 import me.andre111.d20server.service.MessageService;
 
 public class EffectCommand extends Command {
@@ -30,7 +29,7 @@ public class EffectCommand extends Command {
 			String[] split = arguments.split(" ", 6);
 			if(split.length != 6) throw new ScriptException("Wrong argument count: <type> <x:expression> <y:expression> <rotation:expression> <scale:expression> <aboveOcc>");
 			
-			Map map = GameService.getPlayerMap(profile);
+			Map map = profile.getMap();
 			Context context = new Context(profile, map, null);
 			
 			String type = split[0];

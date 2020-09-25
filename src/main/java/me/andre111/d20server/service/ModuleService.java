@@ -41,7 +41,7 @@ public abstract class ModuleService {
 				
 				// read extension definitions
 				for(ExtensionPoint extensionPoint : entityDefinition.extensionPoints()) {
-					for(Map.Entry<String, File> ee : getFilesIn("entities/extensions/"+type+"/"+extensionPoint+"/").entrySet()) {
+					for(Map.Entry<String, File> ee : getFilesIn("entities/extensions/"+type+"/"+extensionPoint.name()+"/").entrySet()) {
 						if(ee.getValue().isFile() && ee.getKey().endsWith(".json")) {
 							String extensionName = ee.getKey().substring(0, ee.getKey().length()-5);
 							ExtensionDefinition extensionDefinition = Utils.readJson(ee.getValue(), ExtensionDefinition.class);

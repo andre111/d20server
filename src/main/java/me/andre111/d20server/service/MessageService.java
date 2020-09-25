@@ -30,7 +30,7 @@ public abstract class MessageService {
 	 */
 	public static void send(Message message, Map map) {
 		for(Profile profile : UserService.getAllConnectedProfiles()) {
-			if(map != null && !map.equals(GameService.getPlayerMap(profile))) continue;
+			if(map != null && !map.equals(profile.getMap())) continue;
 			
 			send(message, profile);
 		}

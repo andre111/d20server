@@ -1,0 +1,88 @@
+{
+    "displayName": "Map",
+    "properties": [
+        {
+            "name": "name",
+            "type": "STRING",
+            "editAccess": "GM",
+            "viewAccess": "CONTROLLING_PLAYER",
+            "value": ""
+        },
+        
+        {
+            "name": "gridSize",
+            "type": "LONG",
+            "editAccess": "GM",
+            "viewAccess": "EVERYONE",
+            "value": "70"
+        },
+        {
+            "name": "width",
+            "type": "LONG",
+            "editAccess": "GM",
+            "viewAccess": "EVERYONE",
+            "value": "100"
+        },
+        {
+            "name": "height",
+            "type": "LONG",
+            "editAccess": "GM",
+            "viewAccess": "EVERYONE",
+            "value": "100"
+        },
+        
+        {
+            "name": "light",
+            "type": "LIGHT",
+            "editAccess": "GM",
+            "viewAccess": "EVERYONE",
+            "value": "BRIGHT"
+        },
+        {
+            "name": "effect",
+            "type": "EFFECT",
+            "editAccess": "GM",
+            "viewAccess": "EVERYONE",
+            "value": "NONE"
+        },
+        
+        {
+            "name": "wallsBlockLight",
+            "type": "BOOLEAN",
+            "editAccess": "GM",
+            "viewAccess": "EVERYONE",
+            "value": "true"
+        },
+        {
+            "name": "hideWithNoMainToken",
+            "type": "BOOLEAN",
+            "editAccess": "GM",
+            "viewAccess": "EVERYONE",
+            "value": "true"
+        },
+        {
+            "name": "playersCanEnter",
+            "type": "BOOLEAN",
+            "editAccess": "GM",
+            "viewAccess": "EVERYONE",
+            "value": "false"
+        },
+        {
+            "name": "playersCanDraw",
+            "type": "BOOLEAN",
+            "editAccess": "GM",
+            "viewAccess": "EVERYONE",
+            "value": "false"
+        }
+    ],
+    "updateRules": [
+    ],
+    "editorTabs": [
+    ],
+    "extensionPoints": [
+        {
+            "name": "base",
+            "mode": "ALL"
+        }
+    ]
+}

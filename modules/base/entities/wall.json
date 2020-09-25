@@ -1,0 +1,57 @@
+{
+    "displayName": "Wall",
+    "properties": [
+        {
+            "name": "map",
+            "type": "LONG",
+            "editAccess": "SYSTEM",
+            "viewAccess": "EVERYONE",
+            "value": "-1"
+        },
+        {
+            "name": "x1",
+            "type": "LONG",
+            "editAccess": "GM",
+            "viewAccess": "EVERYONE",
+            "value": "0"
+        },
+        {
+            "name": "y1",
+            "type": "LONG",
+            "editAccess": "GM",
+            "viewAccess": "EVERYONE",
+            "value": "0"
+        },
+        {
+            "name": "x2",
+            "type": "LONG",
+            "editAccess": "GM",
+            "viewAccess": "EVERYONE",
+            "value": "0"
+        },
+        {
+            "name": "y2",
+            "type": "LONG",
+            "editAccess": "GM",
+            "viewAccess": "EVERYONE",
+            "value": "0"
+        },
+        {
+            "name": "seeThrough",
+            "type": "BOOLEAN",
+            "editAccess": "GM",
+            "viewAccess": "EVERYONE",
+            "value": "false"
+        }
+    ],
+    "updateRules": [
+    ],
+    "editorTabs": [
+    ],
+    "extensionPoints": [
+        {
+            "name": "base",
+            "mode": "ALL"
+        }
+    ]
+}

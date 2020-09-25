@@ -1,0 +1,1824 @@
+{
+    "displayName": "PF Charakter (DE)",
+    "properties": [
+        {
+            "name": "pf_characterName",
+            "type": "STRING",
+            "editAccess": "CONTROLLING_PLAYER",
+            "viewAccess": "CONTROLLING_PLAYER",
+            "value": ""
+        },
+        {
+            "name": "pf_alignment",
+            "type": "STRING",
+            "editAccess": "CONTROLLING_PLAYER",
+            "viewAccess": "CONTROLLING_PLAYER",
+            "value": ""
+        },
+        {
+            "name": "pf_playerName",
+            "type": "STRING",
+            "editAccess": "CONTROLLING_PLAYER",
+            "viewAccess": "CONTROLLING_PLAYER",
+            "value": ""
+        },
+        {
+            "name": "pf_classAndLevel",
+            "type": "STRING",
+            "editAccess": "CONTROLLING_PLAYER",
+            "viewAccess": "CONTROLLING_PLAYER",
+            "value": ""
+        },
+        {
+            "name": "pf_race",
+            "type": "STRING",
+            "editAccess": "CONTROLLING_PLAYER",
+            "viewAccess": "CONTROLLING_PLAYER",
+            "value": ""
+        },
+        {
+            "name": "pf_campaign",
+            "type": "STRING",
+            "editAccess": "CONTROLLING_PLAYER",
+            "viewAccess": "CONTROLLING_PLAYER",
+            "value": ""
+        },
+        {
+            "name": "pf_homeland",
+            "type": "STRING",
+            "editAccess": "CONTROLLING_PLAYER",
+            "viewAccess": "CONTROLLING_PLAYER",
+            "value": ""
+        },
+        {
+            "name": "pf_deity",
+            "type": "STRING",
+            "editAccess": "CONTROLLING_PLAYER",
+            "viewAccess": "CONTROLLING_PLAYER",
+            "value": ""
+        },
+        {
+            "name": "pf_sizeCategory",
+            "type": "STRING",
+            "editAccess": "SYSTEM",
+            "viewAccess": "CONTROLLING_PLAYER",
+            "value": ""
+        },
+        {
+            "name": "pf_gender",
+            "type": "STRING",
+            "editAccess": "CONTROLLING_PLAYER",
+            "viewAccess": "CONTROLLING_PLAYER",
+            "value": ""
+        },
+        {
+            "name": "pf_age",
+            "type": "STRING",
+            "editAccess": "CONTROLLING_PLAYER",
+            "viewAccess": "CONTROLLING_PLAYER",
+            "value": ""
+        },
+        {
+            "name": "pf_size",
+            "type": "STRING",
+            "editAccess": "CONTROLLING_PLAYER",
+            "viewAccess": "CONTROLLING_PLAYER",
+            "value": ""
+        },
+        {
+            "name": "pf_weight",
+            "type": "STRING",
+            "editAccess": "CONTROLLING_PLAYER",
+            "viewAccess": "CONTROLLING_PLAYER",
+            "value": ""
+        },
+        {
+            "name": "pf_hairColor",
+            "type": "STRING",
+            "editAccess": "CONTROLLING_PLAYER",
+            "viewAccess": "CONTROLLING_PLAYER",
+            "value": ""
+        },
+        {
+            "name": "pf_eyeColor",
+            "type": "STRING",
+            "editAccess": "CONTROLLING_PLAYER",
+            "viewAccess": "CONTROLLING_PLAYER",
+            "value": ""
+        },
+    
+        {
+            "name": "pf_sizeMod",
+            "type": "LONG",
+            "editAccess": "CONTROLLING_PLAYER",
+            "viewAccess": "CONTROLLING_PLAYER",
+            "value": "0"
+        },
+    
+        {
+            "name": "pf_str",
+            "type": "LONG",
+            "editAccess": "CONTROLLING_PLAYER",
+            "viewAccess": "CONTROLLING_PLAYER",
+            "value": "10"
+        },
+        {
+            "name": "pf_dex",
+            "type": "LONG",
+            "editAccess": "CONTROLLING_PLAYER",
+            "viewAccess": "CONTROLLING_PLAYER",
+            "value": "10"
+        },
+        {
+            "name": "pf_con",
+            "type": "LONG",
+            "editAccess": "CONTROLLING_PLAYER",
+            "viewAccess": "CONTROLLING_PLAYER",
+            "value": "10"
+        },
+        {
+            "name": "pf_int",
+            "type": "LONG",
+            "editAccess": "CONTROLLING_PLAYER",
+            "viewAccess": "CONTROLLING_PLAYER",
+            "value": "10"
+        },
+        {
+            "name": "pf_wis",
+            "type": "LONG",
+            "editAccess": "CONTROLLING_PLAYER",
+            "viewAccess": "CONTROLLING_PLAYER",
+            "value": "10"
+        },
+        {
+            "name": "pf_cha",
+            "type": "LONG",
+            "editAccess": "CONTROLLING_PLAYER",
+            "viewAccess": "CONTROLLING_PLAYER",
+            "value": "10"
+        },
+        
+        {
+            "name": "pf_initMiscMod",
+            "type": "LONG",
+            "editAccess": "CONTROLLING_PLAYER",
+            "viewAccess": "CONTROLLING_PLAYER",
+            "value": "0"
+        },
+        
+        {
+            "name": "pf_acArmorBonus",
+            "type": "LONG",
+            "editAccess": "CONTROLLING_PLAYER",
+            "viewAccess": "CONTROLLING_PLAYER",
+            "value": "0"
+        },
+        {
+            "name": "pf_acShieldBonus",
+            "type": "LONG",
+            "editAccess": "CONTROLLING_PLAYER",
+            "viewAccess": "CONTROLLING_PLAYER",
+            "value": "0"
+        },
+        {
+            "name": "pf_acMaxDexMod",
+            "type": "LONG",
+            "editAccess": "CONTROLLING_PLAYER",
+            "viewAccess": "CONTROLLING_PLAYER",
+            "value": "100"
+        },
+        {
+            "name": "pf_acSizeMod",
+            "type": "LONG",
+            "editAccess": "SYSTEM",
+            "viewAccess": "CONTROLLING_PLAYER",
+            "value": "0"
+        },
+        {
+            "name": "pf_acNaturalArmor",
+            "type": "LONG",
+            "editAccess": "CONTROLLING_PLAYER",
+            "viewAccess": "CONTROLLING_PLAYER",
+            "value": "0"
+        },
+        {
+            "name": "pf_acDeflectionMod",
+            "type": "LONG",
+            "editAccess": "CONTROLLING_PLAYER",
+            "viewAccess": "CONTROLLING_PLAYER",
+            "value": "0"
+        },
+        {
+            "name": "pf_acMiscMod",
+            "type": "LONG",
+            "editAccess": "CONTROLLING_PLAYER",
+            "viewAccess": "CONTROLLING_PLAYER",
+            "value": "0"
+        },
+        
+        {
+            "name": "pf_saveReflexBase",
+            "type": "LONG",
+            "editAccess": "CONTROLLING_PLAYER",
+            "viewAccess": "CONTROLLING_PLAYER",
+            "value": "0"
+        },
+        {
+            "name": "pf_saveReflexMagic",
+            "type": "LONG",
+            "editAccess": "CONTROLLING_PLAYER",
+            "viewAccess": "CONTROLLING_PLAYER",
+            "value": "0"
+        },
+        {
+            "name": "pf_saveReflexMisc",
+            "type": "LONG",
+            "editAccess": "CONTROLLING_PLAYER",
+            "viewAccess": "CONTROLLING_PLAYER",
+            "value": "0"
+        },
+        {
+            "name": "pf_saveReflexTemp",
+            "type": "LONG",
+            "editAccess": "CONTROLLING_PLAYER",
+            "viewAccess": "CONTROLLING_PLAYER",
+            "value": "0"
+        },
+        
+        {
+            "name": "pf_saveWillBase",
+            "type": "LONG",
+            "editAccess": "CONTROLLING_PLAYER",
+            "viewAccess": "CONTROLLING_PLAYER",
+            "value": "0"
+        },
+        {
+            "name": "pf_saveWillMagic",
+            "type": "LONG",
+            "editAccess": "CONTROLLING_PLAYER",
+            "viewAccess": "CONTROLLING_PLAYER",
+            "value": "0"
+        },
+        {
+            "name": "pf_saveWillMisc",
+            "type": "LONG",
+            "editAccess": "CONTROLLING_PLAYER",
+            "viewAccess": "CONTROLLING_PLAYER",
+            "value": "0"
+        },
+        {
+            "name": "pf_saveWillTemp",
+            "type": "LONG",
+            "editAccess": "CONTROLLING_PLAYER",
+            "viewAccess": "CONTROLLING_PLAYER",
+            "value": "0"
+        },
+        
+        {
+            "name": "pf_saveFortitudeBase",
+            "type": "LONG",
+            "editAccess": "CONTROLLING_PLAYER",
+            "viewAccess": "CONTROLLING_PLAYER",
+            "value": "0"
+        },
+        {
+            "name": "pf_saveFortitudeMagic",
+            "type": "LONG",
+            "editAccess": "CONTROLLING_PLAYER",
+            "viewAccess": "CONTROLLING_PLAYER",
+            "value": "0"
+        },
+        {
+            "name": "pf_saveFortitudeMisc",
+            "type": "LONG",
+            "editAccess": "CONTROLLING_PLAYER",
+            "viewAccess": "CONTROLLING_PLAYER",
+            "value": "0"
+        },
+        {
+            "name": "pf_saveFortitudeTemp",
+            "type": "LONG",
+            "editAccess": "CONTROLLING_PLAYER",
+            "viewAccess": "CONTROLLING_PLAYER",
+            "value": "0"
+        },
+        
+        {
+            "name": "pf_baseAttackBonus",
+            "type": "LONG",
+            "editAccess": "CONTROLLING_PLAYER",
+            "viewAccess": "CONTROLLING_PLAYER",
+            "value": "0"
+        },
+        
+        {
+            "name": "pf_spellResistance",
+            "type": "LONG",
+            "editAccess": "CONTROLLING_PLAYER",
+            "viewAccess": "CONTROLLING_PLAYER",
+            "value": "0"
+        },
+        
+        {
+            "name": "pf_skillAcrobaticsClass",
+            "type": "BOOLEAN",
+            "editAccess": "CONTROLLING_PLAYER",
+            "viewAccess": "CONTROLLING_PLAYER",
+            "value": "false"
+        },
+        {
+            "name": "pf_skillAcrobaticsRanks",
+            "type": "LONG",
+            "editAccess": "CONTROLLING_PLAYER",
+            "viewAccess": "CONTROLLING_PLAYER",
+            "value": "0"
+        },
+        {
+            "name": "pf_skillAcrobaticsMisc",
+            "type": "LONG",
+            "editAccess": "CONTROLLING_PLAYER",
+            "viewAccess": "CONTROLLING_PLAYER",
+            "value": "0"
+        },
+        {
+            "name": "pf_skillAppraiseClass",
+            "type": "BOOLEAN",
+            "editAccess": "CONTROLLING_PLAYER",
+            "viewAccess": "CONTROLLING_PLAYER",
+            "value": "false"
+        },
+        {
+            "name": "pf_skillAppraiseRanks",
+            "type": "LONG",
+            "editAccess": "CONTROLLING_PLAYER",
+            "viewAccess": "CONTROLLING_PLAYER",
+            "value": "0"
+        },
+        {
+            "name": "pf_skillAppraiseMisc",
+            "type": "LONG",
+            "editAccess": "CONTROLLING_PLAYER",
+            "viewAccess": "CONTROLLING_PLAYER",
+            "value": "0"
+        },
+        {
+            "name": "pf_skillBluffClass",
+            "type": "BOOLEAN",
+            "editAccess": "CONTROLLING_PLAYER",
+            "viewAccess": "CONTROLLING_PLAYER",
+            "value": "false"
+        },
+        {
+            "name": "pf_skillBluffRanks",
+            "type": "LONG",
+            "editAccess": "CONTROLLING_PLAYER",
+            "viewAccess": "CONTROLLING_PLAYER",
+            "value": "0"
+        },
+        {
+            "name": "pf_skillBluffMisc",
+            "type": "LONG",
+            "editAccess": "CONTROLLING_PLAYER",
+            "viewAccess": "CONTROLLING_PLAYER",
+            "value": "0"
+        },
+        {
+            "name": "pf_skillClimbClass",
+            "type": "BOOLEAN",
+            "editAccess": "CONTROLLING_PLAYER",
+            "viewAccess": "CONTROLLING_PLAYER",
+            "value": "false"
+        },
+        {
+            "name": "pf_skillClimbRanks",
+            "type": "LONG",
+            "editAccess": "CONTROLLING_PLAYER",
+            "viewAccess": "CONTROLLING_PLAYER",
+            "value": "0"
+        },
+        {
+            "name": "pf_skillClimbMisc",
+            "type": "LONG",
+            "editAccess": "CONTROLLING_PLAYER",
+            "viewAccess": "CONTROLLING_PLAYER",
+            "value": "0"
+        },
+        {
+            "name": "pf_skillCraft1Class",
+            "type": "BOOLEAN",
+            "editAccess": "CONTROLLING_PLAYER",
+            "viewAccess": "CONTROLLING_PLAYER",
+            "value": "false"
+        },
+        {
+            "name": "pf_skillCraft1Text",
+            "type": "STRING",
+            "editAccess": "CONTROLLING_PLAYER",
+            "viewAccess": "CONTROLLING_PLAYER",
+            "value": ""
+        },
+        {
+            "name": "pf_skillCraft1Ranks",
+            "type": "LONG",
+            "editAccess": "CONTROLLING_PLAYER",
+            "viewAccess": "CONTROLLING_PLAYER",
+            "value": "0"
+        },
+        {
+            "name": "pf_skillCraft1Misc",
+            "type": "LONG",
+            "editAccess": "CONTROLLING_PLAYER",
+            "viewAccess": "CONTROLLING_PLAYER",
+            "value": "0"
+        },
+        {
+            "name": "pf_skillCraft2Class",
+            "type": "BOOLEAN",
+            "editAccess": "CONTROLLING_PLAYER",
+            "viewAccess": "CONTROLLING_PLAYER",
+            "value": "false"
+        },
+        {
+            "name": "pf_skillCraft2Text",
+            "type": "STRING",
+            "editAccess": "CONTROLLING_PLAYER",
+            "viewAccess": "CONTROLLING_PLAYER",
+            "value": ""
+        },
+        {
+            "name": "pf_skillCraft2Ranks",
+            "type": "LONG",
+            "editAccess": "CONTROLLING_PLAYER",
+            "viewAccess": "CONTROLLING_PLAYER",
+            "value": "0"
+        },
+        {
+            "name": "pf_skillCraft2Misc",
+            "type": "LONG",
+            "editAccess": "CONTROLLING_PLAYER",
+            "viewAccess": "CONTROLLING_PLAYER",
+            "value": "0"
+        },
+        {
+            "name": "pf_skillCraft3Class",
+            "type": "BOOLEAN",
+            "editAccess": "CONTROLLING_PLAYER",
+            "viewAccess": "CONTROLLING_PLAYER",
+            "value": "false"
+        },
+        {
+            "name": "pf_skillCraft3Text",
+            "type": "STRING",
+            "editAccess": "CONTROLLING_PLAYER",
+            "viewAccess": "CONTROLLING_PLAYER",
+            "value": ""
+        },
+        {
+            "name": "pf_skillCraft3Ranks",
+            "type": "LONG",
+            "editAccess": "CONTROLLING_PLAYER",
+            "viewAccess": "CONTROLLING_PLAYER",
+            "value": "0"
+        },
+        {
+            "name": "pf_skillCraft3Misc",
+            "type": "LONG",
+            "editAccess": "CONTROLLING_PLAYER",
+            "viewAccess": "CONTROLLING_PLAYER",
+            "value": "0"
+        },
+        {
+            "name": "pf_skillDiplomacyClass",
+            "type": "BOOLEAN",
+            "editAccess": "CONTROLLING_PLAYER",
+            "viewAccess": "CONTROLLING_PLAYER",
+            "value": "false"
+        },
+        {
+            "name": "pf_skillDiplomacyRanks",
+            "type": "LONG",
+            "editAccess": "CONTROLLING_PLAYER",
+            "viewAccess": "CONTROLLING_PLAYER",
+            "value": "0"
+        },
+        {
+            "name": "pf_skillDiplomacyMisc",
+            "type": "LONG",
+            "editAccess": "CONTROLLING_PLAYER",
+            "viewAccess": "CONTROLLING_PLAYER",
+            "value": "0"
+        },
+        {
+            "name": "pf_skillDisableDeviceClass",
+            "type": "BOOLEAN",
+            "editAccess": "CONTROLLING_PLAYER",
+            "viewAccess": "CONTROLLING_PLAYER",
+            "value": "false"
+        },
+        {
+            "name": "pf_skillDisableDeviceRanks",
+            "type": "LONG",
+            "editAccess": "CONTROLLING_PLAYER",
+            "viewAccess": "CONTROLLING_PLAYER",
+            "value": "0"
+        },
+        {
+            "name": "pf_skillDisableDeviceMisc",
+            "type": "LONG",
+            "editAccess": "CONTROLLING_PLAYER",
+            "viewAccess": "CONTROLLING_PLAYER",
+            "value": "0"
+        },
+        {
+            "name": "pf_skillDisguiseClass",
+            "type": "BOOLEAN",
+            "editAccess": "CONTROLLING_PLAYER",
+            "viewAccess": "CONTROLLING_PLAYER",
+            "value": "false"
+        },
+        {
+            "name": "pf_skillDisguiseRanks",
+            "type": "LONG",
+            "editAccess": "CONTROLLING_PLAYER",
+            "viewAccess": "CONTROLLING_PLAYER",
+            "value": "0"
+        },
+        {
+            "name": "pf_skillDisguiseMisc",
+            "type": "LONG",
+            "editAccess": "CONTROLLING_PLAYER",
+            "viewAccess": "CONTROLLING_PLAYER",
+            "value": "0"
+        },
+        {
+            "name": "pf_skillEscapeArtistClass",
+            "type": "BOOLEAN",
+            "editAccess": "CONTROLLING_PLAYER",
+            "viewAccess": "CONTROLLING_PLAYER",
+            "value": "false"
+        },
+        {
+            "name": "pf_skillEscapeArtistRanks",
+            "type": "LONG",
+            "editAccess": "CONTROLLING_PLAYER",
+            "viewAccess": "CONTROLLING_PLAYER",
+            "value": "0"
+        },
+        {
+            "name": "pf_skillEscapeArtistMisc",
+            "type": "LONG",
+            "editAccess": "CONTROLLING_PLAYER",
+            "viewAccess": "CONTROLLING_PLAYER",
+            "value": "0"
+        },
+        {
+            "name": "pf_skillFlyClass",
+            "type": "BOOLEAN",
+            "editAccess": "CONTROLLING_PLAYER",
+            "viewAccess": "CONTROLLING_PLAYER",
+            "value": "false"
+        },
+        {
+            "name": "pf_skillFlyRanks",
+            "type": "LONG",
+            "editAccess": "CONTROLLING_PLAYER",
+            "viewAccess": "CONTROLLING_PLAYER",
+            "value": "0"
+        },
+        {
+            "name": "pf_skillFlyMisc",
+            "type": "LONG",
+            "editAccess": "CONTROLLING_PLAYER",
+            "viewAccess": "CONTROLLING_PLAYER",
+            "value": "0"
+        },
+        {
+            "name": "pf_skillHandleAnimalClass",
+            "type": "BOOLEAN",
+            "editAccess": "CONTROLLING_PLAYER",
+            "viewAccess": "CONTROLLING_PLAYER",
+            "value": "false"
+        },
+        {
+            "name": "pf_skillHandleAnimalRanks",
+            "type": "LONG",
+            "editAccess": "CONTROLLING_PLAYER",
+            "viewAccess": "CONTROLLING_PLAYER",
+            "value": "0"
+        },
+        {
+            "name": "pf_skillHandleAnimalMisc",
+            "type": "LONG",
+            "editAccess": "CONTROLLING_PLAYER",
+            "viewAccess": "CONTROLLING_PLAYER",
+            "value": "0"
+        },
+        {
+            "name": "pf_skillHealClass",
+            "type": "BOOLEAN",
+            "editAccess": "CONTROLLING_PLAYER",
+            "viewAccess": "CONTROLLING_PLAYER",
+            "value": "false"
+        },
+        {
+            "name": "pf_skillHealText",
+            "type": "STRING",
+            "editAccess": "CONTROLLING_PLAYER",
+            "viewAccess": "CONTROLLING_PLAYER",
+            "value": ""
+        },
+        {
+            "name": "pf_skillHealRanks",
+            "type": "LONG",
+            "editAccess": "CONTROLLING_PLAYER",
+            "viewAccess": "CONTROLLING_PLAYER",
+            "value": "0"
+        },
+        {
+            "name": "pf_skillHealMisc",
+            "type": "LONG",
+            "editAccess": "CONTROLLING_PLAYER",
+            "viewAccess": "CONTROLLING_PLAYER",
+            "value": "0"
+        },
+        {
+            "name": "pf_skillIntimidateClass",
+            "type": "BOOLEAN",
+            "editAccess": "CONTROLLING_PLAYER",
+            "viewAccess": "CONTROLLING_PLAYER",
+            "value": "false"
+        },
+        {
+            "name": "pf_skillIntimidateRanks",
+            "type": "LONG",
+            "editAccess": "CONTROLLING_PLAYER",
+            "viewAccess": "CONTROLLING_PLAYER",
+            "value": "0"
+        },
+        {
+            "name": "pf_skillIntimidateMisc",
+            "type": "LONG",
+            "editAccess": "CONTROLLING_PLAYER",
+            "viewAccess": "CONTROLLING_PLAYER",
+            "value": "0"
+        },
+        {
+            "name": "pf_skillKnowledgeArcanaClass",
+            "type": "BOOLEAN",
+            "editAccess": "CONTROLLING_PLAYER",
+            "viewAccess": "CONTROLLING_PLAYER",
+            "value": "false"
+        },
+        {
+            "name": "pf_skillKnowledgeArcanaRanks",
+            "type": "LONG",
+            "editAccess": "CONTROLLING_PLAYER",
+            "viewAccess": "CONTROLLING_PLAYER",
+            "value": "0"
+        },
+        {
+            "name": "pf_skillKnowledgeArcanaMisc",
+            "type": "LONG",
+            "editAccess": "CONTROLLING_PLAYER",
+            "viewAccess": "CONTROLLING_PLAYER",
+            "value": "0"
+        },
+        {
+            "name": "pf_skillKnowledgeDungeoneeringClass",
+            "type": "BOOLEAN",
+            "editAccess": "CONTROLLING_PLAYER",
+            "viewAccess": "CONTROLLING_PLAYER",
+            "value": "false"
+        },
+        {
+            "name": "pf_skillKnowledgeDungeoneeringRanks",
+            "type": "LONG",
+            "editAccess": "CONTROLLING_PLAYER",
+            "viewAccess": "CONTROLLING_PLAYER",
+            "value": "0"
+        },
+        {
+            "name": "pf_skillKnowledgeDungeoneeringMisc",
+            "type": "LONG",
+            "editAccess": "CONTROLLING_PLAYER",
+            "viewAccess": "CONTROLLING_PLAYER",
+            "value": "0"
+        },
+        {
+            "name": "pf_skillKnowledgeEngineeringClass",
+            "type": "BOOLEAN",
+            "editAccess": "CONTROLLING_PLAYER",
+            "viewAccess": "CONTROLLING_PLAYER",
+            "value": "false"
+        },
+        {
+            "name": "pf_skillKnowledgeEngineeringRanks",
+            "type": "LONG",
+            "editAccess": "CONTROLLING_PLAYER",
+            "viewAccess": "CONTROLLING_PLAYER",
+            "value": "0"
+        },
+        {
+            "name": "pf_skillKnowledgeEngineeringMisc",
+            "type": "LONG",
+            "editAccess": "CONTROLLING_PLAYER",
+            "viewAccess": "CONTROLLING_PLAYER",
+            "value": "0"
+        },
+        {
+            "name": "pf_skillKnowledgeGeographyClass",
+            "type": "BOOLEAN",
+            "editAccess": "CONTROLLING_PLAYER",
+            "viewAccess": "CONTROLLING_PLAYER",
+            "value": "false"
+        },
+        {
+            "name": "pf_skillKnowledgeGeographyRanks",
+            "type": "LONG",
+            "editAccess": "CONTROLLING_PLAYER",
+            "viewAccess": "CONTROLLING_PLAYER",
+            "value": "0"
+        },
+        {
+            "name": "pf_skillKnowledgeGeographyMisc",
+            "type": "LONG",
+            "editAccess": "CONTROLLING_PLAYER",
+            "viewAccess": "CONTROLLING_PLAYER",
+            "value": "0"
+        },
+        {
+            "name": "pf_skillKnowledgeHistoryClass",
+            "type": "BOOLEAN",
+            "editAccess": "CONTROLLING_PLAYER",
+            "viewAccess": "CONTROLLING_PLAYER",
+            "value": "false"
+        },
+        {
+            "name": "pf_skillKnowledgeHistoryRanks",
+            "type": "LONG",
+            "editAccess": "CONTROLLING_PLAYER",
+            "viewAccess": "CONTROLLING_PLAYER",
+            "value": "0"
+        },
+        {
+            "name": "pf_skillKnowledgeHistoryMisc",
+            "type": "LONG",
+            "editAccess": "CONTROLLING_PLAYER",
+            "viewAccess": "CONTROLLING_PLAYER",
+            "value": "0"
+        },
+        {
+            "name": "pf_skillKnowledgeLocalClass",
+            "type": "BOOLEAN",
+            "editAccess": "CONTROLLING_PLAYER",
+            "viewAccess": "CONTROLLING_PLAYER",
+            "value": "false"
+        },
+        {
+            "name": "pf_skillKnowledgeLocalRanks",
+            "type": "LONG",
+            "editAccess": "CONTROLLING_PLAYER",
+            "viewAccess": "CONTROLLING_PLAYER",
+            "value": "0"
+        },
+        {
+            "name": "pf_skillKnowledgeLocalMisc",
+            "type": "LONG",
+            "editAccess": "CONTROLLING_PLAYER",
+            "viewAccess": "CONTROLLING_PLAYER",
+            "value": "0"
+        },
+        {
+            "name": "pf_skillKnowledgeNatureClass",
+            "type": "BOOLEAN",
+            "editAccess": "CONTROLLING_PLAYER",
+            "viewAccess": "CONTROLLING_PLAYER",
+            "value": "false"
+        },
+        {
+            "name": "pf_skillKnowledgeNatureRanks",
+            "type": "LONG",
+            "editAccess": "CONTROLLING_PLAYER",
+            "viewAccess": "CONTROLLING_PLAYER",
+            "value": "0"
+        },
+        {
+            "name": "pf_skillKnowledgeNatureMisc",
+            "type": "LONG",
+            "editAccess": "CONTROLLING_PLAYER",
+            "viewAccess": "CONTROLLING_PLAYER",
+            "value": "0"
+        },
+        {
+            "name": "pf_skillKnowledgeNobilityClass",
+            "type": "BOOLEAN",
+            "editAccess": "CONTROLLING_PLAYER",
+            "viewAccess": "CONTROLLING_PLAYER",
+            "value": "false"
+        },
+        {
+            "name": "pf_skillKnowledgeNobilityRanks",
+            "type": "LONG",
+            "editAccess": "CONTROLLING_PLAYER",
+            "viewAccess": "CONTROLLING_PLAYER",
+            "value": "0"
+        },
+        {
+            "name": "pf_skillKnowledgeNobilityMisc",
+            "type": "LONG",
+            "editAccess": "CONTROLLING_PLAYER",
+            "viewAccess": "CONTROLLING_PLAYER",
+            "value": "0"
+        },
+        {
+            "name": "pf_skillKnowledgePlanesClass",
+            "type": "BOOLEAN",
+            "editAccess": "CONTROLLING_PLAYER",
+            "viewAccess": "CONTROLLING_PLAYER",
+            "value": "false"
+        },
+        {
+            "name": "pf_skillKnowledgePlanesRanks",
+            "type": "LONG",
+            "editAccess": "CONTROLLING_PLAYER",
+            "viewAccess": "CONTROLLING_PLAYER",
+            "value": "0"
+        },
+        {
+            "name": "pf_skillKnowledgePlanesMisc",
+            "type": "LONG",
+            "editAccess": "CONTROLLING_PLAYER",
+            "viewAccess": "CONTROLLING_PLAYER",
+            "value": "0"
+        },
+        {
+            "name": "pf_skillKnowledgeReligionClass",
+            "type": "BOOLEAN",
+            "editAccess": "CONTROLLING_PLAYER",
+            "viewAccess": "CONTROLLING_PLAYER",
+            "value": "false"
+        },
+        {
+            "name": "pf_skillKnowledgeReligionRanks",
+            "type": "LONG",
+            "editAccess": "CONTROLLING_PLAYER",
+            "viewAccess": "CONTROLLING_PLAYER",
+            "value": "0"
+        },
+        {
+            "name": "pf_skillKnowledgeReligionMisc",
+            "type": "LONG",
+            "editAccess": "CONTROLLING_PLAYER",
+            "viewAccess": "CONTROLLING_PLAYER",
+            "value": "0"
+        },
+        {
+            "name": "pf_skillLinguisticsClass",
+            "type": "BOOLEAN",
+            "editAccess": "CONTROLLING_PLAYER",
+            "viewAccess": "CONTROLLING_PLAYER",
+            "value": "false"
+        },
+        {
+            "name": "pf_skillLinguisticsRanks",
+            "type": "LONG",
+            "editAccess": "CONTROLLING_PLAYER",
+            "viewAccess": "CONTROLLING_PLAYER",
+            "value": "0"
+        },
+        {
+            "name": "pf_skillLinguisticsMisc",
+            "type": "LONG",
+            "editAccess": "CONTROLLING_PLAYER",
+            "viewAccess": "CONTROLLING_PLAYER",
+            "value": "0"
+        },
+        {
+            "name": "pf_skillPerceptionClass",
+            "type": "BOOLEAN",
+            "editAccess": "CONTROLLING_PLAYER",
+            "viewAccess": "CONTROLLING_PLAYER",
+            "value": "false"
+        },
+        {
+            "name": "pf_skillPerceptionRanks",
+            "type": "LONG",
+            "editAccess": "CONTROLLING_PLAYER",
+            "viewAccess": "CONTROLLING_PLAYER",
+            "value": "0"
+        },
+        {
+            "name": "pf_skillPerceptionMisc",
+            "type": "LONG",
+            "editAccess": "CONTROLLING_PLAYER",
+            "viewAccess": "CONTROLLING_PLAYER",
+            "value": "0"
+        },
+        {
+            "name": "pf_skillPerform1Class",
+            "type": "BOOLEAN",
+            "editAccess": "CONTROLLING_PLAYER",
+            "viewAccess": "CONTROLLING_PLAYER",
+            "value": "false"
+        },
+        {
+            "name": "pf_skillPerform1Text",
+            "type": "STRING",
+            "editAccess": "CONTROLLING_PLAYER",
+            "viewAccess": "CONTROLLING_PLAYER",
+            "value": ""
+        },
+        {
+            "name": "pf_skillPerform1Ranks",
+            "type": "LONG",
+            "editAccess": "CONTROLLING_PLAYER",
+            "viewAccess": "CONTROLLING_PLAYER",
+            "value": "0"
+        },
+        {
+            "name": "pf_skillPerform1Misc",
+            "type": "LONG",
+            "editAccess": "CONTROLLING_PLAYER",
+            "viewAccess": "CONTROLLING_PLAYER",
+            "value": "0"
+        },
+        {
+            "name": "pf_skillPerform2Class",
+            "type": "BOOLEAN",
+            "editAccess": "CONTROLLING_PLAYER",
+            "viewAccess": "CONTROLLING_PLAYER",
+            "value": "false"
+        },
+        {
+            "name": "pf_skillPerform2Text",
+            "type": "STRING",
+            "editAccess": "CONTROLLING_PLAYER",
+            "viewAccess": "CONTROLLING_PLAYER",
+            "value": ""
+        },
+        {
+            "name": "pf_skillPerform2Ranks",
+            "type": "LONG",
+            "editAccess": "CONTROLLING_PLAYER",
+            "viewAccess": "CONTROLLING_PLAYER",
+            "value": "0"
+        },
+        {
+            "name": "pf_skillPerform2Misc",
+            "type": "LONG",
+            "editAccess": "CONTROLLING_PLAYER",
+            "viewAccess": "CONTROLLING_PLAYER",
+            "value": "0"
+        },
+        {
+            "name": "pf_skillProfession1Class",
+            "type": "BOOLEAN",
+            "editAccess": "CONTROLLING_PLAYER",
+            "viewAccess": "CONTROLLING_PLAYER",
+            "value": "false"
+        },
+        {
+            "name": "pf_skillProfession1Text",
+            "type": "STRING",
+            "editAccess": "CONTROLLING_PLAYER",
+            "viewAccess": "CONTROLLING_PLAYER",
+            "value": ""
+        },
+        {
+            "name": "pf_skillProfession1Ranks",
+            "type": "LONG",
+            "editAccess": "CONTROLLING_PLAYER",
+            "viewAccess": "CONTROLLING_PLAYER",
+            "value": "0"
+        },
+        {
+            "name": "pf_skillProfession1Misc",
+            "type": "LONG",
+            "editAccess": "CONTROLLING_PLAYER",
+            "viewAccess": "CONTROLLING_PLAYER",
+            "value": "0"
+        },
+        {
+            "name": "pf_skillProfession2Class",
+            "type": "BOOLEAN",
+            "editAccess": "CONTROLLING_PLAYER",
+            "viewAccess": "CONTROLLING_PLAYER",
+            "value": "false"
+        },
+        {
+            "name": "pf_skillProfession2Text",
+            "type": "STRING",
+            "editAccess": "CONTROLLING_PLAYER",
+            "viewAccess": "CONTROLLING_PLAYER",
+            "value": ""
+        },
+        {
+            "name": "pf_skillProfession2Ranks",
+            "type": "LONG",
+            "editAccess": "CONTROLLING_PLAYER",
+            "viewAccess": "CONTROLLING_PLAYER",
+            "value": "0"
+        },
+        {
+            "name": "pf_skillProfession2Misc",
+            "type": "LONG",
+            "editAccess": "CONTROLLING_PLAYER",
+            "viewAccess": "CONTROLLING_PLAYER",
+            "value": "0"
+        },
+        {
+            "name": "pf_skillRideClass",
+            "type": "BOOLEAN",
+            "editAccess": "CONTROLLING_PLAYER",
+            "viewAccess": "CONTROLLING_PLAYER",
+            "value": "false"
+        },
+        {
+            "name": "pf_skillRideRanks",
+            "type": "LONG",
+            "editAccess": "CONTROLLING_PLAYER",
+            "viewAccess": "CONTROLLING_PLAYER",
+            "value": "0"
+        },
+        {
+            "name": "pf_skillRideMisc",
+            "type": "LONG",
+            "editAccess": "CONTROLLING_PLAYER",
+            "viewAccess": "CONTROLLING_PLAYER",
+            "value": "0"
+        },
+        {
+            "name": "pf_skillSenseMotiveClass",
+            "type": "BOOLEAN",
+            "editAccess": "CONTROLLING_PLAYER",
+            "viewAccess": "CONTROLLING_PLAYER",
+            "value": "false"
+        },
+        {
+            "name": "pf_skillSenseMotiveRanks",
+            "type": "LONG",
+            "editAccess": "CONTROLLING_PLAYER",
+            "viewAccess": "CONTROLLING_PLAYER",
+            "value": "0"
+        },
+        {
+            "name": "pf_skillSenseMotiveMisc",
+            "type": "LONG",
+            "editAccess": "CONTROLLING_PLAYER",
+            "viewAccess": "CONTROLLING_PLAYER",
+            "value": "0"
+        },
+        {
+            "name": "pf_skillSleightOfHandClass",
+            "type": "BOOLEAN",
+            "editAccess": "CONTROLLING_PLAYER",
+            "viewAccess": "CONTROLLING_PLAYER",
+            "value": "false"
+        },
+        {
+            "name": "pf_skillSleightOfHandRanks",
+            "type": "LONG",
+            "editAccess": "CONTROLLING_PLAYER",
+            "viewAccess": "CONTROLLING_PLAYER",
+            "value": "0"
+        },
+        {
+            "name": "pf_skillSleightOfHandMisc",
+            "type": "LONG",
+            "editAccess": "CONTROLLING_PLAYER",
+            "viewAccess": "CONTROLLING_PLAYER",
+            "value": "0"
+        },
+        {
+            "name": "pf_skillSpellcraftClass",
+            "type": "BOOLEAN",
+            "editAccess": "CONTROLLING_PLAYER",
+            "viewAccess": "CONTROLLING_PLAYER",
+            "value": "false"
+        },
+        {
+            "name": "pf_skillSpellcraftRanks",
+            "type": "LONG",
+            "editAccess": "CONTROLLING_PLAYER",
+            "viewAccess": "CONTROLLING_PLAYER",
+            "value": "0"
+        },
+        {
+            "name": "pf_skillSpellcraftMisc",
+            "type": "LONG",
+            "editAccess": "CONTROLLING_PLAYER",
+            "viewAccess": "CONTROLLING_PLAYER",
+            "value": "0"
+        },
+        {
+            "name": "pf_skillStealthClass",
+            "type": "BOOLEAN",
+            "editAccess": "CONTROLLING_PLAYER",
+            "viewAccess": "CONTROLLING_PLAYER",
+            "value": "false"
+        },
+        {
+            "name": "pf_skillStealthRanks",
+            "type": "LONG",
+            "editAccess": "CONTROLLING_PLAYER",
+            "viewAccess": "CONTROLLING_PLAYER",
+            "value": "0"
+        },
+        {
+            "name": "pf_skillStealthMisc",
+            "type": "LONG",
+            "editAccess": "CONTROLLING_PLAYER",
+            "viewAccess": "CONTROLLING_PLAYER",
+            "value": "0"
+        },
+        {
+            "name": "pf_skillSurvivalClass",
+            "type": "BOOLEAN",
+            "editAccess": "CONTROLLING_PLAYER",
+            "viewAccess": "CONTROLLING_PLAYER",
+            "value": "false"
+        },
+        {
+            "name": "pf_skillSurvivalRanks",
+            "type": "LONG",
+            "editAccess": "CONTROLLING_PLAYER",
+            "viewAccess": "CONTROLLING_PLAYER",
+            "value": "0"
+        },
+        {
+            "name": "pf_skillSurvivalMisc",
+            "type": "LONG",
+            "editAccess": "CONTROLLING_PLAYER",
+            "viewAccess": "CONTROLLING_PLAYER",
+            "value": "0"
+        },
+        {
+            "name": "pf_skillSwimClass",
+            "type": "BOOLEAN",
+            "editAccess": "CONTROLLING_PLAYER",
+            "viewAccess": "CONTROLLING_PLAYER",
+            "value": "false"
+        },
+        {
+            "name": "pf_skillSwimRanks",
+            "type": "LONG",
+            "editAccess": "CONTROLLING_PLAYER",
+            "viewAccess": "CONTROLLING_PLAYER",
+            "value": "0"
+        },
+        {
+            "name": "pf_skillSwimMisc",
+            "type": "LONG",
+            "editAccess": "CONTROLLING_PLAYER",
+            "viewAccess": "CONTROLLING_PLAYER",
+            "value": "0"
+        },
+        {
+            "name": "pf_skillUseMagicDeviceClass",
+            "type": "BOOLEAN",
+            "editAccess": "CONTROLLING_PLAYER",
+            "viewAccess": "CONTROLLING_PLAYER",
+            "value": "false"
+        },
+        {
+            "name": "pf_skillUseMagicDeviceRanks",
+            "type": "LONG",
+            "editAccess": "CONTROLLING_PLAYER",
+            "viewAccess": "CONTROLLING_PLAYER",
+            "value": "0"
+        },
+        {
+            "name": "pf_skillUseMagicDeviceMisc",
+            "type": "LONG",
+            "editAccess": "CONTROLLING_PLAYER",
+            "viewAccess": "CONTROLLING_PLAYER",
+            "value": "0"
+        },
+        
+        {
+            "name": "pf_strMod",
+            "type": "LONG",
+            "editAccess": "SYSTEM",
+            "viewAccess": "CONTROLLING_PLAYER",
+            "value": "0"
+        },
+        {
+            "name": "pf_dexMod",
+            "type": "LONG",
+            "editAccess": "SYSTEM",
+            "viewAccess": "CONTROLLING_PLAYER",
+            "value": "0"
+        },
+        {
+            "name": "pf_conMod",
+            "type": "LONG",
+            "editAccess": "SYSTEM",
+            "viewAccess": "CONTROLLING_PLAYER",
+            "value": "0"
+        },
+        {
+            "name": "pf_intMod",
+            "type": "LONG",
+            "editAccess": "SYSTEM",
+            "viewAccess": "CONTROLLING_PLAYER",
+            "value": "0"
+        },
+        {
+            "name": "pf_wisMod",
+            "type": "LONG",
+            "editAccess": "SYSTEM",
+            "viewAccess": "CONTROLLING_PLAYER",
+            "value": "0"
+        },
+        {
+            "name": "pf_chaMod",
+            "type": "LONG",
+            "editAccess": "SYSTEM",
+            "viewAccess": "CONTROLLING_PLAYER",
+            "value": "0"
+        },
+        
+        {
+            "name": "pf_initMod",
+            "type": "LONG",
+            "editAccess": "SYSTEM",
+            "viewAccess": "CONTROLLING_PLAYER",
+            "value": "0"
+        },
+        
+        {
+            "name": "pf_ac",
+            "type": "LONG",
+            "editAccess": "SYSTEM",
+            "viewAccess": "CONTROLLING_PLAYER",
+            "value": "0"
+        },
+        {
+            "name": "pf_acTouch",
+            "type": "LONG",
+            "editAccess": "SYSTEM",
+            "viewAccess": "CONTROLLING_PLAYER",
+            "value": "0"
+        },
+        {
+            "name": "pf_acFlatFooted",
+            "type": "LONG",
+            "editAccess": "SYSTEM",
+            "viewAccess": "CONTROLLING_PLAYER",
+            "value": "0"
+        },
+        
+        {
+            "name": "pf_saveReflex",
+            "type": "LONG",
+            "editAccess": "SYSTEM",
+            "viewAccess": "CONTROLLING_PLAYER",
+            "value": "0"
+        },
+        {
+            "name": "pf_saveWill",
+            "type": "LONG",
+            "editAccess": "SYSTEM",
+            "viewAccess": "CONTROLLING_PLAYER",
+            "value": "0"
+        },
+        {
+            "name": "pf_saveFortitude",
+            "type": "LONG",
+            "editAccess": "SYSTEM",
+            "viewAccess": "CONTROLLING_PLAYER",
+            "value": "0"
+        },
+        
+        {
+            "name": "pf_cmb",
+            "type": "LONG",
+            "editAccess": "SYSTEM",
+            "viewAccess": "CONTROLLING_PLAYER",
+            "value": "0"
+        },
+        {
+            "name": "pf_cmd",
+            "type": "LONG",
+            "editAccess": "SYSTEM",
+            "viewAccess": "CONTROLLING_PLAYER",
+            "value": "0"
+        },
+        
+        {
+            "name": "pf_skillAcrobatics",
+            "type": "LONG",
+            "editAccess": "SYSTEM",
+            "viewAccess": "CONTROLLING_PLAYER",
+            "value": "0"
+        },
+        {
+            "name": "pf_skillAppraise",
+            "type": "LONG",
+            "editAccess": "SYSTEM",
+            "viewAccess": "CONTROLLING_PLAYER",
+            "value": "0"
+        },
+        {
+            "name": "pf_skillBluff",
+            "type": "LONG",
+            "editAccess": "SYSTEM",
+            "viewAccess": "CONTROLLING_PLAYER",
+            "value": "0"
+        },
+        {
+            "name": "pf_skillClimb",
+            "type": "LONG",
+            "editAccess": "SYSTEM",
+            "viewAccess": "CONTROLLING_PLAYER",
+            "value": "0"
+        },
+        {
+            "name": "pf_skillCraft1",
+            "type": "LONG",
+            "editAccess": "SYSTEM",
+            "viewAccess": "CONTROLLING_PLAYER",
+            "value": "0"
+        },
+        {
+            "name": "pf_skillCraft2",
+            "type": "LONG",
+            "editAccess": "SYSTEM",
+            "viewAccess": "CONTROLLING_PLAYER",
+            "value": "0"
+        },
+        {
+            "name": "pf_skillCraft3",
+            "type": "LONG",
+            "editAccess": "SYSTEM",
+            "viewAccess": "CONTROLLING_PLAYER",
+            "value": "0"
+        },
+        {
+            "name": "pf_skillDiplomacy",
+            "type": "LONG",
+            "editAccess": "SYSTEM",
+            "viewAccess": "CONTROLLING_PLAYER",
+            "value": "0"
+        },
+        {
+            "name": "pf_skillDisableDevice",
+            "type": "LONG",
+            "editAccess": "SYSTEM",
+            "viewAccess": "CONTROLLING_PLAYER",
+            "value": "0"
+        },
+        {
+            "name": "pf_skillDisguise",
+            "type": "LONG",
+            "editAccess": "SYSTEM",
+            "viewAccess": "CONTROLLING_PLAYER",
+            "value": "0"
+        },
+        {
+            "name": "pf_skillEscapeArtist",
+            "type": "LONG",
+            "editAccess": "SYSTEM",
+            "viewAccess": "CONTROLLING_PLAYER",
+            "value": "0"
+        },
+        {
+            "name": "pf_skillFly",
+            "type": "LONG",
+            "editAccess": "SYSTEM",
+            "viewAccess": "CONTROLLING_PLAYER",
+            "value": "0"
+        },
+        {
+            "name": "pf_skillHandleAnimal",
+            "type": "LONG",
+            "editAccess": "SYSTEM",
+            "viewAccess": "CONTROLLING_PLAYER",
+            "value": "0"
+        },
+        {
+            "name": "pf_skillHeal",
+            "type": "LONG",
+            "editAccess": "SYSTEM",
+            "viewAccess": "CONTROLLING_PLAYER",
+            "value": "0"
+        },
+        {
+            "name": "pf_skillIntimidate",
+            "type": "LONG",
+            "editAccess": "SYSTEM",
+            "viewAccess": "CONTROLLING_PLAYER",
+            "value": "0"
+        },
+        {
+            "name": "pf_skillKnowledgeArcana",
+            "type": "LONG",
+            "editAccess": "SYSTEM",
+            "viewAccess": "CONTROLLING_PLAYER",
+            "value": "0"
+        },
+        {
+            "name": "pf_skillKnowledgeDungeoneering",
+            "type": "LONG",
+            "editAccess": "SYSTEM",
+            "viewAccess": "CONTROLLING_PLAYER",
+            "value": "0"
+        },
+        {
+            "name": "pf_skillKnowledgeEngineering",
+            "type": "LONG",
+            "editAccess": "SYSTEM",
+            "viewAccess": "CONTROLLING_PLAYER",
+            "value": "0"
+        },
+        {
+            "name": "pf_skillKnowledgeGeography",
+            "type": "LONG",
+            "editAccess": "SYSTEM",
+            "viewAccess": "CONTROLLING_PLAYER",
+            "value": "0"
+        },
+        {
+            "name": "pf_skillKnowledgeHistory",
+            "type": "LONG",
+            "editAccess": "SYSTEM",
+            "viewAccess": "CONTROLLING_PLAYER",
+            "value": "0"
+        },
+        {
+            "name": "pf_skillKnowledgeLocal",
+            "type": "LONG",
+            "editAccess": "SYSTEM",
+            "viewAccess": "CONTROLLING_PLAYER",
+            "value": "0"
+        },
+        {
+            "name": "pf_skillKnowledgeNature",
+            "type": "LONG",
+            "editAccess": "SYSTEM",
+            "viewAccess": "CONTROLLING_PLAYER",
+            "value": "0"
+        },
+        {
+            "name": "pf_skillKnowledgeNobility",
+            "type": "LONG",
+            "editAccess": "SYSTEM",
+            "viewAccess": "CONTROLLING_PLAYER",
+            "value": "0"
+        },
+        {
+            "name": "pf_skillKnowledgePlanes",
+            "type": "LONG",
+            "editAccess": "SYSTEM",
+            "viewAccess": "CONTROLLING_PLAYER",
+            "value": "0"
+        },
+        {
+            "name": "pf_skillKnowledgeReligion",
+            "type": "LONG",
+            "editAccess": "SYSTEM",
+            "viewAccess": "CONTROLLING_PLAYER",
+            "value": "0"
+        },
+        {
+            "name": "pf_skillLinguistics",
+            "type": "LONG",
+            "editAccess": "SYSTEM",
+            "viewAccess": "CONTROLLING_PLAYER",
+            "value": "0"
+        },
+        {
+            "name": "pf_skillPerception",
+            "type": "LONG",
+            "editAccess": "SYSTEM",
+            "viewAccess": "CONTROLLING_PLAYER",
+            "value": "0"
+        },
+        {
+            "name": "pf_skillPerform1",
+            "type": "LONG",
+            "editAccess": "SYSTEM",
+            "viewAccess": "CONTROLLING_PLAYER",
+            "value": "0"
+        },
+        {
+            "name": "pf_skillPerform2",
+            "type": "LONG",
+            "editAccess": "SYSTEM",
+            "viewAccess": "CONTROLLING_PLAYER",
+            "value": "0"
+        },
+        {
+            "name": "pf_skillProfession1",
+            "type": "LONG",
+            "editAccess": "SYSTEM",
+            "viewAccess": "CONTROLLING_PLAYER",
+            "value": "0"
+        },
+        {
+            "name": "pf_skillProfession2",
+            "type": "LONG",
+            "editAccess": "SYSTEM",
+            "viewAccess": "CONTROLLING_PLAYER",
+            "value": "0"
+        },
+        {
+            "name": "pf_skillRide",
+            "type": "LONG",
+            "editAccess": "SYSTEM",
+            "viewAccess": "CONTROLLING_PLAYER",
+            "value": "0"
+        },
+        {
+            "name": "pf_skillSenseMotive",
+            "type": "LONG",
+            "editAccess": "SYSTEM",
+            "viewAccess": "CONTROLLING_PLAYER",
+            "value": "0"
+        },
+        {
+            "name": "pf_skillSleightOfHand",
+            "type": "LONG",
+            "editAccess": "SYSTEM",
+            "viewAccess": "CONTROLLING_PLAYER",
+            "value": "0"
+        },
+        {
+            "name": "pf_skillSpellcraft",
+            "type": "LONG",
+            "editAccess": "SYSTEM",
+            "viewAccess": "CONTROLLING_PLAYER",
+            "value": "0"
+        },
+        {
+            "name": "pf_skillStealth",
+            "type": "LONG",
+            "editAccess": "SYSTEM",
+            "viewAccess": "CONTROLLING_PLAYER",
+            "value": "0"
+        },
+        {
+            "name": "pf_skillSurvival",
+            "type": "LONG",
+            "editAccess": "SYSTEM",
+            "viewAccess": "CONTROLLING_PLAYER",
+            "value": "0"
+        },
+        {
+            "name": "pf_skillSwim",
+            "type": "LONG",
+            "editAccess": "SYSTEM",
+            "viewAccess": "CONTROLLING_PLAYER",
+            "value": "0"
+        },
+        {
+            "name": "pf_skillUseMagicDevice",
+            "type": "LONG",
+            "editAccess": "SYSTEM",
+            "viewAccess": "CONTROLLING_PLAYER",
+            "value": "0"
+        }
+    ],
+    "updateRules": [
+        {
+            "property": "pf_strMod",
+            "expression": "floor(({self.property.pf_str} - 10) / 2)"
+        },
+        {
+            "property": "pf_dexMod",
+            "expression": "floor(({self.property.pf_dex} - 10) / 2)"
+        },
+        {
+            "property": "pf_conMod",
+            "expression": "floor(({self.property.pf_con} - 10) / 2)"
+        },
+        {
+            "property": "pf_intMod",
+            "expression": "floor(({self.property.pf_int} - 10) / 2)"
+        },
+        {
+            "property": "pf_wisMod",
+            "expression": "floor(({self.property.pf_wis} - 10) / 2)"
+        },
+        {
+            "property": "pf_chaMod",
+            "expression": "floor(({self.property.pf_cha} - 10) / 2)"
+        },
+        
+        {
+            "property": "pf_initMod",
+            "expression": "{self.property.pf_dexMod} + {self.property.pf_initMiscMod}"
+        },
+        
+        {
+            "property": "pf_acSizeMod",
+            "expression": "-{self.property.pf_sizeMod}"
+        },
+        {
+            "property": "pf_ac",
+            "expression": "{self.property.pf_acArmorBonus} + {self.property.pf_acShieldBonus} + min({self.property.pf_dexMod}, {self.property.pf_acMaxDexMod}) + {self.property.pf_acSizeMod} + {self.property.pf_acNaturalArmor} + {self.property.pf_acDeflectionMod} + {self.property.pf_acMiscMod}"
+        },
+        {
+            "property": "pf_acTouch",
+            "expression": "min({self.property.pf_dexMod}, {self.property.pf_acMaxDexMod}) + {self.property.pf_acSizeMod} + {self.property.pf_acDeflectionMod} + {self.property.pf_acMiscMod}"
+        },
+        {
+            "property": "pf_acFlatFooted",
+            "expression": "{self.property.pf_acArmorBonus} + {self.property.pf_acShieldBonus} + min({self.property.pf_dexMod}, 0) + {self.property.pf_acSizeMod} + {self.property.pf_acNaturalArmor} + {self.property.pf_acDeflectionMod} + {self.property.pf_acMiscMod}"
+        },
+        
+        {
+            "property": "pf_saveReflex",
+            "expression": "{self.property.pf_saveReflexBase} + {self.property.pf_dexMod} + {self.property.pf_saveReflexMagic} + {self.property.pf_saveReflexMisc} + {self.property.pf_saveReflexMisc}"
+        },
+        {
+            "property": "pf_saveWill",
+            "expression": "{self.property.pf_saveWillBase} + {self.property.pf_wisMod} + {self.property.pf_saveWillMagic} + {self.property.pf_saveWillMisc} + {self.property.pf_saveWillTemp}"
+        },
+        {
+            "property": "pf_saveFortitude",
+            "expression": "{self.property.pf_saveFortitudeBase} + {self.property.pf_conMod} + {self.property.pf_saveFortitudeMagic} + {self.property.pf_saveFortitudeMisc} + {self.property.pf_saveFortitudeTemp}"
+        },
+        
+        {
+            "property": "pf_skillAcrobatics",
+            "expression": "{self.property.pf_dexMod} + {self.property.pf_skillAcrobaticsRanks} + {self.property.pf_skillAcrobaticsMisc} + min({self.property.pf_skillAcrobaticsClass}*{self.property.pf_skillAcrobaticsRanks}, 1) * 3"
+        },
+        {
+            "property": "pf_skillAppraise",
+            "expression": "{self.property.pf_intMod} + {self.property.pf_skillAppraiseRanks} + {self.property.pf_skillAppraiseMisc} + min({self.property.pf_skillAppraiseClass}*{self.property.pf_skillAppraiseRanks}, 1) * 3"
+        },
+        {
+            "property": "pf_skillBluff",
+            "expression": "{self.property.pf_chaMod} + {self.property.pf_skillBluffRanks} + {self.property.pf_skillBluffMisc} + min({self.property.pf_skillBluffClass}*{self.property.pf_skillBluffRanks}, 1) * 3"
+        },
+        {
+            "property": "pf_skillClimb",
+            "expression": "{self.property.pf_strMod} + {self.property.pf_skillClimbRanks} + {self.property.pf_skillClimbMisc} + min({self.property.pf_skillClimbClass}*{self.property.pf_skillClimbRanks}, 1) * 3"
+        },
+        {
+            "property": "pf_skillCraft1",
+            "expression": "{self.property.pf_intMod} + {self.property.pf_skillCraft1Ranks} + {self.property.pf_skillCraft1Misc} + min({self.property.pf_skillCraft1Class}*{self.property.pf_skillCraft1Ranks}, 1) * 3"
+        },
+        {
+            "property": "pf_skillCraft2",
+            "expression": "{self.property.pf_intMod} + {self.property.pf_skillCraft2Ranks} + {self.property.pf_skillCraft2Misc} + min({self.property.pf_skillCraft2Class}*{self.property.pf_skillCraft2Ranks}, 1) * 3"
+        },
+        {
+            "property": "pf_skillCraft3",
+            "expression": "{self.property.pf_intMod} + {self.property.pf_skillCraft3Ranks} + {self.property.pf_skillCraft3Misc} + min({self.property.pf_skillCraft3Class}*{self.property.pf_skillCraft3Ranks}, 1) * 3"
+        },
+        {
+            "property": "pf_skillDiplomacy",
+            "expression": "{self.property.pf_chaMod} + {self.property.pf_skillDiplomacyRanks} + {self.property.pf_skillDiplomacyMisc} + min({self.property.pf_skillDiplomacyClass}*{self.property.pf_skillDiplomacyRanks}, 1) * 3"
+        },
+        {
+            "property": "pf_skillDisableDevice",
+            "expression": "{self.property.pf_dexMod} + {self.property.pf_skillDisableDeviceRanks} + {self.property.pf_skillDisableDeviceMisc} + min({self.property.pf_skillDisableDeviceClass}*{self.property.pf_skillDisableDeviceRanks}, 1) * 3"
+        },
+        {
+            "property": "pf_skillDisguise",
+            "expression": "{self.property.pf_chaMod} + {self.property.pf_skillDisguiseRanks} + {self.property.pf_skillDisguiseMisc} + min({self.property.pf_skillDisguiseClass}*{self.property.pf_skillDisguiseRanks}, 1) * 3"
+        },
+        {
+            "property": "pf_skillEscapeArtist",
+            "expression": "{self.property.pf_dexMod} + {self.property.pf_skillEscapeArtistRanks} + {self.property.pf_skillEscapeArtistMisc} + min({self.property.pf_skillEscapeArtistClass}*{self.property.pf_skillEscapeArtistRanks}, 1) * 3"
+        },
+        {
+            "property": "pf_skillFly",
+            "expression": "{self.property.pf_dexMod} + {self.property.pf_skillFlyRanks} + {self.property.pf_skillFlyMisc} + min({self.property.pf_skillFlyClass}*{self.property.pf_skillFlyRanks}, 1) * 3"
+        },
+        {
+            "property": "pf_skillHandleAnimal",
+            "expression": "{self.property.pf_chaMod} + {self.property.pf_skillHandleAnimalRanks} + {self.property.pf_skillHandleAnimalMisc} + min({self.property.pf_skillHandleAnimalClass}*{self.property.pf_skillHandleAnimalRanks}, 1) * 3"
+        },
+        {
+            "property": "pf_skillHeal",
+            "expression": "{self.property.pf_wisMod} + {self.property.pf_skillHealRanks} + {self.property.pf_skillHealMisc} + min({self.property.pf_skillHealClass}*{self.property.pf_skillHealRanks}, 1) * 3"
+        },
+        {
+            "property": "pf_skillIntimidate",
+            "expression": "{self.property.pf_chaMod} + {self.property.pf_skillIntimidateRanks} + {self.property.pf_skillIntimidateMisc} + min({self.property.pf_skillIntimidateClass}*{self.property.pf_skillIntimidateRanks}, 1) * 3"
+        },
+        {
+            "property": "pf_skillKnowledgeArcana",
+            "expression": "{self.property.pf_intMod} + {self.property.pf_skillKnowledgeArcanaRanks} + {self.property.pf_skillKnowledgeArcanaMisc} + min({self.property.pf_skillKnowledgeArcanaClass}*{self.property.pf_skillKnowledgeArcanaRanks}, 1) * 3"
+        },
+        {
+            "property": "pf_skillKnowledgeDungeoneering",
+            "expression": "{self.property.pf_intMod} + {self.property.pf_skillKnowledgeDungeoneeringRanks} + {self.property.pf_skillKnowledgeDungeoneeringMisc} + min({self.property.pf_skillKnowledgeDungeoneeringClass}*{self.property.pf_skillKnowledgeDungeoneeringRanks}, 1) * 3"
+        },
+        {
+            "property": "pf_skillKnowledgeEngineering",
+            "expression": "{self.property.pf_intMod} + {self.property.pf_skillKnowledgeEngineeringRanks} + {self.property.pf_skillKnowledgeEngineeringMisc} + min({self.property.pf_skillKnowledgeEngineeringClass}*{self.property.pf_skillKnowledgeEngineeringRanks}, 1) * 3"
+        },
+        {
+            "property": "pf_skillKnowledgeGeography",
+            "expression": "{self.property.pf_intMod} + {self.property.pf_skillKnowledgeGeographyRanks} + {self.property.pf_skillKnowledgeGeographyMisc} + min({self.property.pf_skillKnowledgeGeographyClass}*{self.property.pf_skillKnowledgeGeographyRanks}, 1) * 3"
+        },
+        {
+            "property": "pf_skillKnowledgeHistory",
+            "expression": "{self.property.pf_intMod} + {self.property.pf_skillKnowledgeHistoryRanks} + {self.property.pf_skillKnowledgeHistoryMisc} + min({self.property.pf_skillKnowledgeHistoryClass}*{self.property.pf_skillKnowledgeHistoryRanks}, 1) * 3"
+        },
+        {
+            "property": "pf_skillKnowledgeLocal",
+            "expression": "{self.property.pf_intMod} + {self.property.pf_skillKnowledgeLocalRanks} + {self.property.pf_skillKnowledgeLocalMisc} + min({self.property.pf_skillKnowledgeLocalClass}*{self.property.pf_skillKnowledgeLocalRanks}, 1) * 3"
+        },
+        {
+            "property": "pf_skillKnowledgeNature",
+            "expression": "{self.property.pf_intMod} + {self.property.pf_skillKnowledgeNatureRanks} + {self.property.pf_skillKnowledgeNatureMisc} + min({self.property.pf_skillKnowledgeNatureClass}*{self.property.pf_skillKnowledgeNatureRanks}, 1) * 3"
+        },
+        {
+            "property": "pf_skillKnowledgeNobility",
+            "expression": "{self.property.pf_intMod} + {self.property.pf_skillKnowledgeNobilityRanks} + {self.property.pf_skillKnowledgeNobilityMisc} + min({self.property.pf_skillKnowledgeNobilityClass}*{self.property.pf_skillKnowledgeNobilityRanks}, 1) * 3"
+        },
+        {
+            "property": "pf_skillKnowledgePlanes",
+            "expression": "{self.property.pf_intMod} + {self.property.pf_skillKnowledgePlanesRanks} + {self.property.pf_skillKnowledgePlanesMisc} + min({self.property.pf_skillKnowledgePlanesClass}*{self.property.pf_skillKnowledgePlanesRanks}, 1) * 3"
+        },
+        {
+            "property": "pf_skillKnowledgeReligion",
+            "expression": "{self.property.pf_intMod} + {self.property.pf_skillKnowledgeReligionRanks} + {self.property.pf_skillKnowledgeReligionMisc} + min({self.property.pf_skillKnowledgeReligionClass}*{self.property.pf_skillKnowledgeReligionRanks}, 1) * 3"
+        },
+        {
+            "property": "pf_skillLinguistics",
+            "expression": "{self.property.pf_intMod} + {self.property.pf_skillLinguisticsRanks} + {self.property.pf_skillLinguisticsMisc} + min({self.property.pf_skillLinguisticsClass}*{self.property.pf_skillLinguisticsRanks}, 1) * 3"
+        },
+        {
+            "property": "pf_skillPerception",
+            "expression": "{self.property.pf_wisMod} + {self.property.pf_skillPerceptionRanks} + {self.property.pf_skillPerceptionMisc} + min({self.property.pf_skillPerceptionClass}*{self.property.pf_skillPerceptionRanks}, 1) * 3"
+        },
+        {
+            "property": "pf_skillPerform1",
+            "expression": "{self.property.pf_chaMod} + {self.property.pf_skillPerform1Ranks} + {self.property.pf_skillPerform1Misc} + min({self.property.pf_skillPerform1Class}*{self.property.pf_skillPerform1Ranks}, 1) * 3"
+        },
+        {
+            "property": "pf_skillPerform2",
+            "expression": "{self.property.pf_chaMod} + {self.property.pf_skillPerform2Ranks} + {self.property.pf_skillPerform2Misc} + min({self.property.pf_skillPerform2Class}*{self.property.pf_skillPerform2Ranks}, 1) * 3"
+        },
+        {
+            "property": "pf_skillProfession1",
+            "expression": "{self.property.pf_wisMod} + {self.property.pf_skillProfession1Ranks} + {self.property.pf_skillProfession1Misc} + min({self.property.pf_skillProfession1Class}*{self.property.pf_skillProfession1Ranks}, 1) * 3"
+        },
+        {
+            "property": "pf_skillProfession2",
+            "expression": "{self.property.pf_wisMod} + {self.property.pf_skillProfession2Ranks} + {self.property.pf_skillProfession2Misc} + min({self.property.pf_skillProfession2Class}*{self.property.pf_skillProfession2Ranks}, 1) * 3"
+        },
+        {
+            "property": "pf_skillRide",
+            "expression": "{self.property.pf_dexMod} + {self.property.pf_skillRideRanks} + {self.property.pf_skillRideMisc} + min({self.property.pf_skillRideClass}*{self.property.pf_skillRideRanks}, 1) * 3"
+        },
+        {
+            "property": "pf_skillSenseMotive",
+            "expression": "{self.property.pf_wisMod} + {self.property.pf_skillSenseMotiveRanks} + {self.property.pf_skillSenseMotiveMisc} + min({self.property.pf_skillSenseMotiveClass}*{self.property.pf_skillSenseMotiveRanks}, 1) * 3"
+        },
+        {
+            "property": "pf_skillSleightOfHand",
+            "expression": "{self.property.pf_dexMod} + {self.property.pf_skillSleightOfHandRanks} + {self.property.pf_skillSleightOfHandMisc} + min({self.property.pf_skillSleightOfHandClass}*{self.property.pf_skillSleightOfHandRanks}, 1) * 3"
+        },
+        {
+            "property": "pf_skillSpellcraft",
+            "expression": "{self.property.pf_intMod} + {self.property.pf_skillSpellcraftRanks} + {self.property.pf_skillSpellcraftMisc} + min({self.property.pf_skillSpellcraftClass}*{self.property.pf_skillSpellcraftRanks}, 1) * 3"
+        },
+        {
+            "property": "pf_skillStealth",
+            "expression": "{self.property.pf_dexMod} + {self.property.pf_skillStealthRanks} + {self.property.pf_skillStealthMisc} + min({self.property.pf_skillStealthClass}*{self.property.pf_skillStealthRanks}, 1) * 3"
+        },
+        {
+            "property": "pf_skillSurvival",
+            "expression": "{self.property.pf_wisMod} + {self.property.pf_skillSurvivalRanks} + {self.property.pf_skillSurvivalMisc} + min({self.property.pf_skillSurvivalClass}*{self.property.pf_skillSurvivalRanks}, 1) * 3"
+        },
+        {
+            "property": "pf_skillSwim",
+            "expression": "{self.property.pf_strMod} + {self.property.pf_skillSwimRanks} + {self.property.pf_skillSwimMisc} + min({self.property.pf_skillSwimClass}*{self.property.pf_skillSwimRanks}, 1) * 3"
+        },
+        {
+            "property": "pf_skillUseMagicDevice",
+            "expression": "{self.property.pf_chaMod} + {self.property.pf_skillUseMagicDeviceRanks} + {self.property.pf_skillUseMagicDeviceMisc} + min({self.property.pf_skillUseMagicDeviceClass}*{self.property.pf_skillUseMagicDeviceRanks}, 1) * 3"
+        },
+        
+        {
+            "property": "pf_sizeCategory",
+            "expression": "{self.property.pf_sizeMod}",
+            "stringMap": {
+                "8": "Kolossal",
+                "4": "Gigantisch",
+                "2": "Riesig",
+                "1": "Groß",
+                "0": "Mittelgroß",
+                "-1": "Klein",
+                "-2": "Sehr Klein",
+                "-4": "Winzig",
+                "-8": "Mini"
+            }
+        }
+    ],
+    "editorTabs": [
+    ],
+    "extensionPoints": [
+        {
+            "name": "base",
+            "mode": "ALL"
+        }
+    ]
+}

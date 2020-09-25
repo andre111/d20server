@@ -1,0 +1,87 @@
+{
+    "displayName": "Drawing",
+    "properties": [
+        {
+            "name": "creator",
+            "type": "LONG",
+            "editAccess": "SYSTEM",
+            "viewAccess": "EVERYONE",
+            "value": "-1"
+        },
+        {
+            "name": "map",
+            "type": "LONG",
+            "editAccess": "SYSTEM",
+            "viewAccess": "EVERYONE",
+            "value": "-1"
+        },
+        
+        {
+            "name": "x",
+            "type": "LONG",
+            "editAccess": "CONTROLLING_PLAYER",
+            "viewAccess": "EVERYONE",
+            "value": "0"
+        },
+        {
+            "name": "y",
+            "type": "LONG",
+            "editAccess": "CONTROLLING_PLAYER",
+            "viewAccess": "EVERYONE",
+            "value": "0"
+        },
+        {
+            "name": "width",
+            "type": "LONG",
+            "editAccess": "GM",
+            "viewAccess": "EVERYONE",
+            "value": "70"
+        },
+        {
+            "name": "height",
+            "type": "LONG",
+            "editAccess": "GM",
+            "viewAccess": "EVERYONE",
+            "value": "70"
+        },
+        {
+            "name": "rotation",
+            "type": "DOUBLE",
+            "editAccess": "CONTROLLING_PLAYER",
+            "viewAccess": "EVERYONE",
+            "value": "0"
+        },
+        {
+            "name": "layer",
+            "type": "LAYER",
+            "editAccess": "GM",
+            "viewAccess": "EVERYONE",
+            "value": "MAIN"
+        },
+        
+        {
+            "name": "shape",
+            "type": "STRING",
+            "editAccess": "CONTROLLING_PLAYER",
+            "viewAccess": "EVERYONE",
+            "value": "rect"
+        },
+        {
+            "name": "color",
+            "type": "LONG",
+            "editAccess": "CONTROLLING_PLAYER",
+            "viewAccess": "EVERYONE",
+            "value": "-8341"
+        }
+    ],
+    "updateRules": [
+    ],
+    "editorTabs": [
+    ],
+    "extensionPoints": [
+        {
+            "name": "base",
+            "mode": "ALL"
+        }
+    ]
+}

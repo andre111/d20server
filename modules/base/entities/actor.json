@@ -1,0 +1,76 @@
+{
+    "displayName": "Actor",
+    "properties": [
+        {
+            "name": "name",
+            "type": "STRING",
+            "editAccess": "GM",
+            "viewAccess": "EVERYONE",
+            "value": ""
+        },
+        {
+            "name": "type",
+            "type": "STRING",
+            "editAccess": "GM",
+            "viewAccess": "EVERYONE",
+            "value": "pf_char_de"
+        },
+        {
+            "name": "controllingPlayers",
+            "type": "LONG_LIST",
+            "editAccess": "GM",
+            "viewAccess": "CONTROLLING_PLAYER",
+            "value": ""
+        },
+        {
+            "name": "access",
+            "type": "ACCESS",
+            "editAccess": "GM",
+            "viewAccess": "EVERYONE",
+            "value": "CONTROLLING_PLAYER"
+        },
+        {
+            "name": "defaultToken",
+            "type": "LONG",
+            "editAccess": "GM",
+            "viewAccess": "CONTROLLING_PLAYER",
+            "value": "-1"
+        },
+        {
+            "name": "attachments",
+            "type": "LONG_LIST",
+            "editAccess": "CONTROLLING_PLAYER",
+            "viewAccess": "CONTROLLING_PLAYER",
+            "value": ""
+        },
+        {
+            "name": "bio",
+            "type": "STRING",
+            "editAccess": "CONTROLLING_PLAYER",
+            "viewAccess": "EVERYONE",
+            "value": ""
+        },
+        {
+            "name": "gmBio",
+            "type": "STRING",
+            "editAccess": "GM",
+            "viewAccess": "GM",
+            "value": ""
+        }
+    ],
+    "updateRules": [
+    ],
+    "editorTabs": [
+    ],
+    "extensionPoints": [
+        {
+            "name": "base",
+            "mode": "ALL"
+        },
+        {
+            "name": "type",
+            "mode": "SELECT_SINGLE",
+            "property": "type"
+        }
+    ]
+}

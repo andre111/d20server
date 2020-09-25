@@ -5,7 +5,6 @@ import me.andre111.d20common.scripting.Context;
 import me.andre111.d20common.scripting.ScriptException;
 import me.andre111.d20common.scripting.variable.Variable;
 import me.andre111.d20common.scripting.variable.parser.VariableParser;
-import me.andre111.d20server.service.GameService;
 
 public class PlaceholderText extends Placeholder {
 
@@ -31,7 +30,7 @@ public class PlaceholderText extends Placeholder {
 				startIndex = index;
 				
 				Variable variable = VariableParser.parseVariable(variableName);
-				Object value = variable.get(new Context(profile, GameService.getPlayerMap(profile), null));
+				Object value = variable.get(new Context(profile, profile.getMap(), null));
 				sb.append(value);
 			}
 		}

@@ -1,0 +1,79 @@
+{
+    "displayName": "Token List",
+    "properties": [
+        {
+            "name": "name",
+            "type": "STRING",
+            "editAccess": "GM",
+            "viewAccess": "EVERYONE",
+            "value": ""
+        },
+        {
+            "name": "displayName",
+            "type": "STRING",
+            "editAccess": "GM",
+            "viewAccess": "EVERYONE",
+            "value": ""
+        },
+        {
+            "name": "display",
+            "type": "BOOLEAN",
+            "editAccess": "GM",
+            "viewAccess": "EVERYONE",
+            "value": "true"
+        },
+        {
+            "name": "sorted",
+            "type": "BOOLEAN",
+            "editAccess": "GM",
+            "viewAccess": "EVERYONE",
+            "value": "true"
+        },
+        {
+            "name": "currentIndex",
+            "type": "LONG",
+            "editAccess": "GM",
+            "viewAccess": "EVERYONE",
+            "value": "0"
+        },
+        {
+            "name": "view",
+            "type": "ACCESS",
+            "editAccess": "GM",
+            "viewAccess": "EVERYONE",
+            "value": "EVERYONE"
+        },
+        {
+            "name": "edit",
+            "type": "ACCESS",
+            "editAccess": "GM",
+            "viewAccess": "EVERYONE",
+            "value": "CONTROLLING_PLAYER"
+        },
+        
+        {
+            "name": "tokens",
+            "type": "LONG_LIST",
+            "editAccess": "SYSTEM",
+            "viewAccess": "EVERYONE",
+            "value": ""
+        },
+        {
+            "name": "values",
+            "type": "STRING_MAP",
+            "editAccess": "SYSTEM",
+            "viewAccess": "EVERYONE",
+            "value": ""
+        }
+    ],
+    "updateRules": [
+    ],
+    "editorTabs": [
+    ],
+    "extensionPoints": [
+        {
+            "name": "base",
+            "mode": "ALL"
+        }
+    ]
+}
