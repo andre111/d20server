@@ -76,6 +76,8 @@
     ],
     "updateRules": [
     ],
+    "macros": {
+    },
     "editorTabs": [
     ],
     "extensionPoints": [

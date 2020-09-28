@@ -3,8 +3,10 @@ package me.andre111.d20server.service;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import me.andre111.d20common.message.game.chat.ChatEntries;
+import me.andre111.d20common.model.def.MacroDefinition;
 import me.andre111.d20common.model.entity.ChatData;
 import me.andre111.d20common.model.entity.ChatEntry;
 import me.andre111.d20common.model.entity.actor.Actor;
@@ -61,12 +63,22 @@ public abstract class ChatService {
 				return;
 			}
 			
-			// find macro (!<name> -> custom in token, !!<name> -> premade in actor)
+			// find macro (!<name> -> custom in token, !!<name> -> predefined)
 			String macro = null;
 			if(macroName.startsWith("!")) {
+				macroName = macroName.substring(1);
+				
+				Map<String, MacroDefinition> macros = token.getPredefinedMacros();
+				if(macros.containsKey(macroName)) {
+					macro = macros.get(macroName).commands().stream().collect(Collectors.joining("\n"));
+				}
+				
 				Actor actor = EntityManagers.get(Actor.class).find(token.prop("actorID").getLong());
 				if(actor != null) {
-					macro = actor.getActorType().getMacroCommands(macroName.substring(1));
+					macros = actor.getPredefinedMacros();
+					if(macros.containsKey(macroName)) {
+						macro = macros.get(macroName).commands().stream().collect(Collectors.joining("\n"));
+					}
 				}
 			} else {
 				Map<String, String> tokenMacros = token.prop("macros").getStringMap();
