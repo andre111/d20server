@@ -1,8 +1,8 @@
 package me.andre111.d20server.command;
 
-import me.andre111.d20common.model.entity.ChatEntry;
-import me.andre111.d20common.model.entity.map.Map;
-import me.andre111.d20common.model.entity.profile.Profile;
+import me.andre111.d20common.model.Entity;
+import me.andre111.d20common.model.chat.ChatEntry;
+import me.andre111.d20common.model.profile.Profile;
 import me.andre111.d20common.model.property.Access;
 import me.andre111.d20common.model.property.Effect;
 import me.andre111.d20common.model.property.Layer;
@@ -39,7 +39,7 @@ public class SetCommand extends Command {
 			String[] split = arguments.split(" ", 3);
 			if(split.length != 3) throw new ScriptException("Wrong argument count: <variable> <type> <expression>");
 			
-			Map map = profile.getMap();
+			Entity map = profile.getMap();
 			Context context = new Context(profile, map, null);
 			
 			Variable variable = VariableParser.parseVariable(split[0]);

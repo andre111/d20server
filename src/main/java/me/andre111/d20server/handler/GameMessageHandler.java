@@ -5,6 +5,7 @@ import java.util.List;
 
 import io.netty.channel.Channel;
 import me.andre111.d20common.message.game.MovePlayerToMap;
+import me.andre111.d20common.D20Common;
 import me.andre111.d20common.message.game.ActionCommand;
 import me.andre111.d20common.message.game.GameMessage;
 import me.andre111.d20common.message.game.PlayEffect;
@@ -18,14 +19,10 @@ import me.andre111.d20common.message.game.token.list.TokenListValue;
 import me.andre111.d20common.message.game.util.EntityLoading;
 import me.andre111.d20common.message.game.util.Ping;
 import me.andre111.d20common.model.Entity;
-import me.andre111.d20common.model.entity.Image;
-import me.andre111.d20common.model.entity.actor.Actor;
-import me.andre111.d20common.model.entity.map.Map;
-import me.andre111.d20common.model.entity.map.Token;
-import me.andre111.d20common.model.entity.map.TokenList;
-import me.andre111.d20common.model.entity.profile.Profile;
+import me.andre111.d20common.model.EntityManager;
+import me.andre111.d20common.model.TokenListHelper;
+import me.andre111.d20common.model.profile.Profile;
 import me.andre111.d20common.model.property.Access;
-import me.andre111.d20server.model.EntityManagers;
 import me.andre111.d20server.model.ServerEntityManager;
 import me.andre111.d20server.service.ChatService;
 import me.andre111.d20server.service.GameService;
@@ -33,7 +30,7 @@ import me.andre111.d20server.service.MessageService;
 import me.andre111.d20server.service.UserService;
 
 public abstract class GameMessageHandler {
-	protected static void handle(Channel channel, Profile profile, Map map, GameMessage message) {
+	protected static void handle(Channel channel, Profile profile, Entity map, GameMessage message) {
 		//
 		if(message instanceof MovePlayerToMap) {
 			handleMovePlayerToMap(profile, map, (MovePlayerToMap) message);
@@ -74,10 +71,10 @@ public abstract class GameMessageHandler {
 		}
 	}
 
-	private static void handleMovePlayerToMap(Profile profile, Map map, MovePlayerToMap message) {
+	private static void handleMovePlayerToMap(Profile profile, Entity map, MovePlayerToMap message) {
 		long mapID = message.getMapID();
 		long playerID = message.getPlayerID();
-		if(EntityManagers.get(Map.class).has(mapID)) {
+		if(D20Common.getEntityManager("map").has(mapID)) {
 			if(playerID == 0) {
 				if(profile.getRole() != Profile.Role.GM) return;
 
@@ -85,27 +82,27 @@ public abstract class GameMessageHandler {
 				for(Profile otherProfile : UserService.getAllProfiles()) {
 					if(otherProfile.getRole() != Profile.Role.GM) {
 						otherProfile.setCurrentMap(mapID);
-						EntityManagers.get(Profile.class).add(otherProfile);
+						UserService.addAndSave(otherProfile);
 					}
 				}
 
 				// (re)load maps for clients
 				GameService.reloadMaps(null);
 			} else {
-				if(profile.getRole() == Profile.Role.GM || (playerID == profile.id() && EntityManagers.get(Map.class).find(mapID).prop("playersCanEnter").getBoolean())) {
+				if(profile.getRole() == Profile.Role.GM || (playerID == profile.id() && D20Common.getEntityManager("map").find(mapID).prop("playersCanEnter").getBoolean())) {
 					// set player override map id and (re)load map
 					Profile otherProfile = UserService.getProfile(playerID);
 					if(otherProfile != null) {
 						otherProfile.setCurrentMap(mapID);
 						GameService.reloadMaps(otherProfile);
-						EntityManagers.get(Profile.class).add(otherProfile);
+						UserService.addAndSave(otherProfile);
 					}
 				}
 			}
 		}
 	}
 
-	private static void handleSelectedTokens(Profile profile, Map map, SelectedTokens message) {
+	private static void handleSelectedTokens(Profile profile, Entity map, SelectedTokens message) {
 		List<Long> selectedTokens = message.getSelectedTokens();
 		if(selectedTokens == null) {
 			selectedTokens = new ArrayList<>();
@@ -116,46 +113,56 @@ public abstract class GameMessageHandler {
 
 
 	// ---------------------------------------------------------
-	private static void handleTokenListValue(Profile profile, Map map, TokenListValue message) {
-		TokenList list = EntityManagers.get(TokenList.class).find(message.getListID());
-		Token token = EntityManagers.get(Token.class).find(message.getTokenID());
+	private static void handleTokenListValue(Profile profile, Entity map, TokenListValue message) {
+		Entity list = D20Common.getEntityManager("token_list").find(message.getListID());
+		Entity token = D20Common.getEntityManager("token").find(message.getTokenID());
 		if(list != null && token != null) {
 			// determine access level
-			Access accessLevel = list.getAccessLevel(profile, token);
+			Access accessLevel = TokenListHelper.getAccessLevel(profile, list, token);
 			if(list.canEdit(accessLevel)) {
 				// apply change
 				if(message.doReset()) {
-					list.removeToken(token.id());
+					TokenListHelper.removeToken(list, token.id());
 				} else {
-					list.addOrUpdateToken(token.id(), message.getValue(), accessLevel == Access.GM && message.isHidden());
+					TokenListHelper.addOrUpdateToken(list, token.id(), message.getValue(), accessLevel == Access.GM && message.isHidden());
 				}
 
-				EntityManagers.get(TokenList.class).add(list);
+				D20Common.getEntityManager("token_list").add(list);
 			}
 		}
 	}
 
 
 	// ---------------------------------------------------------
-	private static void handleSetActorDefaultToken(Profile profile, Map map, SetActorDefaultToken message) {
-		Actor actor = EntityManagers.get(Actor.class).find(message.getActorID());
-		Token token = profile.getSelectedToken(true);
+	private static void handleSetActorDefaultToken(Profile profile, Entity map, SetActorDefaultToken message) {
+		Entity actor = D20Common.getEntityManager("actor").find(message.getActorID());
+		Entity token = profile.getSelectedToken(true);
 		if(actor == null || token == null) return;
 		
-		// set default token
-		actor.setDefaultToken(token);
-		EntityManagers.get(Actor.class).add(actor);
+		// remove old default token
+		EntityManager em = D20Common.getEntityManager("token");
+		em.remove(actor.prop("defaultToken").getLong());
+		
+		// save token clone
+		token = token.clone();
+		token.resetID();
+		token.prop("map").setLong(-1);
+		em.add(token);
+		
+		// add default token
+		actor.prop("defaultToken").setLong(token.id());
+		D20Common.getEntityManager("actor").add(actor);
 	}
 
 
 	// ---------------------------------------------------------
-	private static void handleActionCommand(Profile profile, Map map, ActionCommand message) {
+	private static void handleActionCommand(Profile profile, Entity map, ActionCommand message) {
 		switch(message.getCommand()) {
 		case ActionCommand.PING:
 			MessageService.send(new PlayEffect("PING", message.getX(), message.getY(), 0, 1, true, profile.getRole()==Profile.Role.GM && message.isModified()), map);
 			break;
 		case ActionCommand.SHOW_IMAGE:
-			if(profile.getRole() == Profile.Role.GM && EntityManagers.get(Image.class).has(message.getID())) {
+			if(profile.getRole() == Profile.Role.GM && D20Common.getEntityManager("image").has(message.getID())) {
 				MessageService.broadcast(message);
 			}
 			break;
@@ -172,10 +179,9 @@ public abstract class GameMessageHandler {
 	
 
 	// ---------------------------------------------------------
-	@SuppressWarnings({ "rawtypes", "unchecked" })
-	private static void handleAddEntity(Profile profile, Map map, AddEntity message) {
+	private static void handleAddEntity(Profile profile, Entity map, AddEntity message) {
 		// search for manager, check access and reset id before adding if valid request
-		ServerEntityManager manager = EntityManagers.get(message.getEntityClass());
+		ServerEntityManager manager = (ServerEntityManager) D20Common.getEntityManager(message.getEntity().getType());
 		if(manager != null) {
 			Entity entity = message.getEntity();
 			if(manager.canAddRemove(profile, entity)) {
@@ -184,9 +190,9 @@ public abstract class GameMessageHandler {
 			}
 		}
 	}
-	private static void handleRemoveEntity(Profile profile, Map map, RemoveEntity message) {
+	private static void handleRemoveEntity(Profile profile, Entity map, RemoveEntity message) {
 		// search for entity, check access and delete if valid request
-		ServerEntityManager<?> manager = EntityManagers.get(message.getEntityClass());
+		ServerEntityManager manager = (ServerEntityManager) D20Common.getEntityManager(message.getType());
 		if(manager != null) {
 			Entity entity = manager.find(message.getID());
 			if(entity != null && entity.canEdit(profile) && manager.canAddRemove(profile, entity)) {
@@ -194,9 +200,9 @@ public abstract class GameMessageHandler {
 			}
 		}
 	}
-	private static void handleUpdateEntityProperties(Profile profile, Map map, UpdateEntityProperties message) {
+	private static void handleUpdateEntityProperties(Profile profile, Entity map, UpdateEntityProperties message) {
 		// search for entity, check access and delete if valid request
-		ServerEntityManager<?> manager = EntityManagers.get(message.getEntityClass());
+		ServerEntityManager manager = (ServerEntityManager) D20Common.getEntityManager(message.getType());
 		if(manager != null) {
 			Entity entity = manager.find(message.getID());
 			if(entity != null && entity.canEdit(profile)) {
@@ -207,10 +213,10 @@ public abstract class GameMessageHandler {
 
 
 	// ---------------------------------------------------------
-	private static void handleChatMessage(Profile profile, Map map, SendChatMessage message) {
+	private static void handleChatMessage(Profile profile, Entity map, SendChatMessage message) {
 		ChatService.onMessage(profile, message.getMessage());
 	}
-	private static void handlePingMessage(Profile profile, Map map, Ping message) {
+	private static void handlePingMessage(Profile profile, Entity map, Ping message) {
 		MessageService.send(message, profile);
 	}
 }

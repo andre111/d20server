@@ -1,5 +1,23 @@
 {
     "displayName": "Map",
+    "settings": {
+        "synched": "true",
+        "addRemoveAccess": "GM",
+        "control": {
+            "mode": "NONE"
+        },
+        "accessLevel": {
+            "mode": "CURRENT_MAP_ID_MATCH"
+        },
+        "viewAccess": {
+            "mode": "PROPERTY_TOGGLE",
+            "property": "playersCanEnter"
+        },
+        "editAccess": {
+            "mode": "SET",
+            "value": "GM"
+        }
+    },
     "properties": [
         {
             "name": "name",

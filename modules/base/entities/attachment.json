@@ -1,5 +1,23 @@
 {
     "displayName": "Attachment",
+    "settings": {
+        "synched": "true",
+        "addRemoveAccess": "GM",
+        "control": {
+            "mode": "NONE"
+        },
+        "accessLevel": {
+            "mode": "DEFAULT"
+        },
+        "viewAccess": {
+            "mode": "SET",
+            "value": "EVERYONE"
+        },
+        "editAccess": {
+            "mode": "SET",
+            "value": "EVERYONE"
+        }
+    },
     "properties": [
         {
             "name": "name",

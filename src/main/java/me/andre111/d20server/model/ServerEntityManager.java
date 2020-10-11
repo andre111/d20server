@@ -20,38 +20,37 @@ import me.andre111.d20common.message.game.entity.UpdateEntityProperties;
 import me.andre111.d20common.model.Entity;
 import me.andre111.d20common.model.EntityManager;
 import me.andre111.d20common.model.Property;
-import me.andre111.d20common.model.entity.profile.Profile;
+import me.andre111.d20common.model.def.EntityDefinition;
+import me.andre111.d20common.model.profile.Profile;
 import me.andre111.d20common.model.property.Access;
 import me.andre111.d20common.util.Utils;
 import me.andre111.d20server.service.MessageService;
 import me.andre111.d20server.service.UserService;
 
-public class ServerEntityManager<E extends Entity> implements EntityManager<E> {
-	protected final String name;
-	protected final Class<E> c;
+public class ServerEntityManager implements EntityManager {
+	protected final String type;
 	protected final boolean synched;
 	protected final Access addRemoveAccess;
 	
-	private final Map<Long, E> entities;
+	private final Map<Long, Entity> entities;
 	
-	private final List<Consumer<Map<Long, E>>> listeners = new ArrayList<>();
-	private final List<Consumer<E>> entityListeners = new ArrayList<>();
-	private final List<BiConsumer<Long, E>> removalListeners = new ArrayList<>();
+	private final List<Consumer<Map<Long, Entity>>> listeners = new ArrayList<>();
+	private final List<Consumer<Entity>> entityListeners = new ArrayList<>();
+	private final List<BiConsumer<Long, Entity>> removalListeners = new ArrayList<>();
 	
 	private boolean saveEnabled = true;
 	
-	public ServerEntityManager(String name, Class<E> c, boolean synched, Access addRemoveAccess) {
-		this.name = name;
-		this.c = c;
-		this.synched = synched;
-		this.addRemoveAccess = addRemoveAccess;
+	public ServerEntityManager(String type, EntityDefinition def) {
+		this.type = type;
+		this.synched = def.settings().synched();
+		this.addRemoveAccess = def.settings().addRemoveAccess();
 		
-		Map<Long, E> loadedEntities = Utils.readJson("entity."+name, TypeToken.getParameterized(HashMap.class, Long.class, c).getType());
+		Map<Long, Entity> loadedEntities = Utils.readJson("entity."+type, TypeToken.getParameterized(HashMap.class, Long.class, Entity.class).getType());
 		entities = loadedEntities != null ? loadedEntities : new HashMap<>();
 	}
 	
 	@Override
-	public final E find(long id) {
+	public final Entity find(long id) {
 		return entities.get(id);
 	}
 	
@@ -61,14 +60,19 @@ public class ServerEntityManager<E extends Entity> implements EntityManager<E> {
 	}
 	
 	@Override
-	public final List<E> all() {
+	public final List<Entity> all() {
 		return new ArrayList<>(entities.values());
+	}
+	
+	@Override
+	public final Map<Long, Entity> map() {
+		return Collections.unmodifiableMap(entities);
 	}
 
 	@Override
-	public final void add(E entity) {
+	public final void add(Entity entity) {
 		entities.put(entity.id(), entity);
-		if(saveEnabled) Utils.saveJson("entity."+name, entities);
+		if(saveEnabled) Utils.saveJson("entity."+type, entities);
 		
 		UserService.forEach(profile -> {
 			if(entity.canView(profile)) MessageService.send(new AddEntity(entity), profile);
@@ -84,11 +88,11 @@ public class ServerEntityManager<E extends Entity> implements EntityManager<E> {
 	public final void remove(long id) {
 		if(!entities.containsKey(id)) return;
 		
-		E entity = entities.remove(id);
-		if(saveEnabled) Utils.saveJson("entity."+name, entities);
+		Entity entity = entities.remove(id);
+		if(saveEnabled) Utils.saveJson("entity."+type, entities);
 		
 		UserService.forEach(profile -> {
-			MessageService.send(new RemoveEntity(c, id), profile);
+			MessageService.send(new RemoveEntity(type, id), profile);
 		});
 		
 		notifyListeners();
@@ -99,7 +103,7 @@ public class ServerEntityManager<E extends Entity> implements EntityManager<E> {
 
 	@Override
 	public final void updateProperties(long id, Map<String, Property> map, Access accessLevel) {
-		E entity = find(id);
+		Entity entity = find(id);
 		if(entity == null) return;
 		
 		// keep track of all profiles that could see this entity
@@ -138,14 +142,14 @@ public class ServerEntityManager<E extends Entity> implements EntityManager<E> {
 		}
 
 		// save and transfer (depending on (changing) access: add, remove or only changed properties)
-		if(saveEnabled) Utils.saveJson("entity."+name, entities);
+		if(saveEnabled) Utils.saveJson("entity."+type, entities);
 		UserService.forEach(profile -> {
 			if(entity.canView(profile) && !couldView.contains(profile)) {
 				MessageService.send(new AddEntity(entity), profile);
 			} else if(!entity.canView(profile) && couldView.contains(profile)) {
-				MessageService.send(new RemoveEntity(c, id), profile); 
+				MessageService.send(new RemoveEntity(type, id), profile); 
 			} else if(entity.canView(profile)) {
-				MessageService.send(new UpdateEntityProperties(c, id, changedProperties), profile);
+				MessageService.send(new UpdateEntityProperties(type, id, changedProperties), profile);
 			}
 		});
 		
@@ -156,20 +160,20 @@ public class ServerEntityManager<E extends Entity> implements EntityManager<E> {
 	}
 
 	
-	public final void addListener(Consumer<Map<Long, E>> listener) {
+	public final void addListener(Consumer<Map<Long, Entity>> listener) {
 		listeners.add(listener);
 	}
 	
-	public final void addEntityListener(Consumer<E> listener) {
+	public final void addEntityListener(Consumer<Entity> listener) {
 		entityListeners.add(listener);
 	}
 	
-	public final void addRemovalListener(BiConsumer<Long, E> listener) {
+	public final void addRemovalListener(BiConsumer<Long, Entity> listener) {
 		removalListeners.add(listener);
 	}
 	
 	private final void notifyListeners() {
-		Map<Long, E> unmodifiable = Collections.unmodifiableMap(entities);
+		Map<Long, Entity> unmodifiable = Collections.unmodifiableMap(entities);
 		for(var listener : listeners) {
 			listener.accept(unmodifiable);
 		}
@@ -181,13 +185,9 @@ public class ServerEntityManager<E extends Entity> implements EntityManager<E> {
 		return addRemoveAccess.ordinal() <= accessLevel.ordinal();
 	}
 	
-	protected final Class<E> getEntityClass() {
-		return c;
-	}
-	
 	protected final int getAccessibleCount(Profile profile) {
 		int count = 0;
-		for(E entity : entities.values()) {
+		for(Entity entity : entities.values()) {
 			if(entity.canView(profile)) {
 				count++;
 			}
@@ -196,16 +196,16 @@ public class ServerEntityManager<E extends Entity> implements EntityManager<E> {
 	}
 	
 	protected final void fullSync(Profile profile) {
-		MessageService.send(new ClearEntities(c), profile);
-		for(E entity : entities.values()) {
+		MessageService.send(new ClearEntities(type), profile);
+		for(Entity entity : entities.values()) {
 			if(entity.canView(profile)) {
 				MessageService.send(new AddEntity(entity), profile);
 			}
 		}
 	}
 	
-	protected final void removeAll(Predicate<E> predicate) {
-		for(E e : new ArrayList<>(entities.values())) {
+	protected final void removeAll(Predicate<Entity> predicate) {
+		for(Entity e : new ArrayList<>(entities.values())) {
 			if(predicate.test(e)) remove(e.id());
 		}
 	}
@@ -213,7 +213,7 @@ public class ServerEntityManager<E extends Entity> implements EntityManager<E> {
 	public final void setSaveEnabled(boolean saveEnabled) {
 		this.saveEnabled = saveEnabled;
 		if(saveEnabled) {
-			Utils.saveJson("entity."+name, entities);
+			Utils.saveJson("entity."+type, entities);
 		}
 	}
 }

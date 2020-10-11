@@ -5,16 +5,16 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import me.andre111.d20common.D20Common;
 import me.andre111.d20common.message.game.chat.ChatEntries;
+import me.andre111.d20common.model.Entity;
+import me.andre111.d20common.model.chat.ChatData;
+import me.andre111.d20common.model.chat.ChatEntry;
 import me.andre111.d20common.model.def.MacroDefinition;
-import me.andre111.d20common.model.entity.ChatData;
-import me.andre111.d20common.model.entity.ChatEntry;
-import me.andre111.d20common.model.entity.actor.Actor;
-import me.andre111.d20common.model.entity.map.Token;
-import me.andre111.d20common.model.entity.profile.Profile;
+import me.andre111.d20common.model.profile.Profile;
 import me.andre111.d20common.model.property.Access;
+import me.andre111.d20common.util.Utils;
 import me.andre111.d20server.command.Command;
-import me.andre111.d20server.model.EntityManagers;
 
 public abstract class ChatService {
 	public static final String STYLE_SENDER = "[style \"font=Arial-BOLD-14\"]";
@@ -52,7 +52,7 @@ public abstract class ChatService {
 			String macroName = message.substring(1);
 			
 			// find token and check access
-			Token token = profile.getSelectedToken(true);
+			Entity token = profile.getSelectedToken(true);
 			if(token == null) {
 				appendError(profile, "No (single) token selected");
 				return;
@@ -73,7 +73,7 @@ public abstract class ChatService {
 					macro = macros.get(macroName).commands().stream().collect(Collectors.joining("\n"));
 				}
 				
-				Actor actor = EntityManagers.get(Actor.class).find(token.prop("actorID").getLong());
+				Entity actor = D20Common.getEntityManager("actor").find(token.prop("actorID").getLong());
 				if(actor != null) {
 					macros = actor.getPredefinedMacros();
 					if(macros.containsKey(macroName)) {
@@ -135,7 +135,7 @@ public abstract class ChatService {
 			for(ChatEntry entry : entries) {
 				chatData.append(entry);
 			}
-			EntityManagers.get(ChatData.class).add(chatData);
+			Utils.saveJson("chat", chatData);
 		}
 		
 		// send chat entries to client
@@ -190,9 +190,9 @@ public abstract class ChatService {
 	
 	private static ChatData getChatData() {
 		if(loadedChat == null) {
-			ChatData chatData = EntityManagers.get(ChatData.class).find(1);
+			ChatData chatData = Utils.readJson("chat", ChatData.class);
 			if(chatData == null) {
-				chatData = new ChatData(1);
+				chatData = new ChatData();
 			}
 			loadedChat = chatData;
 		}

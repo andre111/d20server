@@ -3,7 +3,7 @@ package me.andre111.d20server.command;
 import java.util.HashMap;
 import java.util.Map;
 
-import me.andre111.d20common.model.entity.profile.Profile;
+import me.andre111.d20common.model.profile.Profile;
 
 public abstract class Command {
 	private static final Map<String, Command> COMMANDS = new HashMap<>();

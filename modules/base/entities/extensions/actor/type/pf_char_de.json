@@ -1837,6 +1837,49 @@
             ]
         },
         
+        "pf_attribute_strength": {
+            "displayName": "Stärke",
+            "category": "Attributswürfe",
+            "commands": [
+                "/template generic1 Stärke Wurf;für {selected.actor.property.pf_characterName};Wurf;1d20+{selected.actor.property.pf_strMod};"
+            ]
+        },
+        "pf_attribute_dexterity": {
+            "displayName": "Geschicklichkeit",
+            "category": "Attributswürfe",
+            "commands": [
+                "/template generic1 Geschicklichkeits Wurf;für {selected.actor.property.pf_characterName};Wurf;1d20+{selected.actor.property.pf_dexMod};"
+            ]
+        },
+        "pf_attribute_constitution": {
+            "displayName": "Konstitution",
+            "category": "Attributswürfe",
+            "commands": [
+                "/template generic1 Konstitutions Wurf;für {selected.actor.property.pf_characterName};Wurf;1d20+{selected.actor.property.pf_conMod};"
+            ]
+        },
+        "pf_attribute_intelligence": {
+            "displayName": "Intelligenz",
+            "category": "Attributswürfe",
+            "commands": [
+                "/template generic1 Intelligenz Wurf;für {selected.actor.property.pf_characterName};Wurf;1d20+{selected.actor.property.pf_intMod};"
+            ]
+        },
+        "pf_attribute_wisdom": {
+            "displayName": "Weisheit",
+            "category": "Attributswürfe",
+            "commands": [
+                "/template generic1 Weisheits Wurf;für {selected.actor.property.pf_characterName};Wurf;1d20+{selected.actor.property.pf_wisMod};"
+            ]
+        },
+        "pf_attribute_charisma": {
+            "displayName": "Charisma",
+            "category": "Attributswürfe",
+            "commands": [
+                "/template generic1 Charisma Wurf;für {selected.actor.property.pf_characterName};Wurf;1d20+{selected.actor.property.pf_chaMod};"
+            ]
+        },
+        
         "pf_save_reflex": {
             "displayName": "Reflex",
             "category": "Rettungswürfe",

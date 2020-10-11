@@ -3,12 +3,13 @@ package me.andre111.d20server.service;
 import java.util.HashMap;
 import java.util.List;
 
+import me.andre111.d20common.D20Common;
 import me.andre111.d20common.message.game.EnterGame;
 import me.andre111.d20common.message.game.EnterMap;
 import me.andre111.d20common.message.game.PlayerList;
 import me.andre111.d20common.message.game.entity.AddEntity;
-import me.andre111.d20common.model.entity.map.Map;
-import me.andre111.d20common.model.entity.profile.Profile;
+import me.andre111.d20common.model.Entity;
+import me.andre111.d20common.model.profile.Profile;
 import me.andre111.d20server.model.EntityManagers;
 
 public abstract class GameService {
@@ -16,10 +17,10 @@ public abstract class GameService {
 	
 	public static void init() {
 		// add atleast one map
-		if(EntityManagers.get(Map.class).all().isEmpty()) {
-			Map map = new Map();
+		if(D20Common.getEntityManager("map").all().isEmpty()) {
+			Entity map = new Entity("map");
 			map.prop("name").setString("New Map");
-			EntityManagers.get(Map.class).add(map);
+			D20Common.getEntityManager("map").add(map);
 		}
 		
 		// reset player states
@@ -45,7 +46,7 @@ public abstract class GameService {
 		MessageService.send(new EnterGame(profile), profile);
 		
 		// update players (to all)
-		MessageService.send(new PlayerList(UserService.getAllProfiles()), (Map) null);
+		MessageService.send(new PlayerList(UserService.getAllProfiles()), (Entity) null);
 		
 		//TODO: send gamestate (to player) (->LoadMap message, last X chat entries, ...)
 		reloadMaps(profile);
@@ -57,7 +58,7 @@ public abstract class GameService {
 		joinedProfiles.remove(profile.id());
 		
 		// update players
-		MessageService.send(new PlayerList(UserService.getAllProfiles()), (Map) null);
+		MessageService.send(new PlayerList(UserService.getAllProfiles()), (Entity) null);
 		ChatService.appendNote(profile.getName()+" left!");
 	}
 	
@@ -72,7 +73,7 @@ public abstract class GameService {
 		
 		// update all players
 		for(Profile otherProfile : profiles) {
-			Map map = otherProfile.getMap();
+			Entity map = otherProfile.getMap();
 			if(map != null) {
 				MessageService.send(new AddEntity(map), otherProfile); // send map because client could have no independent access
 				MessageService.send(new EnterMap(map), otherProfile);

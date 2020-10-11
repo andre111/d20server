@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import me.andre111.d20common.model.entity.profile.Profile;
+import me.andre111.d20common.model.profile.Profile;
 import me.andre111.d20common.scripting.ScriptException;
 
 public class Template {

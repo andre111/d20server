@@ -1,5 +1,23 @@
 {
     "displayName": "Image",
+    "settings": {
+        "synched": "true",
+        "addRemoveAccess": "GM",
+        "control": {
+            "mode": "NONE"
+        },
+        "accessLevel": {
+            "mode": "DEFAULT"
+        },
+        "viewAccess": {
+            "mode": "SET",
+            "value": "GM"
+        },
+        "editAccess": {
+            "mode": "SET",
+            "value": "GM"
+        }
+    },
     "properties": [
         {
             "name": "name",

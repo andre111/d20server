@@ -2,7 +2,7 @@ package me.andre111.d20server;
 
 import me.andre111.d20common.AppType;
 import me.andre111.d20common.D20Common;
-import me.andre111.d20server.model.EntityManagers;
+import me.andre111.d20server.model.ServerEntityManager;
 import me.andre111.d20server.server.GameServer;
 import me.andre111.d20server.server.HttpServer;
 import me.andre111.d20server.service.CommandLineService;
@@ -13,7 +13,7 @@ public class ServerMain {
 	public static void main(String[] args) {
 		//TODO: replace all System.out.*
 		System.out.println("Initializing...");
-		D20Common.init(AppType.SERVER, EntityManagers::get);
+		D20Common.init(AppType.SERVER, ServerEntityManager::new);
 		ModuleService.init();
 		GameService.init();
 		CommandLineService.init();

@@ -4,8 +4,8 @@ import java.util.Arrays;
 import java.util.List;
 
 import me.andre111.d20common.message.game.PlayEffect;
-import me.andre111.d20common.model.entity.map.Map;
-import me.andre111.d20common.model.entity.profile.Profile;
+import me.andre111.d20common.model.Entity;
+import me.andre111.d20common.model.profile.Profile;
 import me.andre111.d20common.scripting.Context;
 import me.andre111.d20common.scripting.ScriptException;
 import me.andre111.d20common.scripting.expression.Parser;
@@ -29,7 +29,7 @@ public class EffectCommand extends Command {
 			String[] split = arguments.split(" ", 6);
 			if(split.length != 6) throw new ScriptException("Wrong argument count: <type> <x:expression> <y:expression> <rotation:expression> <scale:expression> <aboveOcc>");
 			
-			Map map = profile.getMap();
+			Entity map = profile.getMap();
 			Context context = new Context(profile, map, null);
 			
 			String type = split[0];

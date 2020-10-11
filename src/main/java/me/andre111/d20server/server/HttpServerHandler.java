@@ -31,11 +31,10 @@ import io.netty.handler.codec.http.multipart.FileUpload;
 import io.netty.handler.codec.http.multipart.HttpDataFactory;
 import io.netty.handler.codec.http.multipart.HttpPostRequestDecoder;
 import io.netty.handler.codec.http.multipart.InterfaceHttpData;
-import me.andre111.d20common.model.entity.Audio;
-import me.andre111.d20common.model.entity.Image;
+import me.andre111.d20common.D20Common;
+import me.andre111.d20common.model.Entity;
 import me.andre111.d20common.util.DataUtils;
 import me.andre111.d20common.util.Utils;
-import me.andre111.d20server.model.EntityManagers;
 
 public class HttpServerHandler extends ChannelInboundHandlerAdapter {
 	private static final String IMAGE_PATH = "/image/";
@@ -80,7 +79,7 @@ public class HttpServerHandler extends ChannelInboundHandlerAdapter {
 		if(path.startsWith(IMAGE_PATH)) {
 			String idString = path.substring(IMAGE_PATH.length());
 			long id = Long.parseLong(idString);
-			Image image = EntityManagers.get(Image.class).find(id);
+			Entity image = D20Common.getEntityManager("image").find(id);
 			if(image != null) {
 				data = Utils.readBinary("entity.image."+id);
 				contentType = "image/png";
@@ -88,7 +87,7 @@ public class HttpServerHandler extends ChannelInboundHandlerAdapter {
 		} else if(path.startsWith(AUDIO_PATH)) {
 			String idString = path.substring(AUDIO_PATH.length());
 			long id = Long.parseLong(idString);
-			Audio audio = EntityManagers.get(Audio.class).find(id);
+			Entity audio = D20Common.getEntityManager("audio").find(id);
 			if(audio != null) {
 				data = Utils.readBinary("entity.audio."+id);
 				contentType = "application/ogg";
@@ -159,17 +158,19 @@ public class HttpServerHandler extends ChannelInboundHandlerAdapter {
 									String imageName = fileUpload.getFilename();
 									byte[] imageData = fileUpload.get();
 									if(DataUtils.isValidImage(imageData)) {
-										Image image = new Image(imageName);
+										Entity image = new Entity("image");
+										image.prop("name").setString(imageName);
 										Utils.saveBinary("entity.image."+image.id(), imageData);
-										EntityManagers.get(Image.class).add(image);
+										D20Common.getEntityManager("image").add(image);
 									}
 								} else if(uploadPath.startsWith(UPLOAD_AUDIO_PATH)) {
 									String audioName = fileUpload.getFilename();
 									byte[] audioData = fileUpload.get();
 									if(DataUtils.isValidAudio(audioData)) {
-										Audio audio = new Audio(audioName);
+										Entity audio = new Entity("audio");
+										audio.prop("name").setString(audioName);
 										Utils.saveBinary("entity.audio."+audio.id(), audioData);
-										EntityManagers.get(Audio.class).add(audio);
+										D20Common.getEntityManager("audio").add(audio);
 									}
 								}
 							} catch (IOException e) {

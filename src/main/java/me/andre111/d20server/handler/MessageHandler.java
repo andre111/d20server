@@ -7,8 +7,8 @@ import me.andre111.d20common.message.account.UnauthenticatedMessage;
 import me.andre111.d20common.message.game.GMOnly;
 import me.andre111.d20common.message.game.GameMessage;
 import me.andre111.d20common.message.game.MapRequired;
-import me.andre111.d20common.model.entity.map.Map;
-import me.andre111.d20common.model.entity.profile.Profile;
+import me.andre111.d20common.model.Entity;
+import me.andre111.d20common.model.profile.Profile;
 import me.andre111.d20server.service.UserService;
 
 public abstract class MessageHandler {
@@ -32,7 +32,7 @@ public abstract class MessageHandler {
 	}
 	
 	private static void handleGameMessage(Channel channel, Profile profile, GameMessage message) {
-		Map map = profile.getMap();
+		Entity map = profile.getMap();
 		if(message instanceof MapRequired) {
 			if(map == null) {
 				throw new IllegalMessageException("No map loaded");

@@ -3,7 +3,7 @@ package me.andre111.d20server.template;
 import java.util.HashMap;
 import java.util.Map;
 
-import me.andre111.d20common.model.entity.profile.Profile;
+import me.andre111.d20common.model.profile.Profile;
 import me.andre111.d20common.scripting.ScriptException;
 
 public abstract class Placeholder {

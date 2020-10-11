@@ -8,13 +8,14 @@ import java.util.function.Consumer;
 
 import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
+import com.google.gson.reflect.TypeToken;
 
 import io.netty.channel.Channel;
 import io.netty.channel.group.ChannelGroup;
 import io.netty.channel.group.DefaultChannelGroup;
 import io.netty.util.concurrent.GlobalEventExecutor;
-import me.andre111.d20common.model.entity.profile.Profile;
-import me.andre111.d20server.model.EntityManagers;
+import me.andre111.d20common.model.profile.Profile;
+import me.andre111.d20common.util.Utils;
 
 /**
  * Keeps track of all connections to the server, as well as the corresponding
@@ -28,11 +29,16 @@ public abstract class UserService {
 	private static final BiMap<Profile, Channel> channelMap = HashBiMap.create();
 	private static final Object lock = new Object();
 	static {
-		// load all profiles
-		EntityManagers.get(Profile.class).all().forEach(p -> {
-			p.setConnected(false);
-			allProfiles.put(p.id(), p);
-		});
+		Map<Long, Profile> profiles = Utils.readJson("profiles", TypeToken.getParameterized(Map.class, Long.class, Profile.class).getType());
+		for(Profile profile : profiles.values()) {
+			profile.setConnected(false);
+			allProfiles.put(profile.id(), profile);
+		}
+	}
+	
+	public static void addAndSave(Profile profile) {
+		allProfiles.put(profile.id(), profile);
+		Utils.saveJson("profiles", allProfiles);
 	}
 
 	/**
@@ -85,7 +91,7 @@ public abstract class UserService {
 		
 		// save lastLogin time and log
 		profile.setLastLogin();
-		EntityManagers.get(Profile.class).add(profile);
+		addAndSave(profile);
 		profile.setConnected(true);
 		
 		System.out.println("SignIn: "+profile.id());
