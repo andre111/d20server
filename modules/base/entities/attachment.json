@@ -60,6 +60,50 @@
     "macros": {
     },
     "editorTabs": [
+        {
+            "name": "Main",
+            "layout": "BORDER",
+            "layoutParameters": [],
+            "layoutGlue": "true",
+            "components": [
+                {
+                    "type": "EDITOR",
+                    "property": "name",
+                    "text": "Name"
+                },
+                
+                
+                {
+                    "type": "EDITOR",
+                    "editorType": "IMAGE",
+                    "property": "imageID",
+                    "text": "Icon",
+                    "w": 128,
+                    "h": 128
+                },
+                {
+                    "type": "EDITOR",
+                    "editorType": "MULTI_LINE_STRING",
+                    "property": "descShort",
+                    "text": "Short Description"
+                },
+                {
+                    "type": "EDITOR",
+                    "editorType": "MULTI_LINE_STRING",
+                    "property": "tags",
+                    "text": "Tags"
+                },
+                
+                {
+                    "type": "EDITOR",
+                    "editorType": "MULTI_LINE_STRING",
+                    "property": "descFull",
+                    "text": "Full Description",
+                    "w": 850,
+                    "h": 350
+                }
+            ]
+        }
     ],
     "extensionPoints": [
         {

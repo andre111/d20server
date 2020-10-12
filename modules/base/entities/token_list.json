@@ -89,6 +89,67 @@
     "macros": {
     },
     "editorTabs": [
+        {
+            "name": "Main",
+            "layout": "GRID",
+            "layoutParameters": [ "4", "3" ],
+            "layoutGlue": "true",
+            "components": [
+                {
+                    "type": "LABEL",
+                    "text": "Display Name: "
+                },
+                {
+                    "type": "EDITOR",
+                    "property": "displayName",
+                    "text": ""
+                },
+                {
+                    "type": "EMPTY"
+                },
+                
+                {
+                    "type": "LABEL",
+                    "text": "Code Name: "
+                },
+                {
+                    "type": "EDITOR",
+                    "property": "name",
+                    "text": ""
+                },
+                {
+                    "type": "EMPTY"
+                },
+                
+                {
+                    "type": "LABEL",
+                    "text": "Toggles: "
+                },
+                {
+                    "type": "EDITOR",
+                    "property": "display",
+                    "text": "Display"
+                },
+                {
+                    "type": "EDITOR",
+                    "property": "sorted",
+                    "text": "Sorted"
+                },
+                
+                {
+                    "type": "LABEL",
+                    "text": "Editing Token Values: "
+                },
+                {
+                    "type": "EDITOR",
+                    "property": "edit",
+                    "text": ""
+                },
+                {
+                    "type": "EMPTY"
+                }
+            ]
+        }
     ],
     "extensionPoints": [
         {

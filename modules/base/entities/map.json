@@ -98,6 +98,109 @@
     "macros": {
     },
     "editorTabs": [
+        {
+            "name": "Main",
+            "layout": "GRID",
+            "layoutParameters": [ "7", "3" ],
+            "layoutGlue": "true",
+            "components": [
+                {
+                    "type": "LABEL",
+                    "text": "Name: "
+                },
+                {
+                    "type": "EDITOR",
+                    "property": "name",
+                    "text": ""
+                },
+                {
+                    "type": "EMPTY"
+                },
+                
+                {
+                    "type": "LABEL",
+                    "text": "Grid Size: "
+                },
+                {
+                    "type": "EDITOR",
+                    "property": "gridSize",
+                    "text": ""
+                },
+                {
+                    "type": "EMPTY"
+                },
+                
+                {
+                    "type": "LABEL",
+                    "text": "Size: "
+                },
+                {
+                    "type": "EDITOR",
+                    "property": "width",
+                    "text": "w"
+                },
+                {
+                    "type": "EDITOR",
+                    "property": "height",
+                    "text": "h"
+                },
+                
+                {
+                    "type": "LABEL",
+                    "text": "Light: "
+                },
+                {
+                    "type": "EDITOR",
+                    "property": "light",
+                    "text": ""
+                },
+                {
+                    "type": "EMPTY"
+                },
+                
+                {
+                    "type": "LABEL",
+                    "text": "Effect: "
+                },
+                {
+                    "type": "EDITOR",
+                    "property": "effect",
+                    "text": ""
+                },
+                {
+                    "type": "EMPTY"
+                },
+                
+                {
+                    "type": "LABEL",
+                    "text": "Toggles: "
+                },
+                {
+                    "type": "EDITOR",
+                    "property": "wallsBlockLight",
+                    "text": "Walls block light"
+                },
+                {
+                    "type": "EDITOR",
+                    "property": "hideWithNoMainToken",
+                    "text": "Hide without token"
+                },
+                
+                {
+                    "type": "EMPTY"
+                },
+                {
+                    "type": "EDITOR",
+                    "property": "playersCanEnter",
+                    "text": "Players can enter"
+                },
+                {
+                    "type": "EDITOR",
+                    "property": "playersCanDraw",
+                    "text": "Players can draw"
+                }
+            ]
+        }
     ],
     "extensionPoints": [
         {

@@ -23,11 +23,18 @@
             "value": ""
         },
         {
-            "name": "pf_classAndLevel",
+            "name": "pf_class",
             "type": "STRING",
             "editAccess": "CONTROLLING_PLAYER",
             "viewAccess": "CONTROLLING_PLAYER",
             "value": ""
+        },
+		{
+            "name": "pf_level",
+            "type": "LONG",
+            "editAccess": "CONTROLLING_PLAYER",
+            "viewAccess": "CONTROLLING_PLAYER",
+            "value": "1"
         },
         {
             "name": "pf_race",
@@ -1641,6 +1648,15 @@
         },
         
         {
+            "property": "pf_cmb",
+            "expression": "{self.property.pf_baseAttackBonus} + {self.property.pf_strMod} + {self.property.pf_sizeMod}"
+        },
+        {
+            "property": "pf_cmd",
+            "expression": "{self.property.pf_baseAttackBonus} + {self.property.pf_strMod} + {self.property.pf_sizeMod} + {self.property.pf_dexMod} + 10"
+        },
+        
+        {
             "property": "pf_skillAcrobatics",
             "expression": "{self.property.pf_dexMod} + {self.property.pf_skillAcrobaticsRanks} + {self.property.pf_skillAcrobaticsMisc} + min({self.property.pf_skillAcrobaticsClass}*{self.property.pf_skillAcrobaticsRanks}, 1) * 3"
         },
@@ -2177,5 +2193,2376 @@
         }
     },
     "editorTabs": [
+        {
+            "name": "Sheet",
+            "layout": "FREE_SCROLL",
+            "layoutParameters": [],
+            "layoutGlue": "false",
+            "background": "/public/pf_char_de_1.png",
+            "preferredWidth": 900,
+            "preferredHeight": 450,
+            "components": [
+                {
+                    "type": "EDITOR",
+                    "property": "pf_characterName",
+                    "x": 668,
+                    "y": 125,
+                    "w": 353,
+                    "h": 28
+                },
+                {
+                    "type": "EDITOR",
+                    "property": "pf_alignment",
+                    "x": 1034,
+                    "y": 125,
+                    "w": 115,
+                    "h": 28
+                },
+                {
+                    "type": "EDITOR",
+                    "property": "pf_playerName",
+                    "x": 1162,
+                    "y": 125,
+                    "w": 414,
+                    "h": 28
+                },
+                {
+                    "type": "EDITOR",
+                    "property": "pf_class",
+                    "x": 668,
+                    "y": 178,
+                    "w": 306,
+                    "h": 28
+                },
+                {
+                    "type": "EDITOR",
+                    "property": "pf_level",
+                    "update": "true",
+                    "x": 974,
+                    "y": 178,
+                    "w": 47,
+                    "h": 28
+                },
+                {
+                    "type": "EDITOR",
+                    "property": "pf_race",
+                    "x": 1034,
+                    "y": 178,
+                    "w": 115,
+                    "h": 28
+                },
+                {
+                    "type": "EDITOR",
+                    "property": "pf_campaign",
+                    "x": 1162,
+                    "y": 178,
+                    "w": 223,
+                    "h": 28
+                },
+                {
+                    "type": "EDITOR",
+                    "property": "pf_homeland",
+                    "x": 1394,
+                    "y": 178,
+                    "w": 182,
+                    "h": 28
+                },
+                {
+                    "type": "EDITOR",
+                    "property": "pf_deity",
+                    "x": 668,
+                    "y": 232,
+                    "w": 118,
+                    "h": 28
+                },
+                {
+                    "type": "EDITOR",
+                    "property": "pf_sizeCategory",
+                    "x": 792,
+                    "y": 232,
+                    "w": 120,
+                    "h": 28
+                },
+                {
+                    "type": "EDITOR",
+                    "property": "pf_sizeMod",
+                    "update": "true",
+                    "x": 912,
+                    "y": 232,
+                    "w": 47,
+                    "h": 28
+                },
+                {
+                    "type": "EDITOR",
+                    "property": "pf_gender",
+                    "x": 969,
+                    "y": 232,
+                    "w": 111,
+                    "h": 28
+                },
+                {
+                    "type": "EDITOR",
+                    "property": "pf_age",
+                    "x": 1090,
+                    "y": 232,
+                    "w": 59,
+                    "h": 28
+                },
+                {
+                    "type": "EDITOR",
+                    "property": "pf_size",
+                    "x": 1162,
+                    "y": 232,
+                    "w": 76,
+                    "h": 28
+                },
+                {
+                    "type": "EDITOR",
+                    "property": "pf_weight",
+                    "x": 1250,
+                    "y": 232,
+                    "w": 85,
+                    "h": 28
+                },
+                {
+                    "type": "EDITOR",
+                    "property": "pf_hairColor",
+                    "x": 1345,
+                    "y": 232,
+                    "w": 101,
+                    "h": 28
+                },
+                {
+                    "type": "EDITOR",
+                    "property": "pf_eyeColor",
+                    "x": 1454,
+                    "y": 232,
+                    "w": 122,
+                    "h": 28
+                },
+            
+                {
+                    "type": "EDITOR",
+                    "property": "pf_str",
+                    "update": "true",
+                    "x": 195,
+                    "y": 334,
+                    "w": 60,
+                    "h": 40
+                },
+                {
+                    "type": "EDITOR",
+                    "property": "pf_dex",
+                    "update": "true",
+                    "x": 195,
+                    "y": 383,
+                    "w": 60,
+                    "h": 40
+                },
+                {
+                    "type": "EDITOR",
+                    "property": "pf_con",
+                    "update": "true",
+                    "x": 195,
+                    "y": 432,
+                    "w": 60,
+                    "h": 40
+                },
+                {
+                    "type": "EDITOR",
+                    "property": "pf_int",
+                    "update": "true",
+                    "x": 195,
+                    "y": 479,
+                    "w": 60,
+                    "h": 40
+                },
+                {
+                    "type": "EDITOR",
+                    "property": "pf_wis",
+                    "update": "true",
+                    "x": 195,
+                    "y": 527,
+                    "w": 60,
+                    "h": 40
+                },
+                {
+                    "type": "EDITOR",
+                    "property": "pf_cha",
+                    "update": "true",
+                    "x": 195,
+                    "y": 576,
+                    "w": 60,
+                    "h": 40
+                },
+                
+                {
+                    "type": "EDITOR",
+                    "property": "pf_strMod",
+                    "x": 270,
+                    "y": 334,
+                    "w": 60,
+                    "h": 40
+                },
+                {
+                    "type": "EDITOR",
+                    "property": "pf_dexMod",
+                    "x": 270,
+                    "y": 383,
+                    "w": 60,
+                    "h": 40
+                },
+                {
+                    "type": "EDITOR",
+                    "property": "pf_conMod",
+                    "x": 270,
+                    "y": 432,
+                    "w": 60,
+                    "h": 40
+                },
+                {
+                    "type": "EDITOR",
+                    "property": "pf_intMod",
+                    "x": 270,
+                    "y": 479,
+                    "w": 60,
+                    "h": 40
+                },
+                {
+                    "type": "EDITOR",
+                    "property": "pf_wisMod",
+                    "x": 270,
+                    "y": 527,
+                    "w": 60,
+                    "h": 40
+                },
+                {
+                    "type": "EDITOR",
+                    "property": "pf_chaMod",
+                    "x": 270,
+                    "y": 576,
+                    "w": 60,
+                    "h": 40
+                },
+                
+                {
+                    "type": "EDITOR",
+                    "property": "pf_initMod",
+                    "x": 660,
+                    "y": 576,
+                    "w": 60,
+                    "h": 40
+                },
+                {
+                    "type": "EDITOR",
+                    "property": "pf_dexMod",
+                    "x": 733,
+                    "y": 576,
+                    "w": 60,
+                    "h": 40
+                },
+                {
+                    "type": "EDITOR",
+                    "property": "pf_initMiscMod",
+                    "update": "true",
+                    "x": 810,
+                    "y": 576,
+                    "w": 60,
+                    "h": 40
+                },
+                
+                {
+                    "type": "EDITOR",
+                    "property": "pf_ac",
+                    "x": 192,
+                    "y": 658,
+                    "w": 60,
+                    "h": 40
+                },
+                {
+                    "type": "EDITOR",
+                    "property": "pf_acArmorBonus",
+                    "update": "true",
+                    "x": 327,
+                    "y": 658,
+                    "w": 60,
+                    "h": 40
+                },
+                {
+                    "type": "EDITOR",
+                    "property": "pf_acShieldBonus",
+                    "update": "true",
+                    "x": 407,
+                    "y": 658,
+                    "w": 60,
+                    "h": 40
+                },
+                {
+                    "type": "EDITOR",
+                    "property": "pf_dexMod",
+                    "x": 487,
+                    "y": 658,
+                    "w": 60,
+                    "h": 40
+                },
+                {
+                    "type": "EDITOR",
+                    "property": "pf_acMaxDexMod",
+                    "update": "true",
+                    "x": 487,
+                    "y": 638,
+                    "w": 60,
+                    "h": 20
+                },
+                {
+                    "type": "EDITOR",
+                    "property": "pf_acSizeMod",
+                    "x": 568,
+                    "y": 658,
+                    "w": 60,
+                    "h": 40
+                },
+                {
+                    "type": "EDITOR",
+                    "property": "pf_acNaturalArmor",
+                    "update": "true",
+                    "x": 648,
+                    "y": 658,
+                    "w": 60,
+                    "h": 40
+                },
+                {
+                    "type": "EDITOR",
+                    "property": "pf_acDeflectionMod",
+                    "update": "true",
+                    "x": 729,
+                    "y": 658,
+                    "w": 60,
+                    "h": 40
+                },
+                {
+                    "type": "EDITOR",
+                    "property": "pf_acMiscMod",
+                    "update": "true",
+                    "x": 809,
+                    "y": 658,
+                    "w": 60,
+                    "h": 40
+                },
+                {
+                    "type": "EDITOR",
+                    "property": "pf_acTouch",
+                    "x": 190,
+                    "y": 737,
+                    "w": 60,
+                    "h": 40
+                },
+                {
+                    "type": "EDITOR",
+                    "property": "pf_acFlatFooted",
+                    "x": 489,
+                    "y": 737,
+                    "w": 60,
+                    "h": 40
+                },
+                
+                {
+                    "type": "EDITOR",
+                    "property": "pf_saveReflex",
+                    "x": 292,
+                    "y": 823,
+                    "w": 60,
+                    "h": 40
+                },
+                {
+                    "type": "EDITOR",
+                    "property": "pf_saveReflexBase",
+                    "update": "true",
+                    "x": 370,
+                    "y": 823,
+                    "w": 60,
+                    "h": 40
+                },
+                {
+                    "type": "EDITOR",
+                    "property": "pf_dexMod",
+                    "x": 447,
+                    "y": 823,
+                    "w": 60,
+                    "h": 40
+                },
+                {
+                    "type": "EDITOR",
+                    "property": "pf_saveReflexMagic",
+                    "update": "true",
+                    "x": 525,
+                    "y": 823,
+                    "w": 60,
+                    "h": 40
+                },
+                {
+                    "type": "EDITOR",
+                    "property": "pf_saveReflexMisc",
+                    "update": "true",
+                    "x": 602,
+                    "y": 823,
+                    "w": 60,
+                    "h": 40
+                },
+                {
+                    "type": "EDITOR",
+                    "property": "pf_saveReflexTemp",
+                    "update": "true",
+                    "x": 677,
+                    "y": 823,
+                    "w": 60,
+                    "h": 40
+                },
+                {
+                    "type": "EDITOR",
+                    "property": "pf_saveWill",
+                    "x": 292,
+                    "y": 872,
+                    "w": 60,
+                    "h": 40
+                },
+                {
+                    "type": "EDITOR",
+                    "property": "pf_saveWillBase",
+                    "update": "true",
+                    "x": 370,
+                    "y": 872,
+                    "w": 60,
+                    "h": 40
+                },
+                {
+                    "type": "EDITOR",
+                    "property": "pf_wisMod",
+                    "x": 447,
+                    "y": 872,
+                    "w": 60,
+                    "h": 40
+                },
+                {
+                    "type": "EDITOR",
+                    "property": "pf_saveWillMagic",
+                    "update": "true",
+                    "x": 525,
+                    "y": 872,
+                    "w": 60,
+                    "h": 40
+                },
+                {
+                    "type": "EDITOR",
+                    "property": "pf_saveWillMisc",
+                    "update": "true",
+                    "x": 602,
+                    "y": 872,
+                    "w": 60,
+                    "h": 40
+                },
+                {
+                    "type": "EDITOR",
+                    "property": "pf_saveWillTemp",
+                    "update": "true",
+                    "x": 677,
+                    "y": 872,
+                    "w": 60,
+                    "h": 40
+                },
+                {
+                    "type": "EDITOR",
+                    "property": "pf_saveFortitude",
+                    "x": 292,
+                    "y": 921,
+                    "w": 60,
+                    "h": 40
+                },
+                {
+                    "type": "EDITOR",
+                    "property": "pf_saveFortitudeBase",
+                    "update": "true",
+                    "x": 370,
+                    "y": 921,
+                    "w": 60,
+                    "h": 40
+                },
+                {
+                    "type": "EDITOR",
+                    "property": "pf_conMod",
+                    "x": 447,
+                    "y": 921,
+                    "w": 60,
+                    "h": 40
+                },
+                {
+                    "type": "EDITOR",
+                    "property": "pf_saveFortitudeMagic",
+                    "update": "true",
+                    "x": 525,
+                    "y": 921,
+                    "w": 60,
+                    "h": 40
+                },
+                {
+                    "type": "EDITOR",
+                    "property": "pf_saveFortitudeMisc",
+                    "update": "true",
+                    "x": 602,
+                    "y": 921,
+                    "w": 60,
+                    "h": 40
+                },
+                {
+                    "type": "EDITOR",
+                    "property": "pf_saveFortitudeTemp",
+                    "update": "true",
+                    "x": 677,
+                    "y": 921,
+                    "w": 60,
+                    "h": 40
+                },
+                
+                {
+                    "type": "EDITOR",
+                    "property": "pf_baseAttackBonus",
+                    "update": "true",
+                    "x": 482,
+                    "y": 972,
+                    "w": 96,
+                    "h": 40
+                },
+                
+                {
+                    "type": "EDITOR",
+                    "property": "pf_spellResistance",
+                    "update": "true",
+                    "x": 779,
+                    "y": 972,
+                    "w": 60,
+                    "h": 40
+                },
+                
+                {
+                    "type": "EDITOR",
+                    "property": "pf_cmb",
+                    "x": 352,
+                    "y": 1027,
+                    "w": 76,
+                    "h": 40
+                },
+                {
+                    "type": "EDITOR",
+                    "property": "pf_baseAttackBonus",
+                    "x": 451,
+                    "y": 1027,
+                    "w": 60,
+                    "h": 40,
+                    "disabled": true
+                },
+                {
+                    "type": "EDITOR",
+                    "property": "pf_strMod",
+                    "x": 534,
+                    "y": 1027,
+                    "w": 60,
+                    "h": 40
+                },
+                {
+                    "type": "EDITOR",
+                    "property": "pf_sizeMod",
+                    "x": 617,
+                    "y": 1027,
+                    "w": 60,
+                    "h": 40,
+                    "disabled": true
+                },
+                
+                {
+                    "type": "EDITOR",
+                    "property": "pf_cmd",
+                    "x": 352,
+                    "y": 1105,
+                    "w": 76,
+                    "h": 40
+                },
+                {
+                    "type": "EDITOR",
+                    "property": "pf_baseAttackBonus",
+                    "x": 451,
+                    "y": 1105,
+                    "w": 60,
+                    "h": 40,
+                    "disabled": true
+                },
+                {
+                    "type": "EDITOR",
+                    "property": "pf_strMod",
+                    "x": 534,
+                    "y": 1105,
+                    "w": 60,
+                    "h": 40
+                },
+                {
+                    "type": "EDITOR",
+                    "property": "pf_sizeMod",
+                    "x": 617,
+                    "y": 1105,
+                    "w": 60,
+                    "h": 40,
+                    "disabled": true
+                },
+                {
+                    "type": "EDITOR",
+                    "property": "pf_dexMod",
+                    "x": 704,
+                    "y": 1105,
+                    "w": 60,
+                    "h": 40
+                },
+                
+                {
+                    "type": "EDITOR",
+                    "property": "pf_skillAcrobaticsClass",
+                    "update": "true",
+                    "x": 884,
+                    "y": 552,
+                    "w": 18,
+                    "h": 18
+                },
+                {
+                    "type": "EDITOR",
+                    "property": "pf_skillAcrobatics",
+                    "x": 1208,
+                    "y": 546,
+                    "w": 60,
+                    "h": 30
+                },
+                {
+                    "type": "EDITOR",
+                    "property": "pf_dexMod",
+                    "x": 1345,
+                    "y": 546,
+                    "w": 60,
+                    "h": 30
+                },
+                {
+                    "type": "EDITOR",
+                    "property": "pf_skillAcrobaticsRanks",
+                    "update": "true",
+                    "x": 1431,
+                    "y": 546,
+                    "w": 60,
+                    "h": 30
+                },
+                {
+                    "type": "EDITOR",
+                    "property": "pf_skillAcrobaticsMisc",
+                    "update": "true",
+                    "x": 1516,
+                    "y": 546,
+                    "w": 60,
+                    "h": 30
+                },
+                {
+                    "type": "EDITOR",
+                    "property": "pf_skillPerform1Class",
+                    "update": "true",
+                    "x": 884,
+                    "y": 583,
+                    "w": 18,
+                    "h": 18
+                },
+                {
+                    "type": "EDITOR",
+                    "property": "pf_skillPerform1Text",
+                    "x": 1030,
+                    "y": 577,
+                    "w": 166,
+                    "h": 30
+                },
+                {
+                    "type": "EDITOR",
+                    "property": "pf_skillPerform1",
+                    "x": 1208,
+                    "y": 577,
+                    "w": 60,
+                    "h": 30
+                },
+                {
+                    "type": "EDITOR",
+                    "property": "pf_chaMod",
+                    "x": 1345,
+                    "y": 577,
+                    "w": 60,
+                    "h": 30
+                },
+                {
+                    "type": "EDITOR",
+                    "property": "pf_skillPerform1Ranks",
+                    "update": "true",
+                    "x": 1431,
+                    "y": 577,
+                    "w": 60,
+                    "h": 30
+                },
+                {
+                    "type": "EDITOR",
+                    "property": "pf_skillPerform1Misc",
+                    "update": "true",
+                    "x": 1516,
+                    "y": 577,
+                    "w": 60,
+                    "h": 30
+                },
+                {
+                    "type": "EDITOR",
+                    "property": "pf_skillPerform2Class",
+                    "update": "true",
+                    "x": 884,
+                    "y": 615,
+                    "w": 18,
+                    "h": 18
+                },
+                {
+                    "type": "EDITOR",
+                    "property": "pf_skillPerform2Text",
+                    "x": 1030,
+                    "y": 609,
+                    "w": 166,
+                    "h": 30
+                },
+                {
+                    "type": "EDITOR",
+                    "property": "pf_skillPerform2",
+                    "x": 1208,
+                    "y": 609,
+                    "w": 60,
+                    "h": 30
+                },
+                {
+                    "type": "EDITOR",
+                    "property": "pf_chaMod",
+                    "x": 1345,
+                    "y": 609,
+                    "w": 60,
+                    "h": 30
+                },
+                {
+                    "type": "EDITOR",
+                    "property": "pf_skillPerform2Ranks",
+                    "update": "true",
+                    "x": 1431,
+                    "y": 609,
+                    "w": 60,
+                    "h": 30
+                },
+                {
+                    "type": "EDITOR",
+                    "property": "pf_skillPerform2Misc",
+                    "update": "true",
+                    "x": 1516,
+                    "y": 609,
+                    "w": 60,
+                    "h": 30
+                },
+                {
+                    "type": "EDITOR",
+                    "property": "pf_skillProfession1Class",
+                    "update": "true",
+                    "x": 884,
+                    "y": 646,
+                    "w": 18,
+                    "h": 18
+                },
+                {
+                    "type": "EDITOR",
+                    "property": "pf_skillProfession1Text",
+                    "x": 986,
+                    "y": 640,
+                    "w": 210,
+                    "h": 30
+                },
+                {
+                    "type": "EDITOR",
+                    "property": "pf_skillProfession1",
+                    "x": 1208,
+                    "y": 640,
+                    "w": 60,
+                    "h": 30
+                },
+                {
+                    "type": "EDITOR",
+                    "property": "pf_wisMod",
+                    "x": 1345,
+                    "y": 640,
+                    "w": 60,
+                    "h": 30
+                },
+                {
+                    "type": "EDITOR",
+                    "property": "pf_skillProfession1Ranks",
+                    "update": "true",
+                    "x": 1431,
+                    "y": 640,
+                    "w": 60,
+                    "h": 30
+                },
+                {
+                    "type": "EDITOR",
+                    "property": "pf_skillProfession1Misc",
+                    "update": "true",
+                    "x": 1516,
+                    "y": 640,
+                    "w": 60,
+                    "h": 30
+                },
+                {
+                    "type": "EDITOR",
+                    "property": "pf_skillProfession2Class",
+                    "update": "true",
+                    "x": 884,
+                    "y": 678,
+                    "w": 18,
+                    "h": 18
+                },
+                {
+                    "type": "EDITOR",
+                    "property": "pf_skillProfession2Text",
+                    "x": 986,
+                    "y": 672,
+                    "w": 210,
+                    "h": 30
+                },
+                {
+                    "type": "EDITOR",
+                    "property": "pf_skillProfession2",
+                    "x": 1208,
+                    "y": 672,
+                    "w": 60,
+                    "h": 30
+                },
+                {
+                    "type": "EDITOR",
+                    "property": "pf_wisMod",
+                    "x": 1345,
+                    "y": 672,
+                    "w": 60,
+                    "h": 30
+                },
+                {
+                    "type": "EDITOR",
+                    "property": "pf_skillProfession2Ranks",
+                    "update": "true",
+                    "x": 1431,
+                    "y": 672,
+                    "w": 60,
+                    "h": 30
+                },
+                {
+                    "type": "EDITOR",
+                    "property": "pf_skillProfession2Misc",
+                    "update": "true",
+                    "x": 1516,
+                    "y": 672,
+                    "w": 60,
+                    "h": 30
+                },
+                {
+                    "type": "EDITOR",
+                    "property": "pf_skillBluffClass",
+                    "update": "true",
+                    "x": 884,
+                    "y": 710,
+                    "w": 18,
+                    "h": 18
+                },
+                {
+                    "type": "EDITOR",
+                    "property": "pf_skillBluff",
+                    "x": 1208,
+                    "y": 704,
+                    "w": 60,
+                    "h": 30
+                },
+                {
+                    "type": "EDITOR",
+                    "property": "pf_chaMod",
+                    "x": 1345,
+                    "y": 704,
+                    "w": 60,
+                    "h": 30
+                },
+                {
+                    "type": "EDITOR",
+                    "property": "pf_skillBluffRanks",
+                    "update": "true",
+                    "x": 1431,
+                    "y": 704,
+                    "w": 60,
+                    "h": 30
+                },
+                {
+                    "type": "EDITOR",
+                    "property": "pf_skillBluffMisc",
+                    "update": "true",
+                    "x": 1516,
+                    "y": 704,
+                    "w": 60,
+                    "h": 30
+                },
+                {
+                    "type": "EDITOR",
+                    "property": "pf_skillDiplomacyClass",
+                    "update": "true",
+                    "x": 884,
+                    "y": 741,
+                    "w": 18,
+                    "h": 18
+                },
+                {
+                    "type": "EDITOR",
+                    "property": "pf_skillDiplomacy",
+                    "x": 1208,
+                    "y": 735,
+                    "w": 60,
+                    "h": 30
+                },
+                {
+                    "type": "EDITOR",
+                    "property": "pf_chaMod",
+                    "x": 1345,
+                    "y": 735,
+                    "w": 60,
+                    "h": 30
+                },
+                {
+                    "type": "EDITOR",
+                    "property": "pf_skillDiplomacyRanks",
+                    "update": "true",
+                    "x": 1431,
+                    "y": 735,
+                    "w": 60,
+                    "h": 30
+                },
+                {
+                    "type": "EDITOR",
+                    "property": "pf_skillDiplomacyMisc",
+                    "update": "true",
+                    "x": 1516,
+                    "y": 735,
+                    "w": 60,
+                    "h": 30
+                },
+                {
+                    "type": "EDITOR",
+                    "property": "pf_skillIntimidateClass",
+                    "update": "true",
+                    "x": 884,
+                    "y": 773,
+                    "w": 18,
+                    "h": 18
+                },
+                {
+                    "type": "EDITOR",
+                    "property": "pf_skillIntimidate",
+                    "x": 1208,
+                    "y": 767,
+                    "w": 60,
+                    "h": 30
+                },
+                {
+                    "type": "EDITOR",
+                    "property": "pf_chaMod",
+                    "x": 1345,
+                    "y": 767,
+                    "w": 60,
+                    "h": 30
+                },
+                {
+                    "type": "EDITOR",
+                    "property": "pf_skillIntimidateRanks",
+                    "update": "true",
+                    "x": 1431,
+                    "y": 767,
+                    "w": 60,
+                    "h": 30
+                },
+                {
+                    "type": "EDITOR",
+                    "property": "pf_skillIntimidateMisc",
+                    "update": "true",
+                    "x": 1516,
+                    "y": 767,
+                    "w": 60,
+                    "h": 30
+                },
+                {
+                    "type": "EDITOR",
+                    "property": "pf_skillEscapeArtistClass",
+                    "update": "true",
+                    "x": 884,
+                    "y": 805,
+                    "w": 18,
+                    "h": 18
+                },
+                {
+                    "type": "EDITOR",
+                    "property": "pf_skillEscapeArtist",
+                    "x": 1208,
+                    "y": 799,
+                    "w": 60,
+                    "h": 30
+                },
+                {
+                    "type": "EDITOR",
+                    "property": "pf_dexMod",
+                    "x": 1345,
+                    "y": 799,
+                    "w": 60,
+                    "h": 30
+                },
+                {
+                    "type": "EDITOR",
+                    "property": "pf_skillEscapeArtistRanks",
+                    "update": "true",
+                    "x": 1431,
+                    "y": 799,
+                    "w": 60,
+                    "h": 30
+                },
+                {
+                    "type": "EDITOR",
+                    "property": "pf_skillEscapeArtistMisc",
+                    "update": "true",
+                    "x": 1516,
+                    "y": 799,
+                    "w": 60,
+                    "h": 30
+                },
+                {
+                    "type": "EDITOR",
+                    "property": "pf_skillSleightOfHandClass",
+                    "update": "true",
+                    "x": 884,
+                    "y": 836,
+                    "w": 18,
+                    "h": 18
+                },
+                {
+                    "type": "EDITOR",
+                    "property": "pf_skillSleightOfHand",
+                    "x": 1208,
+                    "y": 830,
+                    "w": 60,
+                    "h": 30
+                },
+                {
+                    "type": "EDITOR",
+                    "property": "pf_dexMod",
+                    "x": 1345,
+                    "y": 830,
+                    "w": 60,
+                    "h": 30
+                },
+                {
+                    "type": "EDITOR",
+                    "property": "pf_skillSleightOfHandRanks",
+                    "update": "true",
+                    "x": 1431,
+                    "y": 830,
+                    "w": 60,
+                    "h": 30
+                },
+                {
+                    "type": "EDITOR",
+                    "property": "pf_skillSleightOfHandMisc",
+                    "update": "true",
+                    "x": 1516,
+                    "y": 830,
+                    "w": 60,
+                    "h": 30
+                },
+                {
+                    "type": "EDITOR",
+                    "property": "pf_skillFlyClass",
+                    "update": "true",
+                    "x": 884,
+                    "y": 868,
+                    "w": 18,
+                    "h": 18
+                },
+                {
+                    "type": "EDITOR",
+                    "property": "pf_skillFly",
+                    "x": 1208,
+                    "y": 862,
+                    "w": 60,
+                    "h": 30
+                },
+                {
+                    "type": "EDITOR",
+                    "property": "pf_dexMod",
+                    "x": 1345,
+                    "y": 862,
+                    "w": 60,
+                    "h": 30
+                },
+                {
+                    "type": "EDITOR",
+                    "property": "pf_skillFlyRanks",
+                    "update": "true",
+                    "x": 1431,
+                    "y": 862,
+                    "w": 60,
+                    "h": 30
+                },
+                {
+                    "type": "EDITOR",
+                    "property": "pf_skillFlyMisc",
+                    "update": "true",
+                    "x": 1516,
+                    "y": 862,
+                    "w": 60,
+                    "h": 30
+                },
+                {
+                    "type": "EDITOR",
+                    "property": "pf_skillCraft1Class",
+                    "update": "true",
+                    "x": 884,
+                    "y": 899,
+                    "w": 18,
+                    "h": 18
+                },
+                {
+                    "type": "EDITOR",
+                    "property": "pf_skillCraft1Text",
+                    "x": 1038,
+                    "y": 893,
+                    "w": 158,
+                    "h": 30
+                },
+                {
+                    "type": "EDITOR",
+                    "property": "pf_skillCraft1",
+                    "x": 1208,
+                    "y": 893,
+                    "w": 60,
+                    "h": 30
+                },
+                {
+                    "type": "EDITOR",
+                    "property": "pf_intMod",
+                    "x": 1345,
+                    "y": 893,
+                    "w": 60,
+                    "h": 30
+                },
+                {
+                    "type": "EDITOR",
+                    "property": "pf_skillCraft1Ranks",
+                    "update": "true",
+                    "x": 1431,
+                    "y": 893,
+                    "w": 60,
+                    "h": 30
+                },
+                {
+                    "type": "EDITOR",
+                    "property": "pf_skillCraft1Misc",
+                    "update": "true",
+                    "x": 1516,
+                    "y": 893,
+                    "w": 60,
+                    "h": 30
+                },
+                {
+                    "type": "EDITOR",
+                    "property": "pf_skillCraft2Class",
+                    "update": "true",
+                    "x": 884,
+                    "y": 931,
+                    "w": 18,
+                    "h": 18
+                },
+                {
+                    "type": "EDITOR",
+                    "property": "pf_skillCraft2Text",
+                    "x": 1038,
+                    "y": 925,
+                    "w": 158,
+                    "h": 30
+                },
+                {
+                    "type": "EDITOR",
+                    "property": "pf_skillCraft2",
+                    "x": 1208,
+                    "y": 925,
+                    "w": 60,
+                    "h": 30
+                },
+                {
+                    "type": "EDITOR",
+                    "property": "pf_intMod",
+                    "x": 1345,
+                    "y": 925,
+                    "w": 60,
+                    "h": 30
+                },
+                {
+                    "type": "EDITOR",
+                    "property": "pf_skillCraft2Ranks",
+                    "update": "true",
+                    "x": 1431,
+                    "y": 925,
+                    "w": 60,
+                    "h": 30
+                },
+                {
+                    "type": "EDITOR",
+                    "property": "pf_skillCraft2Misc",
+                    "update": "true",
+                    "x": 1516,
+                    "y": 925,
+                    "w": 60,
+                    "h": 30
+                },
+                {
+                    "type": "EDITOR",
+                    "property": "pf_skillCraft3Class",
+                    "update": "true",
+                    "x": 884,
+                    "y": 963,
+                    "w": 18,
+                    "h": 18
+                },
+                {
+                    "type": "EDITOR",
+                    "property": "pf_skillCraft3Text",
+                    "x": 1038,
+                    "y": 957,
+                    "w": 158,
+                    "h": 30
+                },
+                {
+                    "type": "EDITOR",
+                    "property": "pf_skillCraft3",
+                    "x": 1208,
+                    "y": 957,
+                    "w": 60,
+                    "h": 30
+                },
+                {
+                    "type": "EDITOR",
+                    "property": "pf_intMod",
+                    "x": 1345,
+                    "y": 957,
+                    "w": 60,
+                    "h": 30
+                },
+                {
+                    "type": "EDITOR",
+                    "property": "pf_skillCraft3Ranks",
+                    "update": "true",
+                    "x": 1431,
+                    "y": 957,
+                    "w": 60,
+                    "h": 30
+                },
+                {
+                    "type": "EDITOR",
+                    "property": "pf_skillCraft3Misc",
+                    "update": "true",
+                    "x": 1516,
+                    "y": 957,
+                    "w": 60,
+                    "h": 30
+                },
+                {
+                    "type": "EDITOR",
+                    "property": "pf_skillHealClass",
+                    "update": "true",
+                    "x": 884,
+                    "y": 994,
+                    "w": 18,
+                    "h": 18
+                },
+                {
+                    "type": "EDITOR",
+                    "property": "pf_skillHeal",
+                    "x": 1208,
+                    "y": 988,
+                    "w": 60,
+                    "h": 30
+                },
+                {
+                    "type": "EDITOR",
+                    "property": "pf_skillHealText",
+                    "x": 1038,
+                    "y": 988,
+                    "w": 158,
+                    "h": 30
+                },
+                {
+                    "type": "EDITOR",
+                    "property": "pf_wisMod",
+                    "x": 1345,
+                    "y": 988,
+                    "w": 60,
+                    "h": 30
+                },
+                {
+                    "type": "EDITOR",
+                    "property": "pf_skillHealRanks",
+                    "update": "true",
+                    "x": 1431,
+                    "y": 988,
+                    "w": 60,
+                    "h": 30
+                },
+                {
+                    "type": "EDITOR",
+                    "property": "pf_skillHealMisc",
+                    "update": "true",
+                    "x": 1516,
+                    "y": 988,
+                    "w": 60,
+                    "h": 30
+                },
+                {
+                    "type": "EDITOR",
+                    "property": "pf_skillStealthClass",
+                    "update": "true",
+                    "x": 884,
+                    "y": 1026,
+                    "w": 18,
+                    "h": 18
+                },
+                {
+                    "type": "EDITOR",
+                    "property": "pf_skillStealth",
+                    "x": 1208,
+                    "y": 1020,
+                    "w": 60,
+                    "h": 30
+                },
+                {
+                    "type": "EDITOR",
+                    "property": "pf_dexMod",
+                    "x": 1345,
+                    "y": 1020,
+                    "w": 60,
+                    "h": 30
+                },
+                {
+                    "type": "EDITOR",
+                    "property": "pf_skillStealthRanks",
+                    "update": "true",
+                    "x": 1431,
+                    "y": 1020,
+                    "w": 60,
+                    "h": 30
+                },
+                {
+                    "type": "EDITOR",
+                    "property": "pf_skillStealthMisc",
+                    "update": "true",
+                    "x": 1516,
+                    "y": 1020,
+                    "w": 60,
+                    "h": 30
+                },
+                {
+                    "type": "EDITOR",
+                    "property": "pf_skillClimbClass",
+                    "update": "true",
+                    "x": 884,
+                    "y": 1058,
+                    "w": 18,
+                    "h": 18
+                },
+                {
+                    "type": "EDITOR",
+                    "property": "pf_skillClimb",
+                    "x": 1208,
+                    "y": 1052,
+                    "w": 60,
+                    "h": 30
+                },
+                {
+                    "type": "EDITOR",
+                    "property": "pf_strMod",
+                    "x": 1345,
+                    "y": 1052,
+                    "w": 60,
+                    "h": 30
+                },
+                {
+                    "type": "EDITOR",
+                    "property": "pf_skillClimbRanks",
+                    "update": "true",
+                    "x": 1431,
+                    "y": 1052,
+                    "w": 60,
+                    "h": 30
+                },
+                {
+                    "type": "EDITOR",
+                    "property": "pf_skillClimbMisc",
+                    "update": "true",
+                    "x": 1516,
+                    "y": 1052,
+                    "w": 60,
+                    "h": 30
+                },
+                {
+                    "type": "EDITOR",
+                    "property": "pf_skillUseMagicDeviceClass",
+                    "update": "true",
+                    "x": 884,
+                    "y": 1089,
+                    "w": 18,
+                    "h": 18
+                },
+                {
+                    "type": "EDITOR",
+                    "property": "pf_skillUseMagicDevice",
+                    "x": 1208,
+                    "y": 1083,
+                    "w": 60,
+                    "h": 30
+                },
+                {
+                    "type": "EDITOR",
+                    "property": "pf_chaMod",
+                    "x": 1345,
+                    "y": 1083,
+                    "w": 60,
+                    "h": 30
+                },
+                {
+                    "type": "EDITOR",
+                    "property": "pf_skillUseMagicDeviceRanks",
+                    "update": "true",
+                    "x": 1431,
+                    "y": 1083,
+                    "w": 60,
+                    "h": 30
+                },
+                {
+                    "type": "EDITOR",
+                    "property": "pf_skillUseMagicDeviceMisc",
+                    "update": "true",
+                    "x": 1516,
+                    "y": 1083,
+                    "w": 60,
+                    "h": 30
+                },
+                {
+                    "type": "EDITOR",
+                    "property": "pf_skillDisableDeviceClass",
+                    "update": "true",
+                    "x": 884,
+                    "y": 1121,
+                    "w": 18,
+                    "h": 18
+                },
+                {
+                    "type": "EDITOR",
+                    "property": "pf_skillDisableDevice",
+                    "x": 1208,
+                    "y": 1115,
+                    "w": 60,
+                    "h": 30
+                },
+                {
+                    "type": "EDITOR",
+                    "property": "pf_dexMod",
+                    "x": 1345,
+                    "y": 1115,
+                    "w": 60,
+                    "h": 30
+                },
+                {
+                    "type": "EDITOR",
+                    "property": "pf_skillDisableDeviceRanks",
+                    "update": "true",
+                    "x": 1431,
+                    "y": 1115,
+                    "w": 60,
+                    "h": 30
+                },
+                {
+                    "type": "EDITOR",
+                    "property": "pf_skillDisableDeviceMisc",
+                    "update": "true",
+                    "x": 1516,
+                    "y": 1115,
+                    "w": 60,
+                    "h": 30
+                },
+                {
+                    "type": "EDITOR",
+                    "property": "pf_skillHandleAnimalClass",
+                    "update": "true",
+                    "x": 884,
+                    "y": 1152,
+                    "w": 18,
+                    "h": 18
+                },
+                {
+                    "type": "EDITOR",
+                    "property": "pf_skillHandleAnimal",
+                    "x": 1208,
+                    "y": 1146,
+                    "w": 60,
+                    "h": 30
+                },
+                {
+                    "type": "EDITOR",
+                    "property": "pf_chaMod",
+                    "x": 1345,
+                    "y": 1146,
+                    "w": 60,
+                    "h": 30
+                },
+                {
+                    "type": "EDITOR",
+                    "property": "pf_skillHandleAnimalRanks",
+                    "update": "true",
+                    "x": 1431,
+                    "y": 1146,
+                    "w": 60,
+                    "h": 30
+                },
+                {
+                    "type": "EDITOR",
+                    "property": "pf_skillHandleAnimalMisc",
+                    "update": "true",
+                    "x": 1516,
+                    "y": 1146,
+                    "w": 60,
+                    "h": 30
+                },
+                {
+                    "type": "EDITOR",
+                    "property": "pf_skillSenseMotiveClass",
+                    "update": "true",
+                    "x": 884,
+                    "y": 1184,
+                    "w": 18,
+                    "h": 18
+                },
+                {
+                    "type": "EDITOR",
+                    "property": "pf_skillSenseMotive",
+                    "x": 1208,
+                    "y": 1178,
+                    "w": 60,
+                    "h": 30
+                },
+                {
+                    "type": "EDITOR",
+                    "property": "pf_wisMod",
+                    "x": 1345,
+                    "y": 1178,
+                    "w": 60,
+                    "h": 30
+                },
+                {
+                    "type": "EDITOR",
+                    "property": "pf_skillSenseMotiveRanks",
+                    "update": "true",
+                    "x": 1431,
+                    "y": 1178,
+                    "w": 60,
+                    "h": 30
+                },
+                {
+                    "type": "EDITOR",
+                    "property": "pf_skillSenseMotiveMisc",
+                    "update": "true",
+                    "x": 1516,
+                    "y": 1178,
+                    "w": 60,
+                    "h": 30
+                },
+                {
+                    "type": "EDITOR",
+                    "property": "pf_skillRideClass",
+                    "update": "true",
+                    "x": 884,
+                    "y": 1216,
+                    "w": 18,
+                    "h": 18
+                },
+                {
+                    "type": "EDITOR",
+                    "property": "pf_skillRide",
+                    "x": 1208,
+                    "y": 1210,
+                    "w": 60,
+                    "h": 30
+                },
+                {
+                    "type": "EDITOR",
+                    "property": "pf_dexMod",
+                    "x": 1345,
+                    "y": 1210,
+                    "w": 60,
+                    "h": 30
+                },
+                {
+                    "type": "EDITOR",
+                    "property": "pf_skillRideRanks",
+                    "update": "true",
+                    "x": 1431,
+                    "y": 1210,
+                    "w": 60,
+                    "h": 30
+                },
+                {
+                    "type": "EDITOR",
+                    "property": "pf_skillRideMisc",
+                    "update": "true",
+                    "x": 1516,
+                    "y": 1210,
+                    "w": 60,
+                    "h": 30
+                },
+                {
+                    "type": "EDITOR",
+                    "property": "pf_skillAppraiseClass",
+                    "update": "true",
+                    "x": 884,
+                    "y": 1247,
+                    "w": 18,
+                    "h": 18
+                },
+                {
+                    "type": "EDITOR",
+                    "property": "pf_skillAppraise",
+                    "x": 1208,
+                    "y": 1241,
+                    "w": 60,
+                    "h": 30
+                },
+                {
+                    "type": "EDITOR",
+                    "property": "pf_intMod",
+                    "x": 1345,
+                    "y": 1241,
+                    "w": 60,
+                    "h": 30
+                },
+                {
+                    "type": "EDITOR",
+                    "property": "pf_skillAppraiseRanks",
+                    "update": "true",
+                    "x": 1431,
+                    "y": 1241,
+                    "w": 60,
+                    "h": 30
+                },
+                {
+                    "type": "EDITOR",
+                    "property": "pf_skillAppraiseMisc",
+                    "update": "true",
+                    "x": 1516,
+                    "y": 1241,
+                    "w": 60,
+                    "h": 30
+                },
+                {
+                    "type": "EDITOR",
+                    "property": "pf_skillSwimClass",
+                    "update": "true",
+                    "x": 884,
+                    "y": 1279,
+                    "w": 18,
+                    "h": 18
+                },
+                {
+                    "type": "EDITOR",
+                    "property": "pf_skillSwim",
+                    "x": 1208,
+                    "y": 1273,
+                    "w": 60,
+                    "h": 30
+                },
+                {
+                    "type": "EDITOR",
+                    "property": "pf_strMod",
+                    "x": 1345,
+                    "y": 1273,
+                    "w": 60,
+                    "h": 30
+                },
+                {
+                    "type": "EDITOR",
+                    "property": "pf_skillSwimRanks",
+                    "update": "true",
+                    "x": 1431,
+                    "y": 1273,
+                    "w": 60,
+                    "h": 30
+                },
+                {
+                    "type": "EDITOR",
+                    "property": "pf_skillSwimMisc",
+                    "update": "true",
+                    "x": 1516,
+                    "y": 1273,
+                    "w": 60,
+                    "h": 30
+                },
+                {
+                    "type": "EDITOR",
+                    "property": "pf_skillLinguisticsClass",
+                    "update": "true",
+                    "x": 884,
+                    "y": 1311,
+                    "w": 18,
+                    "h": 18
+                },
+                {
+                    "type": "EDITOR",
+                    "property": "pf_skillLinguistics",
+                    "x": 1208,
+                    "y": 1305,
+                    "w": 60,
+                    "h": 30
+                },
+                {
+                    "type": "EDITOR",
+                    "property": "pf_intMod",
+                    "x": 1345,
+                    "y": 1305,
+                    "w": 60,
+                    "h": 30
+                },
+                {
+                    "type": "EDITOR",
+                    "property": "pf_skillLinguisticsRanks",
+                    "update": "true",
+                    "x": 1431,
+                    "y": 1305,
+                    "w": 60,
+                    "h": 30
+                },
+                {
+                    "type": "EDITOR",
+                    "property": "pf_skillLinguisticsMisc",
+                    "update": "true",
+                    "x": 1516,
+                    "y": 1305,
+                    "w": 60,
+                    "h": 30
+                },
+                {
+                    "type": "EDITOR",
+                    "property": "pf_skillSurvivalClass",
+                    "update": "true",
+                    "x": 884,
+                    "y": 1342,
+                    "w": 18,
+                    "h": 18
+                },
+                {
+                    "type": "EDITOR",
+                    "property": "pf_skillSurvival",
+                    "x": 1208,
+                    "y": 1336,
+                    "w": 60,
+                    "h": 30
+                },
+                {
+                    "type": "EDITOR",
+                    "property": "pf_wisMod",
+                    "x": 1345,
+                    "y": 1336,
+                    "w": 60,
+                    "h": 30
+                },
+                {
+                    "type": "EDITOR",
+                    "property": "pf_skillSurvivalRanks",
+                    "update": "true",
+                    "x": 1431,
+                    "y": 1336,
+                    "w": 60,
+                    "h": 30
+                },
+                {
+                    "type": "EDITOR",
+                    "property": "pf_skillSurvivalMisc",
+                    "update": "true",
+                    "x": 1516,
+                    "y": 1336,
+                    "w": 60,
+                    "h": 30
+                },
+                {
+                    "type": "EDITOR",
+                    "property": "pf_skillDisguiseClass",
+                    "update": "true",
+                    "x": 884,
+                    "y": 1374,
+                    "w": 18,
+                    "h": 18
+                },
+                {
+                    "type": "EDITOR",
+                    "property": "pf_skillDisguise",
+                    "x": 1208,
+                    "y": 1368,
+                    "w": 60,
+                    "h": 30
+                },
+                {
+                    "type": "EDITOR",
+                    "property": "pf_chaMod",
+                    "x": 1345,
+                    "y": 1368,
+                    "w": 60,
+                    "h": 30
+                },
+                {
+                    "type": "EDITOR",
+                    "property": "pf_skillDisguiseRanks",
+                    "update": "true",
+                    "x": 1431,
+                    "y": 1368,
+                    "w": 60,
+                    "h": 30
+                },
+                {
+                    "type": "EDITOR",
+                    "property": "pf_skillDisguiseMisc",
+                    "update": "true",
+                    "x": 1516,
+                    "y": 1368,
+                    "w": 60,
+                    "h": 30
+                },
+                {
+                    "type": "EDITOR",
+                    "property": "pf_skillPerceptionClass",
+                    "update": "true",
+                    "x": 884,
+                    "y": 1406,
+                    "w": 18,
+                    "h": 18
+                },
+                {
+                    "type": "EDITOR",
+                    "property": "pf_skillPerception",
+                    "x": 1208,
+                    "y": 1400,
+                    "w": 60,
+                    "h": 30
+                },
+                {
+                    "type": "EDITOR",
+                    "property": "pf_wisMod",
+                    "x": 1345,
+                    "y": 1400,
+                    "w": 60,
+                    "h": 30
+                },
+                {
+                    "type": "EDITOR",
+                    "property": "pf_skillPerceptionRanks",
+                    "update": "true",
+                    "x": 1431,
+                    "y": 1400,
+                    "w": 60,
+                    "h": 30
+                },
+                {
+                    "type": "EDITOR",
+                    "property": "pf_skillPerceptionMisc",
+                    "update": "true",
+                    "x": 1516,
+                    "y": 1400,
+                    "w": 60,
+                    "h": 30
+                },
+                {
+                    "type": "EDITOR",
+                    "property": "pf_skillKnowledgeNobilityClass",
+                    "update": "true",
+                    "x": 884,
+                    "y": 1437,
+                    "w": 18,
+                    "h": 18
+                },
+                {
+                    "type": "EDITOR",
+                    "property": "pf_skillKnowledgeNobility",
+                    "x": 1208,
+                    "y": 1431,
+                    "w": 60,
+                    "h": 30
+                },
+                {
+                    "type": "EDITOR",
+                    "property": "pf_intMod",
+                    "x": 1345,
+                    "y": 1431,
+                    "w": 60,
+                    "h": 30
+                },
+                {
+                    "type": "EDITOR",
+                    "property": "pf_skillKnowledgeNobilityRanks",
+                    "update": "true",
+                    "x": 1431,
+                    "y": 1431,
+                    "w": 60,
+                    "h": 30
+                },
+                {
+                    "type": "EDITOR",
+                    "property": "pf_skillKnowledgeNobilityMisc",
+                    "update": "true",
+                    "x": 1516,
+                    "y": 1431,
+                    "w": 60,
+                    "h": 30
+                },
+                {
+                    "type": "EDITOR",
+                    "property": "pf_skillKnowledgeArcanaClass",
+                    "update": "true",
+                    "x": 884,
+                    "y": 1469,
+                    "w": 18,
+                    "h": 18
+                },
+                {
+                    "type": "EDITOR",
+                    "property": "pf_skillKnowledgeArcana",
+                    "x": 1208,
+                    "y": 1463,
+                    "w": 60,
+                    "h": 30
+                },
+                {
+                    "type": "EDITOR",
+                    "property": "pf_intMod",
+                    "x": 1345,
+                    "y": 1463,
+                    "w": 60,
+                    "h": 30
+                },
+                {
+                    "type": "EDITOR",
+                    "property": "pf_skillKnowledgeArcanaRanks",
+                    "update": "true",
+                    "x": 1431,
+                    "y": 1463,
+                    "w": 60,
+                    "h": 30
+                },
+                {
+                    "type": "EDITOR",
+                    "property": "pf_skillKnowledgeArcanaMisc",
+                    "update": "true",
+                    "x": 1516,
+                    "y": 1463,
+                    "w": 60,
+                    "h": 30
+                },
+                {
+                    "type": "EDITOR",
+                    "property": "pf_skillKnowledgeEngineeringClass",
+                    "update": "true",
+                    "x": 884,
+                    "y": 1500,
+                    "w": 18,
+                    "h": 18
+                },
+                {
+                    "type": "EDITOR",
+                    "property": "pf_skillKnowledgeEngineering",
+                    "x": 1208,
+                    "y": 1494,
+                    "w": 60,
+                    "h": 30
+                },
+                {
+                    "type": "EDITOR",
+                    "property": "pf_intMod",
+                    "x": 1345,
+                    "y": 1494,
+                    "w": 60,
+                    "h": 30
+                },
+                {
+                    "type": "EDITOR",
+                    "property": "pf_skillKnowledgeEngineeringRanks",
+                    "update": "true",
+                    "x": 1431,
+                    "y": 1494,
+                    "w": 60,
+                    "h": 30
+                },
+                {
+                    "type": "EDITOR",
+                    "property": "pf_skillKnowledgeEngineeringMisc",
+                    "update": "true",
+                    "x": 1516,
+                    "y": 1494,
+                    "w": 60,
+                    "h": 30
+                },
+                {
+                    "type": "EDITOR",
+                    "property": "pf_skillKnowledgePlanesClass",
+                    "update": "true",
+                    "x": 884,
+                    "y": 1532,
+                    "w": 18,
+                    "h": 18
+                },
+                {
+                    "type": "EDITOR",
+                    "property": "pf_skillKnowledgePlanes",
+                    "x": 1208,
+                    "y": 1526,
+                    "w": 60,
+                    "h": 30
+                },
+                {
+                    "type": "EDITOR",
+                    "property": "pf_intMod",
+                    "x": 1345,
+                    "y": 1526,
+                    "w": 60,
+                    "h": 30
+                },
+                {
+                    "type": "EDITOR",
+                    "property": "pf_skillKnowledgePlanesRanks",
+                    "update": "true",
+                    "x": 1431,
+                    "y": 1526,
+                    "w": 60,
+                    "h": 30
+                },
+                {
+                    "type": "EDITOR",
+                    "property": "pf_skillKnowledgePlanesMisc",
+                    "update": "true",
+                    "x": 1516,
+                    "y": 1526,
+                    "w": 60,
+                    "h": 30
+                },
+                {
+                    "type": "EDITOR",
+                    "property": "pf_skillKnowledgeGeographyClass",
+                    "update": "true",
+                    "x": 884,
+                    "y": 1564,
+                    "w": 18,
+                    "h": 18
+                },
+                {
+                    "type": "EDITOR",
+                    "property": "pf_skillKnowledgeGeography",
+                    "x": 1208,
+                    "y": 1558,
+                    "w": 60,
+                    "h": 30
+                },
+                {
+                    "type": "EDITOR",
+                    "property": "pf_intMod",
+                    "x": 1345,
+                    "y": 1558,
+                    "w": 60,
+                    "h": 30
+                },
+                {
+                    "type": "EDITOR",
+                    "property": "pf_skillKnowledgeGeographyRanks",
+                    "update": "true",
+                    "x": 1431,
+                    "y": 1558,
+                    "w": 60,
+                    "h": 30
+                },
+                {
+                    "type": "EDITOR",
+                    "property": "pf_skillKnowledgeGeographyMisc",
+                    "update": "true",
+                    "x": 1516,
+                    "y": 1558,
+                    "w": 60,
+                    "h": 30
+                },
+                {
+                    "type": "EDITOR",
+                    "property": "pf_skillKnowledgeHistoryClass",
+                    "update": "true",
+                    "x": 884,
+                    "y": 1595,
+                    "w": 18,
+                    "h": 18
+                },
+                {
+                    "type": "EDITOR",
+                    "property": "pf_skillKnowledgeHistory",
+                    "x": 1208,
+                    "y": 1589,
+                    "w": 60,
+                    "h": 30
+                },
+                {
+                    "type": "EDITOR",
+                    "property": "pf_intMod",
+                    "x": 1345,
+                    "y": 1589,
+                    "w": 60,
+                    "h": 30
+                },
+                {
+                    "type": "EDITOR",
+                    "property": "pf_skillKnowledgeHistoryRanks",
+                    "update": "true",
+                    "x": 1431,
+                    "y": 1589,
+                    "w": 60,
+                    "h": 30
+                },
+                {
+                    "type": "EDITOR",
+                    "property": "pf_skillKnowledgeHistoryMisc",
+                    "update": "true",
+                    "x": 1516,
+                    "y": 1589,
+                    "w": 60,
+                    "h": 30
+                },
+                {
+                    "type": "EDITOR",
+                    "property": "pf_skillKnowledgeDungeoneeringClass",
+                    "update": "true",
+                    "x": 884,
+                    "y": 1627,
+                    "w": 18,
+                    "h": 18
+                },
+                {
+                    "type": "EDITOR",
+                    "property": "pf_skillKnowledgeDungeoneering",
+                    "x": 1208,
+                    "y": 1621,
+                    "w": 60,
+                    "h": 30
+                },
+                {
+                    "type": "EDITOR",
+                    "property": "pf_intMod",
+                    "x": 1345,
+                    "y": 1621,
+                    "w": 60,
+                    "h": 30
+                },
+                {
+                    "type": "EDITOR",
+                    "property": "pf_skillKnowledgeDungeoneeringRanks",
+                    "update": "true",
+                    "x": 1431,
+                    "y": 1621,
+                    "w": 60,
+                    "h": 30
+                },
+                {
+                    "type": "EDITOR",
+                    "property": "pf_skillKnowledgeDungeoneeringMisc",
+                    "update": "true",
+                    "x": 1516,
+                    "y": 1621,
+                    "w": 60,
+                    "h": 30
+                },
+                {
+                    "type": "EDITOR",
+                    "property": "pf_skillKnowledgeLocalClass",
+                    "update": "true",
+                    "x": 884,
+                    "y": 1659,
+                    "w": 18,
+                    "h": 18
+                },
+                {
+                    "type": "EDITOR",
+                    "property": "pf_skillKnowledgeLocal",
+                    "x": 1208,
+                    "y": 1653,
+                    "w": 60,
+                    "h": 30
+                },
+                {
+                    "type": "EDITOR",
+                    "property": "pf_intMod",
+                    "x": 1345,
+                    "y": 1653,
+                    "w": 60,
+                    "h": 30
+                },
+                {
+                    "type": "EDITOR",
+                    "property": "pf_skillKnowledgeLocalRanks",
+                    "update": "true",
+                    "x": 1431,
+                    "y": 1653,
+                    "w": 60,
+                    "h": 30
+                },
+                {
+                    "type": "EDITOR",
+                    "property": "pf_skillKnowledgeLocalMisc",
+                    "update": "true",
+                    "x": 1516,
+                    "y": 1653,
+                    "w": 60,
+                    "h": 30
+                },
+                {
+                    "type": "EDITOR",
+                    "property": "pf_skillKnowledgeNatureClass",
+                    "update": "true",
+                    "x": 884,
+                    "y": 1690,
+                    "w": 18,
+                    "h": 18
+                },
+                {
+                    "type": "EDITOR",
+                    "property": "pf_skillKnowledgeNature",
+                    "x": 1208,
+                    "y": 1684,
+                    "w": 60,
+                    "h": 30
+                },
+                {
+                    "type": "EDITOR",
+                    "property": "pf_intMod",
+                    "x": 1345,
+                    "y": 1684,
+                    "w": 60,
+                    "h": 30
+                },
+                {
+                    "type": "EDITOR",
+                    "property": "pf_skillKnowledgeNatureRanks",
+                    "update": "true",
+                    "x": 1431,
+                    "y": 1684,
+                    "w": 60,
+                    "h": 30
+                },
+                {
+                    "type": "EDITOR",
+                    "property": "pf_skillKnowledgeNatureMisc",
+                    "update": "true",
+                    "x": 1516,
+                    "y": 1684,
+                    "w": 60,
+                    "h": 30
+                },
+                {
+                    "type": "EDITOR",
+                    "property": "pf_skillKnowledgeReligionClass",
+                    "update": "true",
+                    "x": 884,
+                    "y": 1722,
+                    "w": 18,
+                    "h": 18
+                },
+                {
+                    "type": "EDITOR",
+                    "property": "pf_skillKnowledgeReligion",
+                    "x": 1208,
+                    "y": 1716,
+                    "w": 60,
+                    "h": 30
+                },
+                {
+                    "type": "EDITOR",
+                    "property": "pf_intMod",
+                    "x": 1345,
+                    "y": 1716,
+                    "w": 60,
+                    "h": 30
+                },
+                {
+                    "type": "EDITOR",
+                    "property": "pf_skillKnowledgeReligionRanks",
+                    "update": "true",
+                    "x": 1431,
+                    "y": 1716,
+                    "w": 60,
+                    "h": 30
+                },
+                {
+                    "type": "EDITOR",
+                    "property": "pf_skillKnowledgeReligionMisc",
+                    "update": "true",
+                    "x": 1516,
+                    "y": 1716,
+                    "w": 60,
+                    "h": 30
+                },
+                {
+                    "type": "EDITOR",
+                    "property": "pf_skillSpellcraftClass",
+                    "update": "true",
+                    "x": 884,
+                    "y": 1753,
+                    "w": 18,
+                    "h": 18
+                },
+                {
+                    "type": "EDITOR",
+                    "property": "pf_skillSpellcraft",
+                    "x": 1208,
+                    "y": 1747,
+                    "w": 60,
+                    "h": 30
+                },
+                {
+                    "type": "EDITOR",
+                    "property": "pf_intMod",
+                    "x": 1345,
+                    "y": 1747,
+                    "w": 60,
+                    "h": 30
+                },
+                {
+                    "type": "EDITOR",
+                    "property": "pf_skillSpellcraftRanks",
+                    "update": "true",
+                    "x": 1431,
+                    "y": 1747,
+                    "w": 60,
+                    "h": 30
+                },
+                {
+                    "type": "EDITOR",
+                    "property": "pf_skillSpellcraftMisc",
+                    "update": "true",
+                    "x": 1516,
+                    "y": 1747,
+                    "w": 60,
+                    "h": 30
+                }
+            ]
+        }
     ]
 }

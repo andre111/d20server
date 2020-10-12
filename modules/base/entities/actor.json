@@ -82,6 +82,96 @@
     "macros": {
     },
     "editorTabs": [
+        {
+            "name": "Bio",
+            "layout": "BORDER",
+            "layoutParameters": [],
+            "layoutGlue": "false",
+            "components": [
+                {
+                    "type": "EMPTY"
+                },
+                
+                {
+                    "type": "IMAGE_REFERENCE",
+                    "property": "defaultToken",
+                    "reference": "token",
+                    "text": "imageID",
+                    "w": 200,
+                    "h": 200
+                },
+                {
+                    "type": "EDITOR",
+                    "editorType": "MULTI_LINE_STRING",
+                    "property": "bio",
+                    "text": "Bio",
+                    "w": 200,
+                    "h": 200
+                },
+                {
+                    "type": "EMPTY"
+                },
+                
+                {
+                    "type": "EDITOR",
+                    "editorType": "MULTI_LINE_STRING",
+                    "property": "gmBio",
+                    "text": "GM Bio",
+                    "w": 300,
+                    "h": 300
+                }
+            ]
+        },
+        {
+            "name": "Attachments",
+            "layout": "Y_AXIS",
+            "layoutParameters": [],
+            "layoutGlue": "true",
+            "components": [
+                {
+                    "type": "EDITOR",
+                    "editorType": "REFERENCE_MULTI",
+                    "property": "attachments",
+                    "text": "Attachments",
+                    "reference": "attachment",
+                    "w": 900,
+                    "h": 500
+                }
+            ]
+        },
+        {
+            "name": "Settings",
+            "layout": "BORDER",
+            "layoutParameters": [],
+            "layoutGlue": "false",
+            "components": [
+                {
+                    "type": "EMPTY"
+                },
+                {
+                    "type": "EDITOR",
+                    "property": "name",
+                    "text": "Name"
+                },
+                {
+                    "type": "EDITOR",
+                    "property": "type",
+                    "text": "Type"
+                },
+                {
+                    "type": "EDITOR",
+                    "property": "access",
+                    "text": "Access"
+                },
+                {
+                    "type": "EDITOR",
+                    "editorType": "REFERENCE_MULTI",
+                    "property": "controllingPlayers",
+                    "text": "Controlling Players",
+                    "reference": "profile"
+                }
+            ]
+        }
     ],
     "extensionPoints": [
         {
