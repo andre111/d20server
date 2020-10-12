@@ -155,6 +155,7 @@
                 },
                 {
                     "type": "EDITOR",
+                    "editorType": "EXTENSION_SELECT",
                     "property": "type",
                     "text": "Type"
                 },

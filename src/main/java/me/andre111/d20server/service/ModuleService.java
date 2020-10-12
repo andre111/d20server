@@ -93,4 +93,23 @@ public abstract class ModuleService {
 		
 		return files;
 	}
+	
+	public static File getFile(String path) {
+		// reject paths that could lead to leaving the module directory
+		if(path.contains("..")) return null;
+		
+		// find file
+		File file = null;
+		for(String module : loadedModules) {
+			File moduleFile = new File(modulesDir, "/"+module+path);
+			if(moduleFile.exists()) file = moduleFile;
+		}
+		
+		// verify file is in modules dir
+		if(!file.toPath().startsWith(modulesDir.toPath())) {
+			return null;
+		}
+		
+		return file;
+	}
 }

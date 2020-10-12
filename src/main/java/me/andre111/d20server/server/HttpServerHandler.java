@@ -1,5 +1,6 @@
 package me.andre111.d20server.server;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
@@ -35,12 +36,14 @@ import me.andre111.d20common.D20Common;
 import me.andre111.d20common.model.Entity;
 import me.andre111.d20common.util.DataUtils;
 import me.andre111.d20common.util.Utils;
+import me.andre111.d20server.service.ModuleService;
 
 public class HttpServerHandler extends ChannelInboundHandlerAdapter {
 	private static final String IMAGE_PATH = "/image/";
 	private static final String UPLOAD_IMAGE_PATH = "/upload/image";
 	private static final String AUDIO_PATH = "/audio/";
 	private static final String UPLOAD_AUDIO_PATH = "/upload/audio";
+	private static final String PUBLIC_PATH = "/public/";
 
 	private static final HttpDataFactory factory = new DefaultHttpDataFactory(false);
 	private HttpPostRequestDecoder decoder;
@@ -91,6 +94,12 @@ public class HttpServerHandler extends ChannelInboundHandlerAdapter {
 			if(audio != null) {
 				data = Utils.readBinary("entity.audio."+id);
 				contentType = "application/ogg";
+			}
+		} else if(path.startsWith(PUBLIC_PATH)) {
+			File file = ModuleService.getFile(path);
+			if(file != null && file.exists()) {
+				data = Utils.readBinary(file);
+				contentType = ""; //TODO: somehow set this correctly?
 			}
 		}
 
@@ -198,7 +207,7 @@ public class HttpServerHandler extends ChannelInboundHandlerAdapter {
 	}
 
 	private boolean isValidPath(String path) {
-		return path != null && (path.startsWith(IMAGE_PATH) || path.startsWith(AUDIO_PATH));
+		return path != null && (path.startsWith(IMAGE_PATH) || path.startsWith(AUDIO_PATH) || path.startsWith(PUBLIC_PATH));
 	}
 
 	@Override

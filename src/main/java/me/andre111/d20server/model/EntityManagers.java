@@ -21,8 +21,9 @@ public class EntityManagers {
 		
 		// TODO: weird place, but sync definitions here
 		MessageService.send(new ServerDefinitions(Definitions.get()), profile);
+		// TODO: not waiting causes race conditions? that doesnt make sense, investigate
 		try {
-			Thread.sleep(250);
+			Thread.sleep(500);
 		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
