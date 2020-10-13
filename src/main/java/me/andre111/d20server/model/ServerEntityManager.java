@@ -25,6 +25,7 @@ import me.andre111.d20common.model.profile.Profile;
 import me.andre111.d20common.model.property.Access;
 import me.andre111.d20common.util.Utils;
 import me.andre111.d20server.service.MessageService;
+import me.andre111.d20server.service.SaveService;
 import me.andre111.d20server.service.UserService;
 
 public class ServerEntityManager implements EntityManager {
@@ -142,7 +143,7 @@ public class ServerEntityManager implements EntityManager {
 		}
 
 		// save and transfer (depending on (changing) access: add, remove or only changed properties)
-		if(saveEnabled) Utils.saveJson("entity."+type, entities);
+		if(saveEnabled) SaveService.requestSave(type); // request (async) save, as that could take some time
 		UserService.forEach(profile -> {
 			if(entity.canView(profile) && !couldView.contains(profile)) {
 				MessageService.send(new AddEntity(entity), profile);
@@ -213,7 +214,11 @@ public class ServerEntityManager implements EntityManager {
 	public final void setSaveEnabled(boolean saveEnabled) {
 		this.saveEnabled = saveEnabled;
 		if(saveEnabled) {
-			Utils.saveJson("entity."+type, entities);
+			SaveService.requestSave(type);
 		}
+	}
+	
+	public final void performSave() {
+		Utils.saveJson("entity."+type, entities); // request (async) save, as that could take some time
 	}
 }

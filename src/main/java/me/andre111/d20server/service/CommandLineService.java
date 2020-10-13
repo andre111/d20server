@@ -21,7 +21,11 @@ public abstract class CommandLineService {
 					}
 					case "stop": {
 						//TODO: cleanly implement stopping
-						System.exit(0);
+						if(SaveService.isBusy()) {
+							System.out.println("Saving in progress, please wait a few seconds and try again...");
+						} else {
+							System.exit(0);
+						}
 						break;
 					}
 					}
