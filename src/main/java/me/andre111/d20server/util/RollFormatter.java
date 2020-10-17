@@ -16,9 +16,17 @@ public class RollFormatter {
 		}
 		sb.append(": \n");
 		
+
+		sb.append("[group ");
 		sb.append(ChatService.STYLE_INFO);
-		sb.append("rolling ");
-		sb.append(rollExpression);
+		sb.append("rolling ...");
+		sb.append("|");
+		sb.append("[table \"bg-color=#EEEEEE;stroke-color=#000000;stroke-width=2;margin=4;align-vertical=CENTER\" ");
+		sb.append("[group \"forced-width=300;auto-wrap=true;align-vertical=CENTER\" ");
+		sb.append(normalizeExpression(rollExpression));
+		sb.append("]");
+		sb.append("]");
+		sb.append("]");
 		sb.append(" \n");
 		sb.append(" \n");
 		
@@ -75,21 +83,33 @@ public class RollFormatter {
 		}
 		sb.append("]");
 		
-		// show full expression on hover
+		// show full result on hover
 		sb.append("|");
 		sb.append("[table \"bg-color=#EEEEEE;stroke-color=#000000;stroke-width=2;margin=4;align-vertical=CENTER\" ");
 		sb.append("[group \"forced-width=300;auto-wrap=true;align-vertical=CENTER\" ");
 		sb.append("[style \"color=#000000;font=Arial-18\"]");
 		if(result != null) {
 			sb.append(result.getString());
-		} else {
-			sb.append(rollExpression);
 		}
 		sb.append("[style \"font=Arial-12\"]");
 		sb.append("]");
 		sb.append("]");
 		
 		sb.append("]");
+		
+		// show a * to hover for full uninterpreted expression
+		sb.append("[group ");
+		sb.append("*");
+		sb.append("|");
+		sb.append("[table \"bg-color=#EEEEEE;stroke-color=#000000;stroke-width=2;margin=4;align-vertical=CENTER\" ");
+		sb.append("[group \"forced-width=300;auto-wrap=true;align-vertical=CENTER\" ");
+		sb.append(ChatService.STYLE_INFO);
+		sb.append(normalizeExpression(rollExpression));
+		sb.append("[style \"font=Arial-12\"]");
+		sb.append("]");
+		sb.append("]");
+		sb.append("]");
+		
 		return sb.toString();
 	}
 	
@@ -99,5 +119,17 @@ public class RollFormatter {
 		} else {
 			sb.append(Double.toString(result.getValue()));
 		}
+	}
+	
+	private static String normalizeExpression(String expression) {
+		expression = expression.replace("+", " + ");
+		expression = expression.replace("-", " - ");
+		expression = expression.replace("*", " * ");
+		expression = expression.replace("/", " / ");
+		expression = expression.replace("(", "( ");
+		expression = expression.replace(",", ", ");
+		expression = expression.replace(")", " )");
+		expression = expression.replaceAll(" +", " ");
+		return expression;
 	}
 }
