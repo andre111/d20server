@@ -1928,28 +1928,28 @@
             "displayName": "Auftreten 1",
             "category": "Fertigkeiten",
             "commands": [
-                "/template generic1 Auftreten Wurf;für {selected.actor.property.pf_characterName};Wurf;1d20+{selected.actor.property.pf_skillPerform1};"
+                "/template generic1 Auftreten ({selected.actor.property.pf_skillPerform1Text}) Wurf;für {selected.actor.property.pf_characterName};Wurf;1d20+{selected.actor.property.pf_skillPerform1};"
             ]
         },
         "pf_skill_perform2": {
             "displayName": "Auftreten 2",
             "category": "Fertigkeiten",
             "commands": [
-                "/template generic1 Auftreten Wurf;für {selected.actor.property.pf_characterName};Wurf;1d20+{selected.actor.property.pf_skillPerform2};"
+                "/template generic1 Auftreten ({selected.actor.property.pf_skillPerform2Text}) Wurf;für {selected.actor.property.pf_characterName};Wurf;1d20+{selected.actor.property.pf_skillPerform2};"
             ]
         },
         "pf_skill_profession1": {
             "displayName": "Beruf 1",
             "category": "Fertigkeiten",
             "commands": [
-                "/template generic1 Beruf Wurf;für {selected.actor.property.pf_characterName};Wurf;1d20+{selected.actor.property.pf_skillProfession1};"
+                "/template generic1 Beruf ({selected.actor.property.pf_skillProfession1Text}) Wurf;für {selected.actor.property.pf_characterName};Wurf;1d20+{selected.actor.property.pf_skillProfession1};"
             ]
         },
         "pf_skill_profession2": {
             "displayName": "Beruf 2",
             "category": "Fertigkeiten",
             "commands": [
-                "/template generic1 Beruf Wurf;für {selected.actor.property.pf_characterName};Wurf;1d20+{selected.actor.property.pf_skillProfession2};"
+                "/template generic1 Beruf ({selected.actor.property.pf_skillProfession2Text}) Wurf;für {selected.actor.property.pf_characterName};Wurf;1d20+{selected.actor.property.pf_skillProfession2};"
             ]
         },
         "pf_skill_bluff": {
@@ -1998,28 +1998,28 @@
             "displayName": "Handwerk 1",
             "category": "Fertigkeiten",
             "commands": [
-                "/template generic1 Handwerk Wurf;für {selected.actor.property.pf_characterName};Wurf;1d20+{selected.actor.property.pf_skillCraft1};"
+                "/template generic1 Handwerk ({selected.actor.property.pf_skillCraft1Text}) Wurf;für {selected.actor.property.pf_characterName};Wurf;1d20+{selected.actor.property.pf_skillCraft1};"
             ]
         },
         "pf_skill_craft2": {
             "displayName": "Handwerk 2",
             "category": "Fertigkeiten",
             "commands": [
-                "/template generic1 Handwerk Wurf;für {selected.actor.property.pf_characterName};Wurf;1d20+{selected.actor.property.pf_skillCraft2};"
+                "/template generic1 Handwerk ({selected.actor.property.pf_skillCraft2Text}) Wurf;für {selected.actor.property.pf_characterName};Wurf;1d20+{selected.actor.property.pf_skillCraft2};"
             ]
         },
         "pf_skill_craft3": {
             "displayName": "Handwerk 3",
             "category": "Fertigkeiten",
             "commands": [
-                "/template generic1 Handwerk Wurf;für {selected.actor.property.pf_characterName};Wurf;1d20+{selected.actor.property.pf_skillCraft3};"
+                "/template generic1 Handwerk ({selected.actor.property.pf_skillCraft3Text}) Wurf;für {selected.actor.property.pf_characterName};Wurf;1d20+{selected.actor.property.pf_skillCraft3};"
             ]
         },
         "pf_skill_heal": {
             "displayName": "Heilkunde",
             "category": "Fertigkeiten",
             "commands": [
-                "/template generic1 Heilkunde Wurf;für {selected.actor.property.pf_characterName};Wurf;1d20+{selected.actor.property.pf_skillHeal};"
+                "/template generic1 Heilkunde ({selected.actor.property.pf_skillHealText}) Wurf;für {selected.actor.property.pf_characterName};Wurf;1d20+{selected.actor.property.pf_skillHeal};"
             ]
         },
         "pf_skill_stealth": {

@@ -80,6 +80,13 @@
             "viewAccess": "EVERYONE",
             "value": "MAIN"
         },
+        {
+            "name": "depth",
+            "type": "LONG",
+            "editAccess": "CONTROLLING_PLAYER",
+            "viewAccess": "EVERYONE",
+            "value": "0"
+        },
         
         {
             "name": "shape",
@@ -104,7 +111,7 @@
         {
             "name": "Main",
             "layout": "GRID",
-            "layoutParameters": [ "3", "2" ],
+            "layoutParameters": [ "4", "2" ],
             "layoutGlue": "true",
             "components": [
                 {
@@ -135,6 +142,16 @@
                 {
                     "type": "EDITOR",
                     "property": "layer",
+                    "text": ""
+                },
+                
+                {
+                    "type": "LABEL",
+                    "text": "Depth: "
+                },
+                {
+                    "type": "EDITOR",
+                    "property": "depth",
                     "text": ""
                 }
             ]
