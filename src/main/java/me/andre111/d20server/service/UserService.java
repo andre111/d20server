@@ -11,9 +11,6 @@ import com.google.common.collect.HashBiMap;
 import com.google.gson.reflect.TypeToken;
 
 import io.netty.channel.Channel;
-import io.netty.channel.group.ChannelGroup;
-import io.netty.channel.group.DefaultChannelGroup;
-import io.netty.util.concurrent.GlobalEventExecutor;
 import me.andre111.d20common.model.profile.Profile;
 import me.andre111.d20common.util.Utils;
 
@@ -24,9 +21,9 @@ import me.andre111.d20common.util.Utils;
  * @author André Schweiger
  */
 public abstract class UserService {
-	private static final ChannelGroup allChannels = new DefaultChannelGroup(GlobalEventExecutor.INSTANCE);
 	private static final Map<Long, Profile> allProfiles = new HashMap<>();
 	private static final BiMap<Profile, Channel> channelMap = HashBiMap.create();
+	private static final Map<Channel, Boolean> isWebsocketMap = new HashMap<>();
 	private static final Object lock = new Object();
 	static {
 		Map<Long, Profile> profiles = Utils.readJson("profiles", TypeToken.getParameterized(Map.class, Long.class, Profile.class).getType());
@@ -47,12 +44,14 @@ public abstract class UserService {
 	 * 
 	 * @param channel the newly connected channel
 	 */
-	public static void onConnect(Channel channel) {
-		synchronized (lock) {
-			allChannels.add(channel);
-		}
+	public static void onConnect(Channel channel, boolean isWebsocket) {
 		// TODO: send welcome message/server info
 		System.out.println("Connected");
+		
+		// track channel type
+		synchronized (lock) {
+			isWebsocketMap.put(channel, isWebsocket);
+		}
 	}
 
 	/**
@@ -66,10 +65,11 @@ public abstract class UserService {
 		if (profile != null) {
 			onSignOut(profile);
 		}
-
-		synchronized (lock) {
-			allChannels.remove(channel);
+		
+		synchronized(lock) {
+			isWebsocketMap.remove(channel);
 		}
+
 		System.out.println("Disconnected");
 	}
 
@@ -80,7 +80,7 @@ public abstract class UserService {
 				// TODO: log/warn? of logging in with a new profile on a channel without logging
 				// out first?
 			}
-
+			
 			// disconnect eventual existing connection for this profile
 			Channel oldChannel = channelMap.put(profile, channel);
 			if (oldChannel != null && !oldChannel.equals(channel)) {
@@ -119,10 +119,6 @@ public abstract class UserService {
 			return channelMap.inverse().get(channel);
 		}
 	}
-
-	public static ChannelGroup getAllChannels() {
-		return allChannels;
-	}
 	
 	public static List<Profile> getAllProfiles() {
 		synchronized (lock) {
@@ -148,6 +144,12 @@ public abstract class UserService {
 
 	public static boolean isConnected(Profile profile) {
 		return getChannelFor(profile) != null;
+	}
+	
+	public static boolean isWebsocket(Channel channel) {
+		synchronized(lock) {
+			return isWebsocketMap.get(channel);
+		}
 	}
 	
 	// Profile finding methods

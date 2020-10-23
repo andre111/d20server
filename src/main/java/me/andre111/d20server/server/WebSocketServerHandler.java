@@ -1,21 +1,23 @@
 package me.andre111.d20server.server;
 
 import io.netty.channel.ChannelHandlerContext;
-import io.netty.channel.ChannelInboundHandlerAdapter;
+import io.netty.channel.SimpleChannelInboundHandler;
+import io.netty.handler.codec.http.websocketx.TextWebSocketFrame;
+import io.netty.handler.codec.http.websocketx.WebSocketFrame;
 import io.netty.handler.timeout.IdleStateEvent;
 import me.andre111.d20common.message.Message;
 import me.andre111.d20common.message.MessageDecoder;
 import me.andre111.d20server.service.MessageService;
 import me.andre111.d20server.service.UserService;
 
-//TODO: code is basically duplicated in WebSocketServerHandler
-public class GameServerHandler extends ChannelInboundHandlerAdapter {
+//TODO: code is basically duplicated from GameServerHandler
+public class WebSocketServerHandler extends SimpleChannelInboundHandler<WebSocketFrame> {
 
 	@Override
 	public void channelActive(ChannelHandlerContext ctx) throws Exception {
 		try {
 			super.channelActive(ctx);
-			UserService.onConnect(ctx.channel(), false);
+			UserService.onConnect(ctx.channel(), true);
 		} finally {
 		}
 	}
@@ -43,18 +45,25 @@ public class GameServerHandler extends ChannelInboundHandlerAdapter {
 		}
 	}
 	
-	@Override
-	public void channelRead(ChannelHandlerContext ctx, Object object) throws Exception {
-		try {
-			//TODO: logging (with time tracking?)
-			Message message = MessageDecoder.decode((String) object);
-			MessageService.recieve(ctx.channel(), message);
-		} catch(Exception e) {
-			e.printStackTrace();
-			throw e;
-		} finally {
-		}
-	}
+    @Override
+    protected void channelRead0(ChannelHandlerContext ctx, WebSocketFrame frame) throws Exception {
+        // ping and pong frames already handled
+
+        if (frame instanceof TextWebSocketFrame textFrame) {
+        	try {
+    			//TODO: logging (with time tracking?)
+    			Message message = MessageDecoder.decode(textFrame.text());
+    			MessageService.recieve(ctx.channel(), message);
+    		} catch(Exception e) {
+    			e.printStackTrace();
+    			throw e;
+    		} finally {
+    		}
+        } else {
+            String message = "unsupported frame type: " + frame.getClass().getName();
+            throw new UnsupportedOperationException(message);
+        }
+    }
 	
 	@Override
 	public void exceptionCaught(ChannelHandlerContext ctx, Throwable t) {

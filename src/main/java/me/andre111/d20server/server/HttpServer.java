@@ -18,7 +18,7 @@ public class HttpServer {
 		bootstrap.group(bossGroup, workerGroup);
 		bootstrap.channel(NioServerSocketChannel.class);
 
-		bootstrap.childHandler(new HttpServerChannelInitializer());
+		bootstrap.childHandler(new HttpServerChannelInitializer(null)); //TODO: add ssl context, might be needed for modern browsers
 
 		bootstrap.bind(port).syncUninterruptibly();
 	}

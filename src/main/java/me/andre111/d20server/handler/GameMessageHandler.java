@@ -163,7 +163,7 @@ public abstract class GameMessageHandler {
 			break;
 		case ActionCommand.SHOW_IMAGE:
 			if(profile.getRole() == Profile.Role.GM && D20Common.getEntityManager("image").has(message.getID())) {
-				MessageService.broadcast(message);
+				MessageService.send(message, UserService.getAllConnectedProfiles());
 			}
 			break;
 		case ActionCommand.LOAD_MUSIC:
@@ -171,7 +171,7 @@ public abstract class GameMessageHandler {
 		case ActionCommand.PAUSE_MUSIC:
 		case ActionCommand.STOP_MUSIC:
 			if(profile.getRole() == Profile.Role.GM) {
-				MessageService.broadcast(message);
+				MessageService.send(message, UserService.getAllConnectedProfiles());
 			}
 			break;
 		}
