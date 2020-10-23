@@ -164,6 +164,49 @@
             "viewAccess": "CONTROLLING_PLAYER",
             "value": "10"
         },
+    
+        {
+            "name": "pf_strTemp",
+            "type": "LONG",
+            "editAccess": "CONTROLLING_PLAYER",
+            "viewAccess": "CONTROLLING_PLAYER",
+            "value": "0"
+        },
+        {
+            "name": "pf_dexTemp",
+            "type": "LONG",
+            "editAccess": "CONTROLLING_PLAYER",
+            "viewAccess": "CONTROLLING_PLAYER",
+            "value": "0"
+        },
+        {
+            "name": "pf_conTemp",
+            "type": "LONG",
+            "editAccess": "CONTROLLING_PLAYER",
+            "viewAccess": "CONTROLLING_PLAYER",
+            "value": "0"
+        },
+        {
+            "name": "pf_intTemp",
+            "type": "LONG",
+            "editAccess": "CONTROLLING_PLAYER",
+            "viewAccess": "CONTROLLING_PLAYER",
+            "value": "0"
+        },
+        {
+            "name": "pf_wisTemp",
+            "type": "LONG",
+            "editAccess": "CONTROLLING_PLAYER",
+            "viewAccess": "CONTROLLING_PLAYER",
+            "value": "0"
+        },
+        {
+            "name": "pf_chaTemp",
+            "type": "LONG",
+            "editAccess": "CONTROLLING_PLAYER",
+            "viewAccess": "CONTROLLING_PLAYER",
+            "value": "0"
+        },
         
         {
             "name": "pf_initMiscMod",
@@ -1589,27 +1632,27 @@
     "updateRules": [
         {
             "property": "pf_strMod",
-            "expression": "floor(({self.property.pf_str} - 10) / 2)"
+            "expression": "floor(({self.property.pf_str} + {self.property.pf_strTemp} - 10) / 2)"
         },
         {
             "property": "pf_dexMod",
-            "expression": "floor(({self.property.pf_dex} - 10) / 2)"
+            "expression": "floor(({self.property.pf_dex} + {self.property.pf_dexTemp} - 10) / 2)"
         },
         {
             "property": "pf_conMod",
-            "expression": "floor(({self.property.pf_con} - 10) / 2)"
+            "expression": "floor(({self.property.pf_con} + {self.property.pf_conTemp} - 10) / 2)"
         },
         {
             "property": "pf_intMod",
-            "expression": "floor(({self.property.pf_int} - 10) / 2)"
+            "expression": "floor(({self.property.pf_int} + {self.property.pf_intTemp} - 10) / 2)"
         },
         {
             "property": "pf_wisMod",
-            "expression": "floor(({self.property.pf_wis} - 10) / 2)"
+            "expression": "floor(({self.property.pf_wis} + {self.property.pf_wisTemp} - 10) / 2)"
         },
         {
             "property": "pf_chaMod",
-            "expression": "floor(({self.property.pf_cha} - 10) / 2)"
+            "expression": "floor(({self.property.pf_cha} + {self.property.pf_chaTemp} - 10) / 2)"
         },
         
         {
@@ -2439,6 +2482,61 @@
                     "type": "EDITOR",
                     "property": "pf_chaMod",
                     "x": 270,
+                    "y": 576,
+                    "w": 60,
+                    "h": 40
+                },
+            
+                {
+                    "type": "EDITOR",
+                    "property": "pf_strTemp",
+                    "update": "true",
+                    "x": 424,
+                    "y": 334,
+                    "w": 60,
+                    "h": 40
+                },
+                {
+                    "type": "EDITOR",
+                    "property": "pf_dexTemp",
+                    "update": "true",
+                    "x": 424,
+                    "y": 383,
+                    "w": 60,
+                    "h": 40
+                },
+                {
+                    "type": "EDITOR",
+                    "property": "pf_conTemp",
+                    "update": "true",
+                    "x": 424,
+                    "y": 432,
+                    "w": 60,
+                    "h": 40
+                },
+                {
+                    "type": "EDITOR",
+                    "property": "pf_intTemp",
+                    "update": "true",
+                    "x": 424,
+                    "y": 479,
+                    "w": 60,
+                    "h": 40
+                },
+                {
+                    "type": "EDITOR",
+                    "property": "pf_wisTemp",
+                    "update": "true",
+                    "x": 424,
+                    "y": 527,
+                    "w": 60,
+                    "h": 40
+                },
+                {
+                    "type": "EDITOR",
+                    "property": "pf_chaTemp",
+                    "update": "true",
+                    "x": 424,
                     "y": 576,
                     "w": 60,
                     "h": 40
