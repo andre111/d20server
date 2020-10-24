@@ -55,14 +55,14 @@
         {
             "name": "width",
             "type": "LONG",
-            "editAccess": "GM",
+            "editAccess": "CONTROLLING_PLAYER",
             "viewAccess": "EVERYONE",
             "value": "70"
         },
         {
             "name": "height",
             "type": "LONG",
-            "editAccess": "GM",
+            "editAccess": "CONTROLLING_PLAYER",
             "viewAccess": "EVERYONE",
             "value": "70"
         },
