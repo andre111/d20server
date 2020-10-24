@@ -1,0 +1,5 @@
+Layer = {
+    BACKGROUND: "BACKGROUND",
+    MAIN: "MAIN",
+    GMOVERLAY: "GMOVERLAY"
+}

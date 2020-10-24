@@ -21,5 +21,8 @@ ImageService = {
         }
         
         return null;
-    }
+    },
+    
+    //TODO: implement missing image
+    MISSING: null
 }

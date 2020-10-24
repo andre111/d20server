@@ -175,6 +175,32 @@ class MouseCameraContoller extends MouseController {
 
 
 function init() {
+    Connection.init(start);
+}
+    
+function start() {
+    document.body.innerHTML = "";
+    setState(StateSignIn);
+}
+
+function setState(state) {
+    if(_g.currentState != null && _g.currentState != undefined) {
+        _g.currentState.exit();
+    }
+    _g.currentState = state;
+    _g.currentState.init();
+}
+
+function startMain() {
+    /*var msg = {
+        msg: "SignIn",
+        appVersion: 7,
+        email: "",
+        password: ""
+    };
+    MessageService.send(msg);*/
+    
+    //TODO: all this should only happen once we recieve EnterGame
     // get reference to main canvas
     _g.canvas = document.getElementById("canvas");
     _g.ctx = _g.canvas.getContext("2d");
@@ -290,6 +316,10 @@ function draw() {
     ctx.save();
     ctx.setTransform(camera.getTransform());
     
+    // draw background tokens
+    //TODO: all parameters
+    TokenRenderer.renderTokens(ctx, MapUtils.currentEntitiesSorted("token", Layer.BACKGROUND), null, -1, false);
+    
     // draw grid
     ctx.lineWidth = 3;
     ctx.strokeStyle = "rgba(0, 0, 0, 0.39)";
@@ -308,10 +338,14 @@ function draw() {
         ctx.closePath();
     }
     
-    var img = ImageService.getImage(10);
+    // draw main tokens
+    //TODO: all parameters
+    TokenRenderer.renderTokens(ctx, MapUtils.currentEntitiesSorted("token", Layer.MAIN), null, -1, false);
+    
+    /*var img = ImageService.getImage(10);
     if(img != null) {
         ctx.drawImage(img, 0, 0);
-    }
+    }*/
     
     ctx.restore();
 }
