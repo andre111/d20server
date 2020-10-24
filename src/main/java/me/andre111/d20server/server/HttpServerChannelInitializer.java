@@ -22,7 +22,8 @@ public class HttpServerChannelInitializer extends ChannelInitializer<SocketChann
             pipeline.addLast(sslCtx.newHandler(channel.alloc()));
         }
         pipeline.addLast(new HttpServerCodec());
-        pipeline.addLast(new HttpObjectAggregator(65536));
+        //pipeline.addLast(new HttpContentCompressor());
+        pipeline.addLast(new HttpObjectAggregator(1024 * 1024 * 100));
         pipeline.addLast(new WebSocketServerCompressionHandler());
         pipeline.addLast(new WebSocketServerProtocolHandler("/ws", null, true));
         pipeline.addLast(new HttpServerHandler());

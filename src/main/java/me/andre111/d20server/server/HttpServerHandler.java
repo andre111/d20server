@@ -13,16 +13,14 @@ import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelFutureListener;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
+import io.netty.handler.codec.DecoderResult;
 import io.netty.handler.codec.TooLongFrameException;
 import io.netty.handler.codec.http.DefaultFullHttpResponse;
 import io.netty.handler.codec.http.FullHttpRequest;
 import io.netty.handler.codec.http.FullHttpResponse;
-import io.netty.handler.codec.http.HttpContent;
 import io.netty.handler.codec.http.HttpHeaderNames;
 import io.netty.handler.codec.http.HttpHeaderValues;
 import io.netty.handler.codec.http.HttpMethod;
-import io.netty.handler.codec.http.HttpObject;
-import io.netty.handler.codec.http.HttpRequest;
 import io.netty.handler.codec.http.HttpResponse;
 import io.netty.handler.codec.http.HttpResponseStatus;
 import io.netty.handler.codec.http.HttpUtil;
@@ -46,6 +44,7 @@ public class HttpServerHandler extends SimpleChannelInboundHandler<FullHttpReque
 	private static final String AUDIO_PATH = "/audio/";
 	private static final String UPLOAD_AUDIO_PATH = "/upload/audio";
 	private static final String PUBLIC_PATH = "/public/";
+	private static final String WEBSOCKET_PATH = "/ws";
 
 	private static final HttpDataFactory factory = new DefaultHttpDataFactory(false);
 	private HttpPostRequestDecoder decoder;
@@ -56,11 +55,11 @@ public class HttpServerHandler extends SimpleChannelInboundHandler<FullHttpReque
 		handleMessageReceived(ctx, msg);
 	}
 
-	private void handleMessageReceived(ChannelHandlerContext ctx, HttpObject msg) throws UnsupportedEncodingException {
+	private void handleMessageReceived(ChannelHandlerContext ctx, FullHttpRequest msg) throws UnsupportedEncodingException {
 		// only allow get
-		if (msg instanceof HttpRequest && ((HttpRequest) msg).method() == HttpMethod.GET) {
-			handleGET(ctx, (HttpRequest) msg);
-		} else if((msg instanceof HttpRequest && ((HttpRequest) msg).method() == HttpMethod.POST) || msg instanceof HttpContent) {
+		if (msg.method() == HttpMethod.GET) {
+			handleGET(ctx, msg);
+		} else if(msg.method() == HttpMethod.POST) {
 			handlePOST(ctx, msg);
 		} else {
 			sendError(ctx, HttpResponseStatus.METHOD_NOT_ALLOWED);
@@ -68,7 +67,7 @@ public class HttpServerHandler extends SimpleChannelInboundHandler<FullHttpReque
 		}
 	}
 
-	private void handleGET(ChannelHandlerContext ctx, HttpRequest request) throws UnsupportedEncodingException {
+	private void handleGET(ChannelHandlerContext ctx, FullHttpRequest request) throws UnsupportedEncodingException {
 		// read and check path
 		String path = URLDecoder.decode(request.uri(), "UTF-8");
 		if (!isValidPath(path)) {
@@ -132,31 +131,25 @@ public class HttpServerHandler extends SimpleChannelInboundHandler<FullHttpReque
 		}
 	}
 
-	private void handlePOST(ChannelHandlerContext ctx, HttpObject msg) throws UnsupportedEncodingException {
-		if(msg instanceof HttpRequest) {
-			HttpRequest request = (HttpRequest) msg;
-
-			// read and check path
-			String path = URLDecoder.decode(request.uri(), "UTF-8");
-			if(path == null || (!path.startsWith(UPLOAD_IMAGE_PATH) && !path.startsWith(UPLOAD_AUDIO_PATH))) {
-				sendError(ctx, HttpResponseStatus.NOT_FOUND);
-				return;
-			}
-			uploadPath = path;
-
+	private void handlePOST(ChannelHandlerContext ctx, FullHttpRequest request) throws UnsupportedEncodingException {
+		// read and check path
+		String path = URLDecoder.decode(request.uri(), "UTF-8");
+		if(path == null || (!path.startsWith(UPLOAD_IMAGE_PATH) && !path.startsWith(UPLOAD_AUDIO_PATH))) {
+			sendError(ctx, HttpResponseStatus.NOT_FOUND);
+			return;
+		}
+		uploadPath = path;
+		
+		DecoderResult result = request.decoderResult();
+		if(result.isSuccess()) {
 			// create decoder
 			if(decoder != null) {
 				decoder.destroy();
 				decoder = null;
 			}
 			decoder = new HttpPostRequestDecoder(factory, request);
-		}
-		if(msg instanceof HttpContent) {
-			HttpContent content = (HttpContent) msg;
-
+			
 			if(decoder != null) {
-				decoder.offer(content);
-
 				// read data from decoder
 				while(decoder.hasNext()) {
 					InterfaceHttpData data = decoder.next();
@@ -196,7 +189,7 @@ public class HttpServerHandler extends SimpleChannelInboundHandler<FullHttpReque
 					}
 				}
 
-				if(content instanceof LastHttpContent) {
+				if(request instanceof LastHttpContent) {
 					FullHttpResponse response = new DefaultFullHttpResponse(HttpVersion.HTTP_1_1, HttpResponseStatus.OK);
 					ctx.writeAndFlush(response).addListener(ChannelFutureListener.CLOSE);
 
@@ -209,7 +202,7 @@ public class HttpServerHandler extends SimpleChannelInboundHandler<FullHttpReque
 	}
 
 	private boolean isValidPath(String path) {
-		return path != null && (path.startsWith(IMAGE_PATH) || path.startsWith(AUDIO_PATH) || path.startsWith(PUBLIC_PATH));
+		return path != null && (path.startsWith(IMAGE_PATH) || path.startsWith(AUDIO_PATH) || path.startsWith(PUBLIC_PATH) || path.startsWith(WEBSOCKET_PATH));
 	}
 
 	@Override
