@@ -1666,15 +1666,15 @@
         },
         {
             "property": "pf_ac",
-            "expression": "{self.property.pf_acArmorBonus} + {self.property.pf_acShieldBonus} + min({self.property.pf_dexMod}, {self.property.pf_acMaxDexMod}) + {self.property.pf_acSizeMod} + {self.property.pf_acNaturalArmor} + {self.property.pf_acDeflectionMod} + {self.property.pf_acMiscMod}"
+            "expression": "10 + {self.property.pf_acArmorBonus} + {self.property.pf_acShieldBonus} + min({self.property.pf_dexMod}, {self.property.pf_acMaxDexMod}) + {self.property.pf_acSizeMod} + {self.property.pf_acNaturalArmor} + {self.property.pf_acDeflectionMod} + {self.property.pf_acMiscMod}"
         },
         {
             "property": "pf_acTouch",
-            "expression": "min({self.property.pf_dexMod}, {self.property.pf_acMaxDexMod}) + {self.property.pf_acSizeMod} + {self.property.pf_acDeflectionMod} + {self.property.pf_acMiscMod}"
+            "expression": "10 + min({self.property.pf_dexMod}, {self.property.pf_acMaxDexMod}) + {self.property.pf_acSizeMod} + {self.property.pf_acDeflectionMod} + {self.property.pf_acMiscMod}"
         },
         {
             "property": "pf_acFlatFooted",
-            "expression": "{self.property.pf_acArmorBonus} + {self.property.pf_acShieldBonus} + min({self.property.pf_dexMod}, 0) + {self.property.pf_acSizeMod} + {self.property.pf_acNaturalArmor} + {self.property.pf_acDeflectionMod} + {self.property.pf_acMiscMod}"
+            "expression": "10 + {self.property.pf_acArmorBonus} + {self.property.pf_acShieldBonus} + min({self.property.pf_dexMod}, 0) + {self.property.pf_acSizeMod} + {self.property.pf_acNaturalArmor} + {self.property.pf_acDeflectionMod} + {self.property.pf_acMiscMod}"
         },
         
         {
