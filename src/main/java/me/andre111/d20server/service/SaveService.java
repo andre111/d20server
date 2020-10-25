@@ -47,8 +47,13 @@ public abstract class SaveService {
 			busy.set(true);
 			while(!requestingSave.isEmpty()) {
 				String type = requestingSave.pollFirst();
-				ServerEntityManager em = (ServerEntityManager) D20Common.getEntityManager(type);
-				em.performSave();
+				try {
+					ServerEntityManager em = (ServerEntityManager) D20Common.getEntityManager(type);
+					em.performSave();
+				} catch(Exception e) {
+					System.err.println("Exception trying to save "+type+": ");
+					e.printStackTrace();
+				}
 				//System.out.println("Saved "+type);
 			}
 			busy.set(false);

@@ -47,3 +47,8 @@ Type = {
     COLOR: "COLOR",
     ACCESS: "ACCESS"
 };
+
+Role = {
+    DEFAULT: "DEFAULT",
+    GM: "GM"
+};

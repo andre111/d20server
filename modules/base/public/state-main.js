@@ -123,9 +123,38 @@ StateMain = {
         ctx.drawImage(_g.buffer, 0, 0);
         */
         
+        //TODO: create actual view implementation
+        var view = {
+            getProfile: function() {
+                return ServerData.localProfile;
+            },
+            doRenderWallOcclusion: function() {
+                return true;
+            },
+            doRenderWallLines: function() {
+                return true;
+            },
+            doRenderLights: function() {
+                return true;
+            },
+            isPlayerView: function() {
+                return true;
+            }
+        };
+        var highlightToken = -1;
+        
         //---------------------------------------
         //based somewhat on actual MapCanvas implementation in current client:
         var map = MapUtils.currentMap();
+        
+        // find viewers
+        var viewers = [];
+        MapUtils.currentEntities("token").forEach(token => {
+            var accessLevel = token.getAccessLevel(view.getProfile());
+            if(Access.matches(token.prop("sharedVision").getAccessValue(), accessLevel)) {
+                viewers.push(token);
+            }
+        }).value();
         
         //
         ctx.fillStyle = "white";
@@ -133,7 +162,7 @@ StateMain = {
         ctx.rect(0, 0, _g.width, _g.height);
         ctx.fill();
         ctx.closePath();
-        if(map == null || map == undefined /* || view == null || view == undefined || (viewers is empty && hideWithNoMainToken && view.isPlayerView())*/) {
+        if(map == null || map == undefined || view == null || view == undefined /*|| (viewers is empty && hideWithNoMainToken && view.isPlayerView())*/) {
             ctx.fillStyle = "black";
             ctx.beginPath();
             ctx.rect(0, 0, _g.width, _g.height);
@@ -144,12 +173,12 @@ StateMain = {
         var gridSize = map.prop("gridSize").getLong();
         
         camera.update();
+        var viewport = camera.getViewport();
         ctx.save();
         ctx.setTransform(camera.getTransform());
         
         // draw background tokens
-        //TODO: all parameters
-        TokenRenderer.renderTokens(ctx, MapUtils.currentEntitiesSorted("token", Layer.BACKGROUND), null, -1, false);
+        TokenRenderer.renderTokens(ctx, MapUtils.currentEntitiesSorted("token", Layer.BACKGROUND), view.getProfile(), highlightToken, false);
         DrawingRenderer.renderDrawings(ctx, MapUtils.currentEntitiesSorted("drawing", Layer.BACKGROUND));
         
         // draw grid
@@ -160,20 +189,63 @@ StateMain = {
             ctx.moveTo(x * gridSize, 0 * gridSize);
             ctx.lineTo(x * gridSize, 100 * gridSize);
             ctx.stroke();
-            ctx.closePath();
         }
         for(y = 0; y <= map.prop("height").getLong(); y++) {
             ctx.beginPath();
             ctx.moveTo(0 * gridSize, y * gridSize);
             ctx.lineTo(100 * gridSize, y * gridSize);
             ctx.stroke();
-            ctx.closePath();
         }
         
         // draw main tokens
-        //TODO: all parameters
-        TokenRenderer.renderTokens(ctx, MapUtils.currentEntitiesSorted("token", Layer.MAIN), null, -1, false);
+        TokenRenderer.renderTokens(ctx, MapUtils.currentEntitiesSorted("token", Layer.MAIN), view.getProfile(), highlightToken, false);
         DrawingRenderer.renderDrawings(ctx, MapUtils.currentEntitiesSorted("drawing", Layer.MAIN));
+        
+        //TODO: EffectRenderer
+        //TODO: WeatherRenderer
+        
+        //TODO: draw wall occlusion / fow background
+        if(view.doRenderWallOcclusion()) {
+            // render
+            if(viewers.length != 0) {
+                // extend viewport to avoid rounding errors
+                var extendedViewport = new CRect(viewport.x-2, viewport.y-2, viewport.width+4, viewport.height+4);
+                var pwr = WallRenderer.calculateWalls(MapUtils.currentEntities("wall").value(), extendedViewport, viewers);
+                WallRenderer.renderPrecalculatedWallRender(ctx, pwr);
+                
+                //TODO: draw fow background tokens
+            }
+        }
+        
+        //TODO: draw lights
+        if(view.doRenderLights()) {
+            
+        }
+        
+        // render gm overlay tokens
+        if(!view.isPlayerView()) {
+            ctx.globalAlpha = 0.5;
+            TokenRenderer.renderTokens(ctx, MapUtils.currentEntitiesSorted("token", Layer.GMOVERLAY), view.getProfile(), highlightToken, false);
+            DrawingRenderer.renderDrawings(ctx, MapUtils.currentEntitiesSorted("drawing", Layer.GMOVERLAY));
+            ctx.globalAlpha = 1;
+        }
+        
+        // draw walls as lines
+        if(view.doRenderWallLines()) {
+            ctx.lineWidth = 5;
+            MapUtils.currentEntities("wall").forEach(wall => {
+                ctx.strokeStyle = wall.prop("seeThrough").getBoolean() ? "lightgray" : "blue";
+                ctx.beginPath();
+                ctx.moveTo(wall.prop("x1").getLong(), wall.prop("y1").getLong());
+                ctx.lineTo(wall.prop("x2").getLong(), wall.prop("y2").getLong());
+                ctx.stroke();
+            }).value();
+            ctx.fillStyle = "rgb(100, 100, 255)";
+            MapUtils.currentEntities("wall").forEach(wall => {
+                ctx.fillRect(wall.prop("x1").getLong()-5, wall.prop("y1").getLong()-5, 10, 10);
+                ctx.fillRect(wall.prop("x2").getLong()-5, wall.prop("y2").getLong()-5, 10, 10);
+            }).value();
+        }
         
         ctx.restore();
     }

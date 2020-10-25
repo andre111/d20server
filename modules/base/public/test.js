@@ -25,7 +25,7 @@ camera = {
     getViewport: function() {
         var w = Math.ceil(_g.width / this.scale);
         var h = Math.ceil(_g.height / this.scale);
-        return new CRect(x-w/2, y-h/2, w, h);
+        return new CRect(this.x-w/2, this.y-h/2, w, h);
     },
     
     inverseTransform: function(x, y) {

@@ -10,6 +10,7 @@ MessageService = {
                 setState(StateLoading);
                 break;
             case "EnterGame":
+                ServerData.localProfile = msg.profile;
                 setState(StateMain);
                 break;
             case "ServerDefinitions":
