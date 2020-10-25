@@ -118,6 +118,7 @@ public class ServerEntityManager implements EntityManager {
 		for(Map.Entry<String, Property> e : map.entrySet()) {
 			Property ownProperty = entity.prop(e.getKey());
 			if(ownProperty == null) continue; // server discards new/unknown properties from client
+			if(!e.getValue().hasValidValue()) continue; // server discards properties with invalid value
 			
 			// transfer value
 			if(accessLevel.ordinal() >= ownProperty.getEditAccess().ordinal()) {
