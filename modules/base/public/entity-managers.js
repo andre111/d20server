@@ -59,6 +59,8 @@ Property = {
         property.setBoolean = Property.setBoolean;
         property.getDouble = Property.getDouble;
         property.setDouble = Property.setDouble;
+        //TODO...
+        property.getColor = Property.getColor;
     },
     
     canView: function(accessLevel) {
@@ -119,6 +121,11 @@ Property = {
         this.setInternal(String(value));
     },
     //TODO: remaining type functions
+    //TODO...
+    getColor: function() {
+        this.checkType(Type.COLOR);
+        return "#" + (Number(this.getInternal()) & 0x00FFFFFF).toString(16).padStart(6, '0');
+    }
 };
 
 //TODO: Listeners

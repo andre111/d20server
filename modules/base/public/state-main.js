@@ -150,6 +150,7 @@ StateMain = {
         // draw background tokens
         //TODO: all parameters
         TokenRenderer.renderTokens(ctx, MapUtils.currentEntitiesSorted("token", Layer.BACKGROUND), null, -1, false);
+        DrawingRenderer.renderDrawings(ctx, MapUtils.currentEntitiesSorted("drawing", Layer.BACKGROUND));
         
         // draw grid
         ctx.lineWidth = 3;
@@ -172,6 +173,7 @@ StateMain = {
         // draw main tokens
         //TODO: all parameters
         TokenRenderer.renderTokens(ctx, MapUtils.currentEntitiesSorted("token", Layer.MAIN), null, -1, false);
+        DrawingRenderer.renderDrawings(ctx, MapUtils.currentEntitiesSorted("drawing", Layer.MAIN));
         
         ctx.restore();
     }
