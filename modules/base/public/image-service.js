@@ -2,6 +2,11 @@ ImageService = {
     _cache: {},
     _cache_grayscale: {},
     
+    init: function() {
+        ImageService.MISSING = new Image();
+        ImageService.MISSING.src = "/public/img/missing.png";
+    },
+    
     //TODO: implement grayscale conversion
     getImage: function(id, grayscale) {
         grayscale = grayscale || false;
@@ -23,6 +28,5 @@ ImageService = {
         return null;
     },
     
-    //TODO: implement missing image
     MISSING: null
 }
