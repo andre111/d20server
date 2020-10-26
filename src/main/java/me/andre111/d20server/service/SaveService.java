@@ -49,7 +49,7 @@ public abstract class SaveService {
 				String type = requestingSave.pollFirst();
 				try {
 					ServerEntityManager em = (ServerEntityManager) D20Common.getEntityManager(type);
-					em.performSave();
+					em.performSave(true);
 				} catch(Exception e) {
 					System.err.println("Exception trying to save "+type+": ");
 					e.printStackTrace();

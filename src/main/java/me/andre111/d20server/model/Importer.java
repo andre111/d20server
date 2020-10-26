@@ -109,7 +109,16 @@ public class Importer {
 			if(nameBased && entityMap.containsKey(entityToImport.getName())) {
 				// by overwriting or keeping existing entities
 				if(overwriteExisting) {
-					entityToImport.transferIDFrom(entityMap.get(entityToImport.getName()));
+					Entity oldEntity = entityMap.get(entityToImport.getName());
+					//TODO: remove hardcoding - cleanup old default tokens of replaced actors
+					if(entityType.equals("actor")) {
+						long tokenID = oldEntity.prop("defaultToken").getLong();
+						if(tokenID > 0) {
+							D20Common.getEntityManager("token").remove(tokenID);
+						}
+					}
+					
+					entityToImport.transferIDFrom(oldEntity);
 					entityModifier.accept(originalID, entityToImport);
 					entityManager.add(entityToImport);
 					importedEntity = entityToImport;

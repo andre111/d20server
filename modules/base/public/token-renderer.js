@@ -20,7 +20,7 @@ TokenRenderer = {
                 ctx.strokeStyle = "orange";
                 ctx.lineWidth = border/2;
                 EntityUtils.applyTransform(ctx, token);
-                ctx.strokeRect(-token.prop("width").getLong()/2-border, -token.prop("height").getLong()/2-border, token.prop("width").getLong(), token.prop("height").getLong());
+                ctx.strokeRect(-token.prop("width").getLong()/2-border, -token.prop("height").getLong()/2-border, token.prop("width").getLong()+border*2, token.prop("height").getLong()+border*2);
                 ctx.restore();
             }
         }

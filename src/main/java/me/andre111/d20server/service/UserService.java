@@ -35,6 +35,7 @@ public abstract class UserService {
 	
 	public static void addAndSave(Profile profile) {
 		allProfiles.put(profile.id(), profile);
+		Utils.backupJson("profiles");
 		Utils.saveJson("profiles", allProfiles);
 	}
 

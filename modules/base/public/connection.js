@@ -1,10 +1,11 @@
 Connection = {
     _ws: null,
     
-    init: function(callback) {
+    init: function(callback, closecallback) {
         Connection._ws = new WebSocket("ws://" + location.host + "/ws");
         Connection._ws.onopen = callback;
         Connection._ws.onmessage = Connection.read;
+        Connection._ws.onclose = closecallback;
     },
     
     close: function() {

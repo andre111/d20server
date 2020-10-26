@@ -73,7 +73,7 @@ public class ServerEntityManager implements EntityManager {
 	@Override
 	public final void add(Entity entity) {
 		entities.put(entity.id(), entity);
-		if(saveEnabled) Utils.saveJson("entity."+type, entities);
+		if(saveEnabled) SaveService.requestSave(type);
 		
 		UserService.forEach(profile -> {
 			if(entity.canView(profile)) MessageService.send(new AddEntity(entity), profile);
@@ -90,7 +90,7 @@ public class ServerEntityManager implements EntityManager {
 		if(!entities.containsKey(id)) return;
 		
 		Entity entity = entities.remove(id);
-		if(saveEnabled) Utils.saveJson("entity."+type, entities);
+		if(saveEnabled) SaveService.requestSave(type);
 		
 		UserService.forEach(profile -> {
 			MessageService.send(new RemoveEntity(type, id), profile);
@@ -219,7 +219,10 @@ public class ServerEntityManager implements EntityManager {
 		}
 	}
 	
-	public final void performSave() {
+	public final void performSave(boolean backup) {
+		if(backup) {
+			Utils.backupJson("entity."+type);
+		}
 		Utils.saveJson("entity."+type, entities); // request (async) save, as that could take some time
 	}
 }

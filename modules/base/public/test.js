@@ -184,13 +184,7 @@ class MouseCameraContoller extends MouseController {
 
 
 function init() {
-    Connection.init(start);
-    ImageService.init();
-}
-    
-function start() {
-    document.body.innerHTML = "";
-    setState(StateSignIn);
+    setState(StateInit);
 }
 
 function setState(state) {
