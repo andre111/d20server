@@ -1,11 +1,11 @@
 MapUtils = {
     currentMap: function() {
-        var currentMap = ServerData.currentMap;
+        var currentMap = ServerData.currentMap.get();
         return EntityManagers.get("map").find(currentMap);
     },
     
     currentEntities: function(type) {
-        var currentMap = ServerData.currentMap;
+        var currentMap = ServerData.currentMap.get();
         return _.chain(EntityManagers.get(type).all()).filter(e => e.prop("map").getLong() == currentMap); 
     },
     
@@ -15,6 +15,16 @@ MapUtils = {
     
     currentEntitiesSorted: function(type, l) {
         return MapUtils.currentEntitiesInLayer(type, l).sortBy("id").sortBy(e => e.prop("depth").getLong());
+    },
+    
+    findControllableTokens: function(profile) {
+        var controllableTokens = [];
+        MapUtils.currentEntitiesSorted("token", Layer.MAIN).forEach(token => {
+            if(token.getControllingPlayers().includes(profile.id)) {
+                controllableTokens.push(token);
+            }
+        }).value();
+        return controllableTokens;
     }
 };
 
@@ -189,4 +199,22 @@ IntMathUtils = {
 		// calculate distance
 		return (x-xp) * (x-xp) + (y-yp) * (y-yp);
 	}
+};
+
+RenderUtils = {
+    addPaths(ctx, paths) {
+        ctx.beginPath();
+        for(var path of paths) {
+            var first = true;
+            for(var point of path) {
+                if(first) {
+                    ctx.moveTo(point.X, point.Y);
+                    first = false;
+                } else {
+                    ctx.lineTo(point.X, point.Y);
+                }
+            }
+            ctx.closePath();
+        }
+    }
 };

@@ -1,5 +1,4 @@
 TokenRenderer = {
-    
     renderTokens: function(ctx, tokenStream, viewer, highlightToken, grayscale) {
         var tokens = tokenStream.value();
         
@@ -140,7 +139,10 @@ TokenRenderer = {
     ],
     
     //-----------------------------------------------------------------------------------------------
-    _lastTokenLocations: new Map(), //TODO: clear on map change -> observer system required
+    _lastTokenLocations: new Map(),
+    onMapChange: function(id) {
+        TokenRenderer._lastTokenLocations.clear();
+    },
     getTokenLocation: function(token, update) {
         var lastLocation = TokenRenderer._lastTokenLocations.get(token.id);
         if(lastLocation == null || lastLocation == undefined) {
@@ -158,4 +160,5 @@ TokenRenderer = {
         TokenRenderer._lastTokenLocations.set(token.id, currentLocation);
         return currentLocation;
     }
-}
+};
+ServerData.currentMap.addObserver(TokenRenderer.onMapChange);

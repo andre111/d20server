@@ -26,6 +26,7 @@ import io.netty.handler.codec.http.HttpResponseStatus;
 import io.netty.handler.codec.http.HttpUtil;
 import io.netty.handler.codec.http.HttpVersion;
 import io.netty.handler.codec.http.LastHttpContent;
+import io.netty.handler.codec.http.QueryStringDecoder;
 import io.netty.handler.codec.http.multipart.DefaultHttpDataFactory;
 import io.netty.handler.codec.http.multipart.FileUpload;
 import io.netty.handler.codec.http.multipart.HttpDataFactory;
@@ -36,6 +37,7 @@ import me.andre111.d20common.model.Entity;
 import me.andre111.d20common.util.DataUtils;
 import me.andre111.d20common.util.Utils;
 import me.andre111.d20server.service.ModuleService;
+import me.andre111.d20server.util.ImageUtil;
 
 //TODO: correct mime types, correct caching with modified timestamp comparison (see netty examples)
 public class HttpServerHandler extends SimpleChannelInboundHandler<FullHttpRequest> {
@@ -69,7 +71,8 @@ public class HttpServerHandler extends SimpleChannelInboundHandler<FullHttpReque
 
 	private void handleGET(ChannelHandlerContext ctx, FullHttpRequest request) throws UnsupportedEncodingException {
 		// read and check path
-		String path = URLDecoder.decode(request.uri(), "UTF-8");
+		QueryStringDecoder decoder = new QueryStringDecoder(URLDecoder.decode(request.uri(), "UTF-8"));
+		String path = decoder.path();
 		if (!isValidPath(path)) {
 			sendError(ctx, HttpResponseStatus.NOT_FOUND);
 			return;
@@ -86,6 +89,9 @@ public class HttpServerHandler extends SimpleChannelInboundHandler<FullHttpReque
 			Entity image = D20Common.getEntityManager("image").find(id);
 			if(image != null) {
 				data = Utils.readBinary("entity.image."+id);
+				if(decoder.parameters().containsKey("grayscale") && decoder.parameters().get("grayscale").get(0).equals("1")) {
+					data = ImageUtil.toGrayscale(data); //TODO: this might need to be cached as a file
+				}
 				contentType = "image/png";
 			}
 		} else if(path.startsWith(AUDIO_PATH)) {

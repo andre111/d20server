@@ -58,27 +58,15 @@ WallRenderer = {
         if(pwr == null || pwr == undefined) return;
         
         ctx.fillStyle = "black";
-        ctx.beginPath();
-        for(var path of pwr) {
-            var first = true;
-            for(var point of path) {
-                if(first) {
-                    ctx.moveTo(point.X, point.Y);
-                    first = false;
-                } else {
-                    ctx.lineTo(point.X, point.Y);
-                }
-            }
-            ctx.closePath();
-        }
+        RenderUtils.addPaths(ctx, pwr);
         ctx.fill();
     },
     
     calculateOccolusionPolygon: function(viewport, wall, viewerX, viewerY) {
-        var minX = Math.round(viewport.x);
-		var maxX = Math.round(viewport.x + viewport.width);
-		var minY = Math.round(viewport.y);
-		var maxY = Math.round(viewport.y + viewport.height);
+        var minX = Math.trunc(viewport.x);
+		var maxX = Math.trunc(viewport.x + viewport.width);
+		var minY = Math.trunc(viewport.y);
+		var maxY = Math.trunc(viewport.y + viewport.height);
 		
 		// extend viewport to include viewer (causes missing occlusion when viewer is outside otherwise)
 		if(minX >= viewerX) minX = viewerX-1;
@@ -90,10 +78,10 @@ WallRenderer = {
 		var clippedWall = IntMathUtils.getClippedLine(wall.prop("x1").getLong(), wall.prop("y1").getLong(), wall.prop("x2").getLong(), wall.prop("y2").getLong(), minX, maxX, minY, maxY);
 		if(clippedWall == null) return null;
 
-		var x1 = Math.round(clippedWall.x1);
-		var y1 = Math.round(clippedWall.y1);
-		var x2 = Math.round(clippedWall.x2);
-		var y2 = Math.round(clippedWall.y2);
+		var x1 = Math.trunc(clippedWall.x1);
+		var y1 = Math.trunc(clippedWall.y1);
+		var x2 = Math.trunc(clippedWall.x2);
+		var y2 = Math.trunc(clippedWall.y2);
 
 		// project points to screen
 		// calculate direction

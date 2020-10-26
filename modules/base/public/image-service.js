@@ -21,7 +21,7 @@ ImageService = {
         } else {        
             // load image from server
             var img = new Image();
-            img.src = "/image/"+id;
+            img.src = "/image/"+id+(grayscale ? "?grayscale=1" : "");
             cache[""+id] = img;
         }
         

@@ -30,7 +30,7 @@ MessageService = {
                 break;
             //
             case "EnterMap":
-                ServerData.currentMap = msg.mapID; //TODO: might need the observed system from current client
+                ServerData.currentMap.set(msg.mapID);
                 console.log("EnterMap: "+msg.mapID);
                 break;
             default:

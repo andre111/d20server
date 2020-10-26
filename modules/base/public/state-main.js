@@ -39,6 +39,9 @@ StateMain = {
         // start rendering
         StateMain.onFrame();
         
+        //...
+        ServerData.currentMap.addObserver(StateMain.onMapChange);
+        
         //TODO: remove test stuff
         var dialog = WindowManager.createWindow("Modal Test", true);
         dialog.appendChild(document.createTextNode("Jetzt auch mit Testinhalt!"));
@@ -99,6 +102,62 @@ StateMain = {
         }
     },
     
+    onMapChange: function(id) {
+        //TODO: mode.init();
+        
+        FOWRenderer.reset();
+        StateMain.centerCamera(true);
+    },
+    
+    //TODO: create actual view implementation
+    lastCenteredTokenID: -1,
+    view: {
+        getProfile: function() {
+            return ServerData.localProfile;
+        },
+        doRenderWallOcclusion: function() {
+            return true;
+        },
+        doRenderWallLines: function() {
+            return true;
+        },
+        doRenderLights: function() {
+            return true;
+        },
+        isPlayerView: function() {
+            return true;
+        }
+    },
+    highlightToken: -1,
+    
+    centerCamera: function(instant) {
+        var map = MapUtils.currentMap();
+        if(map == null || map == undefined) return;
+        
+        var camTargetX = map.prop("width").getLong() * map.prop("gridSize").getLong() / 2;
+		var camTargetY = map.prop("height").getLong() * map.prop("gridSize").getLong() / 2;
+		
+		// find a controlled token to center on
+		var controllableTokens = MapUtils.findControllableTokens(StateMain.view.getProfile());
+		if(controllableTokens.length > 0) {
+			// find index of last token we focused on
+			var lastIndex = -1;
+			for(var i=0; i<controllableTokens.length; i++) {
+				if(controllableTokens[i].id == StateMain.lastCenteredTokenID) {
+					lastIndex = i;
+				}
+			}
+			
+			// focus on the next one
+			var index = (lastIndex + 1) % controllableTokens.length;
+			camTargetX = controllableTokens[index].prop("x").getLong();
+			camTargetY = controllableTokens[index].prop("y").getLong();
+			StateMain.lastCenteredTokenID = controllableTokens[index].id;
+		}
+		
+		camera.setLocation(camTargetX, camTargetY, instant);
+    },
+    
     draw: function() {
         var ctx = _g.ctx;
         var bctx = _g.bctx;
@@ -123,26 +182,6 @@ StateMain = {
         ctx.drawImage(_g.buffer, 0, 0);
         */
         
-        //TODO: create actual view implementation
-        var view = {
-            getProfile: function() {
-                return ServerData.localProfile;
-            },
-            doRenderWallOcclusion: function() {
-                return true;
-            },
-            doRenderWallLines: function() {
-                return true;
-            },
-            doRenderLights: function() {
-                return true;
-            },
-            isPlayerView: function() {
-                return true;
-            }
-        };
-        var highlightToken = -1;
-        
         //---------------------------------------
         //based somewhat on actual MapCanvas implementation in current client:
         var map = MapUtils.currentMap();
@@ -150,7 +189,7 @@ StateMain = {
         // find viewers
         var viewers = [];
         MapUtils.currentEntities("token").forEach(token => {
-            var accessLevel = token.getAccessLevel(view.getProfile());
+            var accessLevel = token.getAccessLevel(StateMain.view.getProfile());
             if(Access.matches(token.prop("sharedVision").getAccessValue(), accessLevel)) {
                 viewers.push(token);
             }
@@ -162,7 +201,7 @@ StateMain = {
         ctx.rect(0, 0, _g.width, _g.height);
         ctx.fill();
         ctx.closePath();
-        if(map == null || map == undefined || view == null || view == undefined /*|| (viewers is empty && hideWithNoMainToken && view.isPlayerView())*/) {
+        if(map == null || map == undefined || StateMain.view == null || StateMain.view == undefined /*|| (viewers is empty && hideWithNoMainToken && StateMain.view.isPlayerView())*/) {
             ctx.fillStyle = "black";
             ctx.beginPath();
             ctx.rect(0, 0, _g.width, _g.height);
@@ -178,7 +217,7 @@ StateMain = {
         ctx.setTransform(camera.getTransform());
         
         // draw background tokens
-        TokenRenderer.renderTokens(ctx, MapUtils.currentEntitiesSorted("token", Layer.BACKGROUND), view.getProfile(), highlightToken, false);
+        TokenRenderer.renderTokens(ctx, MapUtils.currentEntitiesSorted("token", Layer.BACKGROUND), StateMain.view.getProfile(), StateMain.highlightToken, false);
         DrawingRenderer.renderDrawings(ctx, MapUtils.currentEntitiesSorted("drawing", Layer.BACKGROUND));
         
         // draw grid
@@ -198,14 +237,14 @@ StateMain = {
         }
         
         // draw main tokens
-        TokenRenderer.renderTokens(ctx, MapUtils.currentEntitiesSorted("token", Layer.MAIN), view.getProfile(), highlightToken, false);
+        TokenRenderer.renderTokens(ctx, MapUtils.currentEntitiesSorted("token", Layer.MAIN), StateMain.view.getProfile(), StateMain.highlightToken, false);
         DrawingRenderer.renderDrawings(ctx, MapUtils.currentEntitiesSorted("drawing", Layer.MAIN));
         
         //TODO: EffectRenderer
         //TODO: WeatherRenderer
         
-        //TODO: draw wall occlusion / fow background
-        if(view.doRenderWallOcclusion()) {
+        // draw wall occlusion / fow background
+        if(StateMain.view.doRenderWallOcclusion()) {
             // render
             if(viewers.length != 0) {
                 // extend viewport to avoid rounding errors
@@ -213,25 +252,35 @@ StateMain = {
                 var pwr = WallRenderer.calculateWalls(MapUtils.currentEntities("wall").value(), extendedViewport, viewers);
                 WallRenderer.renderPrecalculatedWallRender(ctx, pwr);
                 
-                //TODO: draw fow background tokens
+                // draw fow background tokens
+                var fowClip = FOWRenderer.updateAndGetClip(pwr, extendedViewport);
+                if(fowClip != null) {
+                    ctx.save();
+                    RenderUtils.addPaths(ctx, fowClip);
+                    ctx.clip();
+                    TokenRenderer.renderTokens(ctx, MapUtils.currentEntitiesSorted("token", Layer.BACKGROUND), StateMain.view.getProfile(), StateMain.highlightToken, true);
+                    ctx.fillStyle = "rgba(0, 0, 0, 0.7)";
+                    ctx.fillRect(extendedViewport.x, extendedViewport.y, extendedViewport.width, extendedViewport.heigth);
+                    ctx.restore();
+                }
             }
         }
         
         //TODO: draw lights
-        if(view.doRenderLights()) {
+        if(StateMain.view.doRenderLights()) {
             
         }
         
         // render gm overlay tokens
-        if(!view.isPlayerView()) {
+        if(!StateMain.view.isPlayerView()) {
             ctx.globalAlpha = 0.5;
-            TokenRenderer.renderTokens(ctx, MapUtils.currentEntitiesSorted("token", Layer.GMOVERLAY), view.getProfile(), highlightToken, false);
+            TokenRenderer.renderTokens(ctx, MapUtils.currentEntitiesSorted("token", Layer.GMOVERLAY), StateMain.view.getProfile(), StateMain.highlightToken, false);
             DrawingRenderer.renderDrawings(ctx, MapUtils.currentEntitiesSorted("drawing", Layer.GMOVERLAY));
             ctx.globalAlpha = 1;
         }
         
         // draw walls as lines
-        if(view.doRenderWallLines()) {
+        if(StateMain.view.doRenderWallLines()) {
             ctx.lineWidth = 5;
             MapUtils.currentEntities("wall").forEach(wall => {
                 ctx.strokeStyle = wall.prop("seeThrough").getBoolean() ? "lightgray" : "blue";
