@@ -12,7 +12,8 @@ WallRenderer = {
     },
     
     calculateWalls: function(walls, viewport, viewers) {
-        //TODO: this needs a working shape union/intersection implementation to correctly work
+        var cpr = new ClipperLib.Clipper();
+        
         var combined = null;
         for(var viewer of viewers) {
             // create view for single viewer
@@ -24,46 +25,60 @@ WallRenderer = {
                         if(localCombined == null) {
                             localCombined = [poly];
                         } else {
-                            localCombined.push(poly);
                             //localCombined = union(localCombined, poly);
+                            var result = new ClipperLib.Paths();
+                            cpr.Clear();
+                            cpr.AddPaths(localCombined, ClipperLib.PolyType.ptSubject, true);
+                            cpr.AddPath(poly, ClipperLib.PolyType.ptClip, true);
+                            cpr.Execute(ClipperLib.ClipType.ctUnion, result);
+                            localCombined = result;
                         }
                     }
                 }
             }
             
             // combine all viewers
-            if(combined == null) {
-                combined = localCombined;
-            } else {
-                //combined = intersection(combined, localCombined);
+            if(localCombined != null) {
+                if(combined == null) {
+                    combined = localCombined;
+                } else {
+                    //combined = intersection(combined, localCombined);
+                    var result = new ClipperLib.Paths();
+                    cpr.Clear();
+                    cpr.AddPaths(combined, ClipperLib.PolyType.ptSubject, true);
+                    cpr.AddPaths(localCombined, ClipperLib.PolyType.ptClip, true);
+                    cpr.Execute(ClipperLib.ClipType.ctIntersection, result);
+                    combined = result;
+                }
             }
         }
         return combined;
     },
     renderPrecalculatedWallRender: function(ctx, pwr) {
+        if(pwr == null || pwr == undefined) return;
+        
         ctx.fillStyle = "black";
-        //TODO: render path
-        /*for(var path of pwr) {
-            ctx.beginPath();
+        ctx.beginPath();
+        for(var path of pwr) {
             var first = true;
             for(var point of path) {
                 if(first) {
-                    ctx.moveTo(point[0], point[1]);
+                    ctx.moveTo(point.X, point.Y);
                     first = false;
                 } else {
-                    ctx.lineTo(point[0], point[1]);
+                    ctx.lineTo(point.X, point.Y);
                 }
             }
             ctx.closePath();
-            ctx.fill();
-        }*/
+        }
+        ctx.fill();
     },
     
     calculateOccolusionPolygon: function(viewport, wall, viewerX, viewerY) {
-        var minX = viewport.x;
-		var maxX = viewport.x + viewport.width;
-		var minY = viewport.y;
-		var maxY = viewport.y + viewport.height;
+        var minX = Math.round(viewport.x);
+		var maxX = Math.round(viewport.x + viewport.width);
+		var minY = Math.round(viewport.y);
+		var maxY = Math.round(viewport.y + viewport.height);
 		
 		// extend viewport to include viewer (causes missing occlusion when viewer is outside otherwise)
 		if(minX >= viewerX) minX = viewerX-1;
@@ -75,10 +90,10 @@ WallRenderer = {
 		var clippedWall = IntMathUtils.getClippedLine(wall.prop("x1").getLong(), wall.prop("y1").getLong(), wall.prop("x2").getLong(), wall.prop("y2").getLong(), minX, maxX, minY, maxY);
 		if(clippedWall == null) return null;
 
-		var x1 = clippedWall.x1;
-		var y1 = clippedWall.y1;
-		var x2 = clippedWall.x2;
-		var y2 = clippedWall.y2;
+		var x1 = Math.round(clippedWall.x1);
+		var y1 = Math.round(clippedWall.y1);
+		var x2 = Math.round(clippedWall.x2);
+		var y2 = Math.round(clippedWall.y2);
 
 		// project points to screen
 		// calculate direction
@@ -114,9 +129,9 @@ WallRenderer = {
 		// create polygon
 		var poly = []
 		// add start point
-		poly.push([ x1, y1 ]);
+		poly.push({ X: x1, Y: y1 });
 		// add first projected point
-		poly.push([ px1, py1 ]);
+		poly.push({ X: px1, Y: py1 });
 		// add viewport corners if needed by moving around the edges
 		var isLeft = IntMathUtils.isPointLeftOfLine(x1, y1, x2, y2, viewerX, viewerY);
 		var lastx = px1;
@@ -127,19 +142,19 @@ WallRenderer = {
 			for(var i=0; i<2; i++) {
 				if(lasty==minY && !done) {
 					if(py2==minY) done = true;
-					else poly.push([ lastx = minX, lasty = minY ]);
+					else poly.push({ X: lastx = minX, Y: lasty = minY });
 				}
 				if(lastx==minX && !done) {
 					if(px2==minX) done = true;
-					else poly.push([ lastx = minX, lasty = maxY ]);
+					else poly.push({ X: lastx = minX, Y: lasty = maxY });
 				}
 				if(lasty==maxY && !done) {
 					if(py2==maxY && !done) done = true;
-					else poly.push([ lastx = maxX, lasty = maxY ]);
+					else poly.push({ X: lastx = maxX, Y: lasty = maxY });
 				}
 				if(lastx==maxX && !done) {
 					if(px2==maxX && !done) done = true;
-					else poly.push([ lastx = maxX, lasty = minY ]);
+					else poly.push({ X: lastx = maxX, Y: lasty = minY });
 				}
 			}
 		} else {
@@ -148,26 +163,26 @@ WallRenderer = {
 			for(var i=0; i<2; i++) {
 				if(lastx==minX && !done) {
 					if(px2==minX) done = true;
-					else poly.push([ lastx = minX, lasty = minY ]);
+					else poly.push({ X: lastx = minX, Y: lasty = minY });
 				}
 				if(lasty==minY && !done) {
 					if(py2==minY) done = true;
-					else poly.push([ lastx = maxX, lasty = minY ]);
+					else poly.push({ X: lastx = maxX, Y: lasty = minY });
 				}
 				if(lastx==maxX && !done) {
 					if(px2==maxX) done = true;
-					else poly.push([ lastx = maxX, lasty = maxY ]);
+					else poly.push({ X: lastx = maxX, Y: lasty = maxY });
 				}
 				if(lasty==maxY && !done) {
 					if(py2==maxY) done = true;
-					else poly.push([ lastx = minX, lasty = maxY ]);
+					else poly.push({ X: lastx = minX, Y: lasty = maxY });
 				}
 			}
 		}
 		// add second projected point
-		poly.push([ px2, py2 ]);
+		poly.push({ X: px2, Y: py2 });
 		// add end point
-		poly.push([ x2, y2 ]);
+		poly.push({ X: x2, Y: y2 });
 
 		return poly;
     }
