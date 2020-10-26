@@ -116,7 +116,7 @@ StateMain = {
             return ServerData.localProfile;
         },
         doRenderWallOcclusion: function() {
-            return true;
+            return false;
         },
         doRenderWallLines: function() {
             return true;
@@ -268,7 +268,7 @@ StateMain = {
         
         //TODO: draw lights
         if(StateMain.view.doRenderLights()) {
-            
+            LightRenderer.renderLight(ctx, _g.width, _g.height, camera.getTransform(), viewport, map, viewers);
         }
         
         // render gm overlay tokens

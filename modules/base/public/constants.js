@@ -31,7 +31,14 @@ Layer = {
 Light = {
     DARK: "DARK",
     DIM: "DIM",
-    BRIGHT: "BRIGHT"
+    BRIGHT: "BRIGHT",
+    
+    //TODO: can this be done better? - javascript does not really have enums
+    isLess: function(required, has) {
+        if(required == Light.DARK) return false;
+        else if(required == Light.DIM) return has == Light.DARK;
+        else if(required == Light.BRIGHT) return has == Light.DARK || has == Light.DIM;
+    }
 };
 
 Type = {

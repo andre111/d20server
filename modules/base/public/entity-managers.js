@@ -155,6 +155,11 @@ Property = {
         property.getLongList = Property.getLongList;
         property.setLongList = Property.setLongList;
         //TODO...
+        property.getLayer = Property.getLayer;
+        property.setLayer = Property.setLayer;
+        property.getLight = Property.getLight;
+        property.setLight = Property.setLight;
+        //TODO...
         property.getColor = Property.getColor;
         //TODO...
         property.getAccessValue = Property.getAccessValue;
@@ -246,6 +251,23 @@ Property = {
         this.setInternal(value.join(";"));
     },
     //TODO: remaining type functions
+    //TODO...
+    getLayer: function() {
+        this.checkType(Type.LAYER);
+        return this.getInternal();
+    },
+    setLayer: function(value) {
+        this.checkType(Type.LAYER);
+        this.setInternal(value);
+    },
+    getLight: function() {
+        this.checkType(Type.LIGHT);
+        return this.getInternal();
+    },
+    setLight: function(value) {
+        this.checkType(Type.LIGHT);
+        this.setInternal(value);
+    },
     //TODO...
     getColor: function() {
         this.checkType(Type.COLOR);
