@@ -1,3 +1,16 @@
+class LightWallCache {
+    constructor(clip, lightX, lightY, lightRadius) {
+        this.clip = clip;
+        this.lightX = lightX;
+        this.lightY = lightY;
+        this.lightRadius = lightRadius;
+    }
+    
+    isCompatible(lightX, lightY, lightRadius) {
+        return this.lightX == lightX && this.lightY == lightY && this.lightRadius>=lightRadius;
+    }
+}
+
 LightRenderer = {
     _mainBuffer: null,
     _lightBuffer1: null,
@@ -31,6 +44,7 @@ LightRenderer = {
         
 		// prepare buffer and render light levels
         LightRenderer._mainCtx.save();
+        LightRenderer._mainCtx.setTransform(1, 0, 0, 1, 0, 0); // identity
         LightRenderer._mainCtx.globalCompositeOperation = "source-over";
         LightRenderer._mainCtx.fillStyle = "black";
         LightRenderer._mainCtx.fillRect(0, 0, screenWidth, screenHeight);
@@ -43,7 +57,7 @@ LightRenderer = {
         // render to screen
         ctx.save();
         ctx.setTransform(1, 0, 0, 1, 0, 0); // identity
-        ctx.globalCompositeOperation = "multiply";
+        ctx.globalCompositeOperation = "multiply"; // NOTE: comment this line out to view the current light buffer for debugging
         ctx.drawImage(LightRenderer._mainBuffer, 0, 0);
         ctx.globalCompositeOperation = "source-over";
         ctx.restore();
@@ -88,15 +102,15 @@ LightRenderer = {
 				if(lightRadius > 0 && IntMathUtils.doAABBCircleIntersect(viewport.x, viewport.y, viewport.x+viewport.width, viewport.y+viewport.height, centerX, centerY, lightRadius)) {
                     var lightViewport = new CRect(centerX-maxLightRadius-1, centerY-maxLightRadius-1, maxLightRadius*2+2, maxLightRadius*2+2);
 					
-                    // get wall clip (with cached data whenever possible)
-					var cached = LightRenderer.getLightWallCache(token, light, centerX, centerY, maxLightRadius, lightViewport);
-					
 					if(map.prop("wallsBlockLight").getBoolean() && WallRenderer.hasToRenderWalls(MapUtils.currentEntities("wall"), lightViewport, token)) {
+                        // get wall clip (with cached data whenever possible)
+                        var cached = LightRenderer.getLightWallCache(token, light, centerX, centerY, maxLightRadius, lightViewport);
+                        
 						// draw light (with clip)
 						LightRenderer.paintLight(ctx1, token, cached, true, centerX, centerY, lightRadius);
 					} else {
 						// draw light
-						LightRenderer.paintLight(ctx1, token, cached, false, centerX, centerY, lightRadius);
+						LightRenderer.paintLight(ctx1, token, null, false, centerX, centerY, lightRadius);
 					}
                 }
             }).value();
@@ -109,12 +123,13 @@ LightRenderer = {
         
         // finish render
         if(needsRender && overlay != null) {
-            ctx1.fillColor = overlay;
+            ctx1.fillStyle = overlay;
             ctx1.globalCompositeOperation = "source-over";
             ctx1.fillRect(0, 0, screenWidth, screenHeight);
         }
         
         // render to buffer
+        ctx.globalCompositeOperation = "lighter";
         ctx.drawImage(LightRenderer._lightBuffer1, 0, 0);
     },
     
@@ -135,19 +150,33 @@ LightRenderer = {
         grd.addColorStop(0.5, color);
         grd.addColorStop(1, "rgba(0, 0, 0, 0)");
         
-        // paint (TODO: wall clipping)
+        // paint
         ctx1.save();
         ctx1.fillStyle = grd;
-        //TODO: if(withClip) { ... }
+        if(withClip) { 
+            RenderUtils.addPaths(ctx1, cached.clip);
+            ctx1.clip();
+        }
         ctx1.beginPath();
         ctx1.ellipse(centerX, centerY, lightRadius, lightRadius, 0, startAngle, endAngle);
         ctx1.fill();
         ctx1.restore();
     },
     
+    _cache: {
+        DIM: new Map(),
+        BRIGHT: new Map()
+    },
     getLightWallCache: function(token, light, centerX, centerY, maxLightRadius, lightViewport) {
-        //TODO: implement
-        return null;
+        var cached = LightRenderer._cache[light].get(token.id);
+        if(cached == null || cached == undefined || !cached.isCompatible(centerX, centerY, maxLightRadius)) {
+            var pwr =  WallRenderer.calculateWalls(MapUtils.currentEntities("wall").value(), lightViewport, [token]);
+            var clip = FOWRenderer.calculateSeenArea(pwr, lightViewport);
+            cached = new LightWallCache(clip, centerX, centerY, maxLightRadius);
+            LightRenderer._cache[light].set(token.id, cached);
+            console.log("Updated light cache for "+token.id);
+        }
+        return cached;
     },
     
     //TODO: These two methods do not follow the Pathfinder rules correctly
