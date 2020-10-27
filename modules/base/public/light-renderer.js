@@ -116,10 +116,56 @@ LightRenderer = {
             }).value();
         }
         
-        //TODO render sight (directly when a single viewer is present, with extra buffer otherwise)
+        // render sight (directly when a single viewer is present, with extra buffer otherwise)
         ctx1.setTransform(1, 0, 0, 1, 0, 0); // identity
         ctx1.globalCompositeOperation = "multiply";
-        //...
+        if(viewers.length == 1) {
+            var sight = LightRenderer.getSight(viewers[0], light);
+            if(sight != Infinite || !Number.isFinite(sight)) {
+                var sightRadius = LightRenderer.getSight(viewers[0], light) * map.prop("gridSize").getLong();
+                if(sightRadius > 0) {
+                    var viewerPos = applyToPoint(transform, { x: viewers[0].prop("x").getLong(), y: viewers[0].prop("y").getLong() });
+                    var grd = ctx1.createRadialGradient(viewerPos.x, viewerPos.y, 1, viewerPos.x, viewerPos.y, sightRadius * transform.a);
+                    grd.addColorStop(0, "white");
+                    grd.addColorStop(0.5, "white");
+                    grd.addColorStop(1, "black");
+                    ctx1.fillStyle = grd;
+                    ctx1.fillRect(0, 0, screenWidth, screenHeight);
+                }
+                needsRender = true;
+            }
+        } else {
+            var ctx2 = LightRenderer._lightCtx2;
+            ctx2.save();
+            ctx2.setTransform(1, 0, 0, 1, 0, 0); // identity
+            ctx2.fillStyle = "black";
+            ctx2.fillRect(0, 0, screenWidth, screenHeight);
+            ctx2.globalCompositeOperation = "lighter";
+            
+            for(var viewer of viewers) {
+                var sight = LightRenderer.getSight(viewer, light);
+                if(sight != Infinite || !Number.isFinite(sight)) {
+                    var sightRadius = LightRenderer.getSight(viewer, light) * map.prop("gridSize").getLong();
+                    if(sightRadius > 0) {
+                        var viewerPos = applyToPoint(transform, { x: viewer.prop("x").getLong(), y: viewer.prop("y").getLong() });
+                        var grd = ctx2.createRadialGradient(viewerPos.x, viewerPos.y, 1, viewerPos.x, viewerPos.y, sightRadius * transform.a);
+                        grd.addColorStop(0, "white");
+                        grd.addColorStop(0.5, "white");
+                        grd.addColorStop(1, "black");
+                        ctx2.fillStyle = grd;
+                        ctx2.fillRect(0, 0, screenWidth, screenHeight);
+                    }
+                } else {
+                    ctx2.fillStyle = "white";
+                    ctx2.fillRect(0, 0, screenWidth, screenHeight);
+                    break;
+                }
+            }
+            
+            ctx2.restore();
+            ctx1.drawImage(LightRenderer._lightBuffer2, 0, 0);
+            needsRender = true;
+        }
         
         // finish render
         if(needsRender && overlay != null) {

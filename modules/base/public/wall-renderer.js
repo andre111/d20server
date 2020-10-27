@@ -17,39 +17,33 @@ WallRenderer = {
         var combined = null;
         for(var viewer of viewers) {
             // create view for single viewer
-            var localCombined = null;
+            var localCombined = [];
             for(var wall of walls) {
                 if(!wall.prop("seeThrough").getBoolean()) {
                     var poly = WallRenderer.calculateOccolusionPolygon(viewport, wall, viewer.prop("x").getLong(), viewer.prop("y").getLong());
                     if(poly != null && poly != undefined) {
-                        if(localCombined == null) {
-                            localCombined = [poly];
-                        } else {
-                            //localCombined = union(localCombined, poly);
-                            var result = new ClipperLib.Paths();
-                            cpr.Clear();
-                            cpr.AddPaths(localCombined, ClipperLib.PolyType.ptSubject, true);
-                            cpr.AddPath(poly, ClipperLib.PolyType.ptClip, true);
-                            cpr.Execute(ClipperLib.ClipType.ctUnion, result);
-                            localCombined = result;
-                        }
+                        //localCombined = union(localCombined, poly);
+                        var result = new ClipperLib.Paths();
+                        cpr.Clear();
+                        cpr.AddPaths(localCombined, ClipperLib.PolyType.ptSubject, true);
+                        cpr.AddPath(poly, ClipperLib.PolyType.ptClip, true);
+                        cpr.Execute(ClipperLib.ClipType.ctUnion, result);
+                        localCombined = result;
                     }
                 }
             }
             
             // combine all viewers
-            if(localCombined != null) {
-                if(combined == null) {
-                    combined = localCombined;
-                } else {
-                    //combined = intersection(combined, localCombined);
-                    var result = new ClipperLib.Paths();
-                    cpr.Clear();
-                    cpr.AddPaths(combined, ClipperLib.PolyType.ptSubject, true);
-                    cpr.AddPaths(localCombined, ClipperLib.PolyType.ptClip, true);
-                    cpr.Execute(ClipperLib.ClipType.ctIntersection, result);
-                    combined = result;
-                }
+            if(combined == null) {
+                combined = localCombined;
+            } else {
+                //combined = intersection(combined, localCombined);
+                var result = new ClipperLib.Paths();
+                cpr.Clear();
+                cpr.AddPaths(combined, ClipperLib.PolyType.ptSubject, true);
+                cpr.AddPaths(localCombined, ClipperLib.PolyType.ptClip, true);
+                cpr.Execute(ClipperLib.ClipType.ctIntersection, result);
+                combined = result;
             }
         }
         return combined;

@@ -116,7 +116,7 @@ StateMain = {
             return ServerData.localProfile;
         },
         doRenderWallOcclusion: function() {
-            return false;
+            return true;
         },
         doRenderWallLines: function() {
             return true;
@@ -266,7 +266,7 @@ StateMain = {
             }
         }
         
-        //TODO: draw lights
+        // draw lights
         if(StateMain.view.doRenderLights()) {
             LightRenderer.renderLight(ctx, _g.width, _g.height, camera.getTransform(), viewport, map, viewers);
         }
@@ -295,6 +295,10 @@ StateMain = {
                 ctx.fillRect(wall.prop("x2").getLong()-5, wall.prop("y2").getLong()-5, 10, 10);
             }).value();
         }
+        
+        //TODO: EffectRenderer
+        
+        //TODO: draw overlay
         
         ctx.restore();
     }

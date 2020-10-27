@@ -1,5 +1,6 @@
 StateInit = {
     init: function() {
+        document.body.innerHTML = "Connecting to server...";
         Connection.init(StateInit.onConnect, StateInit.onClose);
         ImageService.init();
     },
