@@ -159,7 +159,8 @@ Property = {
         property.setLayer = Property.setLayer;
         property.getLight = Property.getLight;
         property.setLight = Property.setLight;
-        //TODO...
+        property.getEffect = Property.getEffect;
+        property.setEffect = Property.setEffect;
         property.getColor = Property.getColor;
         //TODO...
         property.getAccessValue = Property.getAccessValue;
@@ -268,7 +269,14 @@ Property = {
         this.checkType(Type.LIGHT);
         this.setInternal(value);
     },
-    //TODO...
+    getEffect: function() {
+        this.checkType(Type.EFFECT);
+        return this.getInternal();
+    },
+    setEffect: function(value) {
+        this.checkType(Type.EFFECT);
+        this.setInternal(value);
+    },
     getColor: function() {
         this.checkType(Type.COLOR);
         return "#" + (Number(this.getInternal()) & 0x00FFFFFF).toString(16).padStart(6, '0');

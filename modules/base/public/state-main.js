@@ -241,7 +241,7 @@ StateMain = {
         DrawingRenderer.renderDrawings(ctx, MapUtils.currentEntitiesSorted("drawing", Layer.MAIN));
         
         //TODO: EffectRenderer
-        //TODO: WeatherRenderer
+        WeatherRenderer.updateAndDraw(ctx, viewport, map.prop("effect").getEffect());
         
         // draw wall occlusion / fow background
         if(StateMain.view.doRenderWallOcclusion()) {

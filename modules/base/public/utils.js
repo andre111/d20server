@@ -198,7 +198,11 @@ IntMathUtils = {
 		
 		// calculate distance
 		return (x-xp) * (x-xp) + (y-yp) * (y-yp);
-	}
+	},
+    
+    getRandomInt: function(max) {
+        return Math.floor(Math.random() * Math.floor(max));
+    }
 };
 
 RenderUtils = {
