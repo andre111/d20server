@@ -3,9 +3,11 @@ StateMain = {
         // create base elements
         var canvas = document.createElement("canvas");
         canvas.id = "canvas";
+        canvas.tabIndex = "1";
         document.body.appendChild(canvas);
         var sidepanel = document.createElement("div");
         sidepanel.id = "sidepanel";
+        sidepanel.tabIndex = "2";
         sidepanel.appendChild(document.createElement("ul"));
         document.body.appendChild(sidepanel);
         var overlay = document.createElement("overlay");
@@ -22,7 +24,7 @@ StateMain = {
         _g.bctx = _g.buffer.getContext("2d");
         
         // add mouse controller
-        mcc = new MouseCameraContoller(camera, null);
+        mcc = new MouseCameraContoller(camera, new MouseCanvasController(canvas));
         canvas.addEventListener("mousemove", e => mcc.onMove(e), true);
         canvas.addEventListener("wheel", e => mcc.mouseWheelMoved(e), true);
         canvas.addEventListener("click", e => mcc.mouseClicked(e), true);
@@ -32,15 +34,22 @@ StateMain = {
         canvas.addEventListener("mouseenter", e => mcc.mouseEntered(e), true);
         canvas.addEventListener("mouseleave", e => mcc.mouseExited(e), true);
         
+        //...
+        ServerData.currentMap.addObserver(StateMain.onMapChange);
+        StateMain.mode = null; //TODO: implement CanvasModes
+        if(ServerData.isGM()) {
+            StateMain.view = new CanvasView(ServerData.localProfile, false, false, false, true);
+        } else {
+            StateMain.view = new CanvasView(ServerData.localProfile, true, true, true, false);
+        }
+        StateMain.highlightToken = -1;
+        
         // calculate fps times
         _g.fpsInterval = 1000 / 30;
         _g.lastFrame = Date.now();
         
         // start rendering
         StateMain.onFrame();
-        
-        //...
-        ServerData.currentMap.addObserver(StateMain.onMapChange);
         
         //TODO: remove test stuff
         var dialog = WindowManager.createWindow("Modal Test", true);
@@ -109,26 +118,7 @@ StateMain = {
         StateMain.centerCamera(true);
     },
     
-    //TODO: create actual view implementation
     lastCenteredTokenID: -1,
-    view: {
-        getProfile: function() {
-            return ServerData.localProfile;
-        },
-        doRenderWallOcclusion: function() {
-            return true;
-        },
-        doRenderWallLines: function() {
-            return true;
-        },
-        doRenderLights: function() {
-            return true;
-        },
-        isPlayerView: function() {
-            return true;
-        }
-    },
-    highlightToken: -1,
     
     centerCamera: function(instant) {
         var map = MapUtils.currentMap();
@@ -160,30 +150,8 @@ StateMain = {
     
     draw: function() {
         var ctx = _g.ctx;
-        var bctx = _g.bctx;
-        
         ctx.font = "12px arial";
         
-        /*
-        // testing off screen buffer rendering
-        bctx.beginPath();
-        bctx.rect(20, 40, 50, 50);
-        bctx.fillStyle = "#FF0000";
-        bctx.fill();
-        bctx.closePath();
-        
-        bctx.beginPath();
-        bctx.arc(240, 160, 20, 0, Math.PI*2, false);
-        bctx.fillStyle = "green";
-        bctx.fill();
-        bctx.closePath();
-        
-        // display buffer
-        ctx.drawImage(_g.buffer, 0, 0);
-        */
-        
-        //---------------------------------------
-        //based somewhat on actual MapCanvas implementation in current client:
         var map = MapUtils.currentMap();
         
         // find viewers
@@ -298,7 +266,8 @@ StateMain = {
         
         EffectRenderer.updateAndDrawAboveEffects(ctx);
         
-        //TODO: draw overlay
+        // draw overlay
+        if(StateMain.mode != null) StateMain.mode.renderOverlay(ctx);
         
         ctx.restore();
     }
