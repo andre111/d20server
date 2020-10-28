@@ -33,6 +33,12 @@ MessageService = {
                 ServerData.currentMap.set(msg.mapID);
                 console.log("EnterMap: "+msg.mapID);
                 break;
+            case "PlayEffect":
+                if(msg.focusCamera) {
+                    camera.setLocation(msg.x, msg.y, false);
+                }
+                EffectRenderer.addEffect(msg.effect, msg.x, msg.y, msg.rotation, msg.scale, msg.aboveOcclusion, msg.parameters);
+                break;
             default:
                 break;
         }

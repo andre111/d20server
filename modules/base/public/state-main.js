@@ -240,7 +240,7 @@ StateMain = {
         TokenRenderer.renderTokens(ctx, MapUtils.currentEntitiesSorted("token", Layer.MAIN), StateMain.view.getProfile(), StateMain.highlightToken, false);
         DrawingRenderer.renderDrawings(ctx, MapUtils.currentEntitiesSorted("drawing", Layer.MAIN));
         
-        //TODO: EffectRenderer
+        EffectRenderer.updateAndDrawEffects(ctx);
         WeatherRenderer.updateAndDraw(ctx, viewport, map.prop("effect").getEffect());
         
         // draw wall occlusion / fow background
@@ -296,7 +296,7 @@ StateMain = {
             }).value();
         }
         
-        //TODO: EffectRenderer
+        EffectRenderer.updateAndDrawAboveEffects(ctx);
         
         //TODO: draw overlay
         
