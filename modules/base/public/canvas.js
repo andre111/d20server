@@ -251,9 +251,9 @@ class MouseCanvasController {
     }
 }
 
-//TODO: implement all the canvas modes
 class CanvasMode extends MouseController {
     constructor() {
+        super();
     }
     
     init() {}

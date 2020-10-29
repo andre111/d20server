@@ -40,6 +40,34 @@ html, body {
     left: 0;
 }
 
+/* ModePanel/Window styles */
+.mode-panel {
+    pointer-events: none;
+    margin: 4px 4px 4px 4px;
+    position: fixed;
+    top: 0;
+    left: 0;
+}
+.mode-sub-panel {
+    display: inline-block;
+    margin: 0 0 0 0;
+}
+.mode-button {
+    pointer-events: auto;
+    width: 32px;
+    height: 32px;
+    padding: 0 0 0 0;
+    margin: 2px 2px 2px 2px;
+}
+.mode-sub-button {
+    pointer-events: auto;
+    width: 28px;
+    height: 28px;
+    padding: 0 0 0 0;
+    margin: 2px 2px 2px 2px;
+}
+
+/* Used to provide bordered and named sections */
 fieldset {
     margin: auto;
 }

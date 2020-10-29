@@ -24,7 +24,7 @@ StateMain = {
         _g.bctx = _g.buffer.getContext("2d");
         
         // add mouse controller
-        mcc = new MouseCameraContoller(camera, new MouseCanvasController(canvas));
+        var mcc = new MouseCameraContoller(camera, new MouseCanvasController(canvas));
         canvas.addEventListener("mousemove", e => mcc.onMove(e), true);
         canvas.addEventListener("wheel", e => mcc.mouseWheelMoved(e), true);
         canvas.addEventListener("click", e => mcc.mouseClicked(e), true);
@@ -36,13 +36,15 @@ StateMain = {
         
         //...
         ServerData.currentMap.addObserver(StateMain.onMapChange);
-        StateMain.mode = null; //TODO: implement CanvasModes
+        StateMain.mode = new CanvasMode(); //TODO: implement CanvasModes and set default mode here
         if(ServerData.isGM()) {
             StateMain.view = new CanvasView(ServerData.localProfile, false, false, false, true);
         } else {
             StateMain.view = new CanvasView(ServerData.localProfile, true, true, true, false);
         }
         StateMain.highlightToken = -1;
+        
+        StateMain.modePanel = new ModePanel();
         
         // calculate fps times
         _g.fpsInterval = 1000 / 30;

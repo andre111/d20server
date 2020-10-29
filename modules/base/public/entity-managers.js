@@ -23,6 +23,9 @@ Entity = {
         entity.getType = Entity.getType;
         entity.getDefinition = Entity.getDefinition;
         entity.getActiveExtensions = Entity.getActiveExtensions;
+        entity.addDefaultProperties = Entity.addDefaultProperties;
+        entity.addPropertiesFromDefs = Entity.addPropertiesFromDefs;
+        entity.addPropertyIfAbsentOrWrong = Entity.addPropertyIfAbsentOrWrong;
         
         entity.prop = Entity.prop;
         entity.getViewAccess = Entity.getViewAccess;
@@ -33,7 +36,14 @@ Entity = {
     },
     
     create: function(type) {
-        //TODO: create new entity with id+type+default properties
+        var entity = {
+            id: 0,
+            type: type,
+            properties: {}
+        };
+        Entity.addMethods(entity);
+        entity.addDefaultProperties();
+        return entity;
     },
     
     getType: function() {
@@ -45,7 +55,52 @@ Entity = {
     },
     
     getActiveExtensions: function() {
-        //TODO: implement getActiveExtensions
+        var activeExtensions = [];
+        
+        var definition = this.getDefinition();
+        for(var extensionPoint of definition.extensionPoints) {
+            switch(extensionPoint.mode) {
+            case "ALL":
+                for(var extensionDefinition in extensionPoint.extensionDefinitions) {
+                    activeExtensions.push(extensionDefinition);
+                }
+                break;
+            case "SELECT_SINGLE":
+                var selected = this.prop(extensionPoint.property).getString();
+                var extensionDefinition = extensionPoint.extensionDefinitions[selected];
+                if(extensionDefinition != null && extensionDefinition != undefined) {
+                    activeExtensions.push(extensionDefinition);
+                }
+                break;
+            }
+        }
+        
+        return activeExtensions;
+    },
+    
+    addDefaultProperties: function() {
+        var def = this.getDefinition();
+        
+        this.addPropertiesFromDefs(def.properties);
+        for(var extDef of this.getActiveExtensions()) {
+            this.addPropertiesFromDefs(extDef.properties);
+        }
+    },
+    addPropertiesFromDefs: function(propertyDefinitions) {
+        for(var propDef of propertyDefinitions) {
+            var property = {
+                type: propDef.type,
+                viewAccess: propDef.viewAccess,
+                editAccess: propDef.editAccess,
+                value: propDef.value
+            };
+            this.addPropertyIfAbsentOrWrong(propDef.name, property);
+        }
+    },
+    addPropertyIfAbsentOrWrong: function(name, property) {
+        if(this.properties[name] == null || this.properties[name] == undefined || this.properties[name].type != property.type) {
+            this.properties[name] = property;
+        }
     },
     
     prop: function(name) {
