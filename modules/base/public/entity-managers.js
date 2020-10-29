@@ -31,8 +31,11 @@ Entity = {
         entity.getViewAccess = Entity.getViewAccess;
         entity.getEditAccess = Entity.getEditAccess;
         entity.getAccessLevel = Entity.getAccessLevel;
+        entity.canView = Entity.canView;
+        entity.canEdit = Entity.canEdit;
         //...
         entity.getControllingPlayers = Entity.getControllingPlayers;
+        entity.clone = Entity.clone;
     },
     
     create: function(type) {
@@ -105,7 +108,7 @@ Entity = {
     
     prop: function(name) {
         var property = this.properties[name];
-        Property.addMethods(property);
+        if(property != null && property != undefined) Property.addMethods(property);
         return property;
     },
     
@@ -158,6 +161,14 @@ Entity = {
         }
     },
     
+    canView: function(profile) {
+        return Access.matches(this.getViewAccess(), this.getAccessLevel(profile));
+    },
+    
+    canEdit: function(profile) {
+        return Access.matches(this.getEditAccess(), this.getAccessLevel(profile));
+    },
+    
     //...
     
     getControllingPlayers: function() {
@@ -178,6 +189,26 @@ Entity = {
                 return [];
             }
         }
+    },
+    
+    clone: function() {
+        var c = {
+            id: this.id,
+            type: this.getType(),
+            properties: {}
+        };
+        Entity.addMethods(c);
+        
+        for(const [key, value] of Object.entries(this.properties)) {
+            c.propertis[key] = {
+                type: value.type,
+                value: value.getInternal(),
+                viewAccess: value.getViewAccess(),
+                editAccess: value.getEditAccess()
+            };
+        }
+        
+        return c;
     }
 };
 
@@ -217,7 +248,7 @@ Property = {
         property.getEffect = Property.getEffect;
         property.setEffect = Property.setEffect;
         property.getColor = Property.getColor;
-        //TODO...
+        property.setColor = Property.setColor;
         property.getAccessValue = Property.getAccessValue;
         property.setAccessValue = Property.setAccessValue;
     },
@@ -336,7 +367,10 @@ Property = {
         this.checkType(Type.COLOR);
         return "#" + (Number(this.getInternal()) & 0x00FFFFFF).toString(16).padStart(6, '0');
     },
-    //TODO...
+    setColor: function(color) {
+        this.checkType(Type.COLOR);
+        this.setInternal(parseInt(color.substring(1), 16));
+    },
     getAccessValue: function() {
         this.checkType(Type.ACCESS);
         return this.getInternal();
@@ -347,8 +381,72 @@ Property = {
     }
 };
 
-//TODO: EntityReference, using already implemented WrappedProperty below
-
+//TODO: listeners (both for the reference itself, and listening for entityChanged to update mouseOffsets)
+EntityReference = {
+    create: function(entity) {
+        var reference = {
+            id: entity.id,
+            type: entity.getType(),
+            wrappedProperties: {},
+            mouseOffsetX: 0,
+            mouseOffsetY: 0
+        };
+        
+        Entity.addMethods(reference);
+        
+        reference.prop = EntityReference.prop;
+        reference.getBackingEntity = EntityReference.getBackingEntity;
+        reference.performUpdate = EntityReference.performUpdate;
+        reference.getModifiedEntity = EntityReference.getModifiedEntity;
+        
+        return reference;
+    },
+    
+    prop: function(name) {
+        if(this.wrappedProperties[name] == null || this.wrappedProperties[name] == undefined) {
+            var backingProperty = this.getBackingEntity().prop(name);
+            if(backingProperty != null && backingProperty != undefined) {
+                this.wrappedProperties[name] = WrappedProperty.create(this, name, backingProperty);
+            }
+        }
+        
+        return this.wrappedProperties[name];
+    },
+    
+    getBackingEntity: function() {
+        return EntityManagers.get(this.type).find(this.id);
+    },
+    
+    performUpdate: function() {
+        if(this.getBackingEntity() == null || this.getBackingEntity() == undefined) return;
+        
+        // find all changed properties
+        var changedProperties = {};
+        for(const [key, value] of Object.entries(this.wrappedProperties)) {
+            if(value.isChanged()) {
+                changedProperties[key] = value.getChanged();
+            }
+        }
+        
+		// send update properties (and clear changes)
+        this.wrappedProperties = {};
+        if(!_.isEmpty(changedProperties)) {
+            EntityManagers.get(this.type).updateProperties(this.id, changedProperties);
+        }
+    },
+    
+    getModifiedEntity: function() {
+        if(this.getBackingEntity() == null || this.getBackingEntity() == undefined) return null;
+        
+        var modified = this.getBackingEntity().clone();
+        for(const [key, value] of Object.entries(this.wrappedProperties)) {
+            if(value.isChanged()) {
+                modified.properties[key] = value.getChanged();
+            }
+        }
+        return modified;
+    }
+};
 WrappedProperty = {
     create: function(reference, name, property) {
         var wrapped = {

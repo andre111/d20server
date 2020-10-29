@@ -261,3 +261,13 @@ class CanvasMode extends MouseController {
     renderOverlay(ctx) {}
     actionPerformed(action) {}
 }
+
+class CanvasWindow {
+    constructor(title, modal) {
+        this.frame = WindowManager.createWindow(title, modal);
+    }
+    
+    close() {
+        $(this.frame).dialog("close");
+    }
+}

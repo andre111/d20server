@@ -54,11 +54,11 @@ StateMain = {
         StateMain.onFrame();
         
         //TODO: remove test stuff
-        var dialog = WindowManager.createWindow("Modal Test", true);
-        dialog.appendChild(document.createTextNode("Jetzt auch mit Testinhalt!"));
+        //var dialog = WindowManager.createWindow("Modal Test", true);
+        //dialog.appendChild(document.createTextNode("Jetzt auch mit Testinhalt!"));
         
-        dialog = WindowManager.createWindow("Test 2", false);
-        dialog.appendChild(document.createTextNode("Jetzt auch mit mehr Testinhalt!"));
+        //dialog = WindowManager.createWindow("Test 2", false);
+        //dialog.appendChild(document.createTextNode("Jetzt auch mit mehr Testinhalt!"));
         
         // add tabs TODO: add content
         var tab = null;
