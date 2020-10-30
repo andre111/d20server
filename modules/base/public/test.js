@@ -1,6 +1,8 @@
 let {scale, rotate, translate, compose, inverse, applyToPoint} = window.TransformationMatrix;
 
-_g = {}
+_g = {
+    VERSION: 8
+}
 class CRect {
     constructor(x, y, width, height) {
         this.x = Math.trunc(x);

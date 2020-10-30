@@ -33,7 +33,7 @@ StateSignIn = {
     doSignIn: function() {
         var msg = {
             msg: "SignIn",
-            appVersion: 7,
+            appVersion: _g.VERSION,
             email: emailField.value,
             password: accessKeyField.value
         };

@@ -14,7 +14,7 @@ MapUtils = {
     },
     
     currentEntitiesSorted: function(type, l) {
-        return MapUtils.currentEntitiesInLayer(type, l).sortBy("id").sortBy(e => e.prop("depth").getLong());
+        return MapUtils.currentEntitiesInLayer(type, l).sortBy(e => -e.id).sortBy(e => -e.prop("depth").getLong());
     },
     
     findControllableTokens: function(profile) {
@@ -220,5 +220,16 @@ RenderUtils = {
             }
             ctx.closePath();
         }
+    }
+};
+
+TokenListUtils = {
+    getAccessLevel: function(profile, list, token) {
+        if(token != null && token != undefined) {
+            return token.getAccessLevel(profile);
+        }
+        
+        if(profile.role == Role.GM) return Access.GM;
+        return Access.EVERYONE;
     }
 };

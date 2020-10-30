@@ -26,6 +26,8 @@ Entity = {
         entity.addDefaultProperties = Entity.addDefaultProperties;
         entity.addPropertiesFromDefs = Entity.addPropertiesFromDefs;
         entity.addPropertyIfAbsentOrWrong = Entity.addPropertyIfAbsentOrWrong;
+        entity.getPredefinedMacros = Entity.getPredefinedMacros;
+        entity.addPredefinedMacros = Entity.addPredefinedMacros;
         
         entity.prop = Entity.prop;
         entity.getViewAccess = Entity.getViewAccess;
@@ -103,6 +105,21 @@ Entity = {
     addPropertyIfAbsentOrWrong: function(name, property) {
         if(this.properties[name] == null || this.properties[name] == undefined || this.properties[name].type != property.type) {
             this.properties[name] = property;
+        }
+    },
+    
+    getPredefinedMacros: function() {
+        var macros = {};
+        
+        this.addPredefinedMacros(macros, this.getDefinition().macros);
+        for(var extDef of this.getActiveExtensions()) {
+            this.addPredefinedMacros(macros, extDef.macros);
+        }
+        return macros;
+    },
+    addPredefinedMacros: function(masterMap, newMap) {
+        for(const [key, value] of Object.entries(newMap)) {
+            masterMap[key] = value;
         }
     },
     
@@ -241,7 +258,8 @@ Property = {
         property.setDouble = Property.setDouble;
         property.getLongList = Property.getLongList;
         property.setLongList = Property.setLongList;
-        //TODO...
+        property.getStringMap = Property.getStringMap;
+        property.setStringMap = Property.setStringMap;
         property.getLayer = Property.getLayer;
         property.setLayer = Property.setLayer;
         property.getLight = Property.getLight;
@@ -338,8 +356,26 @@ Property = {
         this.checkType(Type.LONG_LIST);
         this.setInternal(value.join(";")); //TODO: cast/round to long?
     },
-    //TODO: remaining type functions
-    //TODO...
+    getStringMap: function() {
+        this.checkType(Type.STRING_MAP);
+        if(this.getInternal() == null || this.getInternal() == undefined || this.getInternal() == "") return {};
+        
+        var map = {};
+        var split = this.getInternal().split("§");
+        for(var i=0; i<split.length-1; i+=2) {
+            map[split[i]] = split[i+1];
+        }
+        return map;
+    },
+    setStringMap: function(value) {
+        this.checkType(Type.STRING_MAP);
+        
+        var string = "";
+        for(const [key, value] of Object.entries(value)) {
+            string = string + key.replace("§", "") + "§" + value.replace("§", "") + "§";
+        }
+        this.setInternal(string);
+    },
     getLayer: function() {
         this.checkType(Type.LAYER);
         return this.getInternal();
@@ -403,6 +439,7 @@ EntityReference = {
         reference.getBackingEntity = EntityReference.getBackingEntity;
         reference.performUpdate = EntityReference.performUpdate;
         reference.getModifiedEntity = EntityReference.getModifiedEntity;
+        reference.isValid = EntityReference.isValid;
         
         return reference;
     },
@@ -454,6 +491,11 @@ EntityReference = {
             }
         }
         return modified;
+    },
+    
+    isValid: function() {
+        var backingEntity = this.getBackingEntity();
+        return backingEntity != null && backingEntity != undefined;
     }
 };
 WrappedProperty = {

@@ -2158,70 +2158,70 @@
         },
         "pf_skill_knowledge_nobility": {
             "displayName": "Wissen (Adel und Königshäuser)",
-            "category": "Fertigkeiten",
+            "category": "Fertigkeiten (Wissen)",
             "commands": [
                 "/template generic1 Wissen (Adel und Königshäuser) Wurf;für {selected.actor.property.pf_characterName};Wurf;1d20+{selected.actor.property.pf_skillKnowledgeNobility};"
             ]
         },
         "pf_skill_knowledge_arcana": {
             "displayName": "Wissen (Arkanes)",
-            "category": "Fertigkeiten",
+            "category": "Fertigkeiten (Wissen)",
             "commands": [
                 "/template generic1 Wissen (Arkanes) Wurf;für {selected.actor.property.pf_characterName};Wurf;1d20+{selected.actor.property.pf_skillKnowledgeArcana};"
             ]
         },
         "pf_skill_knowledge_engineering": {
             "displayName": "Wissen (Baukunst)",
-            "category": "Fertigkeiten",
+            "category": "Fertigkeiten (Wissen)",
             "commands": [
                 "/template generic1 Wissen (Baukunst) Wurf;für {selected.actor.property.pf_characterName};Wurf;1d20+{selected.actor.property.pf_skillKnowledgeEngineering};"
             ]
         },
         "pf_skill_knowledge_planes": {
             "displayName": "Wissen (Die Ebenen)",
-            "category": "Fertigkeiten",
+            "category": "Fertigkeiten (Wissen)",
             "commands": [
                 "/template generic1 Wissen (Die Ebenen) Wurf;für {selected.actor.property.pf_characterName};Wurf;1d20+{selected.actor.property.pf_skillKnowledgePlanes};"
             ]
         },
         "pf_skill_knowledge_geography": {
             "displayName": "Wissen (Geographie)",
-            "category": "Fertigkeiten",
+            "category": "Fertigkeiten (Wissen)",
             "commands": [
                 "/template generic1 Wissen (Geographie) Wurf;für {selected.actor.property.pf_characterName};Wurf;1d20+{selected.actor.property.pf_skillKnowledgeGeography};"
             ]
         },
         "pf_skill_knowledge_history": {
             "displayName": "Wissen (Geschichte)",
-            "category": "Fertigkeiten",
+            "category": "Fertigkeiten (Wissen)",
             "commands": [
                 "/template generic1 Wissen (Geschichte) Wurf;für {selected.actor.property.pf_characterName};Wurf;1d20+{selected.actor.property.pf_skillKnowledgeHistory};"
             ]
         },
         "pf_skill_knowledge_dungeoneering": {
             "displayName": "Wissen (Gewölbekunde)",
-            "category": "Fertigkeiten",
+            "category": "Fertigkeiten (Wissen)",
             "commands": [
                 "/template generic1 Wissen (Gewölbekunde) Wurf;für {selected.actor.property.pf_characterName};Wurf;1d20+{selected.actor.property.pf_skillKnowledgeDungeoneering};"
             ]
         },
         "pf_skill_knowledge_local": {
             "displayName": "Wissen (Lokales)",
-            "category": "Fertigkeiten",
+            "category": "Fertigkeiten (Wissen)",
             "commands": [
                 "/template generic1 Wissen (Lokales) Wurf;für {selected.actor.property.pf_characterName};Wurf;1d20+{selected.actor.property.pf_skillKnowledgeLocal};"
             ]
         },
         "pf_skill_knowledge_nature": {
             "displayName": "Wissen (Natur)",
-            "category": "Fertigkeiten",
+            "category": "Fertigkeiten (Wissen)",
             "commands": [
                 "/template generic1 Wissen (Natur) Wurf;für {selected.actor.property.pf_characterName};Wurf;1d20+{selected.actor.property.pf_skillKnowledgeNature};"
             ]
         },
         "pf_skill_knowledge_religion": {
             "displayName": "Wissen (Religion)",
-            "category": "Fertigkeiten",
+            "category": "Fertigkeiten (Wissen)",
             "commands": [
                 "/template generic1 Wissen (Religion) Wurf;für {selected.actor.property.pf_characterName};Wurf;1d20+{selected.actor.property.pf_skillKnowledgeReligion};"
             ]

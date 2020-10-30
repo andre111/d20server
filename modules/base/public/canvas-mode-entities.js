@@ -281,8 +281,169 @@ CMEntityActionSelectPropertyBoxes = [
 ];
 
 class CMEntityActionSelectMenu {
-    constructor() {
-        //TODO: implement
+    constructor(mode, reference, isGM, x, y) {
+        this.mode = mode;
+        this.reference = reference;
+        this.closed = false;
+        
+        var accessLevel = reference.getAccessLevel(ServerData.localProfile);
+        
+        // create html elements
+        this.container = document.createElement("ul");
+        this.container.style.position = "fixed";
+        this.container.style.width = "150px";
+        this.container.style.left = x+"px";
+        this.container.style.top = y+"px";
+        document.body.appendChild(this.container);
+        
+        this.createItem(this.container, "Edit", () => this.doEdit());
+        
+        if(this.mode.entityType == "token") {
+            // sending macros
+            if(Access.matches(reference.prop("macroUse").getAccessValue(), accessLevel)) {
+                var macro = this.createCategory(this.container, "Macro");
+                for(const [key, value] of Object.entries(reference.prop("macros").getStringMap())) {
+                    this.createItem(macro, key, () => this.doSendMacro(key));
+                }
+            }
+            
+            // sending actor macros
+            var actor = EntityManagers.get("actor").find(reference.prop("actorID").getLong());
+            if(actor != null && actor != undefined) {
+                var actorMacro = this.createCategory(this.container, "Actor Macro");
+                
+                //TODO: get and sort macros before adding to menu
+                var macros = actor.getPredefinedMacros();
+                
+				// add macros to menu with categories
+                var categories = new Map();
+                for(const [key, value] of Object.entries(macros)) {
+                    // find or create category sub menu
+                    var parent = actorMacro;
+                    var category = value.category;
+                    if(category != null && category != undefined && category != "") {
+                        if(!categories.has(category)) {
+                            var cat = this.createCategory(actorMacro, category);
+                            categories.set(category, cat);
+                        }
+                        parent = categories.get(category);
+                    }
+                    
+                    // add macro entry
+                    this.createItem(parent, value.displayName, () => this.doSendMacro("!"+key));
+                }
+            }
+            
+            // adding to lists
+            //TODO: this is broken/the access check seems to be wrong somehow
+            var list = this.createCategory(this.container, "Add to");
+            _.chain(EntityManagers.get("token_list").all()).forEach(tokenList => {
+                var listAccessLevel = TokenListUtils.getAccessLevel(ServerData.localProfile, tokenList, reference.getBackingEntity());
+                if(tokenList.canEdit(listAccessLevel)) {
+                    this.createItem(list, tokenList.prop("displayName").getString(), () => this.doTokenListInsert(tokenList));
+                }
+            }).value();
+        }
+        
+        if(reference.prop("depth").canEdit(accessLevel)) {
+            var move = this.createCategory(this.container, "Move");
+            this.createItem(move, "to front", () => this.doMoveToFront());
+            this.createItem(move, "to back", () => this.doMoveToBack());
+        }
+        
+        // gm actions
+        if(isGM) {
+            if(this.mode.entityType == "token") {
+                this.createItem(this.container, "Fit to Grid", () => this.doFitToGrid());
+            }
+            
+            this.createItem(this.container, "Delete", () => this.doDelete());
+        }
+        
+        $(this.container).menu({
+            select: (event, ui) => {
+                if(event.currentTarget.menucallback != null && event.currentTarget.menucallback != undefined) {
+                    event.currentTarget.menucallback();
+                    this.close();
+                }
+            }
+        });
+    }
+    
+    createItem(parent, name, callback) {
+        var item = document.createElement("li");
+        var div = document.createElement("div");
+        div.innerHTML = name;
+        item.appendChild(div);
+        item.menucallback = callback;
+        parent.appendChild(item);
+    }
+    
+    createCategory(parent, name) {
+        var category = document.createElement("li");
+        var div = document.createElement("div");
+        div.innerHTML = name;
+        category.appendChild(div);
+        var container = document.createElement("ul");
+        container.style.width = "210px";
+        category.appendChild(container);
+        
+        parent.appendChild(category);
+        
+        return container;
+    }
+    
+    doEdit() {
+        //TODO...
+    }
+    
+    doSendMacro(macroName) {
+        var msg = {
+            msg: "SendChatMessage",
+            message: "!"+macroName
+        };
+        MessageService.send(msg);
+    }
+    
+    doTokenListInsert(tokenList) {
+        var msg = {
+            msg: "TokenListValue",
+            listID: tokenList.id,
+            tokenID: this.reference.id,
+            value: 0,
+            hidden: false,
+            reset: false
+        };
+        MessageService.send(msg);
+    }
+    
+    doMoveToFront() {
+        var currentMinDepth = MapUtils.currentEntitiesInLayer(this.mode.entityType, this.mode.layer).map(e => e.prop("depth").getLong()).min().value();
+        if(currentMinDepth == undefined) currentMinDepth = 0;
+        this.reference.prop("depth").setLong(currentMinDepth-1);
+        this.reference.performUpdate();
+    }
+    
+    doMoveToBack() {
+        var currentMaxDepth = MapUtils.currentEntitiesInLayer(this.mode.entityType, this.mode.layer).map(e => e.prop("depth").getLong()).max().value();
+        if(currentMaxDepth == undefined) currentMaxDepth = 0;
+        this.reference.prop("depth").setLong(currentMaxDepth+1);
+        this.reference.performUpdate();
+    }
+    
+    doFitToGrid() {
+        //TODO...
+    }
+    
+    doDelete() {
+        EntityManagers.get(this.mode.entityType).remove(this.reference.id);
+        this.mode.activeEntities = [];
+    }
+    
+    close() {
+        if(this.closed) return;
+        this.closed = true;
+        document.body.removeChild(this.container);
     }
 }
 
@@ -295,6 +456,8 @@ class CMEntityActionSelect extends CMEntityAction {
         this.selStartY = 0;
         this.selEndX = 0;
         this.selEndY = 0;
+        
+        this.menu = null;
     }
     
     init() {
@@ -381,6 +544,11 @@ class CMEntityActionSelect extends CMEntityAction {
     
     
     mousePressed(e) {
+        if(this.menu != null) {
+            this.menu.close();
+            this.menu = null;
+        }
+        
         if(e.which == 1) {
             if(this.mode.activeEntities.length > 0) {
                 if(this.mode.activeEntities.length == 1) {
@@ -506,7 +674,7 @@ class CMEntityActionSelect extends CMEntityAction {
 			// -> select single and open context menu
 			this.selectLast(e.xm, e.ym);
             if(this.mode.activeEntities.length == 1) {
-                //TODO: open context menu
+                this.menu = new CMEntityActionSelectMenu(this.mode, this.mode.activeEntities[0], ServerData.isGM(), e.clientX, e.clientY);
             }
         }
     }
@@ -611,44 +779,54 @@ class CanvasModeEntities extends CanvasMode {
     }
     
     renderOverlay(ctx) {
+        this.validateActiveEntities();
         this.action.renderOverlay(ctx);
     }
     
     mouseClicked(e) {
+        this.validateActiveEntities();
         this.action.mouseClicked(e);
     }
     
     mousePressed(e) {
+        this.validateActiveEntities();
         this.action.mousePressed(e);
     }
     
     mouseReleased(e) {
+        this.validateActiveEntities();
         this.action.mouseReleased(e);
     }
     
     mouseEntered(e) {
+        this.validateActiveEntities();
         this.action.mouseEntered(e);
     }
     
     mouseExited(e) {
+        this.validateActiveEntities();
         this.action.mouseExited(e);
     }
     
     mouseDragged(e) {
+        this.validateActiveEntities();
         this.action.mouseDragged(e);
     }
     
     mouseMoved(e) {
+        this.validateActiveEntities();
         this.action.mouseMoved(e);
     }
     
     mouseWheelMoved(e) {
+        this.validateActiveEntities();
         this.action.mouseWheelMoved(e);
     }
     
     actionPerformed(a) {
         var map = MapUtils.currentMap();
         if(map == null || map == undefined) return;
+        this.validateActiveEntities();
         
         var gridSize = map.prop("gridSize").getLong();
         
@@ -698,6 +876,10 @@ class CanvasModeEntities extends CanvasMode {
         var reference = EntityReference.create(entity);
         this.activeEntities.push(reference);
         this.sendSelectedTokens();
+    }
+    
+    validateActiveEntities() {
+        this.activeEntities = _.chain(this.activeEntities).filter(reference => reference.isValid()).value();
     }
     
     clearActiveEntities() {
