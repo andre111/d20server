@@ -4,6 +4,7 @@ MessageService = {
             case "ResponseOk":
                 break;
             case "ResponseFail":
+                if(msg.to == "SignIn") new CanvasWindowInfo("Sign In failed", msg.description);
                 break;
             //TODO: messages should probably not all be handled here?
             case "EntityLoading":
@@ -32,6 +33,14 @@ MessageService = {
             case "EnterMap":
                 ServerData.currentMap.set(msg.mapID);
                 console.log("EnterMap: "+msg.mapID);
+                break;
+            case "ActionCommand":
+                switch(msg.command) {
+                case "SHOW_IMAGE":
+                    new CanvasWindowImage(msg.id);
+                    break;
+                //TODO...
+                }
                 break;
             case "PlayEffect":
                 if(msg.focusCamera) {

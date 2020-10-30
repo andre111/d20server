@@ -17,6 +17,7 @@ DrawingRenderer = {
         var color = drawing.prop("color").getColor();
         ctx.fillStyle = color;
         ctx.strokeStyle = color;
+        ctx.lineWidth = 3;
         
         ctx.save();
         ctx.translate(x, y);

@@ -267,6 +267,20 @@ class CanvasWindow {
         this.frame = WindowManager.createWindow(title, modal);
     }
     
+    maximize() {
+        $(this.frame).dialog("option", "position", { my: "left top", at: "left top", of: window });
+        $(this.frame).dialog("option", "width", document.body.clientWidth);
+        $(this.frame).dialog("option", "height", document.body.clientHeight);
+    }
+    
+    getLocation() {
+        //TODO: implement (use CRect)
+    }
+    
+    setLocation(loc) {
+        //TODO: implement
+    }
+    
     close() {
         $(this.frame).dialog("close");
     }

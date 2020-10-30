@@ -8,18 +8,21 @@ class CanvasWindowColorInput extends CanvasWindow {
         input.value = value;
         this.frame.appendChild(input);
         
-        var buttonPanel = document.createElement("div");
-        this.frame.appendChild(buttonPanel);
-        
-        var okButton = document.createElement("button");
-        okButton.innerHTML = "Ok";
-        okButton.onclick = () => { callback(input.value); this.close(); };
-        buttonPanel.appendChild(okButton);
-        
-        var cancelButton = document.createElement("button");
-        cancelButton.innerHTML = "Cancel";
-        cancelButton.onclick = () => this.close();
-        buttonPanel.appendChild(cancelButton);
+        $(this.frame).dialog("option", "buttons", [
+            {
+                text: "Ok",
+                click: function() {
+                    callback(input.value);
+                    $(this).dialog("close");
+                }
+            },
+            {
+                text: "Cancel",
+                click: function() {
+                    $(this).dialog("close");
+                }
+            }
+        ]);
         
         // focus main input
         input.focus();

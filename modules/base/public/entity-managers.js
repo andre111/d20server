@@ -200,11 +200,12 @@ Entity = {
         Entity.addMethods(c);
         
         for(const [key, value] of Object.entries(this.properties)) {
-            c.propertis[key] = {
-                type: value.type,
-                value: value.getInternal(),
-                viewAccess: value.getViewAccess(),
-                editAccess: value.getEditAccess()
+            var property = this.prop(key);
+            c.properties[key] = {
+                type: property.type,
+                value: property.getInternal(),
+                viewAccess: property.getViewAccess(),
+                editAccess: property.getEditAccess()
             };
         }
         
@@ -306,11 +307,11 @@ Property = {
     },
     getLong: function() {
         this.checkType(Type.LONG);
-        return Number(this.getInternal()); //TODO: cast/round to long?
+        return Number(this.getInternal());
     },
     setLong: function(value) {
         this.checkType(Type.LONG);
-        this.setInternal(String(value));
+        this.setInternal(String(Math.trunc(value)));
     },
     getBoolean: function() {
         this.checkType(Type.BOOLEAN);
@@ -335,7 +336,7 @@ Property = {
     },
     setLongList: function(value) {
         this.checkType(Type.LONG_LIST);
-        this.setInternal(value.join(";"));
+        this.setInternal(value.join(";")); //TODO: cast/round to long?
     },
     //TODO: remaining type functions
     //TODO...
@@ -391,6 +392,10 @@ EntityReference = {
             mouseOffsetX: 0,
             mouseOffsetY: 0
         };
+        // entities with id 0 are not in manager -> store in here
+        if(entity.id == 0) {
+            reference.entity = entity;
+        }
         
         Entity.addMethods(reference);
         
@@ -414,7 +419,11 @@ EntityReference = {
     },
     
     getBackingEntity: function() {
-        return EntityManagers.get(this.type).find(this.id);
+        if(this.id == 0) {
+            return this.entity;
+        } else {
+            return EntityManagers.get(this.type).find(this.id);
+        }
     },
     
     performUpdate: function() {
@@ -540,6 +549,40 @@ WrappedProperty = {
     }
 };
 
+EntityClipboard = {
+    _typedClipboard: new Map(),
+    
+    validateType: function(entityType) {
+        if(!EntityClipboard._typedClipboard.has(entityType)) {
+            EntityClipboard._typedClipboard.set(entityType, []);
+        }
+    },
+    
+    setEntities: function(entityType, references) {
+        EntityClipboard.validateType(entityType);
+        
+        EntityClipboard._typedClipboard.set(entityType, []);
+        for(var reference of references) {
+			// copy/clone underlying entity (and reset id)
+            var entity = reference.getModifiedEntity();
+            entity.id = 0;
+            
+			// copy EntityReference with required values
+            var newReference = EntityReference.create(entity);
+            newReference.mouseOffsetX = reference.mouseOffsetX;
+            newReference.mouseOffsetY = reference.mouseOffsetY;
+            
+            EntityClipboard._typedClipboard.get(entityType).push(newReference);
+        }
+    },
+    
+    getEntities: function(entityType) {
+        EntityClipboard.validateType(entityType);
+        
+        return EntityClipboard._typedClipboard.get(entityType);
+    }
+};
+
 //TODO: Listeners
 class EntityManager {
     constructor(type) {
@@ -564,6 +607,7 @@ class EntityManager {
     }
     
     add(entity) {
+        if(entity == null || entity == undefined) return;
         var msg = {
             msg: "AddEntity",
             type: entity.getType(),

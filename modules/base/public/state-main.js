@@ -10,9 +10,6 @@ StateMain = {
         sidepanel.tabIndex = "2";
         sidepanel.appendChild(document.createElement("ul"));
         document.body.appendChild(sidepanel);
-        var overlay = document.createElement("overlay");
-        overlay.id = "overlay";
-        document.body.appendChild(overlay);
         
         //TODO: ...
         // get reference to main canvas
@@ -36,7 +33,7 @@ StateMain = {
         
         //...
         ServerData.currentMap.addObserver(StateMain.onMapChange);
-        StateMain.mode = new CanvasMode(); //TODO: implement CanvasModes and set default mode here
+        StateMain.mode = new CanvasModeEntities("token", Layer.MAIN);
         if(ServerData.isGM()) {
             StateMain.view = new CanvasView(ServerData.localProfile, false, false, false, true);
         } else {

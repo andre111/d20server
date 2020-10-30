@@ -1,6 +1,6 @@
 WindowManager = { 
     createWindow: function(title, modal) {
-        var container = document.getElementById("overlay");
+        var container = document.body;
         
         // create window
         var panel = document.createElement("div");

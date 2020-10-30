@@ -70,14 +70,14 @@ class ModePanel {
         
         // create buttons
         this.buttons = [];
-        this.buttons.push(new ExtendedModeButton(new ModeButton("cursor", "Edit Tokens", () => false, () => {}), 0)); //TODO: implement
+        this.buttons.push(new ExtendedModeButton(new ModeButton("cursor", "Edit Tokens", () => StateMain.mode instanceof CanvasModeEntities && StateMain.mode.entityType == "token", () => this.setMode(new CanvasModeEntities("token", this.currentLayer))), 0));
         if(ServerData.isGM()) {
             this.buttons.push(new ExtendedModeButton(new ModeButton("wall", "Edit Walls", () => StateMain.mode instanceof CanvasModeWalls, () => this.setMode(new CanvasModeWalls())), 0));
         }
         
         // drawing mode
-        this.buttons.push(new ExtendedModeButton(new ModeButton("brush", "Draw Shapes", () => (StateMain.mode instanceof CanvasModeDrawings /*|| ... */), () => this.setMode(new CanvasModeDrawings(this.currentLayer))), 0, [ //TODO: implement
-                new ModeButton("cursor", "Edit Drawings", () => false, () => {}), //TODO: implement
+        this.buttons.push(new ExtendedModeButton(new ModeButton("brush", "Draw Shapes", () => (StateMain.mode instanceof CanvasModeDrawings || (StateMain.mode instanceof CanvasModeEntities && StateMain.mode.entityType == "drawing")), () => this.setMode(new CanvasModeDrawings(this.currentLayer))), 0, [
+                new ModeButton("cursor", "Edit Drawings", () => StateMain.mode instanceof CanvasModeEntities && StateMain.mode.entityType == "drawing", () => this.setMode(new CanvasModeEntities("drawing", this.currentLayer))),
                 new ModeButton("rect", "Draw Rectangles", () => StateMain.mode instanceof CanvasModeDrawings && StateMain.mode.action == "DRAW_RECT", () => { this.setMode(new CanvasModeDrawings(this.currentLayer)); StateMain.mode.action = "DRAW_RECT"; this.updateState(); }),
                 new ModeButton("oval", "Draw Ovals", () => StateMain.mode instanceof CanvasModeDrawings && StateMain.mode.action == "DRAW_OVAL", () => { this.setMode(new CanvasModeDrawings(this.currentLayer)); StateMain.mode.action = "DRAW_OVAL"; this.updateState(); }),
                 new ModeButton("text", "Write Text", () => StateMain.mode instanceof CanvasModeDrawings && StateMain.mode.action == "WRITE_TEXT", () => { this.setMode(new CanvasModeDrawings(this.currentLayer)); StateMain.mode.action = "WRITE_TEXT"; this.updateState(); }),
@@ -123,7 +123,7 @@ class ModePanel {
         var map = MapUtils.currentMap();
         if(map != null && map != undefined && (ServerData.isGM() || map.prop("playersCanDraw").getBoolean())) allowDrawing = true;
         if(!allowDrawing && StateMain.mode instanceof CanvasModeDrawings) {
-            StateMain.mode = new CanvasMode(); //TODO: use CanvasModeEntities here
+            StateMain.mode = new CanvasModeEntities("token", this.currentLayer);
         }
         
         // update buttons
