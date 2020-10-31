@@ -2241,6 +2241,8 @@
             "layoutParameters": [],
             "layoutGlue": "false",
             "background": "/public/pf_char_de_1.png",
+            "backgroundWidth": 1677,
+            "backgroundHeight": 2177,
             "preferredWidth": 900,
             "preferredHeight": 450,
             "components": [

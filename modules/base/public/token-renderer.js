@@ -33,7 +33,7 @@ TokenRenderer = {
         if(img != null) {
             ctx.save();
             ctx.translate(x, y);
-            ctx.rotate(token.prop("rotation").getLong() * Math.PI / 180);
+            ctx.rotate(token.prop("rotation").getDouble() * Math.PI / 180);
             
             ctx.drawImage(img, -token.prop("width").getLong()/2, -token.prop("height").getLong()/2, token.prop("width").getLong(), token.prop("height").getLong());
             

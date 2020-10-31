@@ -209,7 +209,7 @@
 .ui-menu .ui-menu-item {
 	margin: 0;
 	cursor: pointer;
-    font-size: 12px;
+    font-size: 10px;
 	/* support: IE10, see #8844 */
 	list-style-image: url("data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7");
 }
@@ -837,7 +837,10 @@ button.ui-button::-moz-focus-inner {
 }
 .ui-tabs .ui-tabs-nav {
 	margin: 0;
-	padding: .2em .2em 0;
+	/*padding: .2em .2em 0;*/
+    padding: 0;
+    border: none;
+    background: none;
 }
 .ui-tabs .ui-tabs-nav li {
 	list-style: none;
@@ -869,8 +872,10 @@ button.ui-button::-moz-focus-inner {
 .ui-tabs .ui-tabs-panel {
 	display: block;
 	border-width: 0;
-	padding: 1em 1.4em;
+	/*padding: 1em 1.4em;*/
+    padding: 5px;
 	background: none;
+    border: 1px solid;
 }
 .ui-tooltip {
 	padding: 8px;

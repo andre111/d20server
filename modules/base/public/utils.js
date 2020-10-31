@@ -31,13 +31,13 @@ MapUtils = {
 EntityUtils = {
     applyTransform: function(ctx, entity) {
         ctx.translate(entity.prop("x").getLong(), entity.prop("y").getLong());
-        ctx.rotate(entity.prop("rotation").getLong() * Math.PI / 180);
+        ctx.rotate(entity.prop("rotation").getDouble() * Math.PI / 180);
     },
     
     getTransform: function(entity) {
         return compose(
             translate(entity.prop("x").getLong(), entity.prop("y").getLong()),
-            rotate(entity.prop("rotation").getLong() * Math.PI / 180)
+            rotate(entity.prop("rotation").getDouble() * Math.PI / 180)
         );
     },
     
@@ -80,6 +80,17 @@ EntityUtils = {
         var bounds = EntityUtils.getAABB(entity);
         
 		return x1 <= bounds.x && bounds.x + bounds.width <= x2 && y1 <= bounds.y && bounds.y + bounds.height <= y2;
+    }
+};
+
+DefinitionUtils = {
+    getExtensionPointForProperty: function(definition, name) {
+        for(var extensionPoint of definition.extensionPoints) {
+            if(extensionPoint.mode == "SELECT_SINGLE" && extensionPoint.property == name) {
+                return extensionPoint;
+            }
+        }
+        return null;
     }
 };
 

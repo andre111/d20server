@@ -301,7 +301,7 @@ class CMEntityActionSelectMenu {
         if(this.mode.entityType == "token") {
             // sending macros
             if(Access.matches(reference.prop("macroUse").getAccessValue(), accessLevel)) {
-                var macro = this.createCategory(this.container, "Macro");
+                var macro = this.createCategory(this.container, "Macros");
                 for(const [key, value] of Object.entries(reference.prop("macros").getStringMap())) {
                     this.createItem(macro, key, () => this.doSendMacro(key));
                 }
@@ -310,7 +310,7 @@ class CMEntityActionSelectMenu {
             // sending actor macros
             var actor = EntityManagers.get("actor").find(reference.prop("actorID").getLong());
             if(actor != null && actor != undefined) {
-                var actorMacro = this.createCategory(this.container, "Actor Macro");
+                var actorMacro = this.createCategory(this.container, "Actor Macros");
                 
                 //TODO: get and sort macros before adding to menu
                 var macros = actor.getPredefinedMacros();
@@ -339,7 +339,7 @@ class CMEntityActionSelectMenu {
             var list = this.createCategory(this.container, "Add to");
             _.chain(EntityManagers.get("token_list").all()).forEach(tokenList => {
                 var listAccessLevel = TokenListUtils.getAccessLevel(ServerData.localProfile, tokenList, reference.getBackingEntity());
-                if(tokenList.canEdit(listAccessLevel)) {
+                if(tokenList.canEditWithAccess(listAccessLevel)) {
                     this.createItem(list, tokenList.prop("displayName").getString(), () => this.doTokenListInsert(tokenList));
                 }
             }).value();
@@ -385,7 +385,7 @@ class CMEntityActionSelectMenu {
         div.innerHTML = name;
         category.appendChild(div);
         var container = document.createElement("ul");
-        container.style.width = "210px";
+        container.style.width = "180px";
         category.appendChild(container);
         
         parent.appendChild(category);
@@ -394,7 +394,7 @@ class CMEntityActionSelectMenu {
     }
     
     doEdit() {
-        //TODO...
+        new CanvasWindowEditEntity(this.reference);
     }
     
     doSendMacro(macroName) {

@@ -193,13 +193,13 @@ StateMain = {
         for(x = 0; x <= map.prop("width").getLong(); x++) {
             ctx.beginPath();
             ctx.moveTo(x * gridSize, 0 * gridSize);
-            ctx.lineTo(x * gridSize, 100 * gridSize);
+            ctx.lineTo(x * gridSize, map.prop("height").getLong() * gridSize);
             ctx.stroke();
         }
         for(y = 0; y <= map.prop("height").getLong(); y++) {
             ctx.beginPath();
             ctx.moveTo(0 * gridSize, y * gridSize);
-            ctx.lineTo(100 * gridSize, y * gridSize);
+            ctx.lineTo(map.prop("width").getLong() * gridSize, y * gridSize);
             ctx.stroke();
         }
         

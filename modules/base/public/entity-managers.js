@@ -23,6 +23,7 @@ Entity = {
         entity.getType = Entity.getType;
         entity.getDefinition = Entity.getDefinition;
         entity.getActiveExtensions = Entity.getActiveExtensions;
+        entity.getPropertyDefinition = Entity.getPropertyDefinition;
         entity.addDefaultProperties = Entity.addDefaultProperties;
         entity.addPropertiesFromDefs = Entity.addPropertiesFromDefs;
         entity.addPropertyIfAbsentOrWrong = Entity.addPropertyIfAbsentOrWrong;
@@ -35,6 +36,8 @@ Entity = {
         entity.getAccessLevel = Entity.getAccessLevel;
         entity.canView = Entity.canView;
         entity.canEdit = Entity.canEdit;
+        entity.canViewWithAccess = Entity.canViewWithAccess;
+        entity.canEditWithAccess = Entity.canEditWithAccess;
         //...
         entity.getControllingPlayers = Entity.getControllingPlayers;
         entity.clone = Entity.clone;
@@ -81,6 +84,18 @@ Entity = {
         }
         
         return activeExtensions;
+    },
+    
+    getPropertyDefinition: function(name) {
+        for(var propertyDefinition of this.getDefinition().properties) {
+            if(propertyDefinition.name == name) return propertyDefinition;
+        }
+        for(var extDef of this.getActiveExtensions()) {
+            for(var propertyDefinition of extDef.properties) {
+                if(propertyDefinition.name == name) return propertyDefinition;
+            }
+        }
+        return null;
     },
     
     addDefaultProperties: function() {
@@ -179,11 +194,19 @@ Entity = {
     },
     
     canView: function(profile) {
-        return Access.matches(this.getViewAccess(), this.getAccessLevel(profile));
+        return this.canViewWithAccess(this.getAccessLevel(profile));
     },
     
     canEdit: function(profile) {
-        return Access.matches(this.getEditAccess(), this.getAccessLevel(profile));
+        return this.canEditWithAccess(this.getAccessLevel(profile));
+    },
+    
+    canViewWithAccess: function(accessLevel) {
+        return Access.matches(this.getViewAccess(), accessLevel);
+    },
+    
+    canEditWithAccess: function(accessLevel) {
+        return Access.matches(this.getEditAccess(), accessLevel);
     },
     
     //...
@@ -300,7 +323,7 @@ Property = {
     
     checkType: function(type) {
         if(this.type != type) {
-            //TODO: implement?
+            throw "Property is of wrong type, required "+type+" but is "+this.type
         }
     },
     
@@ -436,6 +459,8 @@ EntityReference = {
         Entity.addMethods(reference);
         
         reference.prop = EntityReference.prop;
+        reference.getViewAccess = EntityReference.getViewAccess;
+        reference.getEditAccess = EntityReference.getEditAccess;
         reference.getBackingEntity = EntityReference.getBackingEntity;
         reference.performUpdate = EntityReference.performUpdate;
         reference.getModifiedEntity = EntityReference.getModifiedEntity;
@@ -453,6 +478,20 @@ EntityReference = {
         }
         
         return this.wrappedProperties[name];
+    },
+    
+    getViewAccess: function() {
+        var entity = this.getBackingEntity();
+        if(entity == null || entity == undefined) return Access.SYSTEM;
+        
+        return entity.getViewAccess();
+    },
+    
+    getEditAccess: function() {
+        var entity = this.getBackingEntity();
+        if(entity == null || entity == undefined) return Access.SYSTEM;
+        
+        return entity.getEditAccess();
     },
     
     getBackingEntity: function() {
