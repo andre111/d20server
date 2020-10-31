@@ -125,6 +125,7 @@ public class ServerEntityManager implements EntityManager {
 				try {
 					e.getValue().transferTo(ownProperty);
 					changedProperties.put(e.getKey(), ownProperty);
+					changedProperties.putAll(entity.onPropertyChange(e.getKey(), ownProperty));
 				} catch(UnsupportedOperationException ex) {
 					ex.printStackTrace(); //TODO: how to handle incorrect property updates
 				}
