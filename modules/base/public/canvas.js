@@ -227,7 +227,7 @@ class MouseCanvasController {
         if(StateMain.mode != null) StateMain.mode.mousePressed(e);
     }
     mouseReleased(e) {
-        this.canvas.focus();
+        //this.canvas.focus(); // this causes issues, like when trying to select text but moving the mouse on the canvas before release, the above should be enough anyway
         if(StateMain.mode != null) StateMain.mode.mouseReleased(e);
     }
     mouseEntered(e) {

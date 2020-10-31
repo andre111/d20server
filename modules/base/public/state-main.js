@@ -81,7 +81,7 @@ StateMain = {
                     return "/image/"+token.prop("imageID").getLong();
                 }
             }
-            return "/public/img/missing.png";
+            return "/public/img/gui/x_empty.png";
         }, actor => { return "Hier ist ein langer Beispieltext, der eine kurze Beschreibung eines Zaubers simulieren soll"; });
     },
     
