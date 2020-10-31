@@ -32,11 +32,13 @@ class CWEditEntityTab {
         //TODO: create content layout
         var styleAttributes = [];
         var styleValues = [];
+        var borderAndPaddingWidth = 1+2;
         switch(this.definition.layout) {
         case "BORDER":
             content.style.display = "grid";
             content.style.gridTemplateColumns = "auto auto auto";
             content.style.gridTemplateRows = "auto";
+            content.style.gridGap = "5px";
             content.style.gridTemplateAreas = '"north north north" "west center east" "south south south"';
             styleAttributes = [ "gridArea", "gridArea", "gridArea", "gridArea", "gridArea" ];
             styleValues = [ "north", "west", "center", "east", "south" ];
@@ -52,6 +54,7 @@ class CWEditEntityTab {
             var columns = "";
             for(var i=0; i<Number(this.definition.layoutParameters[1]); i++) columns = (columns == "" ? "auto" : columns + " auto");
             content.style.gridTemplateColumns = columns;
+            content.style.gridGap = "5px";
             break;
         case "X_AXIS":
             //TODO...
@@ -112,14 +115,17 @@ class CWEditEntityTab {
                 // special cases: 
 				// free scroll -> make edit component the full size of the container
 				if(this.definition.layout == "FREE_SCROLL") {
-					editor.getEditComponent().style.width = compDefinition.w+"px";
-					editor.getEditComponent().style.height = compDefinition.h+"px";
+                    var currentBAPWidth = borderAndPaddingWidth;
+                    if(editor.getEditComponent().type == "checkbox") currentBAPWidth = 0;
+                    
+					editor.getEditComponent().style.width = (compDefinition.w-2*currentBAPWidth)+"px";
+					editor.getEditComponent().style.height = (compDefinition.h-2*currentBAPWidth)+"px";
 				}
 				if(compDefinition.disabled) editor.setForceDisable(true);
 				if(compDefinition.update) editor.addChangeListener(() => {
 					// apply settings
-					apply(this.w.getReference(), this.w.getAccessLevel());
-					reload(this.w.getReference(), this.w.getAccessLevel());
+					this.apply(this.w.getReference(), this.w.getAccessLevel());
+					this.reload(this.w.getReference(), this.w.getAccessLevel());
 				});
                 break;
             case "ACCESS_EDITOR":
@@ -188,7 +194,7 @@ class CWEditEntityTab {
     
     apply(reference, accessLevel) {
         for(var editor of this.editors) {
-            editor.reload(reference, accessLevel);
+            editor.apply(reference, accessLevel);
         }
     }
 }

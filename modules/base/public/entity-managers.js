@@ -612,7 +612,7 @@ WrappedProperty = {
     },
     
     isChanged: function() {
-        return this.changedValue != null;
+        return this.changedValue != null || this.changedViewAccess != null || this.changedEditAccess != null;
     },
     getChanged: function() {
         var changed = {

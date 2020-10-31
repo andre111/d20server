@@ -17,10 +17,13 @@ GuiUtils = {
         return inputElement;
     },
     
-    createBorderedSet: function(label, fixedWidth) {
+    createBorderedSet: function(label, fixedWidth, fixedHeight) {
         var fieldset = document.createElement("fieldset");
         if(fixedWidth) {
             fieldset.style.width = fixedWidth;
+        }
+        if(fixedHeight) {
+            fieldset.style.height = fixedHeight;
         }
         
         var legend = document.createElement("legend");

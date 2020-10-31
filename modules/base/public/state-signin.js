@@ -10,7 +10,7 @@ StateSignIn = {
         document.body.appendChild(div);
         
         // create signin elements
-        var fieldset = GuiUtils.createBorderedSet("Login", "400px");
+        var fieldset = GuiUtils.createBorderedSet("Login", "400px", "auto");
         
         emailField = GuiUtils.createInput(fieldset, "text", "E-Mail");
         fieldset.appendChild(document.createElement("br"));

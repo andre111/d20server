@@ -121,8 +121,8 @@ LightRenderer = {
         ctx1.globalCompositeOperation = "multiply";
         if(viewers.length == 1) {
             var sight = LightRenderer.getSight(viewers[0], light);
-            if(sight != Infinite || !Number.isFinite(sight)) {
-                var sightRadius = LightRenderer.getSight(viewers[0], light) * map.prop("gridSize").getLong();
+            if(sight != Infinite && !Number.isFinite(sight) && sight < 10000) {
+                var sightRadius = sight * map.prop("gridSize").getLong();
                 if(sightRadius > 0) {
                     var viewerPos = applyToPoint(transform, { x: viewers[0].prop("x").getLong(), y: viewers[0].prop("y").getLong() });
                     var grd = ctx1.createRadialGradient(viewerPos.x, viewerPos.y, 1, viewerPos.x, viewerPos.y, sightRadius * transform.a);
@@ -144,8 +144,8 @@ LightRenderer = {
             
             for(var viewer of viewers) {
                 var sight = LightRenderer.getSight(viewer, light);
-                if(sight != Infinite || !Number.isFinite(sight)) {
-                    var sightRadius = LightRenderer.getSight(viewer, light) * map.prop("gridSize").getLong();
+                if(sight != Infinite && !Number.isFinite(sight) && sight < 10000) {
+                    var sightRadius = sight * map.prop("gridSize").getLong();
                     if(sightRadius > 0) {
                         var viewerPos = applyToPoint(transform, { x: viewer.prop("x").getLong(), y: viewer.prop("y").getLong() });
                         var grd = ctx2.createRadialGradient(viewerPos.x, viewerPos.y, 1, viewerPos.x, viewerPos.y, sightRadius * transform.a);
