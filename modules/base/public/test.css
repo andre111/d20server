@@ -97,3 +97,28 @@ fieldset {
 textarea {
     overflow: auto;
 }
+
+/* jsTree overrides -> allow nodes with multiple lines of text */
+/* from: https://stackoverflow.com/questions/24746781/how-do-i-get-a-jstree-node-to-display-long-possibly-multiline-content */
+.jstree-default a { 
+    white-space: normal !important; 
+    height: auto; 
+}
+.jstree-anchor {
+    height: auto !important;
+}
+.jstree-default li > ins { 
+    vertical-align: top; 
+}
+.jstree-leaf {
+    height: auto;
+}
+.jstree-leaf a{
+    height: auto !important;
+}
+
+.tree-entry-text {
+    font-size: 12px;
+    line-height: normal;
+    margin: 0;
+}

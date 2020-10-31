@@ -31,6 +31,7 @@ Entity = {
         entity.addPredefinedMacros = Entity.addPredefinedMacros;
         
         entity.prop = Entity.prop;
+        entity.getName = Entity.getName;
         entity.getViewAccess = Entity.getViewAccess;
         entity.getEditAccess = Entity.getEditAccess;
         entity.getAccessLevel = Entity.getAccessLevel;
@@ -142,6 +143,11 @@ Entity = {
         var property = this.properties[name];
         if(property != null && property != undefined) Property.addMethods(property);
         return property;
+    },
+    
+    getName: function() {
+        var property = this.prop("name");
+        return (property != null && property != undefined) ? property.getString() : "";
     },
     
     getViewAccess: function() {

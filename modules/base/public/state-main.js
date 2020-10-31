@@ -69,6 +69,20 @@ StateMain = {
         tab = SidepanelManager.createTab("Lists", "lists");
         tab = SidepanelManager.createTab("Settings", "settings");
         SidepanelManager.init();
+        
+        //TODO: remove test stuff
+        tab.style.height = "800px";
+        _g.testTree = new SearchableIDTree(tab, "test-tree", actor => {
+            if(actor == null || actor == undefined) return null;
+            
+            var token = EntityManagers.get("token").find(actor.prop("defaultToken").getLong());
+            if(token != null && token != undefined) {
+                if(token.prop("imageID").getLong() > 0) {
+                    return "/image/"+token.prop("imageID").getLong();
+                }
+            }
+            return "/public/img/missing.png";
+        }, actor => { return "Hier ist ein langer Beispieltext, der eine kurze Beschreibung eines Zaubers simulieren soll"; });
     },
     
     exit: function() {
