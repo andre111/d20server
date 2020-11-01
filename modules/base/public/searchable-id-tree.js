@@ -6,6 +6,7 @@ class SearchableIDTree {
         this.searchPanel = document.createElement("div");
         this.filter = document.createElement("input");
         this.filter.type = "text";
+        this.filter.className = "tree-search-input";
         this.filter.onchange = () => this._onFilter();
         this.searchPanel.appendChild(this.filter);
         this.parent.appendChild(this.searchPanel);

@@ -40,6 +40,7 @@ StateMain = {
             StateMain.view = new CanvasView(ServerData.localProfile, true, true, true, false);
         }
         StateMain.highlightToken = -1;
+        StateMain.viewToken = -1;
         
         StateMain.modePanel = new ModePanel();
         
@@ -175,6 +176,15 @@ StateMain = {
                 viewers.push(token);
             }
         }).value();
+        // ...which are potentially overridden
+        var forceWallOcclusion = false;
+        if(StateMain.viewToken > 0) {
+            var forcedViewer = EntityManagers.get("token").find(StateMain.viewToken);
+            if(forcedViewer != null && forcedViewer != undefined && (ServerData.isGM() || viewers.includes(forcedViewer))) {
+                viewers = [forcedViewer];
+                forceWallOcclusion = true;
+            }
+        }
         
         //
         ctx.fillStyle = "white";
@@ -225,7 +235,7 @@ StateMain = {
         WeatherRenderer.updateAndDraw(ctx, viewport, map.prop("effect").getEffect());
         
         // draw wall occlusion / fow background
-        if(StateMain.view.doRenderWallOcclusion()) {
+        if(StateMain.view.doRenderWallOcclusion() || forceWallOcclusion) {
             // render
             if(viewers.length != 0) {
                 // extend viewport to avoid rounding errors

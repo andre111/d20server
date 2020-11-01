@@ -38,6 +38,7 @@ InputService = {
     ROTATE_RIGHT: "rotate_right",
     
     CENTER_CAMERA: "center_camera",
+    SET_VIEW: "set_view",
     PING_LOCATION: "ping_location",
     PING_LOCATION_FOCUS: "ping_location_focus",
     
@@ -58,6 +59,7 @@ InputService._registerAction(new ISAction(InputService.ROTATE_LEFT, 37 /*LEFT*/,
 InputService._registerAction(new ISAction(InputService.ROTATE_RIGHT, 39 /*RIGHT*/, true, false, false));
 
 InputService._registerAction(new ISAction(InputService.CENTER_CAMERA, 67 /*C*/, false, false, false));
+InputService._registerAction(new ISAction(InputService.SET_VIEW, 86 /*V*/, false, false, false));
 InputService._registerAction(new ISAction(InputService.PING_LOCATION, 80 /*P*/, false, false, false));
 InputService._registerAction(new ISAction(InputService.PING_LOCATION_FOCUS, 80 /*P*/, true, false, false));
 

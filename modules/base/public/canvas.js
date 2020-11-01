@@ -224,6 +224,7 @@ class MouseCanvasController {
     }
     mousePressed(e) {
         this.canvas.focus();
+        StateMain.viewToken = -1;
         if(StateMain.mode != null) StateMain.mode.mousePressed(e);
     }
     mouseReleased(e) {

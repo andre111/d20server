@@ -697,6 +697,8 @@ class CMEntityActionSelect extends CMEntityAction {
             this.doCopy();
         } else if(action == InputService.PASTE) {
             this.doPaste();
+        } else if(action == InputService.SET_VIEW) {
+            this.doSetView();
         }
     }
     
@@ -752,6 +754,13 @@ class CMEntityActionSelect extends CMEntityAction {
         }
     }
     
+    doSetView() {
+        if(this.mode.entityType == "token" && this.mode.activeEntities.length == 1 && StateMain.viewToken <= 0) {
+            StateMain.viewToken = this.mode.activeEntities[0].id;
+        } else {
+            StateMain.viewToken = -1;
+        }
+    }
     //TODO...
 }
 
