@@ -1,5 +1,3 @@
-//TODO: implement all the different property editors (missing: STRING_MAP + EntityReference, Image, LongList)
-//TODO: some stuff (especially the ones using fieldsets -> MultiLineString, ReferencedImage, ...) might need some layouting work
 function createPropertyEditor(tab, type, name, label) {
     switch(type) {
     case Type.STRING:
@@ -232,9 +230,125 @@ class DoublePropertyEditor extends PropertyEditor {
 class StringMapPropertyEditor extends PropertyEditor {
     constructor(tab, name, label) {
         super(name, Type.STRING_MAP, label);
+        
+        this.valueMap = {};
     }
     
-    //TODO...
+    initContent(label) {
+        GuiUtils.makeBordered(this.container, label);
+        this.container.style.overflow = "auto";
+        
+        this.list = document.createElement("select");
+        this.list.size = 8;
+        this.list.style.width = "calc(100% - 10px)";
+        this.container.appendChild(this.list);
+        
+        var buttonPanel = document.createElement("div");
+        this.addEntry = document.createElement("button");
+        this.addEntry.innerHTML = "Add";
+        this.addEntry.onclick = () => this.doAdd();
+        buttonPanel.appendChild(this.addEntry);
+        this.renameEntry = document.createElement("button");
+        this.renameEntry.innerHTML = "Rename";
+        this.renameEntry.onclick = () => this.doRename();
+        buttonPanel.appendChild(this.renameEntry);
+        this.removeEntry = document.createElement("button");
+        this.removeEntry.innerHTML = "Remove";
+        this.removeEntry.onclick = () => this.doRemove();
+        buttonPanel.appendChild(this.removeEntry);
+        this.container.appendChild(buttonPanel);
+        
+        this.editor = document.createElement("textarea");
+        this.editor.style.width = "calc(100% - 10px)";
+        this.editor.style.height = "250px";
+        this.editor.style.overflow = "auto";
+        this.editor.style.resize = "none";
+        this.container.appendChild(this.editor);
+        
+        // functionality
+        this.list.onchange = () => {
+            if(this.list.selectedIndex >= 0) {
+                this.editor.value = this.valueMap[this.list.value];
+                this.editor.disabled = false;
+            } else {
+                this.editor.value = "";
+                this.editor.disabled = true;
+            }
+        };
+        this.editor.onkeyup = () => {
+            if(this.list.selectedIndex >= 0) {
+                this.valueMap[this.list.value] = this.editor.value;
+                this.onChange();
+            }
+        };
+        
+        return this.editor;
+    }
+    
+    reload(reference, accessLevel) {
+        super.reload(reference, accessLevel);
+        
+        // determine property
+		var property = reference.prop(this.name);
+		if(property == null) return;
+
+		// update state
+		this.list.disabled = !property.canEdit(accessLevel);
+		this.editor.disabled = !property.canEdit(accessLevel);
+		this.addEntry.disabled = !property.canEdit(accessLevel);
+		this.renameEntry.disabled = !property.canEdit(accessLevel);
+		this.removeEntry.disabled = !property.canEdit(accessLevel);
+    }
+    
+    reloadValue(property) {
+        this.valueMap = property.getStringMap();
+        this.reloadFromMap();
+    }
+    
+    applyValue(property) {
+        property.setStringMap(this.valueMap);
+    }
+    
+    reloadFromMap() {
+        this.list.innerHTML = "";
+        for(var key of Object.keys(this.valueMap)) {
+            var option = document.createElement("option");
+            option.innerHTML = key;
+            this.list.appendChild(option);
+        }
+        this.list.selectedIndex = -1;
+        this.editor.value = "";
+    }
+    
+    doAdd() {
+        new CanvasWindowInput("Enter Name:", "", "", name => {
+            if(name && this.valueMap[name] == undefined) {
+                this.valueMap[name] = "";
+                this.reloadFromMap();
+            }
+        });
+    }
+    
+    doRename() {
+        if(this.list.selectedIndex >= 0) {
+            var oldName = this.list.value;
+            new CanvasWindowInput("Enter Name:", "", oldName, name => {
+                if(name && this.valueMap[name] == undefined) {
+                    var value = this.valueMap[oldName];
+                    delete this.valueMap[oldName];
+                    this.valueMap[name] = value;
+                    this.reloadFromMap();
+                }
+            });
+        }
+    }
+    
+    doRemove() {
+        if(this.list.selectedIndex >= 0) {
+            delete this.valueMap[this.list.value];
+            this.reloadFromMap();
+        }
+    }
 }
 
 class LayerPropertyEditor extends PropertyEditor {
@@ -387,7 +501,7 @@ class AccessPropertyEditor extends PropertyEditor {
 }
 
 
-//TODO: SPECIAL CASE EDITORS
+// SPECIAL CASE EDITORS
 //-----------------------------------------------------------------------------------
 class MultiLineStringPropertyEditor extends PropertyEditor {
     constructor(tab, name, label) {
@@ -395,18 +509,19 @@ class MultiLineStringPropertyEditor extends PropertyEditor {
     }
     
     initContent(label) {
-        //TODO: this might need some wrangling to get to behave how I would like it to (fill available space, including textArea)
-        var set = GuiUtils.createBorderedSet(label);
-        this.container.appendChild(set);
+        GuiUtils.makeBordered(this.container, label);
         
         this.textArea = document.createElement("textarea");
-        set.appendChild(this.textArea);
-        //this.container.appendChild(this.textArea);
+        this.textArea.style.width = "calc(100% - 6px)";
+        this.textArea.style.height = "calc(100% - 16px)";
+        this.textArea.style.overflow = "auto";
+        this.textArea.style.resize = "none";
+        this.textArea.style.fontFamily = "monospace";
+        this.container.appendChild(this.textArea);
         
         this.textArea.onchange = () => this.onChange();
         
-        //return this.textArea;
-        return set;
+        return this.textArea;
     }
     
     reloadValue(property) {
@@ -421,17 +536,93 @@ class MultiLineStringPropertyEditor extends PropertyEditor {
 class EntityReferencePropertyEditor extends PropertyEditor {
     constructor(tab, name, label, referenceType) {
         super(name, Type.LONG, label);
+        
+        this.referenceType = referenceType;
+        this.currentEntityID = -1;
     }
     
-    //TODO...
+    initContent(label) {
+        this.button = document.createElement("button");
+        this.button.onclick = () => this.doSelectEntity();
+        this.container.appendChild(this.button);
+        return this.button;
+    }
+    
+    reloadValue(property) {
+        this.currentEntityID = property.getLong();
+        this.updateButtonText();
+    }
+    
+    applyValue(property) {
+        property.setLong(this.currentEntityID);
+    }
+    
+    updateButtonText() {
+        var entity = EntityManagers.get(this.referenceType).find(this.currentEntityID);
+        this.button.innerHTML = (entity != null && entity != undefined) ? entity.getName() : "<none>";
+    }
+    
+    doSelectEntity() {
+        new CanvasWindowChoose(this.referenceType, null, id => {
+            console.log(id);
+            this.currentEntityID = id;
+            this.updateButtonText();
+        });
+    }
 }
 
 class ImagePropertyEditor extends PropertyEditor {
     constructor(tab, name, label) {
         super(name, Type.LONG, label);
+        
+        this.imageID = -1;
     }
     
-    //TODO...
+    initContent(label) {
+        GuiUtils.makeBordered(this.container, label);
+        
+        this.image = document.createElement("image");
+        this.container.onclick = () => this.doEditImage();
+        this.container.appendChild(this.image);
+        
+        this.input = document.createElement("input");
+        
+        return this.input;
+    }
+    
+    reloadValue(property) {
+        this.imageID = property.getLong();
+        this.reloadImage();
+    }
+    
+    applyValue(property) {
+        property.setLong(this.imageID);
+    }
+    
+    reloadImage() {
+        // replace image (just changing the src is not enough)
+        if(this.image != null) this.container.removeChild(this.image);
+        if(this.imageID > 0) {
+            this.image = new Image();
+            this.image.src = "/image/"+this.imageID;
+            this.image.style.width = "calc(100% - 10px)";
+            this.image.style.height = "calc(100% - 10px)";
+            this.image.style.paddingLeft = "5px";
+            this.image.style.objectFit = "contain";
+            this.container.appendChild(this.image);
+        } else {
+            this.image = null;
+        }
+    }
+    
+    doEditImage() {
+        if(!this.input.disabled) {
+            new CanvasWindowChoose("image", null, id => {
+                this.imageID = id;
+                this.reloadImage();
+            });
+        }
+    }
 }
 
 class ReferencedImagePropertyEditor extends PropertyEditor {
@@ -443,14 +634,12 @@ class ReferencedImagePropertyEditor extends PropertyEditor {
     }
     
     initContent(label) {
-        //TODO: this might need some wrangling to get to behave how I would like it to (fill available space, including textArea)
-        this.set = GuiUtils.createBorderedSet(label);
-        this.container.appendChild(this.set);
+        GuiUtils.makeBordered(this.container, label);
         
         this.image = document.createElement("image");
-        this.set.appendChild(this.image);
+        this.container.appendChild(this.image);
         
-        return this.set;
+        return this.image;
     }
     
     reloadValue(property) {
@@ -461,13 +650,18 @@ class ReferencedImagePropertyEditor extends PropertyEditor {
         }
         
         // replace image (just changing the src is not enough)
-        this.set.removeChild(this.image);
-        this.image = new Image();
-        this.image.src = "/image/"+imageID;
-        this.image.style.width = "100%";
-        this.image.style.height = "100%";
-        this.image.style.objectFit = "contain";
-        this.set.appendChild(this.image);
+        if(this.image != null) this.container.removeChild(this.image);
+        if(imageID > 0) {
+            this.image = new Image();
+            this.image.src = "/image/"+imageID;
+            this.image.style.width = "calc(100% - 10px)";
+            this.image.style.height = "calc(100% - 10px)";
+            this.image.style.paddingLeft = "5px";
+            this.image.style.objectFit = "contain";
+            this.container.appendChild(this.image);
+        } else {
+            this.image = null;
+        }
     }
     
     applyValue(property) {
@@ -509,10 +703,91 @@ class StringSelectionPropertyEditor extends PropertyEditor {
 class LongListPropertyEditor extends PropertyEditor {
     constructor(tab, name, label, referenceType, allowDuplicates) {
         super(name, Type.LONG_LIST, label);
+        
+        this.referenceType = referenceType;
+        this.allowDuplicates = allowDuplicates;
+        
+        this.valueList = [];
+        this.valueProvider = ValueProviders.get(this.referenceType);
+        
+        GuiUtils.makeBordered(this.container, label);
+        
+        this.tree = new SearchableIDTree(this.container, null, this.valueProvider);
+        if(referenceType != "profile") this.addButton("Open", false, () => this.doOpen());
+        this.addButton("Add", false, () => this.doAdd());
+        this.addButton("Remove", false, () => this.doRemove());
+    }
+    
+    addButton(text, disableable, callback) {
+        var button = document.createElement("button");
+        button.innerHTML = text;
+        button.onclick = callback;
+        this.tree.getSearchPanel().appendChild(button);
+    }
+    
+    initContent(label) {
+        return document.createElement("div");
     }
     
     //TODO...
-    //TODO: Also move the code that is in EditEntityTab in the old client to in here (namely ValueProvider creation, open button and special renders)
+    reload(reference, accessLevel) {
+        super.reload(reference, accessLevel);
+        
+        // determine property
+		var property = reference.prop(name);
+		if(property == null || property == undefined) return;
+
+		// update state
+        //TODO...
+    }
+    
+    reloadValue(property) {
+        this.valueList = property.getLongList();
+        this.reloadTree();
+    }
+    
+    applyValue(property) {
+        property.setLongList(this.valueList);
+    }
+    
+    reloadTree() {
+        var entries = new Map();
+        for(var i=0; i<this.valueList.length; i++) {
+            entries.set(i, this.valueProvider.getValue(this.valueList[i]));
+        }
+        
+        this.tree.reload(entries);
+        this.tree.expandAll();
+    }
+    
+    doOpen() {
+        var entry = this.tree.getSelectedValue();
+        if(entry != null) {
+            var entity = EntityManagers.get(this.referenceType).find(this.valueList[entry]);
+            if(entity != null && entity != undefined) {
+                new CanvasWindowEditEntity(EntityReference.create(entity));
+            }
+        }
+    }
+    
+    doAdd() {
+        new CanvasWindowChoose(this.referenceType, null, id => {
+            if(id == null || id <= 0) return;
+            
+            if(this.allowDuplicates || !this.valueList.includes(id)) {
+                this.valueList.push(id);
+                this.reloadTree();
+            }
+        });
+    }
+    
+    doRemove() {
+        var entry = this.tree.getSelectedValue();
+        if(entry != null) {
+            this.valueList.splice(entry, 1);
+            this.reloadTree();
+        }
+    }
 }
 
 class PropertyAccessEditor extends PropertyEditor {
@@ -524,12 +799,6 @@ class PropertyAccessEditor extends PropertyEditor {
     
     initContent(label) {
         this.addLabel(label, "200px");
-        
-        /*var content = document.createElement("div");
-        content.style.float = "right";
-        this.container.appendChild(content);
-        var oldContainer = this.container;
-        this.container = content;*/
         
         this.addLabel("  View: ");
         this.viewSelect = document.createElement("select");
@@ -554,8 +823,6 @@ class PropertyAccessEditor extends PropertyEditor {
             this.editSelect.appendChild(option);
         }
         this.container.appendChild(this.editSelect);
-        
-        //this.container = oldContainer;
         
         return document.createElement("div");
     }

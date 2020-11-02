@@ -400,8 +400,8 @@ Property = {
         this.checkType(Type.STRING_MAP);
         
         var string = "";
-        for(const [key, value] of Object.entries(value)) {
-            string = string + key.replace("§", "") + "§" + value.replace("§", "") + "§";
+        for(const [key, entry] of Object.entries(value)) {
+            string = string + key.replace("§", "") + "§" + entry.replace("§", "") + "§";
         }
         this.setInternal(string);
     },
@@ -675,6 +675,9 @@ class EntityManager {
     constructor(type) {
         this.type = type;
         this.entities = new Map();
+        this.listeners = [];
+        this.entityListeners = [];
+        this.removalListeners = [];
     }
     
     find(id) {
@@ -722,18 +725,42 @@ class EntityManager {
         MessageService.send(msg);
     }
     
+    addListener(listener) {
+        this.listeners.push(listener);
+    }
+    
+    addEntityListener(entityListener) {
+        this.entityListeners.push(entityListener);
+    }
+    
+    addRemovalListener(removalListener) {
+        this.removalListeners.push(removalListener);
+    }
+    
     serverClearEntities() {
         this.entities.clear();
+        
+        this.notifyListeners();
     }
     
     serverAddEntity(entity) {
         Entity.addMethods(entity);
         
         this.entities.set(Number(entity.id), entity);
+        
+        this.notifyListeners();
+        for(var entityListener of this.entityListeners) {
+            entityListener(entity);
+        }
     }
     
     serverRemoveEntity(id) {
         this.entities.delete(Number(id));
+        
+        this.notifyListeners();
+        for(var removalListener of this.removalListeners) {
+            removalListener(id);
+        }
     }
     
     serverUpdateProperties(id, map) {
@@ -758,6 +785,17 @@ class EntityManager {
             // transfer access
             ownProperty.viewAccess = value.viewAccess;
             ownProperty.editAccess = value.editAccess;
+        }
+        
+        this.notifyListeners();
+        for(var entityListener of this.entityListeners) {
+            entityListener(entity);
+        }
+    }
+    
+    notifyListeners() {
+        for(var listener of this.listeners) {
+            listener();
         }
     }
 }

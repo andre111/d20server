@@ -106,7 +106,7 @@ public abstract class ModuleService {
 		}
 		
 		// verify file is in modules dir
-		if(!file.toPath().startsWith(modulesDir.toPath())) {
+		if(file == null || !file.toPath().startsWith(modulesDir.toPath())) {
 			return null;
 		}
 		

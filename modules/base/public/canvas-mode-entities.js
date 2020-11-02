@@ -979,8 +979,21 @@ class CanvasModeEntities extends CanvasMode {
         this.action.init();
     }
     
-    //TODO...
-    
+    setAddEntityAction(entity) {
+		var map = MapUtils.currentMap();
+		if(map == null) return;
+		if(entity.getType() != this.entityType) return;
+        
+        entity = entity.clone();
+        entity.id = 0;
+        entity.prop("map").setLong(map.id);
+        
+        this.activeEntities = [];
+        this.sendSelectedTokens();
+        
+        this.activeEntities.push(EntityReference.create(entity));
+        this.setAction(new CMEntityActionAdd(this));
+    }
     setAddEntitiesAction(references) {
         var map = MapUtils.currentMap();
         if(map == null || map == undefined) return;

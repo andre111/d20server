@@ -12,6 +12,7 @@ import java.util.stream.Collectors;
 
 import me.andre111.d20common.model.profile.Profile;
 import me.andre111.d20common.scripting.ScriptException;
+import me.andre111.d20server.service.ChatService;
 
 public class Template {
 	private static Map<String, Template> TEMPLATES = new HashMap<>();
@@ -39,7 +40,8 @@ public class Template {
 	}
 	
 	private static Template loadInternalTemplate(String name, String...values) {
-		try(BufferedReader reader = new BufferedReader(new InputStreamReader(Template.class.getResourceAsStream("/templates/"+name+".txt")))) {
+		String path = ChatService.USE_HTML ? "/templates/"+name+"_html.txt" : "/templates/"+name+".txt";
+		try(BufferedReader reader = new BufferedReader(new InputStreamReader(Template.class.getResourceAsStream(path)))) {
 			return parseTemplate(reader.lines().collect(Collectors.joining()), values);
 		} catch (IOException e) {
 			throw new RuntimeException(e);

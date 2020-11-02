@@ -7615,7 +7615,7 @@
 					p = p.concat(v.parents);
 				}
 			});
-			if(r.length) {
+			if(r.length && r.length < 150) { //MANUAL CHANGE: Only show search results when less than 150 -> avoid performance impacts when many results are present
 				p = $.vakata.array_unique(p);
 				for(i = 0, j = p.length; i < j; i++) {
 					if(p[i] !== $.jstree.root && m[p[i]] && this.open_node(p[i], null, 0) === true) {

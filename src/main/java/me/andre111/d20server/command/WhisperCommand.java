@@ -24,24 +24,36 @@ public class WhisperCommand extends Command {
 		
 		// find receiver
 		Profile reciever = null;
-		for(Profile other : UserService.getAllConnectedProfiles()) {
+		for(Profile other : UserService.getAllProfiles()) {
 			if(name.equals(other.getName().toLowerCase())) {
 				reciever = other;
 			}
 		}
 		if(reciever == null) {
-			ChatService.appendError(profile, "Unknown player: "+name);
+			ChatService.appendError(profile, "Unknown player: "+split[0]);
 			return;
 		}
 		
 		// build message
 		StringBuilder sb = new StringBuilder();
-		sb.append(ChatService.STYLE_SENDER_ITALIC);
-		sb.append(profile.getName());
-		sb.append(" to ");
-		sb.append(reciever.getName());
-		sb.append(": \n");
-		sb.append(message);
+		if(ChatService.USE_HTML) {
+			sb.append("<p class=\"chat-sender chat-sender-special\">");
+			sb.append(ChatService.escape(profile.getName()));
+			sb.append(" to ");
+			sb.append(ChatService.escape(reciever.getName()));
+			sb.append(": ");
+			sb.append("</p>");
+			sb.append("<p class=\"chat-message\">");
+			sb.append(ChatService.escape(message));
+			sb.append("</p>");
+		} else {
+			sb.append(ChatService.STYLE_SENDER_ITALIC);
+			sb.append(profile.getName());
+			sb.append(" to ");
+			sb.append(reciever.getName());
+			sb.append(": \n");
+			sb.append(message);
+		}
 		
 		// determine recipents
 		long[] recipents = new long[] { profile.id(), reciever.id() };

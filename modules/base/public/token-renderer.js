@@ -42,7 +42,7 @@ TokenRenderer = {
     },
     
     renderTokenInfo: function(ctx, token, viewer, x, y) {
-        //TODO: render additional info
+        // render additional info
         ctx.save();
         ctx.translate(x, y);
         ctx.lineWidth = 1;

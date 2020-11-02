@@ -89,7 +89,7 @@ class CWEditEntityTab {
 					component = editor.getContainer();
                     break;
                 case "REFERENCE_MULTI":
-                    editor = new LongListPropertyEditor(this, property, "", compDefinition.reference, false);
+                    editor = new LongListPropertyEditor(this, property, compDefinition.text, compDefinition.reference, false);
                     component = editor.getContainer();
                     break;
                 case "EXTENSION_SELECT":
@@ -225,8 +225,8 @@ class CanvasWindowEditEntity extends CanvasWindow {
             }
         ]);
         $(this.frame).dialog("option", "resizable", false);
-        $(this.frame).dialog("option", "width", 1000);
-        $(this.frame).dialog("option", "height", 700);
+        $(this.frame).dialog("option", "width", 1000+5);
+        $(this.frame).dialog("option", "height", 700+5);
         
         this.initTabs();
         this.reloadValues();

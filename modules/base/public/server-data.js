@@ -28,7 +28,7 @@ class Observable {
 
 ServerData = {
     localProfile: null,
-    profiles: {},
+    profiles: new Observable(new Map()),
     currentMap: new Observable(0),
     
     isGM: function() {

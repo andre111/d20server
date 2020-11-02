@@ -43,6 +43,7 @@ StateMain = {
         StateMain.viewToken = -1;
         
         StateMain.modePanel = new ModePanel();
+        StateMain.listWindowManager = new CanvasWindowListManager();
         
         // calculate fps times
         _g.fpsInterval = 1000 / 30;
@@ -60,30 +61,16 @@ StateMain = {
         
         // add tabs TODO: add content
         var tab = null;
-        tab = SidepanelManager.createTab("Chat", "chat");
-        tab = SidepanelManager.createTab("Players", "players");
-        tab = SidepanelManager.createTab("Actors", "actors");
-        tab = SidepanelManager.createTab("Attachments", "attachments");
-        tab = SidepanelManager.createTab("Maps", "maps");
-        tab = SidepanelManager.createTab("Images", "images");
-        tab = SidepanelManager.createTab("Audio", "audio");
-        tab = SidepanelManager.createTab("Lists", "lists");
+        new SidepanelTabChat();
+        new SidepanelTabPlayers();
+        new SidepanelTabActors();
+        new SidepanelTabAttachments();
+        new SidepanelTabMaps();
+        new SidepanelTabImages();
+        new SidepanelTabAudio();
+        new SidepanelTabLists();
         tab = SidepanelManager.createTab("Settings", "settings");
         SidepanelManager.init();
-        
-        //TODO: remove test stuff
-        tab.style.height = "800px";
-        _g.testTree = new SearchableIDTree(tab, "test-tree", actor => {
-            if(actor == null || actor == undefined) return null;
-            
-            var token = EntityManagers.get("token").find(actor.prop("defaultToken").getLong());
-            if(token != null && token != undefined) {
-                if(token.prop("imageID").getLong() > 0) {
-                    return "/image/"+token.prop("imageID").getLong();
-                }
-            }
-            return "/public/img/gui/x_empty.png";
-        }, actor => { return "Hier ist ein langer Beispieltext, der eine kurze Beschreibung eines Zaubers simulieren soll"; });
     },
     
     exit: function() {

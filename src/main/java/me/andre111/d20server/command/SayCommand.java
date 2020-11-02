@@ -20,15 +20,28 @@ public class SayCommand extends Command {
 			Object name = variable.get(new Context(profile, profile.getMap(), null));
 			
 			StringBuilder sb = new StringBuilder();
-			sb.append(ChatService.STYLE_SENDER);
-			sb.append(name);
-			sb.append(ChatService.STYLE_SENDER_TINY);
-			sb.append(" (");
-			sb.append(profile.getName());
-			sb.append(")");
-			sb.append(ChatService.STYLE_SENDER);
-			sb.append(": \n");
-			sb.append(arguments);
+
+			if(ChatService.USE_HTML) {
+				sb.append("<p class=\"chat-sender\">");
+				sb.append(ChatService.escape(""+name));
+				sb.append(" (");
+				sb.append(ChatService.escape(profile.getName()));
+				sb.append("): ");
+				sb.append("</p>");
+				sb.append("<p class=\"chat-message\">");
+				sb.append(ChatService.escape(arguments));
+				sb.append("</p>");
+			} else {
+				sb.append(ChatService.STYLE_SENDER);
+				sb.append(name);
+				sb.append(ChatService.STYLE_SENDER_TINY);
+				sb.append(" (");
+				sb.append(profile.getName());
+				sb.append(")");
+				sb.append(ChatService.STYLE_SENDER);
+				sb.append(": \n");
+				sb.append(arguments);
+			}
 			
 			ChatService.append(true, new ChatEntry(sb.toString(), profile.id()));
 		} catch (ScriptException e) {

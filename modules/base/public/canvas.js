@@ -266,6 +266,8 @@ class CanvasMode extends MouseController {
 class CanvasWindow {
     constructor(title, modal) {
         this.frame = WindowManager.createWindow(title, modal);
+        $(this.frame).dialog("option", "maxHeight", document.body.clientHeight);
+        this.isClosed = false;
     }
     
     maximize() {
@@ -275,14 +277,28 @@ class CanvasWindow {
     }
     
     getLocation() {
-        //TODO: implement (use CRect)
+        var position = $(this.frame).dialog("option", "position");
+        delete position["of"];
+        
+        var loc = {
+            position: position,
+            width: $(this.frame).dialog("option", "width"),
+            height: $(this.frame).dialog("option", "height")
+        };
+        return loc;
     }
     
     setLocation(loc) {
-        //TODO: implement
+        loc.position.of = window;
+        
+        $(this.frame).dialog("option", "position", loc.position);
+        $(this.frame).dialog("option", "width", loc.width);
+        $(this.frame).dialog("option", "height", loc.height);
     }
     
     close() {
-        $(this.frame).dialog("close");
+        if(this.isClosed) return;
+        
+        this.isClosed = $(this.frame).dialog("close");
     }
 }

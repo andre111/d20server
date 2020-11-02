@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
 
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
@@ -20,6 +21,7 @@ import io.netty.handler.codec.http.FullHttpRequest;
 import io.netty.handler.codec.http.FullHttpResponse;
 import io.netty.handler.codec.http.HttpHeaderNames;
 import io.netty.handler.codec.http.HttpHeaderValues;
+import io.netty.handler.codec.http.HttpHeaders;
 import io.netty.handler.codec.http.HttpMethod;
 import io.netty.handler.codec.http.HttpResponse;
 import io.netty.handler.codec.http.HttpResponseStatus;
@@ -115,12 +117,42 @@ public class HttpServerHandler extends SimpleChannelInboundHandler<FullHttpReque
 			sendError(ctx, HttpResponseStatus.NOT_FOUND);
 			return;
 		}
+		
+		
 
 		// write
 		//TODO: split header and content and use chunked sending (to support large files)
-		HttpResponse response = new DefaultFullHttpResponse(HttpVersion.HTTP_1_1, HttpResponseStatus.OK, Unpooled.wrappedBuffer(data));
-		HttpUtil.setContentLength(response, data.length);
-		response.headers().set("Content-Type", contentType);
+		int dataStart = 0;
+		int dataEnd = data.length-1;
+		int dataLength = data.length;
+		boolean addAcceptRanges = false;
+		
+		// check range header and reply accordingly
+		HttpHeaders headers = request.headers();
+		String range = headers.get(HttpHeaderNames.RANGE);
+		if(range != null && range.startsWith("bytes=")) {
+			addAcceptRanges = true;
+			
+			String[] split = range.substring("bytes=".length()).split("-", 2);
+			dataStart = Integer.parseInt(split[0]);
+			if(split.length == 2 && !split[1].isBlank()) dataEnd = Integer.parseInt(split[1]);
+			else dataEnd = dataStart + 0xFFFF;
+			
+			if(dataEnd > dataLength-1) dataEnd = dataLength-1;
+
+			if(dataStart != 0 || dataEnd != dataLength-1) {
+				data = Arrays.copyOfRange(data, dataStart, dataEnd+1);
+			}
+		}
+		
+		// write content
+		HttpResponse response = new DefaultFullHttpResponse(HttpVersion.HTTP_1_1, addAcceptRanges ? HttpResponseStatus.PARTIAL_CONTENT : HttpResponseStatus.OK, Unpooled.wrappedBuffer(data));
+		if(addAcceptRanges) {
+			response.headers().set(HttpHeaderNames.ACCEPT_RANGES, "bytes");
+			response.headers().set(HttpHeaderNames.CONTENT_RANGE, "bytes "+dataStart+"-"+dataEnd+"/"+dataLength);
+		}
+		response.headers().set(HttpHeaderNames.CONTENT_LENGTH, data.length);
+		response.headers().set(HttpHeaderNames.CONTENT_TYPE, contentType);
 		if (!HttpUtil.isKeepAlive(request)) {
 			response.headers().set(HttpHeaderNames.CONNECTION, HttpHeaderValues.CLOSE);
 		} else if (request.protocolVersion().equals(HttpVersion.HTTP_1_0)) {

@@ -85,13 +85,17 @@
                     "type": "EDITOR",
                     "editorType": "MULTI_LINE_STRING",
                     "property": "descShort",
-                    "text": "Short Description"
+                    "text": "Short Description",
+                    "w": 660,
+                    "h": 128
                 },
                 {
                     "type": "EDITOR",
                     "editorType": "MULTI_LINE_STRING",
                     "property": "tags",
-                    "text": "Tags"
+                    "text": "Tags",
+                    "w": 158,
+                    "h": 128
                 },
                 
                 {
@@ -99,8 +103,8 @@
                     "editorType": "MULTI_LINE_STRING",
                     "property": "descFull",
                     "text": "Full Description",
-                    "w": 850,
-                    "h": 350
+                    "w": 980,
+                    "h": 298
                 }
             ]
         }

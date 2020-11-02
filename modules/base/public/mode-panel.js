@@ -148,10 +148,15 @@ class ModePanel {
     setView(asGM) {
         if(asGM) {
             StateMain.view = new CanvasView(ServerData.localProfile, false, false, false, true);
+            this.updateState();
         } else {
-            //TODO: implement player selector and replace below test code
-            StateMain.view = new CanvasView(ServerData.localProfile, true, true, true, false);
+            new CanvasWindowChoose("profile", null, id => {
+                if(id > 0) {
+                    StateMain.view = new CanvasView(ServerData.profiles.get().get(id), true, true, true, false);
+                    FOWRenderer.reset();
+                    this.updateState();
+                }
+            });
         }
-        this.updateState();
     }
 }

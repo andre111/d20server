@@ -34,12 +34,30 @@ MessageService = {
                 ServerData.currentMap.set(msg.mapID);
                 console.log("EnterMap: "+msg.mapID);
                 break;
+            case "PlayerList":
+                var index = new Map();
+                for(var profile of msg.players) {
+                    index.set(profile.id, profile);
+                }
+                ServerData.profiles.set(index);
+                break;
             case "ActionCommand":
                 switch(msg.command) {
                 case "SHOW_IMAGE":
                     new CanvasWindowImage(msg.id);
                     break;
-                //TODO...
+                case "LOAD_MUSIC":
+                    SidepanelManager.getTab("audio").musicPlayer.serverDoLoad(msg.id);
+                    break;
+                case "PLAY_MUSIC":
+                    SidepanelManager.getTab("audio").musicPlayer.serverDoPlay(msg.id, msg.x);
+                    break;
+                case "PAUSE_MUSIC":
+                    SidepanelManager.getTab("audio").musicPlayer.serverDoPause();
+                    break;
+                case "STOP_MUSIC":
+                    SidepanelManager.getTab("audio").musicPlayer.serverDoStop();
+                    break;
                 }
                 break;
             case "PlayEffect":
@@ -47,6 +65,14 @@ MessageService = {
                     camera.setLocation(msg.x, msg.y, false);
                 }
                 EffectRenderer.addEffect(msg.effect, msg.x, msg.y, msg.rotation, msg.scale, msg.aboveOcclusion, msg.parameters);
+                break;
+            case "ChatEntries":
+                if(!msg.append) {
+                    SidepanelManager.getTab("chat").clear();
+                }
+                for(var entry of msg.entries) {
+                    SidepanelManager.getTab("chat").append(entry);
+                }
                 break;
             default:
                 break;

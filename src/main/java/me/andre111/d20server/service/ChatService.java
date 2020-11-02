@@ -17,6 +17,8 @@ import me.andre111.d20common.util.Utils;
 import me.andre111.d20server.command.Command;
 
 public abstract class ChatService {
+	public static final boolean USE_HTML = true;
+	
 	public static final String STYLE_SENDER = "[style \"font=Arial-BOLD-14\"]";
 	public static final String STYLE_SENDER_ITALIC = "[style \"font=Arial-ITALIC-14\"]";
 	public static final String STYLE_SENDER_TINY = "[style \"font=Arial-10\"]";
@@ -97,21 +99,44 @@ public abstract class ChatService {
 		} else {
 			// handle simple message
 			StringBuilder sb = new StringBuilder();
-			sb.append(STYLE_SENDER);
-			sb.append(profile.getName());
-			sb.append(": \n");
-			sb.append(message);
+			if(USE_HTML) {
+				sb.append("<p class=\"chat-sender\">");
+				sb.append(escape(profile.getName())+": ");
+				sb.append("</p>");
+				sb.append("<p class=\"chat-message\">");
+				sb.append(escape(message));
+				sb.append("</p>");
+			} else {
+				sb.append(STYLE_SENDER);
+				sb.append(profile.getName());
+				sb.append(": \n");
+				sb.append(message);
+			}
 			
 			append(true, new ChatEntry(sb.toString(), profile.id()));
 		}
 	}
 	
+	public static String escape(String string) {
+		string = string.replace("<", "&lt;");
+		string = string.replace(">", "&gt;");
+		return string;
+	}
+	
 	public static void appendError(Profile profile, String... lines) {
 		StringBuilder sb = new StringBuilder();
-		for(String line : lines) {
-			sb.append(STYLE_INFO);
-			sb.append(line);
-			sb.append("\n");
+		if(USE_HTML) {
+			sb.append("<p class=\"chat-info\">");
+			for(String line : lines) {
+				sb.append(escape(line)+"<br>");
+			}
+			sb.append("</p>");
+		} else {
+			for(String line : lines) {
+				sb.append(STYLE_INFO);
+				sb.append(line);
+				sb.append("\n");
+			}
 		}
 		
 		append(false, new ChatEntry(sb.toString(), SYSTEM_SOURCE, false, profile.id()));
@@ -119,10 +144,18 @@ public abstract class ChatService {
 	
 	public static void appendNote(String... lines) {
 		StringBuilder sb = new StringBuilder();
-		for(String line : lines) {
-			sb.append(STYLE_INFO);
-			sb.append(line);
-			sb.append("\n");
+		if(USE_HTML) {
+			sb.append("<p class=\"chat-info\">");
+			for(String line : lines) {
+				sb.append(escape(line)+"<br>");
+			}
+			sb.append("</p>");
+		} else {
+			for(String line : lines) {
+				sb.append(STYLE_INFO);
+				sb.append(line);
+				sb.append("\n");
+			}
 		}
 		
 		append(false, new ChatEntry(sb.toString(), SYSTEM_SOURCE, true));

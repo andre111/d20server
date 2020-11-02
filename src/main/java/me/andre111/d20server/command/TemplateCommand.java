@@ -40,7 +40,10 @@ public class TemplateCommand extends Command {
 		// parse template
 		String parsed = "";
 		try {
-			parsed = template.parse(profile, templateArguments.split(";", -1));
+			String[] inputs = templateArguments.split(";", -1);
+			for(int i=0; i<inputs.length; i++) inputs[i] = ChatService.escape(inputs[i]);
+			
+			parsed = template.parse(profile, inputs);
 		} catch (ScriptException e) {
 			ChatService.appendError(profile, "Template parsing error: "+e.getMessage());
 			return;
@@ -48,10 +51,21 @@ public class TemplateCommand extends Command {
 		
 		// build message
 		StringBuilder sb = new StringBuilder();
-		sb.append(ChatService.STYLE_SENDER);
-		sb.append(profile.getName());
-		sb.append(": \n");
-		sb.append(parsed);
+		if(ChatService.USE_HTML) {
+			sb.append("<p class=\"chat-sender\">");
+			sb.append(ChatService.escape(profile.getName()));
+			sb.append(": ");
+			sb.append("</p>");
+			
+			sb.append("<p class=\"chat-message\">");
+			sb.append(parsed);
+			sb.append("</p>");
+		} else {
+			sb.append(ChatService.STYLE_SENDER);
+			sb.append(profile.getName());
+			sb.append(": \n");
+			sb.append(parsed);
+		}
 		
 		// determine recipents
 		long[] recipents = buildRecipents(profile, showPublic, showSelf);
