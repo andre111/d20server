@@ -49,6 +49,8 @@ public class HttpServerHandler extends SimpleChannelInboundHandler<FullHttpReque
 	private static final String UPLOAD_AUDIO_PATH = "/upload/audio";
 	private static final String PUBLIC_PATH = "/public/";
 	private static final String WEBSOCKET_PATH = "/ws";
+	private static final String SCRIPT_PATH = "/main.js";
+	private static final String CSS_PATH = "/main.css";
 
 	private static final HttpDataFactory factory = new DefaultHttpDataFactory(false);
 	private HttpPostRequestDecoder decoder;
@@ -110,6 +112,12 @@ public class HttpServerHandler extends SimpleChannelInboundHandler<FullHttpReque
 				data = Utils.readBinary(file);
 				contentType = ""; //TODO: somehow set this correctly?
 			}
+		} else if(path.equals(SCRIPT_PATH)) {
+			data = ModuleService.getScriptData();
+			contentType = "application/javascript";
+		} else if(path.equals(CSS_PATH)) {
+			data = ModuleService.getCSSData();
+			contentType = "text/css";
 		}
 
 		// send response
@@ -240,7 +248,7 @@ public class HttpServerHandler extends SimpleChannelInboundHandler<FullHttpReque
 	}
 
 	private boolean isValidPath(String path) {
-		return path != null && (path.startsWith(IMAGE_PATH) || path.startsWith(AUDIO_PATH) || path.startsWith(PUBLIC_PATH) || path.startsWith(WEBSOCKET_PATH));
+		return path != null && (path.startsWith(IMAGE_PATH) || path.startsWith(AUDIO_PATH) || path.startsWith(PUBLIC_PATH) || path.startsWith(WEBSOCKET_PATH) || path.equals(SCRIPT_PATH) || path.equals(CSS_PATH));
 	}
 
 	@Override

@@ -70,31 +70,18 @@ class ModePanel {
         
         // create buttons
         this.buttons = [];
-        this.buttons.push(new ExtendedModeButton(new ModeButton("cursor", "Edit Tokens", () => StateMain.mode instanceof CanvasModeEntities && StateMain.mode.entityType == "token", () => this.setMode(new CanvasModeEntities("token", this.currentLayer))), 0));
-        if(ServerData.isGM()) {
-            this.buttons.push(new ExtendedModeButton(new ModeButton("wall", "Edit Walls", () => StateMain.mode instanceof CanvasModeWalls, () => this.setMode(new CanvasModeWalls())), 0));
-        }
+        var event = {
+            panel: this,
+            addButton: button => { 
+                if(!(button instanceof ExtendedModeButton)) throw "Invalid parameters, can only add ExtendedModeButton objects!";
+                this.buttons.push(button); 
+            }
+        };
+        ModuleManager.onEvent("addModeButtons", event);
         
-        // drawing mode
-        this.buttons.push(new ExtendedModeButton(new ModeButton("brush", "Draw Shapes", () => (StateMain.mode instanceof CanvasModeDrawings || (StateMain.mode instanceof CanvasModeEntities && StateMain.mode.entityType == "drawing")), () => this.setMode(new CanvasModeDrawings(this.currentLayer))), 0, [
-                new ModeButton("cursor", "Edit Drawings", () => StateMain.mode instanceof CanvasModeEntities && StateMain.mode.entityType == "drawing", () => this.setMode(new CanvasModeEntities("drawing", this.currentLayer))),
-                new ModeButton("rect", "Draw Rectangles", () => StateMain.mode instanceof CanvasModeDrawings && StateMain.mode.action == "DRAW_RECT", () => { this.setMode(new CanvasModeDrawings(this.currentLayer)); StateMain.mode.action = "DRAW_RECT"; this.updateState(); }),
-                new ModeButton("oval", "Draw Ovals", () => StateMain.mode instanceof CanvasModeDrawings && StateMain.mode.action == "DRAW_OVAL", () => { this.setMode(new CanvasModeDrawings(this.currentLayer)); StateMain.mode.action = "DRAW_OVAL"; this.updateState(); }),
-                new ModeButton("text", "Write Text", () => StateMain.mode instanceof CanvasModeDrawings && StateMain.mode.action == "WRITE_TEXT", () => { this.setMode(new CanvasModeDrawings(this.currentLayer)); StateMain.mode.action = "WRITE_TEXT"; this.updateState(); }),
-                new ModeButton("trash", "Delete Drawings", () => StateMain.mode instanceof CanvasModeDrawings && StateMain.mode.action == "DELETE", () => { this.setMode(new CanvasModeDrawings(this.currentLayer)); StateMain.mode.action = "DELETE"; this.updateState(); }),
-                new ModeButton("trashAll", "Delete All Drawings", () => false, () => { this.setMode(new CanvasModeDrawings(this.currentLayer)); StateMain.mode.deleteAllDrawings(); this.updateState(); }),
-                new ModeButton("x_empty", "Select Color", (mb) => { mb.button.style.backgroundColor = CanvasModeDrawingsGlobals.color; return false; }, () => { 
-                    new CanvasWindowColorInput("Select Drawing Color", CanvasModeDrawingsGlobals.color, color => { 
-                        if(color != null && color != undefined) { 
-                            CanvasModeDrawingsGlobals.color = color; this.updateState(); 
-                        }
-                    }) 
-                })
-            ])
-        );
-        
+        // add core buttons
         if(ServerData.isGM()) {
-            // select view
+            // select layer
             this.buttons.push(new ExtendedModeButton(new ModeButton("layers", "Select Layer", () => this.showLayerButtons, () => { this.showLayerButtons = !this.showLayerButtons; this.updateState(); }), 0, [
                     new ModeButton("bg", "Background Layer", () => this.currentLayer == Layer.BACKGROUND, () => this.setLayer(Layer.BACKGROUND)),
                     new ModeButton("token", "Token Layer", () => this.currentLayer == Layer.MAIN, () => this.setLayer(Layer.MAIN)),
@@ -102,7 +89,7 @@ class ModePanel {
                 ])
             );
             
-            // select layer
+            // select view
             this.buttons.push(new ExtendedModeButton(new ModeButton("viewGM", "GM-View", () => !StateMain.view.isPlayerView(), () => this.setView(true)), 8));
             this.buttons.push(new ExtendedModeButton(new ModeButton("viewPlayer", "Player-View", () => StateMain.view.isPlayerView(), () => this.setView(false)), 0)); //TODO: implement
         }
@@ -115,16 +102,17 @@ class ModePanel {
             this.container.appendChild(button.container);
         }
         this.updateState();
+        
+        // add callback
+        ServerData.currentMap.addObserver(() => this.updateState());
     }
     
     updateState() {
         // check for invalid modes and switch out
-        var allowDrawing = false;
-        var map = MapUtils.currentMap();
-        if(map != null && map != undefined && (ServerData.isGM() || map.prop("playersCanDraw").getBoolean())) allowDrawing = true;
-        if(!allowDrawing && StateMain.mode instanceof CanvasModeDrawings) {
-            StateMain.mode = new CanvasModeEntities("token", this.currentLayer);
-        }
+        var event = {
+            panel: this
+        };
+        ModuleManager.onEvent("updateModeState", event);
         
         // update buttons
         for(var button of this.buttons) {

@@ -3,10 +3,10 @@ CanvasModeDrawingsGlobals = {
 };
 
 class CanvasModeDrawings extends CanvasMode {
-    constructor(layer) {
+    constructor(layer, action) {
         super();
         
-        this.action = "DRAW_RECT";
+        this.action = action;
         
         this.startX = 0;
         this.startY = 0;

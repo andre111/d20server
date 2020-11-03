@@ -52,24 +52,33 @@ StateMain = {
         // start rendering
         StateMain.onFrame();
         
-        //TODO: remove test stuff
-        //var dialog = WindowManager.createWindow("Modal Test", true);
-        //dialog.appendChild(document.createTextNode("Jetzt auch mit Testinhalt!"));
+        // get render layers
+        StateMain.renderLayers = [];
+        var event = {
+            addRenderLayer: layer => {
+                if(!(layer instanceof CanvasRenderLayer)) throw "Can only add instances of CanvasRenderLayer";
+                StateMain.renderLayers.push(layer);
+            }
+        };
+        ModuleManager.onEvent("addRenderLayers", event);
+        StateMain.renderLayers = _.chain(StateMain.renderLayers).sortBy(layer => layer.getLevel()).value();
         
-        //dialog = WindowManager.createWindow("Test 2", false);
-        //dialog.appendChild(document.createTextNode("Jetzt auch mit mehr Testinhalt!"));
+        // get entity renderers
+        StateMain.entityRenderers = {};
+        event = {
+            addEntityRenderer: (type, renderer) => {
+                if(!(renderer instanceof CanvasEntityRenderer)) throw "Can only add instances of CanvasEntityRenderer";
+                StateMain.entityRenderers[type] = renderer;
+            }
+        };
+        ModuleManager.onEvent("addEntityRenderers", event);
         
         // add tabs TODO: add content
-        var tab = null;
-        new SidepanelTabChat();
-        new SidepanelTabPlayers();
-        new SidepanelTabActors();
-        new SidepanelTabAttachments();
-        new SidepanelTabMaps();
-        new SidepanelTabImages();
-        new SidepanelTabAudio();
-        new SidepanelTabLists();
-        tab = SidepanelManager.createTab("Settings", "settings");
+        event = {
+            addSidepanelTab: tab => {
+            }
+        };
+        ModuleManager.onEvent("addSidepanelTabs", event);
         SidepanelManager.init();
     },
     
@@ -179,7 +188,7 @@ StateMain = {
         ctx.rect(0, 0, _g.width, _g.height);
         ctx.fill();
         ctx.closePath();
-        if(map == null || map == undefined || StateMain.view == null || StateMain.view == undefined /*|| (viewers is empty && hideWithNoMainToken && StateMain.view.isPlayerView())*/) {
+        if(map == null || map == undefined || StateMain.view == null || StateMain.view == undefined || (viewers.length == 0 && map.prop("hideWithNoMainToken").getBoolean() && StateMain.view.isPlayerView())) {
             ctx.fillStyle = "black";
             ctx.beginPath();
             ctx.rect(0, 0, _g.width, _g.height);
@@ -187,94 +196,17 @@ StateMain = {
             ctx.closePath();
             return;
         }
-        var gridSize = map.prop("gridSize").getLong();
+        StateMain.view.setForceWallOcclusion(forceWallOcclusion);
         
         camera.update();
         var viewport = camera.getViewport();
         ctx.save();
         ctx.setTransform(camera.getTransform());
         
-        // draw background tokens
-        TokenRenderer.renderTokens(ctx, MapUtils.currentEntitiesSorted("token", Layer.BACKGROUND), StateMain.view.getProfile(), StateMain.highlightToken, false);
-        DrawingRenderer.renderDrawings(ctx, MapUtils.currentEntitiesSorted("drawing", Layer.BACKGROUND));
-        
-        // draw grid
-        ctx.lineWidth = 3;
-        ctx.strokeStyle = "rgba(0, 0, 0, 0.39)";
-        for(x = 0; x <= map.prop("width").getLong(); x++) {
-            ctx.beginPath();
-            ctx.moveTo(x * gridSize, 0 * gridSize);
-            ctx.lineTo(x * gridSize, map.prop("height").getLong() * gridSize);
-            ctx.stroke();
+        // draw render layers
+        for(var layer of StateMain.renderLayers) {
+            layer.render(ctx, StateMain.view, viewers, camera, viewport, map);
         }
-        for(y = 0; y <= map.prop("height").getLong(); y++) {
-            ctx.beginPath();
-            ctx.moveTo(0 * gridSize, y * gridSize);
-            ctx.lineTo(map.prop("width").getLong() * gridSize, y * gridSize);
-            ctx.stroke();
-        }
-        
-        // draw main tokens
-        TokenRenderer.renderTokens(ctx, MapUtils.currentEntitiesSorted("token", Layer.MAIN), StateMain.view.getProfile(), StateMain.highlightToken, false);
-        DrawingRenderer.renderDrawings(ctx, MapUtils.currentEntitiesSorted("drawing", Layer.MAIN));
-        
-        EffectRenderer.updateAndDrawEffects(ctx);
-        WeatherRenderer.updateAndDraw(ctx, viewport, map.prop("effect").getEffect());
-        
-        // draw wall occlusion / fow background
-        if(StateMain.view.doRenderWallOcclusion() || forceWallOcclusion) {
-            // render
-            if(viewers.length != 0) {
-                // extend viewport to avoid rounding errors
-                var extendedViewport = new CRect(viewport.x-2, viewport.y-2, viewport.width+4, viewport.height+4);
-                var pwr = WallRenderer.calculateWalls(MapUtils.currentEntities("wall").value(), extendedViewport, viewers);
-                WallRenderer.renderPrecalculatedWallRender(ctx, pwr);
-                
-                // draw fow background tokens
-                var fowClip = FOWRenderer.updateAndGetClip(pwr, extendedViewport);
-                if(fowClip != null) {
-                    ctx.save();
-                    RenderUtils.addPaths(ctx, fowClip);
-                    ctx.clip();
-                    TokenRenderer.renderTokens(ctx, MapUtils.currentEntitiesSorted("token", Layer.BACKGROUND), StateMain.view.getProfile(), StateMain.highlightToken, true);
-                    ctx.fillStyle = "rgba(0, 0, 0, 0.7)";
-                    ctx.fillRect(extendedViewport.x, extendedViewport.y, extendedViewport.width, extendedViewport.heigth);
-                    ctx.restore();
-                }
-            }
-        }
-        
-        // draw lights
-        if(StateMain.view.doRenderLights()) {
-            LightRenderer.renderLight(ctx, _g.width, _g.height, camera.getTransform(), viewport, map, viewers);
-        }
-        
-        // render gm overlay tokens
-        if(!StateMain.view.isPlayerView()) {
-            ctx.globalAlpha = 0.5;
-            TokenRenderer.renderTokens(ctx, MapUtils.currentEntitiesSorted("token", Layer.GMOVERLAY), StateMain.view.getProfile(), StateMain.highlightToken, false);
-            DrawingRenderer.renderDrawings(ctx, MapUtils.currentEntitiesSorted("drawing", Layer.GMOVERLAY));
-            ctx.globalAlpha = 1;
-        }
-        
-        // draw walls as lines
-        if(StateMain.view.doRenderWallLines()) {
-            ctx.lineWidth = 5;
-            MapUtils.currentEntities("wall").forEach(wall => {
-                ctx.strokeStyle = wall.prop("seeThrough").getBoolean() ? "lightgray" : "blue";
-                ctx.beginPath();
-                ctx.moveTo(wall.prop("x1").getLong(), wall.prop("y1").getLong());
-                ctx.lineTo(wall.prop("x2").getLong(), wall.prop("y2").getLong());
-                ctx.stroke();
-            }).value();
-            ctx.fillStyle = "rgb(100, 100, 255)";
-            MapUtils.currentEntities("wall").forEach(wall => {
-                ctx.fillRect(wall.prop("x1").getLong()-5, wall.prop("y1").getLong()-5, 10, 10);
-                ctx.fillRect(wall.prop("x2").getLong()-5, wall.prop("y2").getLong()-5, 10, 10);
-            }).value();
-        }
-        
-        EffectRenderer.updateAndDrawAboveEffects(ctx);
         
         // draw overlay
         if(StateMain.mode != null) StateMain.mode.renderOverlay(ctx);

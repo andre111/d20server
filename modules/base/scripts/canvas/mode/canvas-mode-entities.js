@@ -902,10 +902,8 @@ class CanvasModeEntities extends CanvasMode {
             if(entity == null || entity == undefined) continue;
             
             if(drawNormal) {
-                if(this.entityType == "token") {
-                    TokenRenderer.renderToken(ctx, entity, StateMain.view.getProfile(), entity.prop("x").getLong(), entity.prop("y").getLong(), false);
-                } else if(this.entityType == "drawing") {
-                    DrawingRenderer.renderDrawing(ctx, entity);
+                if(StateMain.entityRenderers[this.entityType]) {
+                    StateMain.entityRenderers[this.entityType].render(ctx, StateMain.view, entity);
                 }
             }
             
@@ -987,6 +985,7 @@ class CanvasModeEntities extends CanvasMode {
         entity = entity.clone();
         entity.id = 0;
         entity.prop("map").setLong(map.id);
+        entity.prop("layer").setLayer(this.layer);
         
         this.activeEntities = [];
         this.sendSelectedTokens();

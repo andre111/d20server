@@ -1,4 +1,3 @@
-//TODO: implement chat history
 class SidepanelTabChat extends SidepanelTab {
     constructor() {
         super("Chat", "chat", true);

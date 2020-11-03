@@ -57,6 +57,8 @@ class CanvasView {
         this.renderLights = renderLights;
         this.renderWallOcclusion = renderWallOcclusion;
         this.renderWallLines = renderWallLines;
+        
+        this.forceWallOcclusion;
     }
     
     getProfile() {
@@ -75,11 +77,15 @@ class CanvasView {
     }
     
     doRenderWallOcclusion() {
-        return this.renderWallOcclusion;
+        return this.renderWallOcclusion || this.forceWallOcclusion;
     }
     
     doRenderWallLines() {
         return this.renderWallLines;
+    }
+    
+    setForceWallOcclusion(forceWallOcclusion) {
+        this.forceWallOcclusion = forceWallOcclusion;
     }
 }
 
@@ -300,5 +306,24 @@ class CanvasWindow {
         if(this.isClosed) return;
         
         this.isClosed = $(this.frame).dialog("close");
+    }
+}
+
+class CanvasRenderLayer {
+    constructor() {
+    }
+    
+    render(ctx, view, viewers, camera, viewport, map) {
+    }
+    
+    getLevel() {
+        return 0;
+    }
+}
+class CanvasEntityRenderer {
+    constructor() {
+    }
+    
+    render(ctx, view, entity) {
     }
 }
