@@ -1,4 +1,4 @@
-class Particle {
+class WeatherRendererParticle {
     constructor(x, y, height, vx, vy, vh, color) {
         this.x = x;
         this.y = y;
@@ -85,7 +85,7 @@ WeatherRenderer = {
         // create new particles
         var edge = 300;
         for(var i=0; i<count; i++) {
-            WeatherRenderer._particles.push(new Particle(viewport.x-edge+IntMathUtils.getRandomInt(viewport.width+edge*2), viewport.y-edge+IntMathUtils.getRandomInt(viewport.height+edge*2),
+            WeatherRenderer._particles.push(new WeatherRendererParticle(viewport.x-edge+IntMathUtils.getRandomInt(viewport.width+edge*2), viewport.y-edge+IntMathUtils.getRandomInt(viewport.height+edge*2),
                     height, svx, svy, svh, color));
         }
         

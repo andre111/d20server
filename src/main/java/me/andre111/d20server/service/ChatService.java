@@ -10,9 +10,11 @@ import me.andre111.d20common.message.game.chat.ChatEntries;
 import me.andre111.d20common.model.Entity;
 import me.andre111.d20common.model.chat.ChatData;
 import me.andre111.d20common.model.chat.ChatEntry;
+import me.andre111.d20common.model.chat.ChatEntry.TriggeredContent;
 import me.andre111.d20common.model.def.MacroDefinition;
 import me.andre111.d20common.model.profile.Profile;
 import me.andre111.d20common.model.property.Access;
+import me.andre111.d20common.scripting.ScriptException;
 import me.andre111.d20common.util.Utils;
 import me.andre111.d20server.command.Command;
 
@@ -29,10 +31,12 @@ public abstract class ChatService {
 	private static ChatData loadedChat = null;
 	
 	public static void onMessage(Profile profile, String message) {
-		// strip formatting stuff
-		message = message.replace("[", "");
-		message = message.replace("]", "");
-		message = message.replace("|", "");
+		if(!USE_HTML) {
+			// strip formatting stuff
+			message = message.replace("[", "");
+			message = message.replace("]", "");
+			message = message.replace("|", "");
+		}
 		
 		if(message.startsWith("/")) {
 			// extract command name and arguments
@@ -173,6 +177,39 @@ public abstract class ChatService {
 		
 		// send chat entries to client
 		sendToClients(true, entries);
+	}
+	
+	public static void triggerContent(Profile profile, long messageID, long contentID) throws ScriptException {
+		// find entry
+		ChatData chatData = getChatData();
+		ChatEntry entry = null;
+		for(int i=chatData.getEntries().size()-1; i>=Math.max(0, chatData.getEntries().size()-200); i--) {
+			if(chatData.getEntries().get(i).getID() == messageID) {
+				entry = chatData.getEntries().get(i);
+				break;
+			}
+		}
+		if(entry == null) throw new ScriptException("Parent not found");
+		
+		// check sender
+		if(entry.getSource() != profile.id()) throw new ScriptException("Not original sender");
+		
+		// find triggered content
+		TriggeredContent triggeredContent = null;
+		if(entry.getTriggeredContent() != null) {
+			for(TriggeredContent triggered : entry.getTriggeredContent()) {
+				if(triggered.getID() == contentID) {
+					triggeredContent = triggered;
+				}
+			}
+		}
+		if(triggeredContent == null) throw new ScriptException("Content not found");
+		if(triggeredContent.isTriggerd()) throw new ScriptException("Already triggered");
+		
+		// send trigger
+		triggeredContent.setTriggered();
+		triggeredContent.getEntry().resetTime();
+		append(true, triggeredContent.getEntry());
 	}
 	
 	public static void sendHistory(Profile profile, int amount) {

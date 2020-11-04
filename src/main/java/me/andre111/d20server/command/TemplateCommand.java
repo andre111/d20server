@@ -5,6 +5,7 @@ import me.andre111.d20common.model.profile.Profile;
 import me.andre111.d20common.scripting.ScriptException;
 import me.andre111.d20server.service.ChatService;
 import me.andre111.d20server.template.Template;
+import me.andre111.d20server.template.Template.ParseResult;
 
 public class TemplateCommand extends Command {
 	private final boolean showPublic;
@@ -38,12 +39,12 @@ public class TemplateCommand extends Command {
 		}
 		
 		// parse template
-		String parsed = "";
+		ParseResult parseResult = null;
 		try {
 			String[] inputs = templateArguments.split(";", -1);
 			for(int i=0; i<inputs.length; i++) inputs[i] = ChatService.escape(inputs[i]);
 			
-			parsed = template.parse(profile, inputs);
+			parseResult = template.parse(profile, inputs);
 		} catch (ScriptException e) {
 			ChatService.appendError(profile, "Template parsing error: "+e.getMessage());
 			return;
@@ -58,19 +59,24 @@ public class TemplateCommand extends Command {
 			sb.append("</p>");
 			
 			sb.append("<p class=\"chat-message\">");
-			sb.append(parsed);
+			sb.append(parseResult.string());
 			sb.append("</p>");
 		} else {
 			sb.append(ChatService.STYLE_SENDER);
 			sb.append(profile.getName());
 			sb.append(": \n");
-			sb.append(parsed);
+			sb.append(parseResult.string());
 		}
 		
 		// determine recipents
 		long[] recipents = buildRecipents(profile, showPublic, showSelf);
 		
+		// create entry
+		ChatEntry entry = new ChatEntry(sb.toString(), profile.id(), showGM, recipents);
+		entry.setRolls(parseResult.diceRolls());
+		entry.setTriggeredContent(parseResult.triggeredContent());
+		
 		// append message
-		ChatService.append(true, new ChatEntry(sb.toString(), profile.id(), showGM, recipents));
+		ChatService.append(true, entry);
 	}
 }

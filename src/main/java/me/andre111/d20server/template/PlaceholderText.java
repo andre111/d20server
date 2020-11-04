@@ -1,15 +1,19 @@
 package me.andre111.d20server.template;
 
+import java.util.List;
+
+import me.andre111.d20common.model.chat.ChatEntry.TriggeredContent;
 import me.andre111.d20common.model.profile.Profile;
 import me.andre111.d20common.scripting.Context;
 import me.andre111.d20common.scripting.ScriptException;
+import me.andre111.d20common.scripting.expression.DiceRoll;
 import me.andre111.d20common.scripting.variable.Variable;
 import me.andre111.d20common.scripting.variable.parser.VariableParser;
 
 public class PlaceholderText extends Placeholder {
 
 	@Override
-	public String parse(Profile profile, String input) throws ScriptException {
+	public String parse(Profile profile, String input, List<DiceRoll> diceRolls, List<TriggeredContent> triggeredContent) throws ScriptException {
 		// find and parse {variables} in string //TODO: Should this happen in normal chat messages or only in templates?
 		StringBuilder sb = new StringBuilder();
 		int index = 0;

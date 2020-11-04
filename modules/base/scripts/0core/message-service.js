@@ -9,6 +9,7 @@ MessageService = {
             //TODO: messages should probably not all be handled here?
             case "EntityLoading":
                 setState(StateLoading);
+                _g.currentState.amount = msg.count;
                 break;
             case "EnterGame":
                 ServerData.localProfile = msg.profile;
@@ -21,6 +22,7 @@ MessageService = {
                 EntityManagers.get(msg.type).serverClearEntities();
                 break;
             case "AddEntity":
+                if(_g.currentState == StateLoading) _g.currentState.increase();
                 EntityManagers.get(msg.type).serverAddEntity(msg.entity);
                 break;
             case "RemoveEntity":
@@ -71,7 +73,7 @@ MessageService = {
                     SidepanelManager.getTab("chat").clear();
                 }
                 for(var entry of msg.entries) {
-                    SidepanelManager.getTab("chat").append(entry);
+                    SidepanelManager.getTab("chat").onMessage(entry);
                 }
                 break;
             default:

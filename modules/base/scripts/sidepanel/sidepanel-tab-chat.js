@@ -52,8 +52,10 @@ class SidepanelTabChat extends SidepanelTab {
         send.style.width = "64px";
         this.tab.appendChild(inputPanel);
         
+        // storage (for accessing and modifying past messages)
+        this.entries = new Map();
+        
         // values
-        this.toggle = false;
         this.previousMessages = [];
         this.previousMessageIndex = -1;
         this.MESSAGE_HISTORY_SIZE = 20;
@@ -69,20 +71,53 @@ class SidepanelTabChat extends SidepanelTab {
         this.chatPanel.innerHTML = "";
     }
     
-    append(entry) {
-        var container = document.createElement("div");
-        container.style.backgroundColor = this.toggle ? "#feeebd" : "#e2cf9d";
-        container.style.width = "100%";
-        container.style.maxWidth = "100%";
+    add(entry) {
+        if(entry.replaceParent && entry.replaceParent > 0) {
+            // find replace parent
+            if(!this.entries.has(entry.replaceParent)) { console.log("Ignoring replace with unknown parent"); return; }
+            var container = this.entries.get(entry.replaceParent);
+            
+            // find replaceable object and replace content
+            $(container).find("#"+entry.id+".replaceable").replaceWith(entry.text);
+            GuiUtils.makeHoverable(container);
+        } else {
+            // create container
+            var container = document.createElement("div");
+            container.className = "chat";
+            
+            container.innerHTML = entry.text;
+            GuiUtils.makeHoverable(container);
+            
+            // add replaceable trigger
+            for(const element of $(container).find(".replaceable")) {
+                element.onclick = () => {
+                    var msg = {
+                        msg: "SendChatMessage",
+                        message: "/trigger "+entry.id+" "+element.id
+                    };
+                    MessageService.send(msg);
+                };
+            }
+            
+            // add to map
+            this.entries.set(entry.id, container);
+            
+            // append to gui
+            this.chatPanel.appendChild(container);
+            //container.scrollIntoView(); // this "breaks" the website by offseting it up by a few pixels for some reason, using "outdated" code below as an alternative
+            this.chatPanel.scrollTop = this.chatPanel.scrollHeight;
+        }
+    }
+    
+    onMessage(entry) {
+        var evt = {
+            entry: entry,
+            canceled: false
+        };
+        Events.trigger("chatMessage", evt);
+        if(evt.canceled) return;
         
-        container.innerHTML = entry.text;
-        GuiUtils.makeHoverable(container);
-        
-        this.chatPanel.appendChild(container);
-        //container.scrollIntoView(); // this "breaks" the website by offseting it up by a few pixels for some reason, using "outdated" code below as an alternative
-        this.chatPanel.scrollTop = this.chatPanel.scrollHeight;
-        
-        this.toggle = !this.toggle;
+        this.add(entry);
     }
     
     doSend() {

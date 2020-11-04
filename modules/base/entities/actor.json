@@ -118,7 +118,7 @@
                     "property": "gmBio",
                     "text": "GM Bio",
                     "w": 980,
-                    "h": 266
+                    "h": 243
                 }
             ]
         },
@@ -135,7 +135,7 @@
                     "text": "Attachments",
                     "reference": "attachment",
                     "w": 900,
-                    "h": 500
+                    "h": 483
                 }
             ]
         },

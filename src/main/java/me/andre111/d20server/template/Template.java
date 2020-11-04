@@ -10,8 +10,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import me.andre111.d20common.model.chat.ChatEntry.TriggeredContent;
 import me.andre111.d20common.model.profile.Profile;
 import me.andre111.d20common.scripting.ScriptException;
+import me.andre111.d20common.scripting.expression.DiceRoll;
 import me.andre111.d20server.service.ChatService;
 
 public class Template {
@@ -97,7 +99,7 @@ public class Template {
 		this.components = Collections.unmodifiableList(new ArrayList<>(components));
 	}
 	
-	public String parse(Profile profile, String[] inputs) throws ScriptException {
+	public ParseResult parse(Profile profile, String[] inputs) throws ScriptException {
 		// parse arguments
 		for(TemplateComponent component : components) {
 			if(component instanceof TemplateComponentPlaceholder placeholder) {
@@ -114,6 +116,22 @@ public class Template {
 		for(TemplateComponent component : components) {
 			sb.append(component.getString());
 		}
-		return sb.toString();
+		
+		// collect rolls
+		List<DiceRoll> diceRolls = new ArrayList<>();
+		for(TemplateComponent component : components) {
+			diceRolls.addAll(component.getDiceRolls());
+		}
+		
+		// collect triggered content
+		List<TriggeredContent> triggeredContent = new ArrayList<>();
+		for(TemplateComponent component : components) {
+			triggeredContent.addAll(component.getTriggeredContent());
+		}
+		
+		return new ParseResult(sb.toString(), diceRolls, triggeredContent);
+	}
+	
+	public static final record ParseResult(String string, List<DiceRoll> diceRolls, List<TriggeredContent> triggeredContent) {
 	}
 }

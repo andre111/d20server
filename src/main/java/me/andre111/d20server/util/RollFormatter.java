@@ -95,17 +95,17 @@ public class RollFormatter {
 		return sb.toString();
 	}
 	
-	public static String formatInlineDiceRoll(String rollExpression, Result result, Exception e) {
+	public static String formatInlineDiceRoll(String rollExpression, Result result, String e) {
 		StringBuilder sb = new StringBuilder();
 		if(ChatService.USE_HTML) {
 			// color format
 			String color = "#000000";
 			if(result != null) {
-				if(result.cf && result.cs) {
+				if(result.hadCriticalFailure() && result.hadCriticalSuccess()) {
 					color = "#0000FF";
-				} else if(result.cf) {
+				} else if(result.hadCriticalFailure()) {
 					color = "#FF0000";
-				} else if(result.cs) {
+				} else if(result.hadCriticalSuccess()) {
 					color = "#008800";
 				}
 			}
@@ -138,11 +138,11 @@ public class RollFormatter {
 			// color format
 			String color = "#000000";
 			if(result != null) {
-				if(result.cf && result.cs) {
+				if(result.hadCriticalFailure() && result.hadCriticalSuccess()) {
 					color = "#0000FF";
-				} else if(result.cf) {
+				} else if(result.hadCriticalFailure()) {
 					color = "#FF0000";
-				} else if(result.cs) {
+				} else if(result.hadCriticalSuccess()) {
 					color = "#008800";
 				}
 			}

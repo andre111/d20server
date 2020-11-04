@@ -513,7 +513,7 @@ class MultiLineStringPropertyEditor extends PropertyEditor {
         
         this.textArea = document.createElement("textarea");
         this.textArea.style.width = "calc(100% - 6px)";
-        this.textArea.style.height = "calc(100% - 16px)";
+        this.textArea.style.height = "calc(100% - 6px)";
         this.textArea.style.overflow = "auto";
         this.textArea.style.resize = "none";
         this.textArea.style.fontFamily = "monospace";
@@ -605,9 +605,8 @@ class ImagePropertyEditor extends PropertyEditor {
         if(this.imageID > 0) {
             this.image = new Image();
             this.image.src = "/image/"+this.imageID;
-            this.image.style.width = "calc(100% - 10px)";
-            this.image.style.height = "calc(100% - 10px)";
-            this.image.style.paddingLeft = "5px";
+            this.image.style.width = "100%";
+            this.image.style.height = "100%";
             this.image.style.objectFit = "contain";
             this.container.appendChild(this.image);
         } else {
@@ -654,9 +653,8 @@ class ReferencedImagePropertyEditor extends PropertyEditor {
         if(imageID > 0) {
             this.image = new Image();
             this.image.src = "/image/"+imageID;
-            this.image.style.width = "calc(100% - 10px)";
-            this.image.style.height = "calc(100% - 10px)";
-            this.image.style.paddingLeft = "5px";
+            this.image.style.width = "100%";
+            this.image.style.height = "100%";
             this.image.style.objectFit = "contain";
             this.container.appendChild(this.image);
         } else {

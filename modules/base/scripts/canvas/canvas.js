@@ -1,46 +1,50 @@
-camera = {
-    x: 0,
-    y: 0,
-    scale: 1,
+class Camera {
+    constructor() {
+        this.x = 0;
+        this.y = 0;
+        this.scale = 1;
+        
+        this.xTarget = 0;
+        this.yTarget = 0;
+    }
     
-    xTarget: 0,
-    yTarget: 0,
-    
-    update: function() {
+    update() {
         this.x = this.x + (this.xTarget - this.x) * 0.2;
         this.y = this.y + (this.yTarget - this.y) * 0.2;
-    },
+    }
     
-    getTransform: function() {
+    getTransform() {
         return compose(
             translate(_g.width/2, _g.height/2),
             scale(this.scale, this.scale),
             translate(-this.x, -this.y)
         );
-    },
+    }
     
-    getViewport: function() {
+    getViewport() {
         var w = Math.ceil(_g.width / this.scale);
         var h = Math.ceil(_g.height / this.scale);
         return new CRect(this.x-w/2, this.y-h/2, w, h);
-    },
+    }
     
-    inverseTransform: function(x, y) {
+    inverseTransform(x, y) {
         return applyToPoint(inverse(this.getTransform()), { x: x, y: y });
-    },
+    }
     
-    setLocation: function(x, y, instant) {
+    setLocation(x, y, instant) {
         this.xTarget = x;
         this.yTarget = y;
         if(instant) {
             this.x = x;
             this.y = y;
         }
-    },
-    drag: function(xd, yd) {
+    }
+    
+    drag(xd, yd) {
         this.setLocation(this.x + xd, this.y + yd, true);
-    },
-    zoom: function(dir) {
+    }
+    
+    zoom(dir) {
         if(dir > 0) {
             this.scale *= 0.9;
         } else {
@@ -146,7 +150,7 @@ class MouseCameraContoller extends MouseController {
         e.xm = e.offsetX;
         e.ym = e.offsetY;
         
-        camera.zoom(e.deltaY);
+        this.camera.zoom(e.deltaY);
         if(this.child != null) this.child.mouseWheelMoved(this.adjustPosition(e));
     }
     mouseClicked(e) {

@@ -111,6 +111,7 @@ public class HttpServerHandler extends SimpleChannelInboundHandler<FullHttpReque
 			if(file != null && file.exists()) {
 				data = Utils.readBinary(file);
 				contentType = ""; //TODO: somehow set this correctly?
+				if(path.endsWith(".js")) contentType = "application/javascript";
 			}
 		} else if(path.equals(SCRIPT_PATH)) {
 			data = ModuleService.getScriptData();

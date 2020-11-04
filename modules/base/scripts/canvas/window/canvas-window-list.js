@@ -6,9 +6,8 @@ class CanvasWindowListEntry {
         
         // create html elements
         var container = document.createElement("div");
-        container.style.width = "100%";
-        container.style.display = "flex";
-        if(current) container.style.backgroundColor = "#ffffdd";
+        container.className = "list-window-entry";
+        if(current) container.className = "list-window-entry-active";
         parent.appendChild(container);
         
         var leftPanel = document.createElement("div");
@@ -56,6 +55,10 @@ class CanvasWindowListEntry {
         this.valueField.style.height = "40px";
         this.valueField.onchange = () => this.onConfirmChange();
         rightPanel.appendChild(this.valueField);
+        
+        // add hover functionality
+        container.onmouseover = () => StateMain.setHighlightToken(tokenID);
+        container.onmouseout = () => StateMain.releaseHighlightToken(tokenID);
     }
     
     onRemove() {

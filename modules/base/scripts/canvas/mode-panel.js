@@ -77,7 +77,7 @@ class ModePanel {
                 this.buttons.push(button); 
             }
         };
-        ModuleManager.onEvent("addModeButtons", event);
+        Events.trigger("addModeButtons", event);
         
         // add core buttons
         if(ServerData.isGM()) {
@@ -112,7 +112,7 @@ class ModePanel {
         var event = {
             panel: this
         };
-        ModuleManager.onEvent("updateModeState", event);
+        Events.trigger("updateModeState", event);
         
         // update buttons
         for(var button of this.buttons) {

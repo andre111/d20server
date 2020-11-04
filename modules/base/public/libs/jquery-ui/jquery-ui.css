@@ -1,7 +1,7 @@
-/*! jQuery UI - v1.12.1 - 2020-10-23
+/*! jQuery UI - v1.12.1 - 2020-11-04
 * http://jqueryui.com
 * Includes: draggable.css, core.css, resizable.css, selectable.css, sortable.css, accordion.css, autocomplete.css, menu.css, button.css, controlgroup.css, checkboxradio.css, datepicker.css, dialog.css, progressbar.css, selectmenu.css, slider.css, spinner.css, tabs.css, tooltip.css, theme.css
-* To view and modify this theme, visit http://jqueryui.com/themeroller/?scope=&folderName=sunny&cornerRadiusShadow=8px&offsetLeftShadow=-7px&offsetTopShadow=-7px&thicknessShadow=7px&opacityShadow=60&bgImgOpacityShadow=30&bgTextureShadow=flat&bgColorShadow=cccccc&opacityOverlay=80&bgImgOpacityOverlay=50&bgTextureOverlay=flat&bgColorOverlay=5c5c5c&iconColorError=ffe180&fcError=ffffff&borderColorError=ffb73d&bgImgOpacityError=20&bgTextureError=diagonals_medium&bgColorError=d34d17&iconColorHighlight=ed9f26&fcHighlight=1f1f1f&borderColorHighlight=eeb420&bgImgOpacityHighlight=90&bgTextureHighlight=gloss_wave&bgColorHighlight=fff9e5&iconColorActive=eb990f&fcActive=0074c7&borderColorActive=655e4e&bgImgOpacityActive=30&bgTextureActive=inset_soft&bgColorActive=ffffff&iconColorHover=bd7b00&fcHover=381f00&borderColorHover=a45b13&bgImgOpacityHover=70&bgTextureHover=gloss_wave&bgColorHover=ffdd57&iconColorDefault=3d3d3d&fcDefault=4c3000&borderColorDefault=d19405&bgImgOpacityDefault=60&bgTextureDefault=gloss_wave&bgColorDefault=fece2f&iconColorContent=d19405&fcContent=383838&borderColorContent=8e846b&bgImgOpacityContent=100&bgTextureContent=highlight_soft&bgColorContent=feeebd&iconColorHeader=fadc7a&fcHeader=ffffff&borderColorHeader=494437&bgImgOpacityHeader=45&bgTextureHeader=gloss_wave&bgColorHeader=817865&cornerRadius=8px&fsDefault=1.1em&fwDefault=bold&ffDefault=Segoe%20UI%2CArial%2Csans-serif
+* To view and modify this theme, visit http://jqueryui.com/themeroller/?scope=&folderName=custom-theme&bgImgOpacityError=20&bgImgOpacityHighlight=90&bgImgOpacityActive=30&bgImgOpacityHover=70&bgImgOpacityDefault=60&bgImgOpacityContent=100&bgImgOpacityHeader=45&cornerRadiusShadow=8px&offsetLeftShadow=-7px&offsetTopShadow=-7px&thicknessShadow=7px&opacityShadow=60&bgImgOpacityShadow=30&bgTextureShadow=flat&bgColorShadow=%23cccccc&opacityOverlay=80&bgImgOpacityOverlay=50&bgTextureOverlay=flat&bgColorOverlay=%235c5c5c&iconColorError=%23ffe180&fcError=%23ffffff&borderColorError=%23ffb73d&bgTextureError=diagonals_medium&bgColorError=%23d34d17&iconColorHighlight=%23ed9f26&fcHighlight=%231f1f1f&borderColorHighlight=%23eeb420&bgTextureHighlight=gloss_wave&bgColorHighlight=%23fff9e5&iconColorActive=%23eb990f&fcActive=%230074c7&borderColorActive=%23655e4e&bgTextureActive=inset_soft&bgColorActive=%23ffffff&iconColorHover=%23bd7b00&fcHover=%23381f00&borderColorHover=%23a45b13&bgTextureHover=gloss_wave&bgColorHover=%23f9ce2a&iconColorDefault=%233d3d3d&fcDefault=%234c3000&borderColorDefault=%23d19405&bgTextureDefault=gloss_wave&bgColorDefault=%23ffe17b&iconColorContent=%23d19405&fcContent=%23383838&borderColorContent=%238e846b&bgTextureContent=highlight_soft&bgColorContent=%23feeebd&iconColorHeader=%23fadc7a&fcHeader=%23ffffff&borderColorHeader=%23494437&bgTextureHeader=gloss_wave&bgColorHeader=%23817865&cornerRadius=8px&fwDefault=bold&fsDefault=1.1em&ffDefault=Segoe%20UI%2CArial%2Csans-serif
 * Copyright jQuery Foundation and other contributors; Licensed MIT */
 
 .ui-draggable-handle {
@@ -209,7 +209,6 @@
 .ui-menu .ui-menu-item {
 	margin: 0;
 	cursor: pointer;
-    font-size: 10px;
 	/* support: IE10, see #8844 */
 	list-style-image: url("data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7");
 }
@@ -837,24 +836,21 @@ button.ui-button::-moz-focus-inner {
 }
 .ui-tabs .ui-tabs-nav {
 	margin: 0;
-	/*padding: .2em .2em 0;*/
-    padding: 0;
-    border: none;
-    background: none;
+	padding: .2em .2em 0;
 }
 .ui-tabs .ui-tabs-nav li {
 	list-style: none;
 	float: left;
 	position: relative;
 	top: 0;
-	/*margin: 1px .2em 0 0;*/
+	margin: 1px .2em 0 0;
 	border-bottom-width: 0;
 	padding: 0;
 	white-space: nowrap;
 }
 .ui-tabs .ui-tabs-nav .ui-tabs-anchor {
 	float: left;
-	padding: .2em .2em;
+	padding: .5em 1em;
 	text-decoration: none;
 }
 .ui-tabs .ui-tabs-nav li.ui-tabs-active {
@@ -872,10 +868,8 @@ button.ui-button::-moz-focus-inner {
 .ui-tabs .ui-tabs-panel {
 	display: block;
 	border-width: 0;
-	/*padding: 1em 1.4em;*/
-    padding: 5px;
+	padding: 1em 1.4em;
 	background: none;
-    border: 1px solid;
 }
 .ui-tooltip {
 	padding: 8px;
@@ -936,7 +930,7 @@ works properly when clicked or hovered */
 html .ui-button.ui-state-disabled:hover,
 html .ui-button.ui-state-disabled:active {
 	border: 1px solid #d19405;
-	background: #fece2f url("images/ui-bg_gloss-wave_60_fece2f_500x100.png") 50% 50% repeat-x;
+	background: #ffe17b url("images/ui-bg_gloss-wave_60_ffe17b_500x100.png") 50% 50% repeat-x;
 	font-weight: bold;
 	color: #4c3000;
 }
@@ -959,7 +953,7 @@ a:visited.ui-button,
 .ui-button:hover,
 .ui-button:focus {
 	border: 1px solid #a45b13;
-	background: #ffdd57 url("images/ui-bg_gloss-wave_70_ffdd57_500x100.png") 50% 50% repeat-x;
+	background: #f9ce2a url("images/ui-bg_gloss-wave_70_f9ce2a_500x100.png") 50% 50% repeat-x;
 	font-weight: bold;
 	color: #381f00;
 }

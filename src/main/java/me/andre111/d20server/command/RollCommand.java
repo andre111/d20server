@@ -44,7 +44,11 @@ public class RollCommand extends Command {
 		// determine recipents
 		long[] recipents = buildRecipents(profile, showPublic, showSelf);
 		
+		// create entry
+		ChatEntry entry = new ChatEntry(rollMessage, profile.id(), showGM, recipents);
+		if(result != null) entry.setRolls(result.getDiceRolls());
+		
 		// append message
-		ChatService.append(true, new ChatEntry(rollMessage, profile.id(), showGM, recipents));
+		ChatService.append(true, entry);
 	}
 }

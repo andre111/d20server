@@ -11,6 +11,8 @@ StateMain = {
         sidepanel.appendChild(document.createElement("ul"));
         document.body.appendChild(sidepanel);
         
+        Events.trigger("createMainHTML", StateMain);
+        
         //TODO: ...
         // get reference to main canvas
         _g.canvas = document.getElementById("canvas");
@@ -21,7 +23,8 @@ StateMain = {
         _g.bctx = _g.buffer.getContext("2d");
         
         // add mouse controller
-        var mcc = new MouseCameraContoller(camera, new MouseCanvasController(canvas));
+        StateMain.camera = new Camera();
+        var mcc = new MouseCameraContoller(StateMain.camera, new MouseCanvasController(canvas));
         canvas.addEventListener("mousemove", e => mcc.onMove(e), true);
         canvas.addEventListener("wheel", e => mcc.mouseWheelMoved(e), true);
         canvas.addEventListener("click", e => mcc.mouseClicked(e), true);
@@ -60,7 +63,7 @@ StateMain = {
                 StateMain.renderLayers.push(layer);
             }
         };
-        ModuleManager.onEvent("addRenderLayers", event);
+        Events.trigger("addRenderLayers", event);
         StateMain.renderLayers = _.chain(StateMain.renderLayers).sortBy(layer => layer.getLevel()).value();
         
         // get entity renderers
@@ -71,19 +74,20 @@ StateMain = {
                 StateMain.entityRenderers[type] = renderer;
             }
         };
-        ModuleManager.onEvent("addEntityRenderers", event);
+        Events.trigger("addEntityRenderers", event);
         
         // add tabs TODO: add content
         event = {
             addSidepanelTab: tab => {
             }
         };
-        ModuleManager.onEvent("addSidepanelTabs", event);
+        Events.trigger("addSidepanelTabs", event);
         SidepanelManager.init();
     },
     
     exit: function() {
         //TODO: improve this
+        //TODO: stop calling onFrame!!!
         document.body.innerHTML = "";
     },
     
@@ -102,7 +106,9 @@ StateMain = {
         if(elapsed > _g.fpsInterval) {
             _g.lastFrame = now - (elapsed % _g.fpsInterval);
             
+            Events.trigger("frameStart");
             StateMain.draw();
+            Events.trigger("frameEnd");
         }
     },
     
@@ -126,6 +132,15 @@ StateMain = {
         
         FOWRenderer.reset();
         StateMain.centerCamera(true);
+    },
+    
+    setHighlightToken: function(highlightToken) {
+        StateMain.highlightToken = highlightToken;
+    },
+    releaseHighlightToken: function(highlightToken) {
+        if(StateMain.highlightToken == highlightToken) {
+            StateMain.highlightToken = -1;
+        }
     },
     
     lastCenteredTokenID: -1,
@@ -155,7 +170,7 @@ StateMain = {
 			StateMain.lastCenteredTokenID = controllableTokens[index].id;
 		}
 		
-		camera.setLocation(camTargetX, camTargetY, instant);
+		StateMain.camera.setLocation(camTargetX, camTargetY, instant);
     },
     
     draw: function() {
@@ -198,14 +213,14 @@ StateMain = {
         }
         StateMain.view.setForceWallOcclusion(forceWallOcclusion);
         
-        camera.update();
-        var viewport = camera.getViewport();
+        StateMain.camera.update();
+        var viewport = StateMain.camera.getViewport();
         ctx.save();
-        ctx.setTransform(camera.getTransform());
+        ctx.setTransform(StateMain.camera.getTransform());
         
         // draw render layers
         for(var layer of StateMain.renderLayers) {
-            layer.render(ctx, StateMain.view, viewers, camera, viewport, map);
+            layer.render(ctx, StateMain.view, viewers, StateMain.camera, viewport, map);
         }
         
         // draw overlay

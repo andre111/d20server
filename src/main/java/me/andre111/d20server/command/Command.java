@@ -39,6 +39,7 @@ public abstract class Command {
 		new TemplateCommand("template", new String[] {"t"}, true, true, true);
 		new TemplateCommand("gmtemplate", new String[] {"gmt"}, false, false, true);
 		new TemplateCommand("hiddentemplate", new String[] {"ht"}, false, true, false);
+		new TriggerCommand("trigger", new String[] {});
 		
 		new EffectCommand("effect", new String[] {});
 	}

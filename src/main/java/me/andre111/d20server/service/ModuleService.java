@@ -19,6 +19,7 @@ import com.google.gson.Gson;
 import com.google.javascript.jscomp.CompilerOptions;
 import com.google.javascript.jscomp.PropertyRenamingPolicy;
 import com.google.javascript.jscomp.Result;
+import com.google.javascript.jscomp.ShowByPathWarningsGuard;
 import com.google.javascript.jscomp.SourceFile;
 import com.google.javascript.jscomp.VariableRenamingPolicy;
 import com.google.javascript.rhino.StaticSourceFile.SourceKind;
@@ -31,7 +32,7 @@ import me.andre111.d20common.model.def.RenderLayerDefinition;
 import me.andre111.d20common.util.Utils;
 
 public abstract class ModuleService {
-	private static final boolean DEBUG_SCRIPTS = false;
+	private static final boolean DEBUG_SCRIPTS = true;
 	
 	private static List<Module> modules = new ArrayList<>();
 	private static File modulesDir;
@@ -136,8 +137,9 @@ public abstract class ModuleService {
 			options.setCollapseVariableDeclarations(true);
 			options.setFoldConstants(true);
 			options.setRenamingPolicy(VariableRenamingPolicy.ALL, PropertyRenamingPolicy.OFF);
+			options.addWarningsGuard(new ShowByPathWarningsGuard("never"));
 			
-			Result result = compiler.compile(SourceFile.fromCode("empty", "function init() {}"), SourceFile.fromCode("main.js", script, SourceKind.STRONG), options);
+			Result result = compiler.compile(SourceFile.fromCode("empty", "function init() {}; const window = {}; const document = {};"), SourceFile.fromCode("main.js", script, SourceKind.STRONG), options);
 			if(!result.success) {
 				throw new RuntimeException("Module compilation failed");
 			}

@@ -11,7 +11,7 @@
 			</tr>
 			<tr>
 				<td>%4:text%:</td>
-				<td>%5:roll-inline%</td>
+				<td>%5:roll-inline-triggered%</td>
 			</tr>
 		</table>
 		%6:text%

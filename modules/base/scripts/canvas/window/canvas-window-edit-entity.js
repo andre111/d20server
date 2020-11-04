@@ -224,7 +224,7 @@ class CanvasWindowEditEntity extends CanvasWindow {
                 }
             }
         ]);
-        $(this.frame).dialog("option", "resizable", false);
+        //$(this.frame).dialog("option", "resizable", false);
         $(this.frame).dialog("option", "width", 1000+5);
         $(this.frame).dialog("option", "height", 700+5);
         
