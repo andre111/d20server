@@ -105,7 +105,7 @@
                     "editorType": "MULTI_LINE_STRING",
                     "property": "bio",
                     "text": "Bio",
-                    "w": 763,
+                    "w": 775,
                     "h": 200
                 },
                 {
@@ -118,7 +118,7 @@
                     "property": "gmBio",
                     "text": "GM Bio",
                     "w": 980,
-                    "h": 242
+                    "h": 282
                 }
             ]
         },

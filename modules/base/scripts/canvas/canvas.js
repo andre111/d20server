@@ -6,24 +6,33 @@ class Camera {
         
         this.xTarget = 0;
         this.yTarget = 0;
+        
+        this.screenWidth = 0;
+        this.screenHeight = 0;
+        
+        this.minScale = 0.2;
+        this.maxScale = 2;
     }
     
-    update() {
+    update(screenWidth, screenHeight) {
+        this.screenWidth = screenWidth;
+        this.screenHeight = screenHeight;
+        
         this.x = this.x + (this.xTarget - this.x) * 0.2;
         this.y = this.y + (this.yTarget - this.y) * 0.2;
     }
     
     getTransform() {
         return compose(
-            translate(_g.width/2, _g.height/2),
+            translate(this.screenWidth/2, this.screenHeight/2),
             scale(this.scale, this.scale),
             translate(-this.x, -this.y)
         );
     }
     
     getViewport() {
-        var w = Math.ceil(_g.width / this.scale);
-        var h = Math.ceil(_g.height / this.scale);
+        var w = Math.ceil(this.screenWidth / this.scale);
+        var h = Math.ceil(this.screenHeight / this.scale);
         return new CRect(this.x-w/2, this.y-h/2, w, h);
     }
     
@@ -58,7 +67,7 @@ class Camera {
         } else {
             this.scale /= 0.9;
         }
-        this.scale = Math.max(0.2, Math.min(this.scale, 2));
+        this.scale = Math.max(this.minScale, Math.min(this.scale, this.maxScale));
     }
 }
 
@@ -166,14 +175,14 @@ class MouseCameraContoller extends MouseController {
         e.xm = e.offsetX;
         e.ym = e.offsetY;
         
-        if(this.child != null) this.child.mouseClicked(this.adjustPosition(e));
+        if(this.child != null && !e.altKey) this.child.mouseClicked(this.adjustPosition(e));
     }
     mousePressed(e) {
         e.preventDefault();
         e.xm = e.offsetX;
         e.ym = e.offsetY;
         
-        if(e.which == 2) {
+        if(e.which == 2 || e.altKey) {
             this.dragCamera = true;
         } else {
             if(this.child != null) this.child.mousePressed(this.adjustPosition(e));
@@ -184,7 +193,7 @@ class MouseCameraContoller extends MouseController {
         e.xm = e.offsetX;
         e.ym = e.offsetY;
         
-        if(e.which == 2) {
+        if(e.which == 2 || e.altKey) {
             this.dragCamera = false;
         } else {
             if(this.child != null) this.child.mouseReleased(this.adjustPosition(e));
@@ -283,7 +292,7 @@ class CanvasMode extends MouseController {
 
 class CanvasWindow {
     constructor(title, modal) {
-        this.frame = WindowManager.createWindow(title, modal);
+    this.frame = WindowManager.createWindow(title, modal, () => { this.isClosed = true; });
         $(this.frame).dialog("option", "maxHeight", document.body.clientHeight);
         this.isClosed = false;
     }

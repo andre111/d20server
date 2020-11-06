@@ -13,7 +13,7 @@ class SidepanelTabChat extends SidepanelTab {
         var inputPanel = document.createElement("div");
         this.input = document.createElement("input");
         this.input.type = "text";
-        this.input.style.width = "300px";
+        this.input.style.width = "80%";
         this.input.onkeyup = e => {
             if(e.keyCode == 13) {
                 this.doSend();
@@ -49,7 +49,7 @@ class SidepanelTabChat extends SidepanelTab {
         };
         inputPanel.appendChild(this.input);
         var send = GuiUtils.createButton(inputPanel, "Send", () => this.doSend());
-        send.style.width = "64px";
+        send.style.width = "20%";
         this.tab.appendChild(inputPanel);
         
         // storage (for accessing and modifying past messages)

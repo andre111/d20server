@@ -26,6 +26,19 @@ class CanvasRenderLayerWallOcclusion extends CanvasRenderLayer {
                     ctx.fillRect(extendedViewport.x, extendedViewport.y, extendedViewport.width, extendedViewport.heigth);
                     ctx.restore();
                 }
+                
+                // draw walls as lines
+                ctx.lineWidth = 5;
+                ctx.lineCap = "round";
+                ctx.strokeStyle = "black";
+                ctx.beginPath();
+                MapUtils.currentEntities("wall").forEach(wall => {
+                    if(!wall.prop("seeThrough").getBoolean()) {
+                        ctx.moveTo(wall.prop("x1").getLong(), wall.prop("y1").getLong());
+                        ctx.lineTo(wall.prop("x2").getLong(), wall.prop("y2").getLong());
+                    }
+                }).value();
+                ctx.stroke();
             }
         }
     }

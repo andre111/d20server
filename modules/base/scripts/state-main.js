@@ -128,7 +128,7 @@ StateMain = {
     },
     
     onMapChange: function(id) {
-        //TODO: mode.init();
+        StateMain.mode.init();
         
         FOWRenderer.reset();
         StateMain.centerCamera(true);
@@ -213,7 +213,7 @@ StateMain = {
         }
         StateMain.view.setForceWallOcclusion(forceWallOcclusion);
         
-        StateMain.camera.update();
+        StateMain.camera.update(_g.width, _g.height);
         var viewport = StateMain.camera.getViewport();
         ctx.save();
         ctx.setTransform(StateMain.camera.getTransform());

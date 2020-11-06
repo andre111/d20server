@@ -28,6 +28,7 @@ WallRenderer = {
                         cpr.AddPaths(localCombined, ClipperLib.PolyType.ptSubject, true);
                         cpr.AddPath(poly, ClipperLib.PolyType.ptClip, true);
                         cpr.Execute(ClipperLib.ClipType.ctUnion, result);
+                        result = ClipperLib.Clipper.CleanPolygons(result, 1.1);
                         localCombined = result;
                     }
                 }
@@ -43,6 +44,7 @@ WallRenderer = {
                 cpr.AddPaths(combined, ClipperLib.PolyType.ptSubject, true);
                 cpr.AddPaths(localCombined, ClipperLib.PolyType.ptClip, true);
                 cpr.Execute(ClipperLib.ClipType.ctIntersection, result);
+                //result = ClipperLib.Clipper.CleanPolygons(result, 1.1); // would this be needed?
                 combined = result;
             }
         }
@@ -107,7 +109,7 @@ WallRenderer = {
 		if(Math.abs(px2-maxX)<=1) px2 = maxX;
 		if(Math.abs(py2-minY)<=1) py2 = minY;
 		if(Math.abs(py2-maxY)<=1) py2 = maxY;
-		
+        
 		// create polygon
 		var poly = []
 		// add start point

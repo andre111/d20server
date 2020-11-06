@@ -432,7 +432,7 @@ class CMEntityActionSelectMenu {
     }
     
     doFitToGrid() {
-        //TODO...
+        new CanvasWindowFitToGrid(this.reference);
     }
     
     doDelete() {

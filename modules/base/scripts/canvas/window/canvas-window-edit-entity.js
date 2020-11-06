@@ -32,7 +32,6 @@ class CWEditEntityTab {
         //TODO: create content layout
         var styleAttributes = [];
         var styleValues = [];
-        var borderAndPaddingWidth = 1+2;
         switch(this.definition.layout) {
         case "BORDER":
             content.style.display = "grid";
@@ -115,11 +114,8 @@ class CWEditEntityTab {
                 // special cases: 
 				// free scroll -> make edit component the full size of the container
 				if(this.definition.layout == "FREE_SCROLL") {
-                    var currentBAPWidth = borderAndPaddingWidth;
-                    if(editor.getEditComponent().type == "checkbox") currentBAPWidth = 0;
-                    
-					editor.getEditComponent().style.width = (compDefinition.w-2*currentBAPWidth)+"px";
-					editor.getEditComponent().style.height = (compDefinition.h-2*currentBAPWidth)+"px";
+					editor.getEditComponent().style.width = compDefinition.w+"px";
+					editor.getEditComponent().style.height = compDefinition.h+"px";
 				}
 				if(compDefinition.disabled) editor.setForceDisable(true);
 				if(compDefinition.update) editor.addChangeListener(() => {

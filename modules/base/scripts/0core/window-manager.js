@@ -1,5 +1,5 @@
 WindowManager = { 
-    createWindow: function(title, modal) {
+    createWindow: function(title, modal, onClose) {
         var container = document.body;
         
         // create window
@@ -15,6 +15,7 @@ WindowManager = {
         $(panel).dialog({
             modal: modal,
             close: function(event, ui) {
+                if(onClose) onClose();
                 $(panel).dialog("destroy");
                 container.removeChild(panel);
             },

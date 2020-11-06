@@ -25,6 +25,8 @@ WeatherRenderer = {
     _fog_color: "rgba(255, 255, 255, 0)",
     _fog_image: null,
     _lightning: 0,
+    _sound: null,
+    _soundSrc: null,
     
     updateAndDraw: function(ctx, viewport, effect) {
         // get values
@@ -32,9 +34,11 @@ WeatherRenderer = {
         var height = 40, svx = 0, svy = 0, svh = -1;
         var color = "black";
         var lightningChance = 0;
+        var soundSrc = null;
         switch(effect) {
         case Effect.NONE:
-            return;
+            count = 0;
+            break;
         case Effect.FOG:
             count = 1;
             svx = (Math.random() - 0.5) / 8;
@@ -48,6 +52,7 @@ WeatherRenderer = {
 			svy = 0;
 			svh = -1;
 			color = WeatherRenderer._rain_colors[IntMathUtils.getRandomInt(WeatherRenderer._rain_colors.length)];
+            soundSrc = "/public/audio/weather/rain_light.mp3";
 			break;
 		case Effect.RAIN_HEAVY:
 			count = 20;
@@ -55,6 +60,7 @@ WeatherRenderer = {
 			svy = 0;
 			svh = -1;
 			color = WeatherRenderer._rain_colors[IntMathUtils.getRandomInt(WeatherRenderer._rain_colors.length)];
+            soundSrc = "/public/audio/weather/rain_heavy.mp3";
 			break;
 		case Effect.RAIN_STORM:
 			count = 20;
@@ -62,7 +68,8 @@ WeatherRenderer = {
 			svy = 0;
 			svh = -1;
 			color = WeatherRenderer._rain_colors[IntMathUtils.getRandomInt(WeatherRenderer._rain_colors.length)];
-			lightningChance = 0.0025;
+			lightningChance = 0.001;
+            soundSrc = "/public/audio/weather/rain_storm.mp3";
 			break;
 		case Effect.SNOW:
 			count = 5;
@@ -90,62 +97,90 @@ WeatherRenderer = {
         }
         
         // update (and draw) particles
-        ctx.save();
-        if(effect == Effect.RAIN_LIGHT || effect == Effect.RAIN_HEAVY || effect == Effect.RAIN_STORM) {
-            ctx.lineWidth = 1.5;
-        }
-        WeatherRenderer._particles = _.chain(WeatherRenderer._particles).filter(particle => {
-            particle.height += particle.vh;
-            if(particle.height <= 0) {
-				//TODO: add rain splashes on impact
-                return false;
-            } else {
-                particle.x += particle.vx;
-                particle.y += particle.vy;
-                
-                var vx = (particle.x-vCenterX) / vHalfWidth;
-				var vy = (particle.y-vCenterY) / vHalfHeight;
-				var h1Sq = particle.height * particle.height;
-				var h2Sq = (particle.height + 2) * (particle.height + 2);
-                
-                if(effect == Effect.FOG) {
-					//FOG:
-                    if(WeatherRenderer._fog_image != null) {
-                        var alpha = 1 - Math.abs(20 - particle.height)/20;
-                        ctx.globalAlpha = alpha;
-                        ctx.drawImage(WeatherRenderer._fog_image, particle.x - WeatherRenderer._fog_image.naturalWidth/2, particle.y - WeatherRenderer._fog_image.naturalHeight/2);
-                    }
-				} else if(effect == Effect.SNOW) {
-					//SNOW:
-                    var radius = (4 + 4 * h1Sq / (40*40)) / 2;
-                    ctx.fillStyle = particle.color;
-                    ctx.beginPath();
-                    ctx.ellipse((particle.x+vx*h1Sq)+radius, (particle.y+vy*h1Sq)+radius, radius, radius, 0, 0, Math.PI*2);
-                    ctx.fill();
-				} else {
-					//RAIN:
-                    ctx.strokeStyle = particle.color;
-                    ctx.beginPath();
-                    ctx.moveTo(particle.x+vx*h1Sq, particle.y+vy*h1Sq);
-                    ctx.lineTo(particle.x+vx*h2Sq, particle.y+vy*h2Sq);
-                    ctx.stroke();
-				}
-                
-                return true;
+        if(effect != Effect.NONE) {
+            ctx.save();
+            if(effect == Effect.RAIN_LIGHT || effect == Effect.RAIN_HEAVY || effect == Effect.RAIN_STORM) {
+                ctx.lineWidth = 1.5;
             }
-        }).value();
+            WeatherRenderer._particles = _.chain(WeatherRenderer._particles).filter(particle => {
+                particle.height += particle.vh;
+                if(particle.height <= 0) {
+                    //TODO: add rain splashes on impact
+                    return false;
+                } else {
+                    particle.x += particle.vx;
+                    particle.y += particle.vy;
+                    
+                    var vx = (particle.x-vCenterX) / vHalfWidth;
+                    var vy = (particle.y-vCenterY) / vHalfHeight;
+                    var h1Sq = particle.height * particle.height;
+                    var h2Sq = (particle.height + 2) * (particle.height + 2);
+                    
+                    if(effect == Effect.FOG) {
+                        //FOG:
+                        if(WeatherRenderer._fog_image != null) {
+                            var alpha = 1 - Math.abs(20 - particle.height)/20;
+                            ctx.globalAlpha = alpha;
+                            ctx.drawImage(WeatherRenderer._fog_image, particle.x - WeatherRenderer._fog_image.naturalWidth/2, particle.y - WeatherRenderer._fog_image.naturalHeight/2);
+                        }
+                    } else if(effect == Effect.SNOW) {
+                        //SNOW:
+                        var radius = (4 + 4 * h1Sq / (40*40)) / 2;
+                        ctx.fillStyle = particle.color;
+                        ctx.beginPath();
+                        ctx.ellipse((particle.x+vx*h1Sq)+radius, (particle.y+vy*h1Sq)+radius, radius, radius, 0, 0, Math.PI*2);
+                        ctx.fill();
+                    } else {
+                        //RAIN:
+                        ctx.strokeStyle = particle.color;
+                        ctx.beginPath();
+                        ctx.moveTo(particle.x+vx*h1Sq, particle.y+vy*h1Sq);
+                        ctx.lineTo(particle.x+vx*h2Sq, particle.y+vy*h2Sq);
+                        ctx.stroke();
+                    }
+                    
+                    return true;
+                }
+            }).value();
+            ctx.restore();
+        }
+        
+        // update sound
+        if(soundSrc != null) {
+            if(!WeatherRenderer._sound || WeatherRenderer._soundSrc != soundSrc) {
+                if(WeatherRenderer._sound) {
+                    if(WeatherRenderer._sound.playing()) WeatherRenderer._sound.stop();
+                    WeatherRenderer._sound = null;
+                }
+                WeatherRenderer._soundSrc = soundSrc;
+                WeatherRenderer._sound = new Howl({
+                    src: [soundSrc],
+                    volume: 0.1,
+                    autoplay: true,
+                    loop: true
+                });
+            }
+        } else {
+            if(WeatherRenderer._sound) {
+                if(WeatherRenderer._sound.playing()) WeatherRenderer._sound.stop();
+                WeatherRenderer._sound = null;
+            }
+        }
         
         // update (and draw) lightning
         if(Math.random() < lightningChance) {
             WeatherRenderer._lightning = 0.9;
-			//TODO: add sound
+            var thunderSound = "/public/audio/weather/thunder"+IntMathUtils.getRandomInt(4)+".mp3";
+            new Howl({
+                src: [thunderSound],
+                volume: 0.5,
+                autoplay: true
+            });
         }
         if(WeatherRenderer._lightning > 0) {
             ctx.fillStyle = "rgba(255, 255, 255, "+WeatherRenderer._lightning+")";
             ctx.fillRect(viewport.x, viewport.y, viewport.width, viewport.height);
             WeatherRenderer._lightning -= 0.1;
         }
-        
-        ctx.restore();
     }
 }

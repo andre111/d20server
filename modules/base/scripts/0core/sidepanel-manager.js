@@ -27,7 +27,7 @@ SidepanelManager = {
         // create tab panel
         var panel = document.createElement("div");
         panel.id = "sptab-"+id;
-        panel.style.height = "calc(100% - 82px)";
+        panel.style.height = "calc(100% - 63px)";
         panel.style.overflow = "auto";
         container.appendChild(panel);
         

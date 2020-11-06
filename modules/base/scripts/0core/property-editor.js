@@ -240,7 +240,7 @@ class StringMapPropertyEditor extends PropertyEditor {
         
         this.list = document.createElement("select");
         this.list.size = 8;
-        this.list.style.width = "calc(100% - 10px)";
+        this.list.style.width = "100%";
         this.container.appendChild(this.list);
         
         var buttonPanel = document.createElement("div");
@@ -259,7 +259,7 @@ class StringMapPropertyEditor extends PropertyEditor {
         this.container.appendChild(buttonPanel);
         
         this.editor = document.createElement("textarea");
-        this.editor.style.width = "calc(100% - 10px)";
+        this.editor.style.width = "100%";
         this.editor.style.height = "250px";
         this.editor.style.overflow = "auto";
         this.editor.style.resize = "none";
@@ -512,8 +512,8 @@ class MultiLineStringPropertyEditor extends PropertyEditor {
         GuiUtils.makeBordered(this.container, label);
         
         this.textArea = document.createElement("textarea");
-        this.textArea.style.width = "calc(100% - 6px)";
-        this.textArea.style.height = "calc(100% - 6px)";
+        this.textArea.style.width = "100%";
+        this.textArea.style.height = "100%";
         this.textArea.style.overflow = "auto";
         this.textArea.style.resize = "none";
         this.textArea.style.fontFamily = "monospace";

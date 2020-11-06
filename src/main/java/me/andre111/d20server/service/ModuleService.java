@@ -28,7 +28,6 @@ import me.andre111.d20common.model.def.Definitions;
 import me.andre111.d20common.model.def.EntityDefinition;
 import me.andre111.d20common.model.def.EntityDefinition.ExtensionPoint;
 import me.andre111.d20common.model.def.ExtensionDefinition;
-import me.andre111.d20common.model.def.RenderLayerDefinition;
 import me.andre111.d20common.util.Utils;
 
 public abstract class ModuleService {
@@ -98,17 +97,6 @@ public abstract class ModuleService {
 				
 				// add entity definition
 				Definitions.addEntityDefinition(type, entityDefinition);
-			}
-		}
-		
-		// load render layer definitions
-		for(Map.Entry<String, File> e : getFilesIn("renderlayers").entrySet()) {
-			if(e.getValue().isFile() && e.getKey().endsWith(".json")) {
-				String type = e.getKey().substring(0, e.getKey().length()-5);
-				RenderLayerDefinition renderLayerDefinition = Utils.readJson(e.getValue(), RenderLayerDefinition.class);
-				System.out.println("RenderLayer: "+type);
-				
-				Definitions.addRenderLayerDefinition(type, renderLayerDefinition);
 			}
 		}
 	}

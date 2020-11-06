@@ -42,7 +42,7 @@ public class EffectCommand extends Command {
 			
 			boolean aboveOcc = Boolean.parseBoolean(split[5]);
 			
-			MessageService.send(new PlayEffect("PING", (int) x.v, (int) y.v, (float) rotation.v, (float) scale.v, aboveOcc, false), map);
+			MessageService.send(new PlayEffect(type, (int) x.v, (int) y.v, (float) rotation.v, (float) scale.v, aboveOcc, false), map);
 		} catch (ScriptException e) {
 			ChatService.appendError(profile, "Could not create effect:", e.getMessage());
 		}

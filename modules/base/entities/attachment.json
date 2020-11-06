@@ -94,7 +94,7 @@
                     "editorType": "MULTI_LINE_STRING",
                     "property": "tags",
                     "text": "Tags",
-                    "w": 158,
+                    "w": 181,
                     "h": 128
                 },
                 
@@ -104,7 +104,7 @@
                     "property": "descFull",
                     "text": "Full Description",
                     "w": 980,
-                    "h": 276
+                    "h": 322
                 }
             ]
         }
