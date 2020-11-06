@@ -40,6 +40,14 @@ html, body {
     left: 0;
 }
 
+.login-field {
+    width: 200px;
+    padding: 2px;
+    border-width: 1px;
+    margin: 2px;
+    box-sizing: border-box; /* THIS IS THE SPECIAL STUFF: MAKE SIZE ACTUALY REFER TO SIZE INCLUDING BORDER AND PADDING */
+}
+
 /* ModePanel/Window styles */
 .mode-panel {
     pointer-events: none;

@@ -52,21 +52,14 @@ public class TemplateCommand extends Command {
 		
 		// build message
 		StringBuilder sb = new StringBuilder();
-		if(ChatService.USE_HTML) {
-			sb.append("<p class=\"chat-sender\">");
-			sb.append(ChatService.escape(profile.getName()));
-			sb.append(": ");
-			sb.append("</p>");
-			
-			sb.append("<p class=\"chat-message\">");
-			sb.append(parseResult.string());
-			sb.append("</p>");
-		} else {
-			sb.append(ChatService.STYLE_SENDER);
-			sb.append(profile.getName());
-			sb.append(": \n");
-			sb.append(parseResult.string());
-		}
+		sb.append("<p class=\"chat-sender\">");
+		sb.append(ChatService.escape(profile.getName()));
+		sb.append(": ");
+		sb.append("</p>");
+		
+		sb.append("<p class=\"chat-message\">");
+		sb.append(parseResult.string());
+		sb.append("</p>");
 		
 		// determine recipents
 		long[] recipents = buildRecipents(profile, showPublic, showSelf);

@@ -33,8 +33,14 @@ MessageService = {
                 break;
             //
             case "EnterMap":
+                //TODO: replace observable with event
+                var evt = {
+                    oldMapID: ServerData.currentMap.get(),
+                    newMapID: msg.mapID
+                };
                 ServerData.currentMap.set(msg.mapID);
                 console.log("EnterMap: "+msg.mapID);
+                Events.trigger("mapChange", evt);
                 break;
             case "PlayerList":
                 var index = new Map();
@@ -44,27 +50,11 @@ MessageService = {
                 ServerData.profiles.set(index);
                 break;
             case "ActionCommand":
-                switch(msg.command) {
-                case "SHOW_IMAGE":
-                    new CanvasWindowImage(msg.id);
-                    break;
-                case "LOAD_MUSIC":
-                    SidepanelManager.getTab("audio").musicPlayer.serverDoLoad(msg.id);
-                    break;
-                case "PLAY_MUSIC":
-                    SidepanelManager.getTab("audio").musicPlayer.serverDoPlay(msg.id, msg.x);
-                    break;
-                case "PAUSE_MUSIC":
-                    SidepanelManager.getTab("audio").musicPlayer.serverDoPause();
-                    break;
-                case "STOP_MUSIC":
-                    SidepanelManager.getTab("audio").musicPlayer.serverDoStop();
-                    break;
-                }
+                Events.trigger("actionCommand", msg);
                 break;
             case "PlayEffect":
                 if(msg.focusCamera) {
-                    camera.setLocation(msg.x, msg.y, false);
+                    StateMain.camera.setLocation(msg.x, msg.y, false);
                 }
                 EffectRenderer.addEffect(msg.effect, msg.x, msg.y, msg.rotation, msg.scale, msg.aboveOcclusion, msg.parameters);
                 break;
@@ -73,7 +63,7 @@ MessageService = {
                     SidepanelManager.getTab("chat").clear();
                 }
                 for(var entry of msg.entries) {
-                    SidepanelManager.getTab("chat").onMessage(entry);
+                    SidepanelManager.getTab("chat").onMessage(entry, msg.historical);
                 }
                 break;
             default:

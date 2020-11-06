@@ -23,7 +23,10 @@ class Observable {
         this.observers.push(observer);
     }
     
-    //TODO: removeObserver
+    removeObserver(observer) {
+        var index = this.observers.indexOf(observer);
+        if(index >= 0) this.observers.slice(index, 1);
+    }
 };
 
 ServerData = {

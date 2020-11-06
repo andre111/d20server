@@ -14,7 +14,6 @@ import me.andre111.d20common.model.chat.ChatEntry.TriggeredContent;
 import me.andre111.d20common.model.profile.Profile;
 import me.andre111.d20common.scripting.ScriptException;
 import me.andre111.d20common.scripting.expression.DiceRoll;
-import me.andre111.d20server.service.ChatService;
 
 public class Template {
 	private static Map<String, Template> TEMPLATES = new HashMap<>();
@@ -42,7 +41,7 @@ public class Template {
 	}
 	
 	private static Template loadInternalTemplate(String name, String...values) {
-		String path = ChatService.USE_HTML ? "/templates/"+name+"_html.txt" : "/templates/"+name+".txt";
+		String path = "/templates/"+name+"_html.txt";
 		try(BufferedReader reader = new BufferedReader(new InputStreamReader(Template.class.getResourceAsStream(path)))) {
 			return parseTemplate(reader.lines().collect(Collectors.joining()), values);
 		} catch (IOException e) {

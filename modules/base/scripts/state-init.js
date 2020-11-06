@@ -14,6 +14,8 @@ StateInit = {
     },
     
     onClose: function() {
-        setState(StateInit);
+        // do NOT go back to StateInit, as old event listeners and other stuff could remain 
+        // -> ask for manualy full page reload
+        setState(StateDisconnected);
     }
 }

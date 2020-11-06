@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
+import java.util.regex.Pattern;
 
 import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
@@ -37,6 +38,30 @@ public abstract class UserService {
 		allProfiles.put(profile.id(), profile);
 		Utils.backupJson("profiles");
 		Utils.saveJson("profiles", allProfiles);
+	}
+	
+	public static void createProfile(String username, String accesskey, Profile.Role role) {
+		// remove outer whitespace
+		username = username.trim();
+		accesskey = accesskey.trim();
+
+		// validate
+		Pattern NAME_PATTERN = Pattern.compile("\\w{3,}");
+		if(!NAME_PATTERN.matcher(username).matches()) {
+			throw new IllegalArgumentException("Invalid name.");
+		}
+		if(accesskey.length() < 5) {
+			throw new IllegalArgumentException("Accesskey cannot be shorter than 5 characters.");
+		}
+
+		// check for existing profiles
+		if(UserService.findByUsername(username) != null) {
+			throw new IllegalArgumentException("Name taken.");
+		}
+
+		// create profile and save
+		Profile profile = new Profile(accesskey, username, role);
+		UserService.addAndSave(profile);
 	}
 
 	/**
@@ -154,9 +179,6 @@ public abstract class UserService {
 	}
 	
 	// Profile finding methods
-	public static Profile findByEmail(String email) {
-		return allProfiles.values().stream().filter(p -> p.getEmail().equals(email)).findAny().orElse(null);
-	}
 	public static Profile findByUsername(String username) {
 		return allProfiles.values().stream().filter(p -> p.getUsername().equals(username)).findAny().orElse(null);
 	}

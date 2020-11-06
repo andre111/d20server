@@ -20,7 +20,7 @@ public class TriggerCommand extends Command {
 			
 			ChatService.triggerContent(profile, messageID, contentID);
 		} catch (ScriptException | NumberFormatException e) {
-			ChatService.appendError(profile, "Could execute trigger:", e.getMessage());
+			ChatService.appendError(profile, "Could not execute trigger:", e.getMessage());
 		}
 	}
 }

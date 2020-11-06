@@ -48,6 +48,8 @@ public abstract class GameMessageHandler {
 			// OTHERS: --------------------
 		} else if(message instanceof ActionCommand) {
 			handleActionCommand(profile, map, (ActionCommand) message);
+		} else if(message instanceof PlayEffect) {
+			handlePlayEffect(profile, map, (PlayEffect) message);
 
 			// ENTITIES: --------------------
 		} else if(message instanceof AddEntity) {
@@ -157,24 +159,17 @@ public abstract class GameMessageHandler {
 
 	// ---------------------------------------------------------
 	private static void handleActionCommand(Profile profile, Entity map, ActionCommand message) {
-		switch(message.getCommand()) {
-		case ActionCommand.PING:
-			MessageService.send(new PlayEffect("PING", message.getX(), message.getY(), 0, 1, true, profile.getRole()==Profile.Role.GM && message.isModified()), map);
-			break;
-		case ActionCommand.SHOW_IMAGE:
-			if(profile.getRole() == Profile.Role.GM && D20Common.getEntityManager("image").has(message.getID())) {
-				MessageService.send(message, UserService.getAllConnectedProfiles());
-			}
-			break;
-		case ActionCommand.LOAD_MUSIC:
-		case ActionCommand.PLAY_MUSIC:
-		case ActionCommand.PAUSE_MUSIC:
-		case ActionCommand.STOP_MUSIC:
-			if(profile.getRole() == Profile.Role.GM) {
-				MessageService.send(message, UserService.getAllConnectedProfiles());
-			}
-			break;
-		}
+		// create new command instance with set sender and gm state
+		long sender = profile.id();
+		boolean gm = profile.getRole() == Profile.Role.GM;
+		ActionCommand command = new ActionCommand(message.getCommand(), message.getID(), message.getX(), message.getY(), message.isModified(), message.getText(), sender, gm);
+		
+		// broadcast to all clients
+		MessageService.send(command, UserService.getAllConnectedProfiles());
+	}
+	private static void handlePlayEffect(Profile profile, Entity map, PlayEffect message) {
+		// send to all players in map (and only allow camera focus for gms)
+		MessageService.send(new PlayEffect(message.getEffect(), message.getX(), message.getY(), message.getRotation(), message.getScale(), message.isAboveOcclusion(), profile.getRole()==Profile.Role.GM && message.isFocusCamera()), map);
 	}
 	
 

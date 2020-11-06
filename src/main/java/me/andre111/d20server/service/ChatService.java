@@ -19,25 +19,11 @@ import me.andre111.d20common.util.Utils;
 import me.andre111.d20server.command.Command;
 
 public abstract class ChatService {
-	public static final boolean USE_HTML = true;
-	
-	public static final String STYLE_SENDER = "[style \"font=Arial-BOLD-14\"]";
-	public static final String STYLE_SENDER_ITALIC = "[style \"font=Arial-ITALIC-14\"]";
-	public static final String STYLE_SENDER_TINY = "[style \"font=Arial-10\"]";
-	public static final String STYLE_INFO = "[style \"font=Arial-ITALIC-12\"]";
-
 	public static final long SYSTEM_SOURCE = 0;
 	
 	private static ChatData loadedChat = null;
 	
 	public static void onMessage(Profile profile, String message) {
-		if(!USE_HTML) {
-			// strip formatting stuff
-			message = message.replace("[", "");
-			message = message.replace("]", "");
-			message = message.replace("|", "");
-		}
-		
 		if(message.startsWith("/")) {
 			// extract command name and arguments
 			int endIndex = message.indexOf(' ');
@@ -103,19 +89,12 @@ public abstract class ChatService {
 		} else {
 			// handle simple message
 			StringBuilder sb = new StringBuilder();
-			if(USE_HTML) {
-				sb.append("<p class=\"chat-sender\">");
-				sb.append(escape(profile.getName())+": ");
-				sb.append("</p>");
-				sb.append("<p class=\"chat-message\">");
-				sb.append(escape(message));
-				sb.append("</p>");
-			} else {
-				sb.append(STYLE_SENDER);
-				sb.append(profile.getName());
-				sb.append(": \n");
-				sb.append(message);
-			}
+			sb.append("<p class=\"chat-sender\">");
+			sb.append(escape(profile.getName())+": ");
+			sb.append("</p>");
+			sb.append("<p class=\"chat-message\">");
+			sb.append(escape(message));
+			sb.append("</p>");
 			
 			append(true, new ChatEntry(sb.toString(), profile.id()));
 		}
@@ -129,38 +108,22 @@ public abstract class ChatService {
 	
 	public static void appendError(Profile profile, String... lines) {
 		StringBuilder sb = new StringBuilder();
-		if(USE_HTML) {
-			sb.append("<p class=\"chat-info\">");
-			for(String line : lines) {
-				sb.append(escape(line)+"<br>");
-			}
-			sb.append("</p>");
-		} else {
-			for(String line : lines) {
-				sb.append(STYLE_INFO);
-				sb.append(line);
-				sb.append("\n");
-			}
+		sb.append("<p class=\"chat-info\">");
+		for(String line : lines) {
+			sb.append(escape(line)+"<br>");
 		}
+		sb.append("</p>");
 		
 		append(false, new ChatEntry(sb.toString(), SYSTEM_SOURCE, false, profile.id()));
 	}
 	
 	public static void appendNote(String... lines) {
 		StringBuilder sb = new StringBuilder();
-		if(USE_HTML) {
-			sb.append("<p class=\"chat-info\">");
-			for(String line : lines) {
-				sb.append(escape(line)+"<br>");
-			}
-			sb.append("</p>");
-		} else {
-			for(String line : lines) {
-				sb.append(STYLE_INFO);
-				sb.append(line);
-				sb.append("\n");
-			}
+		sb.append("<p class=\"chat-info\">");
+		for(String line : lines) {
+			sb.append(escape(line)+"<br>");
 		}
+		sb.append("</p>");
 		
 		append(false, new ChatEntry(sb.toString(), SYSTEM_SOURCE, true));
 	}
@@ -226,7 +189,7 @@ public abstract class ChatService {
 		}
 		
 		// send message
-		MessageService.send(new ChatEntries(playerEntries, false), profile);
+		MessageService.send(new ChatEntries(playerEntries, false, true), profile);
 	}
 	
 	public static void sendToClients(boolean append, ChatEntry... entries) {
@@ -241,7 +204,7 @@ public abstract class ChatService {
 			}
 			
 			// send message
-			MessageService.send(new ChatEntries(playerEntries, append), profile);
+			MessageService.send(new ChatEntries(playerEntries, append, false), profile);
 		}
 	}
 	

@@ -9,7 +9,7 @@ class MusicPlayer {
         this.lastUpdate = -1;
         
         // handle updating other clients
-        requestAnimationFrame(() => this.updateState());
+        Events.on("frameEnd", () => this.updateState());
         this.audio.onpause = () => {
             if(ServerData.isGM()) {
                 var msg = {
@@ -30,6 +30,26 @@ class MusicPlayer {
                 MessageService.send(msg);
             }
         };
+        
+        // listen to commands
+        Events.on("actionCommand", evt => {
+            if(!evt.gm) return; // only accept commands from gm
+            
+            switch(evt.command) {
+            case "LOAD_MUSIC":
+                this.serverDoLoad(evt.id);
+                break;
+            case "PLAY_MUSIC":
+                this.serverDoPlay(evt.id, evt.x);
+                break;
+            case "PAUSE_MUSIC":
+                this.serverDoPause();
+                break;
+            case "STOP_MUSIC":
+                this.serverDoStop();
+                break;
+            }
+        });
     }
     
     load(id) {
@@ -47,9 +67,6 @@ class MusicPlayer {
     }
     
     updateState() {
-        // schedule next update
-        requestAnimationFrame(() => this.updateState());
-        
         // calculate time
         var now = Date.now();
         var elapsed = now - this.lastUpdate;

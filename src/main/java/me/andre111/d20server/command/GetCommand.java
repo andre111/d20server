@@ -20,18 +20,11 @@ public class GetCommand extends Command {
 			Object value = variable.get(new Context(profile, profile.getMap(), null));
 			
 			StringBuilder sb = new StringBuilder();
-			if(ChatService.USE_HTML) {
-				sb.append("<p class=\"chat-info\">");
-				sb.append(ChatService.escape(arguments));
-				sb.append(" = ");
-				sb.append(ChatService.escape(""+value));
-				sb.append("</p>");
-			} else {
-				sb.append(ChatService.STYLE_INFO);
-				sb.append(arguments);
-				sb.append(" = ");
-				sb.append(value);
-			}
+			sb.append("<p class=\"chat-info\">");
+			sb.append(ChatService.escape(arguments));
+			sb.append(" = ");
+			sb.append(ChatService.escape(""+value));
+			sb.append("</p>");
 			
 			ChatService.append(false, new ChatEntry(sb.toString(), ChatService.SYSTEM_SOURCE, false, profile.id()));
 		} catch (ScriptException e) {

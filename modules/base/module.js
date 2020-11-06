@@ -1,5 +1,6 @@
 _g = {
-    VERSION: 9
+    VERSION: 9,
+    FPS: 30
 }
 
 Events.on("addModeButtons", event => {
@@ -39,6 +40,14 @@ Events.on("addSidepanelTabs", event => {
     event.addSidepanelTab(new SidepanelTabAudio());
     event.addSidepanelTab(new SidepanelTabLists());
     SidepanelManager.createTab("Settings", "settings"); //TODO: implement
+});
+
+Events.on("actionCommand", event => {
+    if(!event.gm) return; // only accept commands from gm
+    
+    if(event.command == "SHOW_IMAGE") {
+        new CanvasWindowImage(event.id);
+    }
 });
 
 function init() {

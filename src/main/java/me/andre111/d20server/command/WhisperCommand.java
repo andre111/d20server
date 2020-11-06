@@ -36,24 +36,15 @@ public class WhisperCommand extends Command {
 		
 		// build message
 		StringBuilder sb = new StringBuilder();
-		if(ChatService.USE_HTML) {
-			sb.append("<p class=\"chat-sender chat-sender-special\">");
-			sb.append(ChatService.escape(profile.getName()));
-			sb.append(" to ");
-			sb.append(ChatService.escape(reciever.getName()));
-			sb.append(": ");
-			sb.append("</p>");
-			sb.append("<p class=\"chat-message\">");
-			sb.append(ChatService.escape(message));
-			sb.append("</p>");
-		} else {
-			sb.append(ChatService.STYLE_SENDER_ITALIC);
-			sb.append(profile.getName());
-			sb.append(" to ");
-			sb.append(reciever.getName());
-			sb.append(": \n");
-			sb.append(message);
-		}
+		sb.append("<p class=\"chat-sender chat-sender-special\">");
+		sb.append(ChatService.escape(profile.getName()));
+		sb.append(" to ");
+		sb.append(ChatService.escape(reciever.getName()));
+		sb.append(": ");
+		sb.append("</p>");
+		sb.append("<p class=\"chat-message\">");
+		sb.append(ChatService.escape(message));
+		sb.append("</p>");
 		
 		// determine recipents
 		long[] recipents = new long[] { profile.id(), reciever.id() };

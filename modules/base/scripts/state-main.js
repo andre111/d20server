@@ -49,7 +49,7 @@ StateMain = {
         StateMain.listWindowManager = new CanvasWindowListManager();
         
         // calculate fps times
-        _g.fpsInterval = 1000 / 30;
+        _g.fpsInterval = 1000 / _g.FPS;
         _g.lastFrame = Date.now();
         
         // start rendering

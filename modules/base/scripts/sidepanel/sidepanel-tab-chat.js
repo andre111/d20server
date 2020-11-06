@@ -109,9 +109,10 @@ class SidepanelTabChat extends SidepanelTab {
         }
     }
     
-    onMessage(entry) {
+    onMessage(entry, historical) {
         var evt = {
             entry: entry,
+            historical: historical,
             canceled: false
         };
         Events.trigger("chatMessage", evt);

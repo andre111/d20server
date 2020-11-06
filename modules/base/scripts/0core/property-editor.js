@@ -709,6 +709,7 @@ class LongListPropertyEditor extends PropertyEditor {
         this.valueProvider = ValueProviders.get(this.referenceType);
         
         GuiUtils.makeBordered(this.container, label);
+        this.container.style.overflow = "auto";
         
         this.tree = new SearchableIDTree(this.container, null, this.valueProvider);
         if(referenceType != "profile") this.addButton("Open", false, () => this.doOpen());
