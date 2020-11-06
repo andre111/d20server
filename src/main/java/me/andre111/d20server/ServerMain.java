@@ -21,16 +21,13 @@ import me.andre111.d20server.service.SaveService;
 //    (make start point snap to centers AND corners)
 
 //TODO: web client todos:
-// - Add a replacement "register" commandline option to the server to add new users in place of client based register
 // Align to Grid Window
-// - Ambient sounds system!!
-// server should send lastModified data and respond with use cached when applicable
 // Somehow live update update rules ("parser implementation problems")
+// server should send lastModified data and respond with use cached when applicable
 
 //TODO: when the web client porting is done:
 // Separate into modules 
-//    - (e.g. a "drawings" module -> needs some way of defining render layers and canvas modes for menu that can be extended)
-//    split stuff into their own modules: Audio System (including token properties,edit tab,ambient sound system,music player(=>actionCommand event),audio sidepanel tab,...)
+//    Audio System (including token properties,edit tab,ambient sound system,music player(=>actionCommand event),audio sidepanel tab,...)
 // "Area" module (you can define areas, maybe using the drawing system, that can influence stuff, 
 //               first idea: "no weather/indoor" areas where the WeatherRenderer does not spawn particles)
 // add a "requiredAccess" setting to editortabs to hide tabs (e.g. access and gm tabs of token)
@@ -38,16 +35,12 @@ import me.andre111.d20server.service.SaveService;
 //-------------------------------------------
 //TODO: Current Plans:
 // support sending selected entities of other types
-// / Aufs Chris Laptop ist der LightRenderer kapput (Licht verschiebt sich scheinbar nicht mit der Kamera???)
 // Doppelklick um Dinge zu öffnen
 // Hidden Initiative Macro (Hidden Entry in Lists system (add hidden value and toggle for gm))
-// / Extract and Provide a general/global location for value providers + Refactor SearchableIDTree to take valueproviders (currently duplicated code)
 // replace sidebar tab names with icons? (to avoid needing to scroll? - but would be harder to understand)
 // create real "import" command line functionality on server (+ other commands?)
-// / Custom Blending is broken on my laptop - why? - it's broken in d3d, fix that sometime later
 
 //TODO: dice/template/scripting rework
-// needs to support:
 //    not as important: (using a string property as part of the expression (cheap solution would be replacing before parsing, but that can be done better...))
 //    storing a evaluated expression and reusing that (multiple times) as part of other expressions (so not just the resulting value, but also the full "result" object)
 //    better display of eval results (calculations for dice sides/count/... are not show at all currently)
@@ -56,25 +49,18 @@ import me.andre111.d20server.service.SaveService;
 // make pf character sheet more complete (atleast: movementrates, ...) AND replace with custom no copyright sheet
 // journal: entity with a single string (parsed by layoutengine), that can be shown/viewed - needs atleast text and image (based on id) support
 // more keyboard shortcuts (delete, camera moving, ...)
-// / doors (special walls that can be toggled)
-
-//TODO: The next "big" plan:
 // Add optional "attachment" macros
 
 //TODO: And the completely insane next plan:
 // Convert ALL entities to be FULLY data defined/driven
 //    Third.1 step: Add remaining data defined stuff: cascading deletes
 //    ? step: verify entity type on entitymanager add / other locations
-// -   (could be a first step towards a browser based client)
 
 //TODO: Nice to haves:
 // Better name for "attachments?"
 // more "Effects" for use with the effect command (-> i.e. attack animations and magic)
 // one sided walls ? (more easily do-able of I go through with the technical entity changes)
 // Script support (server side)
-// - "3D dice" (simulated in 3d, drawn using a prerendered sprite sheet?)
-// - improved sound filters (freeverb tweaking and muffle filter)
-// - Better Chat formatting (write a better formatted String parser in LayoutEngine and use that)
 // language support
 // a "map" function for an actual map somehow?
 
@@ -97,7 +83,6 @@ public class ServerMain {
 		
 		System.out.println("Starting game server...");
 		//TODO: set/configure correct ports
-		//GameServer.start(8081);
 		HttpServer.start(8082);
 	}
 }

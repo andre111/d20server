@@ -32,7 +32,7 @@ import me.andre111.d20common.model.def.RenderLayerDefinition;
 import me.andre111.d20common.util.Utils;
 
 public abstract class ModuleService {
-	private static final boolean DEBUG_SCRIPTS = true;
+	private static final boolean DEBUG_SCRIPTS = false;
 	
 	private static List<Module> modules = new ArrayList<>();
 	private static File modulesDir;
