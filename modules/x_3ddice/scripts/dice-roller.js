@@ -57,7 +57,7 @@ class DiceRoller {
             
             var config = {
                 autoscale: true,
-                canBeFlipped: false,
+                canBeFlipped: true, // should this be possible (knock old dice around with new dice)
                 speed: 1,
                 shadowQuality: 'high',
                 bumpMapping: true,

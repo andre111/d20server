@@ -28,7 +28,7 @@ WallRenderer = {
                         cpr.AddPaths(localCombined, ClipperLib.PolyType.ptSubject, true);
                         cpr.AddPath(poly, ClipperLib.PolyType.ptClip, true);
                         cpr.Execute(ClipperLib.ClipType.ctUnion, result);
-                        result = ClipperLib.Clipper.CleanPolygons(result, 1.1);
+                        result = ClipperLib.Clipper.CleanPolygons(result, 1.1); //TODO tweak this value
                         localCombined = result;
                     }
                 }
@@ -110,12 +110,36 @@ WallRenderer = {
 		if(Math.abs(py2-minY)<=1) py2 = minY;
 		if(Math.abs(py2-maxY)<=1) py2 = maxY;
         
+        // move projected values one away from each other (to avoid polygon rounding/clipping problems)
+        // TODO: even if it works, this is an ugly hack, find an actual solution!!!
+        var mpx1 = px1;
+        var mpy1 = py1;
+        var mpx2 = px2;
+        var mpy2 = py2;
+        if((mpx1 == minX && mpx2 == maxX) || (mpx1 == maxX && mpx2 == minX)) {
+            // on opposite sides of the screen -> move y coordinates towards viewer
+            mpy1 = mpy1 < viewerY ? mpy1 + 1 : mpy1 - 1;
+            mpy2 = mpy2 < viewerY ? mpy2 + 1 : mpy2 - 1;
+        } else if((mpy1 == minY && mpy2 == maxY) || (mpy1 == maxY && mpy2 == minY)) {
+            // on top and bottom of the screen -> move y coordinates towards viewer
+            mpx1 = mpx1 < viewerX ? mpx1 + 1 : mpx1 - 1;
+            mpx2 = mpx2 < viewerX ? mpx2 + 1 : mpx2 - 1;
+        } else {
+            // else move away from each other
+            if(mpx1 != minX && mpx1 != maxX) mpx1 = mpx1 < mpx2 ? mpx1 - 1 : mpx1 + 1;
+            if(mpy1 != minY && mpy1 != maxY) mpy1 = mpy1 < mpy2 ? mpy1 - 1 : mpy1 + 1;
+            if(mpx2 != minX && mpx2 != maxX) mpx2 = mpx2 < mpx1 ? mpx2 - 1 : mpx2 + 1;
+            if(mpy2 != minY && mpy2 != maxY) mpy2 = mpy2 < mpy1 ? mpy2 - 1 : mpy2 + 1;
+        }
+        
+        //
+        
 		// create polygon
 		var poly = []
 		// add start point
 		poly.push({ X: x1, Y: y1 });
 		// add first projected point
-		poly.push({ X: px1, Y: py1 });
+		poly.push({ X: mpx1, Y: mpy1 });
 		// add viewport corners if needed by moving around the edges
 		var isLeft = IntMathUtils.isPointLeftOfLine(x1, y1, x2, y2, viewerX, viewerY);
 		var lastx = px1;
@@ -164,7 +188,7 @@ WallRenderer = {
 			}
 		}
 		// add second projected point
-		poly.push({ X: px2, Y: py2 });
+		poly.push({ X: mpx2, Y: mpy2 });
 		// add end point
 		poly.push({ X: x2, Y: y2 });
 

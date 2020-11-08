@@ -11,12 +11,12 @@ class CanvasRenderLayerWallOcclusion extends CanvasRenderLayer {
             // render
             if(viewers.length != 0) {
                 // extend viewport to avoid rounding errors
-                var extendedViewport = new CRect(viewport.x-2, viewport.y-2, viewport.width+4, viewport.height+4);
+                var extendedViewport = new CRect(viewport.x-4, viewport.y-4, viewport.width+8, viewport.height+8);
                 var pwr = WallRenderer.calculateWalls(MapUtils.currentEntities("wall").value(), extendedViewport, viewers);
                 WallRenderer.renderPrecalculatedWallRender(ctx, pwr);
                 
                 // draw fow background tokens
-                var fowClip = FOWRenderer.updateAndGetClip(pwr, extendedViewport);
+                var fowClip = FOWRenderer.updateAndGetClip(pwr, viewport);
                 if(fowClip != null) {
                     ctx.save();
                     RenderUtils.addPaths(ctx, fowClip);
@@ -28,7 +28,7 @@ class CanvasRenderLayerWallOcclusion extends CanvasRenderLayer {
                 }
                 
                 // draw walls as lines
-                ctx.lineWidth = 5;
+                ctx.lineWidth = 3;
                 ctx.lineCap = "round";
                 ctx.strokeStyle = "black";
                 ctx.beginPath();

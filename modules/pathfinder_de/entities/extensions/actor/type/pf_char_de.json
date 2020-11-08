@@ -1679,7 +1679,7 @@
         
         {
             "property": "pf_saveReflex",
-            "expression": "{self.property.pf_saveReflexBase} + {self.property.pf_dexMod} + {self.property.pf_saveReflexMagic} + {self.property.pf_saveReflexMisc} + {self.property.pf_saveReflexMisc}"
+            "expression": "{self.property.pf_saveReflexBase} + {self.property.pf_dexMod} + {self.property.pf_saveReflexMagic} + {self.property.pf_saveReflexMisc} + {self.property.pf_saveReflexTemp}"
         },
         {
             "property": "pf_saveWill",

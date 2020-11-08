@@ -10,6 +10,11 @@ import me.andre111.d20server.service.ModuleService;
 import me.andre111.d20server.service.SaveService;
 
 //TODO: plans for making the web client wait not seem so long:
+// split attachments into more logical sepparate things:
+//    items
+//    features
+//    spells
+//    journal entries
 // add "statuses" to attachments (using d20helper, with a manualAttachmentDefinitions.json)
 //    Doors 
 //    isDoor,isLocked,isOpen properties for walls
@@ -21,7 +26,7 @@ import me.andre111.d20server.service.SaveService;
 //    (make start point snap to centers AND corners)
 
 //TODO: web client todos:
-// Align to Grid Window
+// - Align to Grid Window
 // Somehow live update update rules ("parser implementation problems")
 // server should send lastModified data and respond with use cached when applicable
 

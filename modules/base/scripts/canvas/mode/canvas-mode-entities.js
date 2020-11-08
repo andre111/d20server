@@ -945,6 +945,8 @@ class CanvasModeEntities extends CanvasMode {
 				xp = Math.ceil(xp / gridSize) * gridSize - gridSize/2;
 				yp = Math.ceil(yp / gridSize) * gridSize - gridSize/2;
 			}
+            xp = Math.trunc(xp);
+            yp = Math.trunc(yp);
             
             // collide with walls
 			var doMove = true;

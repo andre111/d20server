@@ -142,6 +142,9 @@ class SearchableIDTree {
         
         $(this.container).jstree({
             "plugins": (identifier != null ? [ "search", "state" ] : [ "search" ]),
+            "core": {
+                "animation": false
+            },
             "search": {
                 "case_sensitive": false,
                 "show_only_matches": true,

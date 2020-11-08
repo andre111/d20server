@@ -51,7 +51,7 @@ class CanvasWindowListEntry {
         this.valueField.type = "text";
         this.valueField.value = value;
         this.valueField.disabled = !editable;
-        this.valueField.style.width = "40px";
+        this.valueField.style.width = "60px";
         this.valueField.style.height = "40px";
         this.valueField.onchange = () => this.onConfirmChange();
         rightPanel.appendChild(this.valueField);
@@ -103,6 +103,7 @@ class CanvasWindowList extends CanvasWindow {
         
         // prevent closing when not GM or update visible state if proceeding
         this.shouldClose = false;
+        this.frame.style.margin = "0";
         $(this.frame).on("dialogbeforeclose", (event, ui) => { 
             if(!this.shouldClose && !ServerData.isGM()) return false; 
         });
@@ -138,6 +139,9 @@ class CanvasWindowList extends CanvasWindow {
         this.frame.innerHTML = "";
         var mainPanel = document.createElement("div");
         mainPanel.style.overflow = "auto";
+        mainPanel.style.margin = "0";
+        mainPanel.style.width = "100%";
+        mainPanel.style.height = "100%";
         this.frame.appendChild(mainPanel);
         
         var i = 0;

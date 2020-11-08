@@ -1,7 +1,4 @@
 /* THIS IS THE SPECIAL STUFF: MAKE SIZE ACTUALY REFER TO SIZE INCLUDING BORDER AND PADDING */
-html {
-    box-sizing: border-box;
-}
 *, *:before, *:after {
-    box-sizing: inherit;
+    box-sizing: border-box;
 }

@@ -1,0 +1,53 @@
+Required properties for the split attchment entities:
+Should they all appear under a general journal? 
+They should be linkable from elsewhere, either under a general system or with specified type
+-----------------------------------------------------
+Use a "COUNTED_REFERNCE" property type to attach these to actors 
+(map id->count)
+to note count for items, or usage tracker for spells/...?
+-----------------------------------------------------
+For "usable stuff" (features, spells, maybe items?):
+	activation cost (number + type (Action,Turn,...,Legendary Action,...)
+	target (number + type?)
+	range
+	duration (number + type?)
+	maxUsages?
+-----------------------------------------------------
+For "rolling stuff"
+	type
+	formula?
+	saving throw settings?
+-----------------------------------------------------
+SHARED:
+-----------------------------------------------------
+	name
+	icon
+	shortDesc
+	fullDesc? (should this be shared?, should this be html parsed?, allow references to other journal entries?)
+	tags
+-----------------------------------------------------
+ITEMS:
+(should this include all the pf rule stuff, so proficiences,ac effects,attack rools,consumables,equipment slot...?)
+-----------------------------------------------------
+	type
+	rarity
+	weight
+	price
+	ruleSource
+-----------------------------------------------------
+FEATURES:
+-----------------------------------------------------
+	type
+	requirements
+	ruleSource
+-----------------------------------------------------
+SPELLS:
+-----------------------------------------------------
+	grad? (english name?)
+	school
+	components (boolean toggles?)
+	materials (String?)
+	ruleSource
+-----------------------------------------------------
+JOURNAL ENTRIES:
+-----------------------------------------------------

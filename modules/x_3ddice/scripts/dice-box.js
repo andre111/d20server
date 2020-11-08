@@ -345,10 +345,10 @@ class DiceBox {
 	//returns an array of vectordata objects
 	getVectors(notationVectors, vector, boost, dist){
 
-		for (let i = 0;i< notationVectors.dice.length;i++) {
+		for (let i = notationVectors.dice.length-1; i>=0; i--) {
 
 			const diceobj = this.dicefactory.get("d"+notationVectors.dice[i].sides); //TODO: add support for special dice?
-            if(!diceobj) continue; // skip unknown dice
+            if(!diceobj) { notationVectors.dice.splice(i, 1); continue; } // skip unknown dice
 
 			let vec = this.vectorRand(vector);
 
