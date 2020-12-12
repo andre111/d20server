@@ -82,6 +82,10 @@ html, body {
     height: 32px;
     overflow: hidden;
     padding: 2px;
+    border: solid 1 px black;
+    border-radius: 4px;
+}
+.property-editor:hover {
 }
 
 /* Used for bordered divs with overlaying legend on border -> see: GuiUtils.makeBordered */

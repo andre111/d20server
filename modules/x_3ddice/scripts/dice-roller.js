@@ -44,9 +44,10 @@ class DiceRoller {
         this.canvas.style.position = "absolute";
         this.canvas.style.left = "0";
         this.canvas.style.top = "0";
-        this.canvas.style.width = "100%";
+        this.canvas.style.width = "calc(100% - 384px)";
         this.canvas.style.height = "100%";
         this.canvas.style.pointerEvents = "none";
+        this.canvas.style.zIndex = "100000";
         document.body.appendChild(this.canvas);
     }
     
