@@ -20,10 +20,6 @@ import me.andre111.d20server.service.SaveService;
 //    isDoor,isLocked,isOpen properties for walls
 //    split CanvasModeWalls into actions: Create Walls (right click to open edit window), Create Doors, Delete
 //    allow interacting with doors in CanvasModeEntities as long as a controllable entity is near it (toggle isOpen or play locked sound)
-// - CanvasModeMeasurements (part of pathfinder module? as that may be pf specific)
-// -   allow measuring distance and circles/cones/...
-// -   see: http://prd.5footstep.de/Grundregelwerk/Magie/Zauberbeschreibungen/EinenZauberzielen
-// -   (make start point snap to centers AND corners)
 
 //TODO: web client todos:
 // Timestamps in chat messages
@@ -64,8 +60,8 @@ import me.andre111.d20server.service.SaveService;
 //TODO: Nice to haves:
 // Better name for "attachments?"
 // more "Effects" for use with the effect command (-> i.e. attack animations and magic)
-// one sided walls ? (more easily do-able of I go through with the technical entity changes)
-// Script support (server side)
+// one sided walls ?
+// Script support (server side, may just happen automatically if I decide to port the server to node.js)
 // language support
 // a "map" function for an actual map somehow?
 

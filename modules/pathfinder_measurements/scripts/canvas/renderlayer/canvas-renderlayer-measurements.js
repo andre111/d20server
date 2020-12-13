@@ -28,8 +28,8 @@ class CanvasRenderLayerMeasurements extends CanvasRenderLayer {
                 // draw affected cells
                 ctx.globalAlpha = 0.2;
                 var bb = this.getMeasurementBB(measurement, length, angle);
-                for(var xcell = Math.floor(bb.xmin/gridSize); xcell <= Math.ceil(bb.xmax/gridSize); xcell++) {
-                    for(var ycell = Math.floor(bb.ymin/gridSize); ycell <= Math.ceil(bb.ymax/gridSize); ycell++) {
+                for(var xcell = Math.floor(bb.xmin/gridSize)-1; xcell <= Math.ceil(bb.xmax/gridSize)+1; xcell++) {
+                    for(var ycell = Math.floor(bb.ymin/gridSize)-1; ycell <= Math.ceil(bb.ymax/gridSize)+1; ycell++) {
                         if(this.isInsideMeasurement(xcell*gridSize + gridSize/2, ycell*gridSize + gridSize/2, measurement, length, angle, gridSize)) {
                             ctx.fillRect(xcell*gridSize, ycell*gridSize, gridSize, gridSize);
                         }

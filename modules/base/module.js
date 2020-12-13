@@ -2,6 +2,9 @@ _g = {
     VERSION: 9,
     FPS: 30
 }
+dayjs.locale('de');
+dayjs.extend(window.dayjs_plugin_relativeTime);
+dayjs.extend(window.dayjs_plugin_duration);
 
 Events.on("addModeButtons", event => {
     // token mode

@@ -86,7 +86,6 @@ class SidepanelTabChat extends SidepanelTab {
             container.className = "chat";
             
             container.innerHTML = entry.text;
-            GuiUtils.makeHoverable(container);
             
             // add replaceable trigger
             for(const element of $(container).find(".replaceable")) {
@@ -99,6 +98,23 @@ class SidepanelTabChat extends SidepanelTab {
                 };
             }
             
+            // add timestamp (with hover and auto update)
+            var timestampP = document.createElement("p");
+            timestampP.className = "chat-timestamp hoverable";
+            container.appendChild(timestampP);
+            var timestampText = document.createElement("p");
+            timestampP.appendChild(timestampText);
+            var timestampHover = document.createElement("p");
+            timestampHover.className = "onhover";
+            timestampP.appendChild(timestampHover);
+            
+            timestampText.innerHTML = dayjs.unix(entry.time).fromNow();
+            timestampHover.innerHTML = dayjs.unix(entry.time).format();
+            this.scheduleUpdate(timestampText, entry);
+            
+            // make gui adjustments
+            GuiUtils.makeHoverable(container);
+            
             // add to map
             this.entries.set(entry.id, container);
             
@@ -107,6 +123,20 @@ class SidepanelTabChat extends SidepanelTab {
             //container.scrollIntoView(); // this "breaks" the website by offseting it up by a few pixels for some reason, using "outdated" code below as an alternative
             this.chatPanel.scrollTop = this.chatPanel.scrollHeight;
         }
+    }
+    
+    scheduleUpdate(timestampText, entry) {
+        // determine wait time (a second when below a minute ago, a minute when below one hour, one hour otherwise)
+        var ago = dayjs.duration(dayjs().diff(dayjs.unix(entry.time))).as('seconds');
+        var time = (ago < 60 ? 1 : (ago < 60*60 ? 60 : 60 * 60)) * 1000;
+        
+        setTimeout(() => {
+            // perform update
+            timestampText.innerHTML = dayjs.unix(entry.time).fromNow();
+            
+            // schedule next update
+            this.scheduleUpdate(timestampText, entry);
+        }, time);
     }
     
     onMessage(entry, historical) {

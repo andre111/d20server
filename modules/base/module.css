@@ -110,6 +110,7 @@ div.chat {
     margin: 2px;
     border-radius: 6px;
     border: solid 1px #e2cf9d;
+    position: relative;
 }
 p.chat-sender {
     font-weight: bold;
@@ -126,6 +127,16 @@ p.chat-message {
 p.chat-info {
     font-style: italic;
     font-size: 14px;
+    margin: 0;
+}
+p.chat-timestamp {
+    position: absolute;
+    top: 0;
+    right: 0;
+    margin: 0 5px 0 0;
+    font-size: 12px;
+}
+p.chat-timestamp p {
     margin: 0;
 }
 
