@@ -109,7 +109,7 @@ class SidepanelTabChat extends SidepanelTab {
             timestampP.appendChild(timestampHover);
             
             timestampText.innerHTML = dayjs.unix(entry.time).fromNow();
-            timestampHover.innerHTML = dayjs.unix(entry.time).format();
+            timestampHover.innerHTML = dayjs.unix(entry.time).format('lll');
             this.scheduleUpdate(timestampText, entry);
             
             // make gui adjustments

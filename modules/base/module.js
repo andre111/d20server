@@ -5,6 +5,7 @@ _g = {
 dayjs.locale('de');
 dayjs.extend(window.dayjs_plugin_relativeTime);
 dayjs.extend(window.dayjs_plugin_duration);
+dayjs.extend(window.dayjs_plugin_localizedFormat);
 
 Events.on("addModeButtons", event => {
     // token mode
