@@ -22,14 +22,19 @@ public class Template {
 		TEMPLATES.put("attack1", loadInternalTemplate("attack1", "#888888"));
 		TEMPLATES.put("attack11", loadInternalTemplate("attack11", "#888888"));
 		TEMPLATES.put("attack21", loadInternalTemplate("attack21", "#888888"));
+		TEMPLATES.put("attack22", loadInternalTemplate("attack22", "#888888"));
 
 		TEMPLATES.put("magic0", loadInternalTemplate("attack0", "#57007F"));
 		TEMPLATES.put("magic1", loadInternalTemplate("attack1", "#57007F"));
 		TEMPLATES.put("magic11", loadInternalTemplate("attack11", "#57007F"));
 		TEMPLATES.put("magic21", loadInternalTemplate("attack21", "#57007F"));
+		TEMPLATES.put("magic22", loadInternalTemplate("attack22", "#57007F"));
 
 		TEMPLATES.put("generic0", loadInternalTemplate("attack0", "#4A7C00"));
 		TEMPLATES.put("generic1", loadInternalTemplate("attack1", "#4A7C00"));
+		TEMPLATES.put("generic11", loadInternalTemplate("attack11", "#4A7C00"));
+		TEMPLATES.put("generic21", loadInternalTemplate("attack21", "#4A7C00"));
+		TEMPLATES.put("generic22", loadInternalTemplate("attack22", "#4A7C00"));
 
 		TEMPLATES.put("text", loadInternalTemplate("text"));
 		
