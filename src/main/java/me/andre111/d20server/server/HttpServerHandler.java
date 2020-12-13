@@ -51,6 +51,7 @@ public class HttpServerHandler extends SimpleChannelInboundHandler<FullHttpReque
 	private static final String WEBSOCKET_PATH = "/ws";
 	private static final String SCRIPT_PATH = "/main.js";
 	private static final String CSS_PATH = "/main.css";
+	private static final String COLOR_IMAGE_PATH = "/color/";
 
 	private static final HttpDataFactory factory = new DefaultHttpDataFactory(false);
 	private HttpPostRequestDecoder decoder;
@@ -120,6 +121,13 @@ public class HttpServerHandler extends SimpleChannelInboundHandler<FullHttpReque
 		} else if(path.equals(CSS_PATH)) {
 			data = ModuleService.getCSSData();
 			contentType = "text/css";
+		} else if(path.startsWith(COLOR_IMAGE_PATH)) {
+			try {
+				int color = Integer.parseInt(path.substring(COLOR_IMAGE_PATH.length()));
+				data = ImageUtil.createColorImage(color, 16, 2);
+				contentType = "image/png";
+			} catch(NumberFormatException e) {
+			}
 		}
 
 		// send response
@@ -250,7 +258,7 @@ public class HttpServerHandler extends SimpleChannelInboundHandler<FullHttpReque
 	}
 
 	private boolean isValidPath(String path) {
-		return path != null && (path.startsWith(IMAGE_PATH) || path.startsWith(AUDIO_PATH) || path.startsWith(PUBLIC_PATH) || path.startsWith(WEBSOCKET_PATH) || path.equals(SCRIPT_PATH) || path.equals(CSS_PATH));
+		return path != null && (path.startsWith(IMAGE_PATH) || path.startsWith(AUDIO_PATH) || path.startsWith(PUBLIC_PATH) || path.startsWith(WEBSOCKET_PATH) || path.equals(SCRIPT_PATH) || path.equals(CSS_PATH) || path.startsWith(COLOR_IMAGE_PATH));
 	}
 
 	@Override

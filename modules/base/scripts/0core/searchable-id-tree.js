@@ -118,6 +118,12 @@ class ProfileValueProvider extends ValueProvider {
         
         return value.connected ? "Online/"+value.username : "Offline/"+value.username;
     }
+    
+    getIcon(value) {
+        if(value == null || value == undefined) return null;
+        
+        return "/color/"+value.color;
+    }
 }
 
 class SearchableIDTree {

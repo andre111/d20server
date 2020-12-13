@@ -9,7 +9,9 @@ import me.andre111.d20common.D20Common;
 import me.andre111.d20common.message.game.ActionCommand;
 import me.andre111.d20common.message.game.GameMessage;
 import me.andre111.d20common.message.game.PlayEffect;
+import me.andre111.d20common.message.game.PlayerList;
 import me.andre111.d20common.message.game.SelectedTokens;
+import me.andre111.d20common.message.game.SetPlayerColor;
 import me.andre111.d20common.message.game.actor.SetActorDefaultToken;
 import me.andre111.d20common.message.game.chat.SendChatMessage;
 import me.andre111.d20common.message.game.entity.AddEntity;
@@ -50,6 +52,8 @@ public abstract class GameMessageHandler {
 			handleActionCommand(profile, map, (ActionCommand) message);
 		} else if(message instanceof PlayEffect) {
 			handlePlayEffect(profile, map, (PlayEffect) message);
+		} else if(message instanceof SetPlayerColor) {
+			handleSetPlayerColor(profile, map, (SetPlayerColor) message);
 
 			// ENTITIES: --------------------
 		} else if(message instanceof AddEntity) {
@@ -170,6 +174,13 @@ public abstract class GameMessageHandler {
 	private static void handlePlayEffect(Profile profile, Entity map, PlayEffect message) {
 		// send to all players in map (and only allow camera focus for gms)
 		MessageService.send(new PlayEffect(message.getEffect(), message.getX(), message.getY(), message.getRotation(), message.getScale(), message.isAboveOcclusion(), profile.getRole()==Profile.Role.GM && message.isFocusCamera()), map);
+	}
+	private static void handleSetPlayerColor(Profile profile, Entity map, SetPlayerColor message) {
+		profile.setColor(message.getColor());
+		UserService.addAndSave(profile);
+		
+		// update players (to all)
+		MessageService.send(new PlayerList(UserService.getAllProfiles()), (Entity) null);
 	}
 	
 

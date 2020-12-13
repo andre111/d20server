@@ -1,5 +1,6 @@
 package me.andre111.d20server.util;
 
+import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.awt.image.DataBufferInt;
@@ -37,5 +38,21 @@ public class ImageUtil {
 			e.printStackTrace();
 		}
 		return fileData;
+	}
+	
+	public static byte[] createColorImage(int color, int size, int border) {
+		try(ByteArrayOutputStream os = new ByteArrayOutputStream()) {
+			BufferedImage source = new BufferedImage(size, size, BufferedImage.TYPE_INT_ARGB);
+			Graphics2D g2d = source.createGraphics();
+			g2d.setColor(new Color(color));
+			g2d.fillRect(border, border, size-border*2, size-border*2);
+			g2d.dispose();
+			ImageIO.write(source, "PNG", os);
+			return os.toByteArray();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return null;
+		}
 	}
 }
