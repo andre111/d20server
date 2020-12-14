@@ -42,6 +42,8 @@ public abstract class Command {
 		new TriggerCommand("trigger", new String[] {});
 		
 		new EffectCommand("effect", new String[] {});
+		
+		new IfCommand("if", new String[] {});
 	}
 	
 	public static final Command get(String name) {

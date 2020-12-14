@@ -22,7 +22,6 @@ import me.andre111.d20server.service.SaveService;
 //    allow interacting with doors in CanvasModeEntities as long as a controllable entity is near it (toggle isOpen or play locked sound)
 
 //TODO: web client todos:
-// Timestamps in chat messages
 // Somehow live update update rules ("parser implementation problems")
 // server should send lastModified data and respond with use cached when applicable
 
