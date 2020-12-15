@@ -78,16 +78,16 @@
                     "editorType": "IMAGE",
                     "property": "imageID",
                     "text": "Icon",
-                    "w": 128,
-                    "h": 128
+                    "w": 64,
+                    "h": 64
                 },
                 {
                     "type": "EDITOR",
                     "editorType": "MULTI_LINE_STRING",
                     "property": "descShort",
                     "text": "Short Description",
-                    "w": 660,
-                    "h": 128
+                    "w": 724,
+                    "h": 64
                 },
                 {
                     "type": "EDITOR",
@@ -95,16 +95,16 @@
                     "property": "tags",
                     "text": "Tags",
                     "w": 181,
-                    "h": 128
+                    "h": 64
                 },
                 
                 {
                     "type": "EDITOR",
-                    "editorType": "MULTI_LINE_STRING",
+                    "editorType": "HTML_STRING",
                     "property": "descFull",
                     "text": "Full Description",
                     "w": 980,
-                    "h": 322
+                    "h": 370
                 }
             ]
         }

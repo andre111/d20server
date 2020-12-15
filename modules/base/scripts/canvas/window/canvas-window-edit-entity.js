@@ -83,6 +83,11 @@ class CWEditEntityTab {
 					editor = new MultiLineStringPropertyEditor(this, property, compDefinition.text);
 					component = editor.getContainer();
                     break;
+                case "HTML_STRING":
+                    if(type != "STRING") throw "Cannot use HTML_STRING editor for property of type: "+type;
+					editor = new HTMLStringPropertyEditor(this, property, compDefinition.text);
+					component = editor.getContainer();
+                    break;
                 case "REFERENCE_SINGLE":
                     editor = new EntityReferencePropertyEditor(this, property, compDefinition.text, compDefinition.reference);
 					component = editor.getContainer();
@@ -193,6 +198,12 @@ class CWEditEntityTab {
             editor.apply(reference, accessLevel);
         }
     }
+    
+    onClose() {
+        for(var editor of this.editors) {
+            editor.onDestroy();
+        }
+    }
 }
 
 class CanvasWindowEditEntity extends CanvasWindow {
@@ -277,5 +288,12 @@ class CanvasWindowEditEntity extends CanvasWindow {
         
         // update entity
         this.reference.performUpdate();
+    }
+    
+    onClose() {
+        super.onClose();
+        for(var tab of this.tabs) {
+            tab.onClose();
+        }
     }
 }

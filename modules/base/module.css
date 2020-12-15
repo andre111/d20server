@@ -220,6 +220,24 @@ textarea {
     overflow: auto;
 }
 
+table {
+    border: 1px solid black;
+    border-collapse: collapse;
+    padding: 5px;
+    margin-left: auto;
+    margin-right: auto;
+}
+th, td {
+    border: 1px solid black;
+    border-collapse: collapse;
+    padding: 5px;
+}
+
+/* TinyMCE Overrides */
+.tox-tinymce-inline {
+    z-index:1000 !important; /* force editor toolbar in front of windows */
+}
+
 /* jQueryUI overrides */
 .ui-menu .ui-menu-item {
     font-size: 10px !important;

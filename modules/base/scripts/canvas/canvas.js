@@ -292,7 +292,7 @@ class CanvasMode extends MouseController {
 
 class CanvasWindow {
     constructor(title, modal) {
-    this.frame = WindowManager.createWindow(title, modal, () => { this.isClosed = true; });
+        this.frame = WindowManager.createWindow(title, modal, () => { this.onClose(); });
         $(this.frame).dialog("option", "maxHeight", document.body.clientHeight);
         this.isClosed = false;
     }
@@ -327,6 +327,10 @@ class CanvasWindow {
         if(this.isClosed) return;
         
         this.isClosed = $(this.frame).dialog("close");
+    }
+    
+    onClose() {
+        this.isClosed = true;
     }
 }
 
