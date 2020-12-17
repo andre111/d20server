@@ -121,8 +121,10 @@ class ModePanel {
     }
     
     setMode(mode) {
+        if(StateMain.mode) StateMain.mode.exit();
         StateMain.mode = mode;
         mode.init();
+        
         this.updateState();
     }
     

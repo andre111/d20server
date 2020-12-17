@@ -102,10 +102,10 @@
                 },
                 {
                     "type": "EDITOR",
-                    "editorType": "MULTI_LINE_STRING",
+                    "editorType": "HTML_STRING",
                     "property": "bio",
                     "text": "Bio",
-                    "w": 775,
+                    "w": 785,
                     "h": 200
                 },
                 {
@@ -114,11 +114,11 @@
                 
                 {
                     "type": "EDITOR",
-                    "editorType": "MULTI_LINE_STRING",
+                    "editorType": "HTML_STRING",
                     "property": "gmBio",
                     "text": "GM Bio",
-                    "w": 980,
-                    "h": 282
+                    "w": 990,
+                    "h": 266
                 }
             ]
         },

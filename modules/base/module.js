@@ -13,7 +13,11 @@ Events.on("addModeButtons", event => {
     
     // wall mode
     if(ServerData.isGM()) {
-        event.addButton(new ExtendedModeButton(new ModeButton("wall", "Edit Walls", () => StateMain.mode instanceof CanvasModeWalls, () => event.panel.setMode(new CanvasModeWalls())), 0));
+        event.addButton(new ExtendedModeButton(new ModeButton("wall", "Edit Walls", () => StateMain.mode instanceof CanvasModeWalls, () => event.panel.setMode(new CanvasModeWalls())), 0, [
+            new ModeButton("wall", "Create Walls", () => StateMain.mode instanceof CanvasModeWalls && StateMain.mode.action instanceof CMWallsActionCreateWall, () => { event.panel.setMode(new CanvasModeWalls()); StateMain.mode.setAction(new CMWallsActionCreateWall(StateMain.mode)); event.panel.updateState(); }),
+            new ModeButton("window", "Create Windows", () => StateMain.mode instanceof CanvasModeWalls && StateMain.mode.action instanceof CMWallsActionCreateWindow, () => { event.panel.setMode(new CanvasModeWalls()); StateMain.mode.setAction(new CMWallsActionCreateWindow(StateMain.mode)); event.panel.updateState(); }),
+            new ModeButton("door", "Create Doors", () => StateMain.mode instanceof CanvasModeWalls && StateMain.mode.action instanceof CMWallsActionCreateDoor, () => { event.panel.setMode(new CanvasModeWalls()); StateMain.mode.setAction(new CMWallsActionCreateDoor(StateMain.mode)); event.panel.updateState(); })
+        ]));
     }
 });
 

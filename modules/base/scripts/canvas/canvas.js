@@ -285,6 +285,7 @@ class CanvasMode extends MouseController {
     }
     
     init() {}
+    exit() {}
     setLayer(layer) {}
     renderOverlay(ctx) {}
     actionPerformed(action) {}

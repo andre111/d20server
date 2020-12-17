@@ -6,7 +6,9 @@ WallRenderer = {
         var maxY = viewport.y + viewport.height;
         
         for(var wall of walls.value()) {
-            if(!wall.prop("seeThrough").getBoolean() && IntMathUtils.getClippedLine(wall.prop("x1").getLong(), wall.prop("y1").getLong(), wall.prop("x2").getLong(), wall.prop("y2").getLong(), minX, maxX, minY, maxY) != null) return true;
+            if(!wall.prop("seeThrough").getBoolean() && (!wall.prop("door").getBoolean() || !wall.prop("open").getBoolean())) {
+                if(IntMathUtils.getClippedLine(wall.prop("x1").getLong(), wall.prop("y1").getLong(), wall.prop("x2").getLong(), wall.prop("y2").getLong(), minX, maxX, minY, maxY) != null) return true;
+            }
 		}
         return false;
     },
@@ -19,7 +21,7 @@ WallRenderer = {
             // create view for single viewer
             var localCombined = [];
             for(var wall of walls) {
-                if(!wall.prop("seeThrough").getBoolean()) {
+                if(!wall.prop("seeThrough").getBoolean() && (!wall.prop("door").getBoolean() || !wall.prop("open").getBoolean())) {
                     var poly = WallRenderer.calculateOccolusionPolygon(viewport, wall, viewer.prop("x").getLong(), viewer.prop("y").getLong());
                     if(poly != null && poly != undefined) {
                         //localCombined = union(localCombined, poly);

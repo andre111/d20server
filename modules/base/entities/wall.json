@@ -60,6 +60,27 @@
             "editAccess": "GM",
             "viewAccess": "EVERYONE",
             "value": "false"
+        },
+        {
+            "name": "door",
+            "type": "BOOLEAN",
+            "editAccess": "GM",
+            "viewAccess": "EVERYONE",
+            "value": "false"
+        },
+        {
+            "name": "open",
+            "type": "BOOLEAN",
+            "editAccess": "GM",
+            "viewAccess": "EVERYONE",
+            "value": "false"
+        },
+        {
+            "name": "locked",
+            "type": "BOOLEAN",
+            "editAccess": "GM",
+            "viewAccess": "EVERYONE",
+            "value": "false"
         }
     ],
     "updateRules": [
@@ -67,6 +88,83 @@
     "macros": {
     },
     "editorTabs": [
+        {
+            "name": "Main",
+            "layout": "GRID",
+            "layoutParameters": [ "5", "3" ],
+            "layoutGlue": "true",
+            "components": [
+                {
+                    "type": "LABEL",
+                    "text": "Corner 1: "
+                },
+                {
+                    "type": "EDITOR",
+                    "property": "x1",
+                    "text": "x"
+                },
+                {
+                    "type": "EDITOR",
+                    "property": "y1",
+                    "text": "y"
+                },
+                
+                {
+                    "type": "LABEL",
+                    "text": "Corner 2: "
+                },
+                {
+                    "type": "EDITOR",
+                    "property": "x2",
+                    "text": "x"
+                },
+                {
+                    "type": "EDITOR",
+                    "property": "y2",
+                    "text": "y"
+                },
+                
+                {
+                    "type": "EMPTY"
+                },
+                {
+                    "type": "EMPTY"
+                },
+                {
+                    "type": "EMPTY"
+                },
+                
+                {
+                    "type": "LABEL",
+                    "text": "Toggles: "
+                },
+                {
+                    "type": "EDITOR",
+                    "property": "seeThrough",
+                    "text": "See Through"
+                },
+                {
+                    "type": "EDITOR",
+                    "property": "door",
+                    "text": "Door"
+                },
+                
+                {
+                    "type": "LABEL",
+                    "text": "Door: "
+                },
+                {
+                    "type": "EDITOR",
+                    "property": "open",
+                    "text": "Open"
+                },
+                {
+                    "type": "EDITOR",
+                    "property": "locked",
+                    "text": "Locked"
+                }
+            ]
+        }
     ],
     "extensionPoints": [
         {

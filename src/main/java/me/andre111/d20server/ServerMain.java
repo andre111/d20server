@@ -10,15 +10,11 @@ import me.andre111.d20server.service.ModuleService;
 import me.andre111.d20server.service.SaveService;
 
 //TODO: plans for making the web client wait not seem so long:
-// split attachments into more logical separate things:
-//    items
-//    features
-//    spells
-//    journal entries
 // add "statuses" to attachments (using d20helper, with a manualAttachmentDefinitions.json)
 // Doors 
-//    isDoor,isLocked,isOpen properties for walls
-//    split CanvasModeWalls into actions: Create Walls (right click to open edit window), Create Doors, Delete
+//    - isDoor,isLocked,isOpen properties for walls
+//    - split CanvasModeWalls into actions: Create Walls (right click to open edit window), Create Windows, Create Doors, Delete
+//    - show locked status for doors when rendering wall lines in GM view (that also differentiates doors from simple walls for the GM)
 //    allow interacting with doors in CanvasModeEntities as long as a controllable entity is near it (toggle isOpen or play locked sound)
 
 //TODO: web client todos:
@@ -55,6 +51,12 @@ import me.andre111.d20server.service.SaveService;
 // Convert ALL entities to be FULLY data defined/driven
 //    Third.1 step: Add remaining data defined stuff: cascading deletes
 //    ? step: verify entity type on entitymanager add / other locations
+// 
+// split attachments into more logical separate things:
+//    items
+//    features
+//    spells
+//    journal entries
 
 //TODO: Nice to haves:
 // Better name for "attachments?"

@@ -6,6 +6,7 @@ class CMEntityAction extends MouseController {
     }
     
     init() {}
+    exit() {}
     renderOverlay(ctx) {}
     actionPerformed(action) {}
 }
@@ -464,6 +465,13 @@ class CMEntityActionSelect extends CMEntityAction {
         this.selecting = false;
     }
     
+    exit() {
+        if(this.menu != null) {
+            this.menu.close();
+            this.menu = null;
+        }
+    }
+    
     renderOverlay(ctx) {
         this.mode.renderActiveEntities(ctx, false, true);
         
@@ -782,6 +790,10 @@ class CanvasModeEntities extends CanvasMode {
         this.sendSelectedTokens();
     }
     
+    exit() {
+        this.action.exit();
+    }
+    
     setLayer(layer) {
         this.layer = layer;
         this.init();
@@ -952,10 +964,12 @@ class CanvasModeEntities extends CanvasMode {
 			var doMove = true;
 			if(collideWithWalls) {
                 MapUtils.currentEntities("wall").forEach(wall => {
-                    if(IntMathUtils.doLineSegmentsIntersect(reference.prop("x").getLong(), reference.prop("y").getLong(), xp, yp, 
-						wall.prop("x1").getLong(), wall.prop("y1").getLong(), wall.prop("x2").getLong(), wall.prop("y2").getLong())) {
-						doMove = false;
-					}
+                    if(!wall.prop("door").getBoolean() || !wall.prop("open").getBoolean()) {
+                        if(IntMathUtils.doLineSegmentsIntersect(reference.prop("x").getLong(), reference.prop("y").getLong(), xp, yp, 
+                            wall.prop("x1").getLong(), wall.prop("y1").getLong(), wall.prop("x2").getLong(), wall.prop("y2").getLong())) {
+                            doMove = false;
+                        }
+                    }
                 }).value();
 			}
 			
@@ -975,6 +989,7 @@ class CanvasModeEntities extends CanvasMode {
     }
     
     setAction(action) {
+        this.action.exit();
         this.action = action;
         this.action.init();
     }
