@@ -78,7 +78,7 @@ StateMain = {
         
         // add tabs TODO: add content
         event = {
-            addSidepanelTab: tab => {
+            addSidepanelTab: tab => {//TODO: this does nothing? that seems wrong
             }
         };
         Events.trigger("addSidepanelTabs", event);

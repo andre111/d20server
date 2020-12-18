@@ -23,6 +23,7 @@ class PingEffect extends AbstractEffect {
     constructor(x, y, rotation, scale, parameters) {
         super(x, y, rotation, scale);
         
+        this.color = parameters[0];
         this.age = 0;
     }
     
@@ -32,7 +33,7 @@ class PingEffect extends AbstractEffect {
     }
     
     drawEffect(ctx) {
-        ctx.strokeStyle = "orange";
+        ctx.strokeStyle = this.color;
         ctx.lineWidth = 8;
         
         var size = 16 + (160-16) * this.age / 20;

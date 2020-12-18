@@ -173,7 +173,7 @@ public abstract class GameMessageHandler {
 	}
 	private static void handlePlayEffect(Profile profile, Entity map, PlayEffect message) {
 		// send to all players in map (and only allow camera focus for gms)
-		MessageService.send(new PlayEffect(message.getEffect(), message.getX(), message.getY(), message.getRotation(), message.getScale(), message.isAboveOcclusion(), profile.getRole()==Profile.Role.GM && message.isFocusCamera()), map);
+		MessageService.send(new PlayEffect(message.getEffect(), message.getX(), message.getY(), message.getRotation(), message.getScale(), message.isAboveOcclusion(), profile.getRole()==Profile.Role.GM && message.isFocusCamera(), message.getParameters()), map);
 	}
 	private static void handleSetPlayerColor(Profile profile, Entity map, SetPlayerColor message) {
 		profile.setColor(message.getColor());

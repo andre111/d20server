@@ -46,6 +46,11 @@ MessageService = {
                 var index = new Map();
                 for(var profile of msg.players) {
                     index.set(profile.id, profile);
+                    
+                    // update localProfile
+                    if(ServerData.localProfile && profile.id == ServerData.localProfile.id) {
+                        ServerData.localProfile = profile;
+                    }
                 }
                 ServerData.profiles.set(index);
                 break;

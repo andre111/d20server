@@ -269,9 +269,10 @@ class MouseCanvasController {
     keyPressed(e) {
 		//TODO: should this be in a separate system?
         var action = InputService.getAction(e);
+        var pcolor = "#" + (ServerData.localProfile.color & 0x00FFFFFF).toString(16).padStart(6, '0');
         if(action == InputService.CENTER_CAMERA) StateMain.centerCamera(false);
-        if(action == InputService.PING_LOCATION) MessageService.send({ msg: "PlayEffect", effect: "PING", x: this.mouseX, y: this.mouseY, rotation: 0, scale: 1, aboveOcclusion: true, focusCamera: false });
-        if(action == InputService.PING_LOCATION_FOCUS) MessageService.send({ msg: "PlayEffect", effect: "PING", x: this.mouseX, y: this.mouseY, rotation: 0, scale: 1, aboveOcclusion: true, focusCamera: true });
+        if(action == InputService.PING_LOCATION) MessageService.send({ msg: "PlayEffect", effect: "PING", parameters: [pcolor], x: this.mouseX, y: this.mouseY, rotation: 0, scale: 1, aboveOcclusion: true, focusCamera: false });
+        if(action == InputService.PING_LOCATION_FOCUS) MessageService.send({ msg: "PlayEffect", effect: "PING", parameters: [pcolor], x: this.mouseX, y: this.mouseY, rotation: 0, scale: 1, aboveOcclusion: true, focusCamera: true });
         //TODO: if(action == InputService.TOGGLE_MODE_WINDOW) ...
         //TODO: if(action == InputService.TOGGLE_SIDEPANE) ...
         
