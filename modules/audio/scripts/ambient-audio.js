@@ -44,7 +44,7 @@ class AmbientSoundManager {
                 var y2 = listenerY;
                 
                 MapUtils.currentEntities("wall").forEach(wall => {
-                    if(!wall.prop("seeThrough").getBoolean() && IntMathUtils.doLineSegmentsIntersect(x1, y1, x2, y2, wall.prop("x1").getLong(), wall.prop("y1").getLong(), wall.prop("x2").getLong(), wall.prop("y2").getLong())) {
+                    if(!wall.prop("seeThrough").getBoolean() && (!wall.prop("door").getBoolean() || !wall.prop("open").getBoolean()) && IntMathUtils.doLineSegmentsIntersect(x1, y1, x2, y2, wall.prop("x1").getLong(), wall.prop("y1").getLong(), wall.prop("x2").getLong(), wall.prop("y2").getLong())) {
                         muffle = true;
                     }
                 }).value();
@@ -129,8 +129,5 @@ Events.on("addRenderLayers", event => {
 
 Events.on("mapChange", () => {
     AmbientAudio.init();
-    AmbientAudio.stop()
+    AmbientAudio.stop();
 });
-
-//TODO: move all the audio system stuff into its own module (so this ambient stuff + the audio properties + editor + sidepanel + music player)
-// (ideally also requires server side module based changes (for audio upload and action command rules))

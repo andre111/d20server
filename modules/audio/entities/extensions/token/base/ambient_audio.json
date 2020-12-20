@@ -1,0 +1,125 @@
+{
+    "displayName": "Ambient Audio",
+    "properties": [
+        {
+            "name": "audioID",
+            "type": "LONG",
+            "editAccess": "GM",
+            "viewAccess": "GM",
+            "value": "-1"
+        },
+        {
+            "name": "audioVolume",
+            "type": "DOUBLE",
+            "editAccess": "GM",
+            "viewAccess": "GM",
+            "value": "1"
+        },
+        {
+            "name": "audioDistance",
+            "type": "DOUBLE",
+            "editAccess": "GM",
+            "viewAccess": "GM",
+            "value": "10"
+        },
+        {
+            "name": "audioWallsMuffle",
+            "type": "BOOLEAN",
+            "editAccess": "GM",
+            "viewAccess": "GM",
+            "value": "true"
+        },
+        {
+            "name": "audioReverb",
+            "type": "BOOLEAN",
+            "editAccess": "GM",
+            "viewAccess": "GM",
+            "value": "false"
+        },
+        {
+            "name": "audioMinPause",
+            "type": "LONG",
+            "editAccess": "GM",
+            "viewAccess": "GM",
+            "value": "60"
+        },
+        {
+            "name": "audioMaxPause",
+            "type": "LONG",
+            "editAccess": "GM",
+            "viewAccess": "GM",
+            "value": "60"
+        }
+    ],
+    "updateRules": [],
+    "macros": {},
+    "editorTabs": [
+        {
+            "name": "Audio",
+            "layout": "GRID",
+            "layoutParameters": [ "4", "3" ],
+            "layoutGlue": "true",
+            "components": [
+                {
+                    "type": "LABEL",
+                    "text": "Audio: "
+                },
+                {
+                    "type": "EDITOR",
+                    "editorType": "REFERENCE_SINGLE",
+                    "property": "audioID",
+                    "text": "",
+                    "reference": "audio"
+                },
+                {
+                    "type": "EMPTY"
+                },
+                
+                {
+                    "type": "LABEL",
+                    "text": "Volume/Distance: "
+                },
+                {
+                    "type": "EDITOR",
+                    "property": "audioVolume",
+                    "text": "vol"
+                },
+                {
+                    "type": "EDITOR",
+                    "property": "audioDistance",
+                    "text": "cells"
+                },
+                
+                {
+                    "type": "LABEL",
+                    "text": "Settings: "
+                },
+                {
+                    "type": "EDITOR",
+                    "property": "audioWallsMuffle",
+                    "text": "Muffled by walls"
+                },
+                {
+                    "type": "EDITOR",
+                    "property": "audioReverb",
+                    "text": "Reverb"
+                },
+                
+                {
+                    "type": "LABEL",
+                    "text": "Pause Seconds: "
+                },
+                {
+                    "type": "EDITOR",
+                    "property": "audioMinPause",
+                    "text": "min"
+                },
+                {
+                    "type": "EDITOR",
+                    "property": "audioMaxPause",
+                    "text": "max"
+                }
+            ]
+        }
+    ]
+}

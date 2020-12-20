@@ -70,8 +70,8 @@ Entity = {
         for(var extensionPoint of definition.extensionPoints) {
             switch(extensionPoint.mode) {
             case "ALL":
-                for(var extensionDefinition in extensionPoint.extensionDefinitions) {
-                    activeExtensions.push(extensionDefinition);
+                for(var name in extensionPoint.extensionDefinitions) {
+                    activeExtensions.push(extensionPoint.extensionDefinitions[name]);
                 }
                 break;
             case "SELECT_SINGLE":

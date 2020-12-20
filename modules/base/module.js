@@ -45,7 +45,6 @@ Events.on("addSidepanelTabs", event => {
     event.addSidepanelTab(new SidepanelTabAttachments());
     event.addSidepanelTab(new SidepanelTabMaps());
     event.addSidepanelTab(new SidepanelTabImages());
-    event.addSidepanelTab(new SidepanelTabAudio());
     event.addSidepanelTab(new SidepanelTabLists());
     SidepanelManager.createTab("Settings", "settings"); //TODO: implement
 });

@@ -180,6 +180,14 @@ div.chat-box-content {
     border: solid 1px black;
     background-color: white;
 }
+div.chat-box-content table {
+    border: none;
+    margin-left: 0;
+    margin-right: 0;
+}
+div.chat-box-content th, div.chat-box-content td {
+    border: none;
+}
 
 /* used for onhover divs */
 .onhover {

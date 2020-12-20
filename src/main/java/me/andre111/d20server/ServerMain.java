@@ -19,11 +19,12 @@ import me.andre111.d20server.service.SaveService;
 
 //TODO: web client todos:
 // Somehow live update update rules ("parser implementation problems")
-// server should send lastModified data and respond with use cached when applicable
+// file server should send lastModified data and respond with use cached when applicable
 
 //TODO: when the web client porting is done:
 // Separate into modules 
-//    Audio System (including token properties,edit tab,ambient sound system,music player(=>actionCommand event),audio sidepanel tab,...)
+//    - Audio System (including token properties,edit tab,ambient sound system,music player(=>actionCommand event),audio sidepanel tab,...)
+//    still needs serverside functionality (audio upload/download) in module (needs to wait until server is running on javascript as well)
 // "Area" module (you can define areas, maybe using the drawing system, that can influence stuff, 
 //               first idea: "no weather/indoor" areas where the WeatherRenderer does not spawn particles)
 // add a "requiredAccess" setting to editortabs to hide tabs (e.g. access and gm tabs of token)
