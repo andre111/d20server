@@ -249,12 +249,17 @@ class CanvasWindowEditEntity extends CanvasWindow {
         // create tabs
         this.tabs = [];
         var id = 0;
+        var accessLevel = this.getAccessLevel();
         for(var tabDefinition of this.reference.getDefinition().editorTabs) {
-            this.tabs.push(new CWEditEntityTab(this, container, links, id++, tabDefinition));
+            if(Access.matches(tabDefinition.access, accessLevel)) {
+                this.tabs.push(new CWEditEntityTab(this, container, links, id++, tabDefinition));
+            }
         }
         for(var extDef of this.reference.getActiveExtensions()) {
             for(var tabDefinition of extDef.editorTabs) {
-                this.tabs.push(new CWEditEntityTab(this, container, links, id++, tabDefinition));
+                if(Access.matches(tabDefinition.access, accessLevel)) {
+                    this.tabs.push(new CWEditEntityTab(this, container, links, id++, tabDefinition));
+                }
             }
         }
         

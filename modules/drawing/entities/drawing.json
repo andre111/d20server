@@ -110,6 +110,7 @@
     "editorTabs": [
         {
             "name": "Main",
+            "access": "EVERYONE",
             "layout": "GRID",
             "layoutParameters": [ "4", "2" ],
             "layoutGlue": "true",

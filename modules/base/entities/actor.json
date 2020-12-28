@@ -84,6 +84,7 @@
     "editorTabs": [
         {
             "name": "Bio",
+            "access": "EVERYONE",
             "layout": "BORDER",
             "layoutParameters": [],
             "layoutGlue": "false",
@@ -124,6 +125,7 @@
         },
         {
             "name": "Attachments",
+            "access": "EVERYONE",
             "layout": "Y_AXIS",
             "layoutParameters": [],
             "layoutGlue": "true",
@@ -141,6 +143,7 @@
         },
         {
             "name": "Settings",
+            "access": "GM",
             "layout": "BORDER",
             "layoutParameters": [],
             "layoutGlue": "false",

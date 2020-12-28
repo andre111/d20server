@@ -3,7 +3,7 @@ StateLoading = {
         // create loading div
         var div = document.createElement("div");
         div.id = "loading";
-        div.className = "full-overlay";
+        div.className = "full-overlay fancy-bg";
         document.body.appendChild(div);
         
         // create loading bar

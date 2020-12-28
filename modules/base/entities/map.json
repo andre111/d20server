@@ -100,6 +100,7 @@
     "editorTabs": [
         {
             "name": "Main",
+            "access": "GM",
             "layout": "GRID",
             "layoutParameters": [ "7", "3" ],
             "layoutGlue": "true",

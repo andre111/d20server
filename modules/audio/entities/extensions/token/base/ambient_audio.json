@@ -56,6 +56,7 @@
     "editorTabs": [
         {
             "name": "Audio",
+            "access": "GM",
             "layout": "GRID",
             "layoutParameters": [ "4", "3" ],
             "layoutGlue": "true",

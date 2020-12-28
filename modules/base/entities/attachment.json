@@ -62,6 +62,7 @@
     "editorTabs": [
         {
             "name": "Main",
+            "access": "EVERYONE",
             "layout": "BORDER",
             "layoutParameters": [],
             "layoutGlue": "true",

@@ -90,6 +90,7 @@
     "editorTabs": [
         {
             "name": "Main",
+            "access": "GM",
             "layout": "GRID",
             "layoutParameters": [ "5", "3" ],
             "layoutGlue": "true",

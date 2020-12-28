@@ -7,7 +7,7 @@ StateSignIn = {
         // create signin div
         var div = document.createElement("div");
         div.id = "signin";
-        div.className = "full-overlay";
+        div.className = "full-overlay fancy-bg";
         document.body.appendChild(div);
         
         // create signin elements

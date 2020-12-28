@@ -10,7 +10,6 @@ import me.andre111.d20common.message.MessageDecoder;
 import me.andre111.d20server.service.MessageService;
 import me.andre111.d20server.service.UserService;
 
-//TODO: code is basically duplicated from GameServerHandler
 public class WebSocketServerHandler extends SimpleChannelInboundHandler<WebSocketFrame> {
 
 	@Override

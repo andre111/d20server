@@ -9,13 +9,16 @@ import me.andre111.d20server.service.GameService;
 import me.andre111.d20server.service.ModuleService;
 import me.andre111.d20server.service.SaveService;
 
-//TODO: plans for making the web client wait not seem so long:
-// add "statuses" to attachments (using d20helper, with a manualAttachmentDefinitions.json)
+//TODO: current plans:
+// - add "statuses" to attachments (using d20helper, with a manualAttachmentDefinitions.json)
 // Doors 
 //    - isDoor,isLocked,isOpen properties for walls
 //    - split CanvasModeWalls into actions: Create Walls (right click to open edit window), Create Windows, Create Doors, Delete
 //    - show locked status for doors when rendering wall lines in GM view (that also differentiates doors from simple walls for the GM)
 //    allow interacting with doors in CanvasModeEntities as long as a controllable entity is near it (toggle isOpen or play locked sound)
+// - add background image
+// add motd (and maybe more?) to login screen
+// Replace serverside hardcoded image and audio upload/download with generic file upload/download (also get rid of image/audio "entities" and just use paths for that)
 
 //TODO: web client todos:
 // Somehow live update update rules ("parser implementation problems")
@@ -27,7 +30,7 @@ import me.andre111.d20server.service.SaveService;
 //    still needs serverside functionality (audio upload/download) in module (needs to wait until server is running on javascript as well)
 // "Area" module (you can define areas, maybe using the drawing system, that can influence stuff, 
 //               first idea: "no weather/indoor" areas where the WeatherRenderer does not spawn particles)
-// add a "requiredAccess" setting to editortabs to hide tabs (e.g. access and gm tabs of token)
+// - add a "requiredAccess" setting to editortabs to hide tabs (e.g. access and gm tabs of token)
 
 //-------------------------------------------
 //TODO: Current Plans:

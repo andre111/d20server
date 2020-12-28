@@ -53,6 +53,7 @@ StateMain = {
         _g.lastFrame = Date.now();
         
         // start rendering
+        StateMain.active = true;
         StateMain.onFrame();
         
         // get render layers
@@ -87,11 +88,13 @@ StateMain = {
     
     exit: function() {
         //TODO: improve this
-        //TODO: stop calling onFrame!!!
+        StateMain.active = false;
         document.body.innerHTML = "";
     },
     
     onFrame: function() {
+        if(!StateMain.active) return;
+        
         // schedule next frame
         requestAnimationFrame(StateMain.onFrame);
         
@@ -213,6 +216,7 @@ StateMain = {
         }
         StateMain.view.setForceWallOcclusion(forceWallOcclusion);
         
+        // update and apply camera
         StateMain.camera.update(_g.width, _g.height);
         var viewport = StateMain.camera.getViewport();
         ctx.save();
