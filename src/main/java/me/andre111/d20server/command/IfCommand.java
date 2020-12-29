@@ -23,20 +23,20 @@ public class IfCommand extends Command {
 		try {
 			// parse components
 			arguments = arguments.stripLeading();
-			if(arguments.charAt(0) != '[') throw new ScriptException("Wrong arguments: [<expression>] <condition> [<expression>] ...");
-			int endIndex = arguments.indexOf(']');
-			if(endIndex < 0) throw new ScriptException("Wrong arguments: [<expression>] <condition> [<expression>] ...");
+			if(arguments.charAt(0) != '"') throw new ScriptException("Wrong arguments: \"<expression>\" <condition> \"<expression>\" ...");
+			int endIndex = arguments.indexOf('"', 1);
+			if(endIndex < 0) throw new ScriptException("Wrong arguments: \"<expression>\" <condition> \"<expression>\" ...");
 			String firstExpression = arguments.substring(1, endIndex);
 			
 			arguments = arguments.substring(endIndex+1).stripLeading();
 			endIndex = arguments.indexOf(' ');
-			if(endIndex < 0) throw new ScriptException("Wrong arguments: [<expression>] <condition> [<expression>] ...");
+			if(endIndex < 0) throw new ScriptException("Wrong arguments: \"<expression>\" <condition> \"<expression>\" ...");
 			String comparison = arguments.substring(0, endIndex);
 			
 			arguments = arguments.substring(endIndex+1).stripLeading();
-			if(arguments.charAt(0) != '[') throw new ScriptException("Wrong arguments: [<expression>] <condition> [<expression>] ...");
-			endIndex = arguments.indexOf(']');
-			if(endIndex < 0) throw new ScriptException("Wrong arguments: [<expression>] <condition> [<expression>] ...");
+			if(arguments.charAt(0) != '"') throw new ScriptException("Wrong arguments: \"<expression>\" <condition> \"<expression>\" ...");
+			endIndex = arguments.indexOf('"', 1);
+			if(endIndex < 0) throw new ScriptException("Wrong arguments: \"<expression>\" <condition> \"<expression>\" ...");
 			String secondExpression = arguments.substring(1, endIndex);
 			
 			String message = arguments.substring(endIndex+1).stripLeading();

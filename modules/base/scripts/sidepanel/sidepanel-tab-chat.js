@@ -119,6 +119,7 @@ class SidepanelTabChat extends SidepanelTab {
             this.entries.set(entry.id, container);
             
             // append to gui
+            //TODO: maybe? find location (could be older message that was kept hidden for some time -> should now appear before other messages?)
             this.chatPanel.appendChild(container);
             //container.scrollIntoView(); // this "breaks" the website by offseting it up by a few pixels for some reason, using "outdated" code below as an alternative
             this.chatPanel.scrollTop = this.chatPanel.scrollHeight;

@@ -84,6 +84,8 @@ public abstract class ChatService {
 			// execute macro
 			String[] macroLines = macro.split("\n");
 			for(String macroLine : macroLines) {
+				if(macroLine.isBlank()) continue;
+				
 				ChatService.onMessage(profile, macroLine);
 			}
 		} else {
