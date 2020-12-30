@@ -19,6 +19,7 @@ html, body {
     right: 0;
     background: rgba(254, 238, 189, 0.85);
     border-radius: 8px 0 0 8px;
+    box-shadow: 0px 0px 6px black;
 }
 
 #overlay {
@@ -81,14 +82,22 @@ html, body {
     margin: 2px 2px 2px 2px;
 }
 
+/* General inputs */
+button:enabled:hover, input:enabled:hover {
+    box-shadow: 0px 0px 4px 3px #e2cf9d; 
+}
+button:active, input:focus {
+    box-shadow: 0px 0px 4px 3px #e2cf9d; 
+}
+
 /* Property Editor */
 .property-editor {
     width: 150px;
     height: 32px;
     overflow: hidden;
     padding: 2px;
-    border: solid 1 px black;
-    border-radius: 4px;
+    border: solid 1px black;
+    /* border-radius: 4px; */ /* TODO: does this actually make it look better? */
 }
 .property-editor:hover {
 }
@@ -116,6 +125,7 @@ div.chat {
     border-radius: 6px;
     border: solid 1px #e2cf9d;
     position: relative;
+    box-shadow: 0px 0px 3px 3px #e2cf9d; /* TODO: Is this really important/noticable? */
 }
 p.chat-sender {
     font-weight: bold;
@@ -161,8 +171,10 @@ span.chat-dice-inline {
     line-height: 32px;
 }
 span.chat-button:hover {
-    border-color: #e2cf9d;
-    background-color: #feeebd;
+    /*border-color: #e2cf9d;
+    background-color: #feeebd;*/
+    box-shadow: 0px 0px 4px 3px #e2cf9d; /*TODO: make other buttons/textfields/everything input display this effect when hovered or active */
+    cursor: pointer;
 }
 
 div.chat-box {
@@ -177,6 +189,8 @@ div.chat-box-header {
     border-radius: 12px;
     text-align: center;
     color: white;
+    text-shadow: 0px 0px 3px black, 0px 0px 3px black;
+    box-shadow: 0px 0px 3px black;
 }
 div.chat-box-content {
     display: block;
@@ -184,6 +198,7 @@ div.chat-box-content {
     margin: 0 auto;
     border: solid 1px black;
     background-color: white;
+    box-shadow: 0px 0px 3px black;
 }
 div.chat-box-content table {
     border: none;
@@ -197,6 +212,8 @@ div.chat-box-content th, div.chat-box-content td {
 /* used for onhover divs */
 .onhover {
     display: none;
+    z-index: 20; /*TODO: this makes this unusable in windows, but for now only the chat uses this component and it fixes the order there */
+    box-shadow: 0px 0px 3px black;
 }
 .hoverable:hover .onhover {
     display: block;
@@ -277,6 +294,7 @@ th, td {
 }
 .ui-dialog {
     background: rgba(254, 238, 189, 0.85) !important;
+    box-shadow: 0px 0px 6px black !important;
 }
 .ui-dialog .ui-dialog-buttonpane {
     background: none !important;
