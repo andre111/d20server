@@ -2,5 +2,11 @@
     "name": "3D Dice",
     "version": "0.0.1",
     "description": "",
-    "disableable": true
+    "disableable": true,
+    "libraries": [
+        "/libs/cannon.min.js",
+        "/libs/three/three.js",
+        "/libs/three-modules/GLTFLoader.js",
+        "/libs/three-modules/RGBELoader.js"
+    ]
 }

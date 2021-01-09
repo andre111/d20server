@@ -5,7 +5,10 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
@@ -47,12 +50,45 @@ public class HttpServerHandler extends SimpleChannelInboundHandler<FullHttpReque
 	private static final String UPLOAD_IMAGE_PATH = "/upload/image";
 	private static final String AUDIO_PATH = "/audio/";
 	private static final String UPLOAD_AUDIO_PATH = "/upload/audio";
-	private static final String PUBLIC_PATH = "/public/";
-	private static final String WEBSOCKET_PATH = "/ws";
-	private static final String SCRIPT_PATH = "/main.js";
-	private static final String CSS_PATH = "/main.css";
 	private static final String COLOR_IMAGE_PATH = "/color/";
-
+	
+	private static record Static(String path, File baseDir) {};
+	private static List<Static> statics = new ArrayList<>();
+	private static String index = "";
+	static {
+		statics.add(new Static("/core/common/", new File("./core/common/")));
+		statics.add(new Static("/core/client/", new File("./core/client/")));
+		statics.add(new Static("/core/files/", new File("./core/files/")));
+	}
+	public static void initModules() {
+		StringBuilder moduleScripts = new StringBuilder();
+		StringBuilder moduleStyles = new StringBuilder();
+		StringBuilder moduleLibraries = new StringBuilder();
+		ModuleService.enabledModules().forEach(module -> {
+			statics.add(new Static("/modules/"+module.getIdentifier()+"/common/", new File(module.getDirectory(), "/common/")));
+			statics.add(new Static("/modules/"+module.getIdentifier()+"/client/", new File(module.getDirectory(), "/client/")));
+			statics.add(new Static("/modules/"+module.getIdentifier()+"/files/", new File(module.getDirectory(), "/files/")));
+			
+			moduleScripts.append("        <script src=\"/modules/"+module.getIdentifier()+"/client/module.js\" type=\"module\"></script>\n");
+			moduleStyles.append("        <link rel=\"stylesheet\" href=\"/modules/"+module.getIdentifier()+"/files/module.css\">\n");
+			if(module.getDefinition().libraries() != null) {
+				for(String library : module.getDefinition().libraries()) {
+					moduleLibraries.append("        <script src=\"/modules/"+module.getIdentifier()+"/files"+library+"\"></script>\n");
+				}
+			}
+		});
+		
+		try {
+			index = Files.readString(new File("./core/index.html").toPath());
+			index = index.replace("!MODULE_SCRIPTS!", moduleScripts.toString());
+			index = index.replace("!MODULE_STYLES!", moduleStyles.toString());
+			index = index.replace("!MODULE_LIBRARIES!", moduleLibraries.toString());
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			throw new RuntimeException(e);
+		}
+	}
+	
 	private static final HttpDataFactory factory = new DefaultHttpDataFactory(false);
 	private HttpPostRequestDecoder decoder;
 	private String uploadPath;
@@ -88,7 +124,10 @@ public class HttpServerHandler extends SimpleChannelInboundHandler<FullHttpReque
 		String contentType = null;
 
 		// provide images
-		if(path.startsWith(IMAGE_PATH)) {
+		if(path.isBlank() || path.equals("/")) {
+			data = index.getBytes();
+			contentType = "text/html";
+		} else if(path.startsWith(IMAGE_PATH)) {
 			String idString = path.substring(IMAGE_PATH.length());
 			long id = Long.parseLong(idString);
 			Entity image = D20Common.getEntityManager("image").find(id);
@@ -107,26 +146,27 @@ public class HttpServerHandler extends SimpleChannelInboundHandler<FullHttpReque
 				data = Utils.readBinary("entity.audio."+id);
 				contentType = "application/ogg";
 			}
-		} else if(path.startsWith(PUBLIC_PATH)) {
-			File file = ModuleService.getFile(path);
-			if(file != null && file.exists()) {
-				data = Utils.readBinary(file);
-				contentType = ""; //TODO: somehow set this correctly?
-				if(path.endsWith(".js")) contentType = "application/javascript";
-				if(path.endsWith(".css")) contentType = "text/css";
-			}
-		} else if(path.equals(SCRIPT_PATH)) {
-			data = ModuleService.getScriptData();
-			contentType = "application/javascript";
-		} else if(path.equals(CSS_PATH)) {
-			data = ModuleService.getCSSData();
-			contentType = "text/css";
 		} else if(path.startsWith(COLOR_IMAGE_PATH)) {
 			try {
 				int color = Integer.parseInt(path.substring(COLOR_IMAGE_PATH.length()));
 				data = ImageUtil.createColorImage(color, 16, 2);
 				contentType = "image/png";
 			} catch(NumberFormatException e) {
+			}
+		} else {
+			// static hosted files
+			for(Static s : statics) {
+				if(path.startsWith(s.path)) {
+					String filePath = path.substring(s.path.length());
+					File file = new File(s.baseDir, filePath);
+					if(file != null && file.exists() && file.toPath().toAbsolutePath().startsWith(s.baseDir.toPath().toAbsolutePath())) {
+						data = Utils.readBinary(file);
+						contentType = ""; //TODO: somehow set this correctly?
+						if(path.endsWith(".js")) contentType = "application/javascript";
+						if(path.endsWith(".css")) contentType = "text/css";
+						if(path.endsWith(".png")) contentType = "image/png";
+					}
+				}
 			}
 		}
 
@@ -139,7 +179,6 @@ public class HttpServerHandler extends SimpleChannelInboundHandler<FullHttpReque
 		
 
 		// write
-		//TODO: split header and content and use chunked sending (to support large files)
 		int dataStart = 0;
 		int dataEnd = data.length-1;
 		int dataLength = data.length;
@@ -176,10 +215,6 @@ public class HttpServerHandler extends SimpleChannelInboundHandler<FullHttpReque
 		} else if (request.protocolVersion().equals(HttpVersion.HTTP_1_0)) {
 			response.headers().set(HttpHeaderNames.CONNECTION, HttpHeaderValues.KEEP_ALIVE);
 		}
-
-		//ctx.write(response);
-		//ctx.write(data);
-		//ChannelFuture writeFuture = ctx.writeAndFlush(LastHttpContent.EMPTY_LAST_CONTENT);
 
 		ChannelFuture writeFuture = ctx.writeAndFlush(response);
 		if(!HttpUtil.isKeepAlive(request)) {
@@ -258,7 +293,7 @@ public class HttpServerHandler extends SimpleChannelInboundHandler<FullHttpReque
 	}
 
 	private boolean isValidPath(String path) {
-		return path != null && (path.startsWith(IMAGE_PATH) || path.startsWith(AUDIO_PATH) || path.startsWith(PUBLIC_PATH) || path.startsWith(WEBSOCKET_PATH) || path.equals(SCRIPT_PATH) || path.equals(CSS_PATH) || path.startsWith(COLOR_IMAGE_PATH));
+		return path != null;
 	}
 
 	@Override

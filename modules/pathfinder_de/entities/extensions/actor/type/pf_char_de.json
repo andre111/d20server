@@ -1877,7 +1877,7 @@
             "displayName": "Initiative",
             "category": "",
             "commands": [
-                "/set selected.list.initiative DOUBLE 1d20+{selected.actor.property.pf_initMod}*1.01"
+                "/set selected.list.initiative DOUBLE 1d20cs>=100cf>=100+{selected.actor.property.pf_initMod}*1.01"
             ]
         },
         "pf_roll_cmb": {
@@ -2241,7 +2241,7 @@
             "layout": "FREE_SCROLL",
             "layoutParameters": [],
             "layoutGlue": "false",
-            "background": "/public/pf_char_de_1.png",
+            "background": "/module/pathfindeder_de/files/pf_char_de_1.png",
             "backgroundWidth": 1677,
             "backgroundHeight": 2177,
             "preferredWidth": 900,

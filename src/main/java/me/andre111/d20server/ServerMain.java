@@ -44,6 +44,21 @@ import me.andre111.d20server.service.SaveService;
 // Add optional "attachment" macros
 
 //TODO: And the completely insane next plan:
+// Convert the server to node.js (in small steps)
+//   - 1: Store a __type attribute in all transmitted Objects (Entities,Properties,Messages,...)
+//   - 2: Convert client to actual es6 modules and create "common" modules
+//   3: Remove unnecessary editAccess,viewAccess,type attributes of Properties and get them from the definition (but allow overrides)
+//   4: Implement the ExpressionParser/Variables/UpdateRule systems in js modules
+//   5: Convert images and audio from entities to using a "file manager" and paths to resolve (use elFinder library?) 
+//      5.1: write a small data converter -> read id -> read name -> store as path
+//   6: Convert server to node.js (by reusing the "common" modules)
+// After that is done:
+//    Rework the entity system (the current one always needs to transmit and iterate all for everything -> performance degradation with many maps)
+//      Maps, Actors and Attachments remain the only "global" entities
+//      Tokens, Walls, Drawings, ... are stored in the maps (not as properties, a sepparate system that can allow gradual loading of map content)
+//      Make it possible to store a single entity in a property (as a JSON string) -> use for actor default token
+//      What do we do with lists? Is this the time to rework the whole combat system?
+//
 // Convert ALL entities to be FULLY data defined/driven
 //    Third.1 step: Add remaining data defined stuff: cascading deletes
 //    ? step: verify entity type on entitymanager add / other locations

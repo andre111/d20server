@@ -1,0 +1,346 @@
+/* required to make content refer to actual window size */
+html, body {
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    overflow: hidden;
+}
+
+#canvas {
+    width: 100%;
+    height: 100%;
+    float: left;
+}
+
+#sidepanel {
+    width: 384px;
+    height: 100%;
+    position: absolute;
+    right: 0;
+    background: rgba(254, 238, 189, 0.85);
+    border-radius: 8px 0 0 8px;
+    box-shadow: 0px 0px 6px black;
+}
+
+#overlay {
+    width: 0%;
+    height: 0%;
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+}
+
+.full-overlay {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: white; /*TODO: choose a better color*/
+    position: fixed;
+    top: 0;
+    left: 0;
+}
+
+.fancy-bg {
+    background-size: cover;
+    background-image: url(/core/files/img/bg.jpg);
+}
+
+.login-field {
+    width: 200px;
+    padding: 2px;
+    border-width: 1px;
+    margin: 2px;
+}
+
+/* ModePanel/Window styles */
+.mode-panel {
+    pointer-events: none;
+    margin: 4px 4px 4px 4px;
+    position: fixed;
+    top: 0;
+    left: 0;
+}
+.mode-sub-panel {
+    display: inline-block;
+    margin: 0 0 0 0;
+}
+.mode-button {
+    pointer-events: auto;
+    width: 32px;
+    height: 32px;
+    padding: 0 0 0 0;
+    margin: 2px 2px 2px 2px;
+}
+.mode-sub-button {
+    pointer-events: auto;
+    width: 28px;
+    height: 28px;
+    padding: 0 0 0 0;
+    margin: 2px 2px 2px 2px;
+}
+
+/* General inputs */
+button, input {
+    border-width: 1px;
+}
+button:enabled:hover, input:enabled:hover {
+    box-shadow: 0px 0px 4px 3px #e2cf9d; 
+}
+button:active, input:focus {
+    box-shadow: 0px 0px 4px 3px #e2cf9d; 
+}
+
+/* Property Editor */
+.property-editor {
+    width: 150px;
+    height: 32px;
+    overflow: hidden;
+    padding: 2px;
+    border: solid 1px black;
+    /* border-radius: 4px; */ /* TODO: does this actually make it look better? */
+}
+.property-editor:hover {
+}
+
+/* Used for bordered divs with overlaying legend on border -> see: GuiUtils.makeBordered */
+.bordered {
+    padding: 5px 5px 5px 5px;
+    margin-top: 18px;
+    border: 1px solid black;
+}
+.border-title {
+    font-size: 17px;
+    font-style: normal;
+    font-weight: normal;
+    margin: -27px 2px 5px 0;
+    width: fit-content;
+}
+
+/* Chat */
+div.chat {
+    background-color: #fff4d2;
+    width: calc(100% - 4px);
+    max-width: calc(100% - 4px);
+    margin: 2px;
+    border-radius: 6px;
+    border: solid 1px #e2cf9d;
+    position: relative;
+    box-shadow: 0px 0px 3px 3px #e2cf9d; /* TODO: Is this really important/noticable? */
+}
+p.chat-sender {
+    font-weight: bold;
+    font-size: 16px;
+    margin: 0;
+}
+p.chat-sender-special {
+    font-style: italic;
+}
+p.chat-message {
+    font-size: 16px;
+    margin: 8px 0 0 8px;
+}
+p.chat-info {
+    font-style: italic;
+    font-size: 14px;
+    margin: 0;
+}
+p.chat-timestamp {
+    position: absolute;
+    top: 0;
+    right: 0;
+    margin: 0 5px 0 0;
+    font-size: 12px;
+}
+p.chat-timestamp p {
+    margin: 0;
+}
+
+span.chat-dice-bg {
+    width: 48px;
+    height: 48px;
+    display: inline-flex;
+    place-content: center;
+    line-height: 48px;
+}
+span.chat-dice-inline {
+    width: 32px;
+    height: 32px;
+    display: inline-flex;
+    border: solid 1px black;
+    place-content: center;
+    line-height: 32px;
+}
+span.chat-button:hover {
+    /*border-color: #e2cf9d;
+    background-color: #feeebd;*/
+    box-shadow: 0px 0px 4px 3px #e2cf9d; /*TODO: make other buttons/textfields/everything input display this effect when hovered or active */
+    cursor: pointer;
+}
+
+div.chat-box {
+    display: block;
+    place-content: center;
+}
+div.chat-box-header {
+    display: block;
+    width: 90%;
+    margin: 0 auto;
+    border: solid 1px black;
+    border-radius: 12px;
+    text-align: center;
+    color: white;
+    text-shadow: 0px 0px 3px black, 0px 0px 3px black;
+    box-shadow: 0px 0px 3px black;
+}
+div.chat-box-content {
+    display: block;
+    width: 80%;
+    margin: 0 auto;
+    border: solid 1px black;
+    background-color: white;
+    box-shadow: 0px 0px 3px black;
+}
+div.chat-box-content table {
+    border: none;
+    margin-left: 0;
+    margin-right: 0;
+}
+div.chat-box-content th, div.chat-box-content td {
+    border: none;
+}
+
+/* used for onhover divs */
+.onhover {
+    display: none;
+    z-index: 20; /*TODO: this makes this unusable in windows, but for now only the chat uses this component and it fixes the order there */
+    box-shadow: 0px 0px 3px black;
+}
+.hoverable:hover .onhover {
+    display: block;
+    color: black;
+    position: fixed;
+    background-color: white;
+    border: solid 1px black;
+}
+
+/* used in list windows */
+.list-window-entry {
+    width: calc(100% - 6px);
+    display: flex;
+    padding: 3px; /* includes the border size that would be present when active */
+}
+.list-window-entry-active {
+    width: calc(100% - 6px);
+    display: flex;
+    padding: 2px;
+    background-color: #fff4d2;
+    border: solid 1px #e2cf9d;
+    border-radius: 6px;
+    box-shadow: 0px 0px 4px 3px #e2cf9d;
+}
+
+
+/* Used to provide bordered and named sections */
+fieldset {
+    margin: auto;
+    width: auto;
+    height: auto;
+    box-shadow: 0px 0px 8px 2px black;
+}
+
+fieldset legend {
+    text-shadow: 0px 0px 3px black, 0px 0px 3px black;
+    font-weight: bold;
+    font-size: larger;
+    color: white;
+}
+
+textarea {
+    overflow: auto;
+}
+
+table {
+    border: 1px solid black;
+    border-collapse: collapse;
+    padding: 5px;
+    margin-left: auto;
+    margin-right: auto;
+}
+th, td {
+    border: 1px solid black;
+    border-collapse: collapse;
+    padding: 5px;
+}
+
+/* TinyMCE Overrides */
+.tox-tinymce-inline {
+    z-index:1000 !important; /* force editor toolbar in front of windows */
+}
+
+/* jQueryUI overrides */
+.ui-menu .ui-menu-item {
+    font-size: 10px !important;
+}
+.ui-tabs .ui-tabs-nav {
+    padding: 0 !important;
+    border: none !important;
+    background: none !important;
+}
+.ui-tabs .ui-tabs-nav .ui-tabs-anchor {
+	padding: .2em .2em !important;
+}
+.ui-tabs .ui-tabs-panel {
+    padding: 5px !important;
+    border: 1px solid !important;
+}
+.ui-dialog {
+    background: rgba(254, 238, 189, 0.85) !important;
+    box-shadow: 0px 0px 6px black !important;
+}
+.ui-dialog .ui-dialog-buttonpane {
+    background: none !important;
+}
+.ui-dialog, .ui-dialog-content {
+    box-sizing: content-box !important; /* jQueryUI is made with respect to content-box sizing, so override the reset style in this case */
+}
+
+/* make modal dialogs non transparent */
+.modal-dialog {
+    background: rgb(254, 238, 189) !important;
+}
+
+/* jsTree overrides -> allow nodes with multiple lines of text */
+/* from: https://stackoverflow.com/questions/24746781/how-do-i-get-a-jstree-node-to-display-long-possibly-multiline-content */
+.jstree-default a { 
+    white-space: normal !important; 
+    height: auto; 
+}
+.jstree-anchor {
+    height: auto !important;
+    border: solid 1px rgba(0, 0, 0, 0.1);
+    margin: 1px !important;
+    width: 100%;
+}
+.jstree-default li > ins { 
+    vertical-align: top; 
+}
+.jstree-leaf {
+    height: auto;
+}
+.jstree-leaf a{
+    height: auto !important;
+}
+
+.tree-entry-text {
+    font-size: 12px;
+    line-height: normal;
+    margin: 0 0 0 10px;
+}
+.tree-search-input {
+    width: 100%;
+    padding: 2px;
+    border-width: 2px;
+}
