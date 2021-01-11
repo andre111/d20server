@@ -33,7 +33,7 @@ export class EntityReferencePropertyEditor extends PropertyEditor {
     }
     
     doSelectEntity() {
-        new CanvasWindowChoose(this.referenceType, null, id => {
+        new CanvasWindowChoose(this.referenceType, id => {
             console.log(id);
             this.currentEntityID = id;
             this.updateButtonText();

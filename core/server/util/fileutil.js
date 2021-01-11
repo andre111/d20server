@@ -5,8 +5,12 @@ import { fromJson, toJson } from '../../common/util/datautil.js';
 
 // store functions
 export function readJson(name) {
-    if(existsSync(nameToPath(name, '.json'))) {
-        const text = readFileSync(nameToPath(name, '.json'), 'utf-8');
+    return readJsonFile(nameToPath(name, '.json'));
+}
+
+export function readJsonFile(file) {
+    if(existsSync(file)) {
+        const text = readFileSync(file, 'utf-8');
         return fromJson(text);
     } else {
         return null;

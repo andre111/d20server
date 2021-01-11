@@ -24,14 +24,18 @@ export const EntityManagers = {
             EntityManagers.create(type, entityDefinition);
         }
     },
-    
-    get: function(type) {
-        return _entityManagers[type];
-    },
 
     create: function(type, entityDefinition) {
         if(_entityManagerClass == null) throw new Error('Cannot create EntityManager before initialization');
 
         _entityManagers[type] = new _entityManagerClass(type, entityDefinition);
+    },
+    
+    get: function(type) {
+        return _entityManagers[type];
+    },
+
+    getAll: function() {
+        return Object.values(_entityManagers);
     }
 }

@@ -26,3 +26,4 @@ export class ChatEntries extends Message {
     }
 }
 registerType(ChatEntries);
+export { ChatEntry } from './chat-entry.js';

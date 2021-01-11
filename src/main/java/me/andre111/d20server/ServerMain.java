@@ -2,8 +2,10 @@ package me.andre111.d20server;
 
 import me.andre111.d20common.AppType;
 import me.andre111.d20common.D20Common;
+import me.andre111.d20server.model.EntityManagers;
 import me.andre111.d20server.model.ServerEntityManager;
 import me.andre111.d20server.server.HttpServer;
+import me.andre111.d20server.service.ChatService;
 import me.andre111.d20server.service.CommandLineService;
 import me.andre111.d20server.service.GameService;
 import me.andre111.d20server.service.ModuleService;
@@ -47,11 +49,10 @@ import me.andre111.d20server.service.SaveService;
 // Convert the server to node.js (in small steps)
 //   - 1: Store a __type attribute in all transmitted Objects (Entities,Properties,Messages,...)
 //   - 2: Convert client to actual es6 modules and create "common" modules
-//   3: Remove unnecessary editAccess,viewAccess,type attributes of Properties and get them from the definition (but allow overrides)
-//   4: Implement the ExpressionParser/Variables/UpdateRule systems in js modules
-//   5: Convert images and audio from entities to using a "file manager" and paths to resolve (use elFinder library?) 
-//      5.1: write a small data converter -> read id -> read name -> store as path
-//   6: Convert server to node.js (by reusing the "common" modules)
+//   - 3: Implement the ExpressionParser/Variables/UpdateRule systems in js modules
+//   4: Convert images and audio from entities to using a "file manager" and paths to resolve (use elFinder library?) 
+//      4.1: write a small data converter -> read id -> read name -> store as path
+//   5: Convert server to node.js (by reusing the "common" modules)
 // After that is done:
 //    Rework the entity system (the current one always needs to transmit and iterate all for everything -> performance degradation with many maps)
 //      Maps, Actors and Attachments remain the only "global" entities
@@ -92,6 +93,10 @@ public class ServerMain {
 		SaveService.init();
 		GameService.init();
 		CommandLineService.init();
+		
+		// used to force a save to store the required __type attribute for new server
+		//EntityManagers.fullSave();
+		//ChatService.forceChatDataSave();
 		
 		System.out.println("Starting game server...");
 		//TODO: set/configure correct ports

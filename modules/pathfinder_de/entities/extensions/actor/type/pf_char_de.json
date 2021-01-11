@@ -2241,7 +2241,7 @@
             "layout": "FREE_SCROLL",
             "layoutParameters": [],
             "layoutGlue": "false",
-            "background": "/module/pathfindeder_de/files/pf_char_de_1.png",
+            "background": "/modules/pathfinder_de/files/pf_char_de_1.png",
             "backgroundWidth": 1677,
             "backgroundHeight": 2177,
             "preferredWidth": 900,

@@ -91,7 +91,7 @@ export class ModePanel {
             Client.getState().setView(new CanvasView(ServerData.localProfile, false, false, false, true));
             this.updateState();
         } else {
-            new CanvasWindowChoose('profile', null, id => {
+            new CanvasWindowChoose('profile', id => {
                 if(id > 0) {
                     Client.getState().setView(new CanvasView(ServerData.profiles.get().get(id), true, true, true, false));
                     this.updateState();

@@ -62,9 +62,9 @@ export class LongListPropertyEditor extends PropertyEditor {
     }
     
     reloadTree() {
-        var entries = new Map();
+        var entries = {};
         for(var i=0; i<this.valueList.length; i++) {
-            entries.set(i, this.valueProvider.getValue(this.valueList[i]));
+            entries[String(i)] = this.valueProvider.getValue(this.valueList[i]);
         }
         
         this.tree.reload(entries);
@@ -82,7 +82,7 @@ export class LongListPropertyEditor extends PropertyEditor {
     }
     
     doAdd() {
-        new CanvasWindowChoose(this.referenceType, null, id => {
+        new CanvasWindowChoose(this.referenceType, id => {
             if(id == null || id <= 0) return;
             
             if(this.allowDuplicates || !this.valueList.includes(id)) {

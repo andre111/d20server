@@ -47,17 +47,17 @@ export class SearchableIDTree {
         this.tree = $(this.container).jstree(true);
         this.tree.settings.core.multiple = false;
         
-        this.reload(this.valueProvider.getData());
+        this.reload();
     }
     
     reload(map) {
         if(map == null || map == undefined) map = this.valueProvider.getData();
         
         // sort keys by value names
-        var sorted = Array.from(map.keys());
+        var sorted = Array.from(Object.keys(map));
         sorted.sort((o1, o2) => {
-            var p1 = this.valueProvider.getName(map.get(o1)).split('/');
-            var p2 = this.valueProvider.getName(map.get(o2)).split('/');
+            var p1 = this.valueProvider.getName(map[o1]).split('/');
+            var p2 = this.valueProvider.getName(map[o2]).split('/');
             
             // skip all equal parts
             var i1 = 0;
@@ -84,7 +84,7 @@ export class SearchableIDTree {
         var directoryNodes = {};
         var nodeList = [];
         for(const key of sorted) {
-            var entry = map.get(key);
+            var entry = map[key];
             
             var fullPath = this.valueProvider.getName(entry);
             this._addDirectories(directoryNodes, nodeList, fullPath);

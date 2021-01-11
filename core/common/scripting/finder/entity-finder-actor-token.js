@@ -1,5 +1,5 @@
-import { EntityManagers } from '../../entity/entitymanagers.js';
-import { EntityFinder } from './entityfinder.js'
+import { EntityManagers } from '../../entity/entity-managers.js';
+import { EntityFinder } from './entity-finder.js'
 
 export class EntityFinderActorToken extends EntityFinder {
     tokenFinder;

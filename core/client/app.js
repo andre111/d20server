@@ -6,6 +6,7 @@ import { ClientIDProvider } from './entity/id.js';
 import { ClientEntityManager } from './entity/client-entity-manager.js';
 
 import { InputService } from './service/input-service.js';
+import { ImageService } from './service/image-service.js';
 import { ServerData } from './server-data.js';
 import { ModeButton, ModeButtonExtended } from './canvas/mode-panel.js';
 import { CanvasModeEntities } from './canvas/mode/canvas-mode-entities.js';
@@ -70,6 +71,8 @@ InputService.registerAction('toggle_sidepane', 84 /*T*/, false, false, false);
 InputService.registerAction('copy', 67 /*C*/, false, true, false);
 InputService.registerAction('paste', 86 /*V*/, false, true, false);
 InputService.registerAction('delete', 46 /*DELETE*/, false, false, false);
+
+ImageService.init();
 
 Events.on('addModeButtons', event => {
     // token mode

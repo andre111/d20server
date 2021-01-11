@@ -3,10 +3,10 @@ export class Result {
     s;
     drs;
 
-    constructor(value, string, diceRolls) {
+    constructor(value, string, ...diceRolls) {
         this.v = value;
         this.s = string;
-        this.diceRolls = diceRolls;
+        this.drs = diceRolls.flat();
     }
 
     getValue() {

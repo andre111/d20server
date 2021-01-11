@@ -11,9 +11,13 @@ export function setDefinitions(definitions) {
 }
 
 export class Definitions {
-    entityDefinitions;
+    entityDefinitions = {};
 
     constructor() {
+    }
+
+    addEntityDefinition(type, entityDefinition) {
+        this.entityDefinitions[type] = entityDefinition;
     }
 
     getEntityDefinition(type) {

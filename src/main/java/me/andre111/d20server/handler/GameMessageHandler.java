@@ -141,6 +141,8 @@ public abstract class GameMessageHandler {
 
 	// ---------------------------------------------------------
 	private static void handleSetActorDefaultToken(Profile profile, Entity map, SetActorDefaultToken message) {
+		if(profile.getRole() != Profile.Role.GM) return;
+		
 		Entity actor = D20Common.getEntityManager("actor").find(message.getActorID());
 		Entity token = profile.getSelectedToken(true);
 		if(actor == null || token == null) return;
@@ -207,7 +209,7 @@ public abstract class GameMessageHandler {
 		}
 	}
 	private static void handleUpdateEntityProperties(Profile profile, Entity map, UpdateEntityProperties message) {
-		// search for entity, check access and delete if valid request
+		// search for entity, check access and update if valid request
 		ServerEntityManager manager = (ServerEntityManager) D20Common.getEntityManager(message.getType());
 		if(manager != null) {
 			Entity entity = manager.find(message.getID());

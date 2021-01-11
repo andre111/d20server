@@ -7,6 +7,8 @@
 /data_real - Kopie/
 /data_real - Kopie Old/
 /target/
+/node_modules/
+/package-lock.json
 
 # Created by https://www.gitignore.io/api/java,eclipse
 # Edit at https://www.gitignore.io/?templates=java,eclipse

@@ -1,5 +1,6 @@
 import { ValueProvider } from './value-provider.js';
 import { ServerData } from '../server-data.js';
+import { RenderUtils } from '../util/renderutil.js';
 
 export class ValueProviderProfile extends ValueProvider {
     constructor() {
@@ -7,7 +8,12 @@ export class ValueProviderProfile extends ValueProvider {
     }
     
     getData() {
-        return ServerData.profiles.get();
+        // convert map to object as is expected in new code
+        const map = {};
+        for(const [key, value] of ServerData.profiles.get().entries()) {
+            map[String(key)] = value;
+        }
+        return map;
     }
     
     getValue(id) {
@@ -23,6 +29,7 @@ export class ValueProviderProfile extends ValueProvider {
     getIcon(value) {
         if(value == null || value == undefined) return null;
         
-        return '/color/'+value.getColor();
+        const color = '#' + (Number(value.getColor()) & 0x00FFFFFF).toString(16).padStart(6, '0');
+        return RenderUtils.getColorImage(color, 16, 2);
     }
 }

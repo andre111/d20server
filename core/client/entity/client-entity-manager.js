@@ -6,30 +6,32 @@ import { MessageService } from '../service/message-service.js';
 export class ClientEntityManager extends EntityManager {
     type;
     entities;
+
     listeners;
     entityListeners;
     removalListeners;
 
-    constructor(type) {
+    constructor(type, entityDefinition) {
         super();
 
         this.type = type;
-        this.entities = new Map();
+        this.entities = {};
         this.listeners = [];
         this.entityListeners = [];
         this.removalListeners = [];
     }
 
     find(id) {
-        return this.entities.get(Number(id));
+        return this.entities[String(id)];
     }
 
     has(id) {
-        return this.entities.has(Number(id));
+        const entity = this.entities[String(id)]
+        return entity != null && entity != undefined;
     }
 
     all() { 
-        return Array.from(this.entities.values()); //TODO: might need the readOnlyAll system from old client
+        return Object.values(this.entities); //TODO: might need the readOnlyAll system from old client
     }
 
     map() {
@@ -76,13 +78,13 @@ export class ClientEntityManager extends EntityManager {
 
     // Server Data Methods
     serverClearEntities() {
-        this.entities.clear();
+        this.entities = {};
 
         this.notifyListeners();
     }
 
     serverAddEntity(entity) {
-        this.entities.set(Number(entity.getID()), entity);
+        this.entities[String(entity.getID())] = entity;
         
         this.notifyListeners();
         for(const entityListener of this.entityListeners) {
@@ -91,11 +93,12 @@ export class ClientEntityManager extends EntityManager {
     }
 
     serverRemoveEntity(id) {
-        this.entities.delete(Number(id));
+        const entity = this.entities.get(id);
+        delete this.entities[String(id)];
 
         this.notifyListeners();
         for(const removalListener of this.removalListeners) {
-            removalListener(id);
+            removalListener(id, entity);
         }
     }
 

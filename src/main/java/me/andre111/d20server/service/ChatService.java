@@ -234,4 +234,8 @@ public abstract class ChatService {
 		
 		return loadedChat;
 	}
+	
+	public static void forceChatDataSave() {
+		Utils.saveJson("chat", getChatData());
+	}
 }

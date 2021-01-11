@@ -49,7 +49,7 @@ export class ImagePropertyEditor extends PropertyEditor {
     
     doEditImage() {
         if(!this.input.disabled) {
-            new CanvasWindowChoose('image', null, id => {
+            new CanvasWindowChoose('image', id => {
                 this.imageID = id;
                 this.reloadImage();
             });

@@ -4,7 +4,7 @@ import { registerType } from '../util/datautil.js';
 import { Property } from './property.js';
 import { Access, Type, Role } from '../constants.js';
 import { getDefinitions } from '../definitions.js';
-import { Parser } from '../scripting/expression/parser.js';
+import { ParserInstance } from '../scripting/expression/parser.js';
 import { Context } from '../scripting/context.js';
 
 export class Entity {
@@ -163,8 +163,7 @@ export class Entity {
             if(!property) throw new Error(`Error in UpdateRule: Property ${ruleDef.property} does not exist`);
 
             try {
-                //TODO: reenable update rules once the expression parser is completed
-                /*const expression = Parser.parse(ruleDef.expression);
+                const expression = ParserInstance.parse(ruleDef.expression);
                 const result = expression.eval(new Context(null, null, this));
             
                 const value = result.getValue();
@@ -183,9 +182,12 @@ export class Entity {
                 default:
                     throw new Error(`Error in UpdateRule: Cannot modify property of type ${property.getType()}`);
                 }
-                changedProperties[ruleDef.property] = property;*/
+                changedProperties[ruleDef.property] = property;
             } catch (error) {
-                throw new Error(`Error in UpdateRule: ${error.message}`);
+                //TODO: how can I report where the old error happended?
+                //throw new Error(`Error in UpdateRule: ${error.message}`);
+                console.log(`Error in UpdateRule: ${error.message}`);
+                throw error;
             }
         }
     }

@@ -5,6 +5,8 @@ export class Variable extends Expression {
     fullName;
 
     constructor(fullName) {
+        super();
+
         this.fullName = fullName;
     }
 
@@ -13,7 +15,7 @@ export class Variable extends Expression {
 
     eval(context) {
         // get value
-        const valueObject = get(context);
+        const valueObject = this.get(context);
         var value = 0;
 
         // try to interpret as number

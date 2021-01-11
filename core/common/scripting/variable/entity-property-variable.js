@@ -1,14 +1,16 @@
-import { Type } from "../../constants.js";
 import { Variable } from './variable.js';
-import { EntityManagers } from '../../entity/entitymanagers.js';
+import { Type } from '../../constants.js';
+import { EntityManagers } from '../../entity/entity-managers.js';
 
-export class PropertyVariable extends Variable {
+export class EntityPropertyVariable extends Variable {
     propertyName;
+    entityFinder;
 
-    constructor(fullName, propertyName) {
+    constructor(fullName, propertyName, entityFinder) {
         super(fullName);
-        
+
         this.propertyName = propertyName;
+        this.entityFinder = entityFinder;
     }
 
     set(context, value) {
@@ -102,5 +104,7 @@ export class PropertyVariable extends Variable {
         }
     }
 
-    getEntity(context) { throw new Error('Cannot call abstract function'); }
+    getEntity(context) {
+        return this.entityFinder.findEntity(context);
+    }
 }

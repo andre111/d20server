@@ -221,9 +221,10 @@ public class ServerEntityManager implements EntityManager {
 	}
 	
 	public final void performSave(boolean backup) {
+		// called from (async) save service
 		if(backup) {
 			Utils.backupJson("entity."+type);
 		}
-		Utils.saveJson("entity."+type, entities); // request (async) save, as that could take some time
+		Utils.saveJson("entity."+type, entities);
 	}
 }

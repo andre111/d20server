@@ -172,6 +172,10 @@ export class Property {
     }
 
     //TODO: checkValue(value) (called hasValidValue in old code)
+    hasValidValue() {
+        //TODO: actual implementation
+        return true;
+    }
 
     transferTo(other) {
         this.checkType(other.type);

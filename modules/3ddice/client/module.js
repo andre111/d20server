@@ -15,8 +15,8 @@ Events.on('chatMessage', evt => {
     if(evt.canceled) return;
     
     // catch chat entries with rolls and that are not in the past
-    if(!evt.entry.rolls) return;
-    if(evt.entry.rolls.length == 0) return;
+    if(!evt.entry.getRolls()) return;
+    if(evt.entry.getRolls().length == 0) return;
     if(evt.historical) return;
     
     // cancel the event to avoid showing the result instantly
@@ -25,7 +25,7 @@ Events.on('chatMessage', evt => {
     // throw dice and only add chat entry once they are done
     var t = [
         {
-            dice: evt.entry.rolls,
+            dice: evt.entry.getRolls(),
             done: () => {
                 if(Client.getState() instanceof StateMain) {
                     Client.getState().getTab('Chat').add(evt.entry);

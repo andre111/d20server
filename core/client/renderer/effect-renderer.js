@@ -23,7 +23,7 @@ class PingEffect extends AbstractEffect {
     constructor(x, y, rotation, scale, parameters) {
         super(x, y, rotation, scale);
         
-        this.color = parameters[0];
+        this.color = parameters ? parameters[0] : '#000000';
         this.age = 0;
     }
     

@@ -35,6 +35,12 @@ public class EntityManagers {
 		}
 	}
 	
+	public static void fullSave() {
+		for(EntityManager manager : D20Common.getAllEntityManagers()) {
+			((ServerEntityManager) manager).performSave(true);
+		}
+	}
+	
 	//TODO: remove and make this datadriven (cascade deletion in reference definition)
 	static {
 		// remove token list entries on token remove

@@ -79,25 +79,25 @@ export class SidepanelTabChat extends SidepanelTab {
     }
     
     add(entry) {
-        if(entry.replaceParent && entry.replaceParent > 0) {
+        if(entry.getReplaceParent() && entry.getReplaceParent() > 0) {
             // find replace parent
-            if(!this.entries.has(entry.replaceParent)) { console.log('Ignoring replace with unknown parent'); return; }
-            var container = this.entries.get(entry.replaceParent);
+            if(!this.entries.has(entry.getReplaceParent())) { console.log('Ignoring replace with unknown parent'); return; }
+            var container = this.entries.get(entry.getReplaceParent());
             
             // find replaceable object and replace content
-            $(container).find('#'+entry.id+'.replaceable').replaceWith(entry.text);
+            $(container).find('#'+entry.getID()+'.replaceable').replaceWith(entry.getText());
             GuiUtils.makeHoverable(container);
         } else {
             // create container
             var container = document.createElement('div');
             container.className = 'chat';
             
-            container.innerHTML = entry.text;
+            container.innerHTML = entry.getText();
             
             // add replaceable trigger
             for(const element of $(container).find('.replaceable')) {
                 element.onclick = () => {
-                    const msg = new SendChatMessage('/trigger '+entry.id+' '+element.id);
+                    const msg = new SendChatMessage('/trigger '+entry.getID()+' '+element.id);
                     MessageService.send(msg);
                 };
             }
@@ -112,15 +112,15 @@ export class SidepanelTabChat extends SidepanelTab {
             timestampHover.className = 'onhover';
             timestampP.appendChild(timestampHover);
             
-            timestampText.innerHTML = dayjs.unix(entry.time).fromNow();
-            timestampHover.innerHTML = dayjs.unix(entry.time).format('lll');
+            timestampText.innerHTML = dayjs.unix(entry.getTime()).fromNow();
+            timestampHover.innerHTML = dayjs.unix(entry.getTime()).format('lll');
             this.scheduleUpdate(timestampText, entry);
             
             // make gui adjustments
             GuiUtils.makeHoverable(container);
             
             // add to map
-            this.entries.set(entry.id, container);
+            this.entries.set(entry.getID(), container);
             
             // append to gui
             //TODO: maybe? find location (could be older message that was kept hidden for some time -> should now appear before other messages?)
@@ -132,12 +132,12 @@ export class SidepanelTabChat extends SidepanelTab {
     
     scheduleUpdate(timestampText, entry) {
         // determine wait time (a second when below a minute ago, a minute when below one hour, one hour otherwise)
-        var ago = dayjs.duration(dayjs().diff(dayjs.unix(entry.time))).as('seconds');
+        var ago = dayjs.duration(dayjs().diff(dayjs.unix(entry.getTime()))).as('seconds');
         var time = (ago < 60 ? 1 : (ago < 60*60 ? 60 : 60 * 60)) * 1000;
         
         setTimeout(() => {
             // perform update
-            timestampText.innerHTML = dayjs.unix(entry.time).fromNow();
+            timestampText.innerHTML = dayjs.unix(entry.getTime()).fromNow();
             
             // schedule next update
             this.scheduleUpdate(timestampText, entry);

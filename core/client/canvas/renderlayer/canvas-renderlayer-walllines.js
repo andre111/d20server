@@ -28,7 +28,7 @@ export class CanvasRenderLayerWallLines extends CanvasRenderLayer {
                 ctx.fillRect(wall.prop('x2').getLong()-5, wall.prop('y2').getLong()-5, 10, 10);
                 
                 if(wall.prop('door').getBoolean()) {
-                    var icon = ImageService.getInternalImage('/public/img/'+(wall.prop('locked').getBoolean() ? 'locked.png' : 'unlocked.png'));
+                    var icon = ImageService.getInternalImage('/core/files/img/'+(wall.prop('locked').getBoolean() ? 'locked.png' : 'unlocked.png'));
                     if(icon != null) {
                         var x = (wall.prop('x1').getLong() + wall.prop('x2').getLong()) / 2;
                         var y = (wall.prop('y1').getLong() + wall.prop('y2').getLong()) / 2;

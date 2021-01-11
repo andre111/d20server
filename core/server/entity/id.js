@@ -8,15 +8,15 @@ export class ServerIDProvider extends IDProvider {
     constructor() {
         super();
 
-        this.nextID = readJson('ids');
+        this.nextID = readJson('id');
         if(!this.nextID) this.nextID = 1;
     }
 
     next() {
         const id = this.nextID;
         this.nextID++;
-        backupJson('ids');
-        saveJson('ids', this.nextID);
+        backupJson('id');
+        saveJson('id', this.nextID);
         return id;
     }
 }
