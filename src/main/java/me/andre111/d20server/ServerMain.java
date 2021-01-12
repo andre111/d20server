@@ -50,9 +50,14 @@ import me.andre111.d20server.service.SaveService;
 //   - 1: Store a __type attribute in all transmitted Objects (Entities,Properties,Messages,...)
 //   - 2: Convert client to actual es6 modules and create "common" modules
 //   - 3: Implement the ExpressionParser/Variables/UpdateRule systems in js modules
-//   4: Convert images and audio from entities to using a "file manager" and paths to resolve (use elFinder library?) 
-//      4.1: write a small data converter -> read id -> read name -> store as path
-//   5: Convert server to node.js (by reusing the "common" modules)
+//   4: Convert images and audio from entities to using a "file manager" and paths to resolve
+//      - 4.1: write the file manager using actual modules in core/client
+//      - 4.2: integrate into tinymce editor (HTMLStringPropertyEditor)
+//      4.3: write a small data converter -> read id -> read name -> store as path
+//      4.4: add custom functionality (images: show to players, create token; audio: open in player)
+//      4.5: integrate into ImagePropertyEditor and editor for audio path
+//      4.6: Add an "fileRenamed" event and a listener that adjusts token imagePath and audioPath properties to server
+//   - 5: Convert server to node.js (by reusing the "common" modules)
 // After that is done:
 //    Rework the entity system (the current one always needs to transmit and iterate all for everything -> performance degradation with many maps)
 //      Maps, Actors and Attachments remain the only "global" entities

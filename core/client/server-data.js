@@ -36,6 +36,7 @@ class Observable {
 
 export const ServerData = {
     localProfile: null,
+    editKey: -1,
     profiles: new Observable(new Map()),
     currentMap: new Observable(0),
 

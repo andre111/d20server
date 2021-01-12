@@ -1,10 +1,13 @@
-import { Entity } from '../../common/common.js';
-import { EntityManagers } from '../../common/entity/entity-managers.js';
-import { AddEntity, EnterGame, EnterMap, PlayerList } from '../../common/messages.js';
 import { fullSync } from '../entity/server-entity-managers.js';
+import { EDIT_KEY } from '../handler/fileman/fileman.js';
 import { ChatService } from './chat-service.js';
 import { MessageService } from './message-service.js';
 import { UserService } from './user-service.js';
+
+import { Entity } from '../../common/common.js';
+import { Role } from '../../common/constants.js';
+import { EntityManagers } from '../../common/entity/entity-managers.js';
+import { AddEntity, EnterGame, EnterMap, PlayerList } from '../../common/messages.js';
 
 export class GameService {
     static init() {
@@ -30,8 +33,8 @@ export class GameService {
         // sync data -> moves client into loading state
         fullSync(profile);
 
-        // send enter message -> moves client into main state ans sets client role/profile
-        MessageService.send(new EnterGame(profile), profile);
+        // send enter message -> moves client into main state ans sets client role/profile and edit key for gms
+        MessageService.send(new EnterGame(profile, profile.getRole() == Role.GM ? EDIT_KEY : -1), profile);
 
         // update player list (to all)
         MessageService.broadcast(new PlayerList(UserService.getAllProfiles()));

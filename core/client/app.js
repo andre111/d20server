@@ -121,7 +121,7 @@ Events.on('actionCommand', event => {
     if(!event.isGM()) return; // only accept commands from gm
     
     if(event.getCommand() == 'SHOW_IMAGE') {
-        new CanvasWindowImage(event.getID());
+        new CanvasWindowImage('/image/'+event.getID());
     }
 });
 

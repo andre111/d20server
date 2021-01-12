@@ -19,6 +19,7 @@ export const MessageService = {
             Client.setState(new StateLoading(msg.getCount()));
         } else if(msg instanceof EnterGame) {
             ServerData.localProfile = msg.getProfile();
+            ServerData.editKey = msg.getEditKey();
             Client.setState(new StateMain());
         } else if(msg instanceof ServerDefinitions) {
             setDefinitions(msg.getDefinitions());

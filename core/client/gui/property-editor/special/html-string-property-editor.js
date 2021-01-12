@@ -1,5 +1,7 @@
 import { PropertyEditor } from '../property-editor.js';
 import { GuiUtils } from '../../../util/guiutil.js';
+import { CanvasWindowFilemanager } from '../../../canvas/window/canvas-window-filemanager.js';
+import { ServerData } from '../../../server-data.js';
 
 import { Type } from '../../../../common/constants.js';
 
@@ -29,8 +31,8 @@ export class HTMLStringPropertyEditor extends PropertyEditor {
             if(!this.input.disabled) {
                 tinymce.init({
                     target: this.textDiv,
-                    plugins: 'table,lists,hr,save',
-                    toolbar: 'undo redo styleselect bold italic | alignleft aligncenter alignright | bullist numlist table hr | save',
+                    plugins: 'table,lists,hr,image,save',
+                    toolbar: 'undo redo styleselect bold italic | alignleft aligncenter alignright | bullist numlist table hr image | save',
                     menubar: false,
                     statusbar: false,
                     inline: true,
@@ -42,6 +44,8 @@ export class HTMLStringPropertyEditor extends PropertyEditor {
                         'margin-left': 'auto',
                         'margin-right': 'auto'
                     },
+                    file_picker_types: 'image',
+                    file_picker_callback: (callback, value, meta) => this.doOpenFilePicker(callback, value, meta),
                     onchange_callback: inst => this.doSubmit(inst)
                 }).then(result => this.editor = result[0]);
             }
@@ -66,6 +70,20 @@ export class HTMLStringPropertyEditor extends PropertyEditor {
     
     doSubmit(editor) {
         this.value = editor.getContent();
+    }
+
+    doOpenFilePicker(callback, value, meta) {
+        const manager = new CanvasWindowFilemanager(ServerData.isGM(), ServerData.editKey, ServerData.isGM() ? null : '/public');
+        //TODO: select existing file if possible (based on value)
+        manager.init(file => {
+            if(!file) return;
+            if(meta.filetype == 'image' && file.getType() == 'image') {
+                callback('/data/files' + file.getPath(), { alt: file.getName() });
+                manager.close();
+            }
+        });
+        // force the manager over top of tinyMCE dialogs (TODO: is there a cleaner way?)
+        manager.frame.parentElement.style.zIndex = 1400;
     }
     
     onDestroy() {

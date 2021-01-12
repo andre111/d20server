@@ -59,6 +59,11 @@ export class CanvasWindow {
         $(this.frame).dialog("option", "width", loc.width);
         $(this.frame).dialog("option", "height", loc.height);
     }
+
+    setDimensions(width, height) {
+        $(this.frame).dialog("option", "width", width);
+        $(this.frame).dialog("option", "height", height);
+    }
     
     close() {
         if(this.closed) return;

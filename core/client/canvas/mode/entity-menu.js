@@ -1,3 +1,4 @@
+import { Menu } from '../../gui/menu.js';
 import { ServerData } from '../../server-data.js';
 import { CanvasWindowEditEntity } from '../window/canvas-window-edit-entity.js';
 import { CanvasWindowFitToGrid } from '../window/canvas-window-fit-to-grid.js';
@@ -9,22 +10,16 @@ import { EntityManagers } from '../../../common/entity/entity-managers.js';
 import { TokenListUtils } from '../../../common/util/token-list-util.js';
 import { SendChatMessage, TokenListValue } from '../../../common/messages.js';
 
-export class EntityMenu {
+export class EntityMenu extends Menu {
     constructor(mode, reference, isGM, x, y) {
+        super(x, y);
+
         this.mode = mode;
         this.reference = reference;
-        this.closed = false;
         
         var accessLevel = reference.getAccessLevel(ServerData.localProfile);
         
         // create html elements
-        this.container = document.createElement('ul');
-        this.container.style.position = 'fixed';
-        this.container.style.width = '150px';
-        this.container.style.left = x+'px';
-        this.container.style.top = y+'px';
-        document.body.appendChild(this.container);
-        
         this.createItem(this.container, 'Edit', () => this.doEdit());
         
         if(this.mode.entityType == 'token') {
@@ -89,37 +84,7 @@ export class EntityMenu {
             this.createItem(this.container, 'Delete', () => this.doDelete());
         }
         
-        $(this.container).menu({
-            select: (event, ui) => {
-                if(event.currentTarget.menucallback != null && event.currentTarget.menucallback != undefined) {
-                    event.currentTarget.menucallback();
-                    this.close();
-                }
-            }
-        });
-    }
-    
-    createItem(parent, name, callback) {
-        var item = document.createElement('li');
-        var div = document.createElement('div');
-        div.innerHTML = name;
-        item.appendChild(div);
-        item.menucallback = callback;
-        parent.appendChild(item);
-    }
-    
-    createCategory(parent, name) {
-        var category = document.createElement('li');
-        var div = document.createElement('div');
-        div.innerHTML = name;
-        category.appendChild(div);
-        var container = document.createElement('ul');
-        container.style.width = '180px';
-        category.appendChild(container);
-        
-        parent.appendChild(category);
-        
-        return container;
+        this.open();
     }
     
     doEdit() {
@@ -157,11 +122,5 @@ export class EntityMenu {
     doDelete() {
         EntityManagers.get(this.mode.entityType).remove(this.reference.id);
         this.mode.activeEntities = [];
-    }
-    
-    close() {
-        if(this.closed) return;
-        this.closed = true;
-        document.body.removeChild(this.container);
     }
 }

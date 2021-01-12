@@ -1,26 +1,21 @@
+import { Menu } from '../../gui/menu.js';
 import { CanvasWindowEditEntity } from '../window/canvas-window-edit-entity.js';
 import { ServerData } from '../../server-data.js';
 
 import { EntityManagers } from '../../../common/entity/entity-managers.js';
 
-export class WallMenu {
+export class WallMenu extends Menu{
     constructor(mode, reference, isGM, x, y) {
+        super(x, y);
+
         // only allow gm access to walls
         if(isGM) {
             this.mode = mode;
             this.reference = reference;
-            this.closed = false;
             
             var accessLevel = reference.getAccessLevel(ServerData.localProfile);
             
             // create html elements
-            this.container = document.createElement('ul');
-            this.container.style.position = 'fixed';
-            this.container.style.width = '150px';
-            this.container.style.left = x+'px';
-            this.container.style.top = y+'px';
-            document.body.appendChild(this.container);
-            
             this.createItem(this.container, 'Edit', () => this.doEdit());
             
             if(this.reference.prop('door').getBoolean()) {
@@ -33,24 +28,8 @@ export class WallMenu {
             
             this.createItem(this.container, 'Delete', () => this.doDelete());
             
-            $(this.container).menu({
-                select: (event, ui) => {
-                    if(event.currentTarget.menucallback != null && event.currentTarget.menucallback != undefined) {
-                        event.currentTarget.menucallback();
-                        this.close();
-                    }
-                }
-            });
+            this.open();
         }
-    }
-    
-    createItem(parent, name, callback) {
-        var item = document.createElement('li');
-        var div = document.createElement('div');
-        div.innerHTML = name;
-        item.appendChild(div);
-        item.menucallback = callback;
-        parent.appendChild(item);
     }
     
     doEdit() {
@@ -70,11 +49,5 @@ export class WallMenu {
     doDelete() {
         EntityManagers.get('wall').remove(this.reference.id);
         this.mode.activeEntities = [];
-    }
-    
-    close() {
-        if(this.closed) return;
-        this.closed = true;
-        document.body.removeChild(this.container);
     }
 }

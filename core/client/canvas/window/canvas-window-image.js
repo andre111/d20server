@@ -1,12 +1,12 @@
 import { CanvasWindow } from '../canvas-window.js';
 
 export class CanvasWindowImage extends CanvasWindow {
-    constructor(imageID) {
+    constructor(imagePath) {
         super('Image', false);
         
-        // TODO: create html elements
+        // create html elements
         var image = new Image();
-        image.src = '/image/'+imageID;
+        image.src = imagePath;
         image.style.width = '100%';
         image.style.height = '100%';
         image.style.objectFit = 'contain';
