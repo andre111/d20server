@@ -8,14 +8,14 @@ export class FileAction {
     constructor(window, name, icon) {
         this.window = window;
         this.name = name;
-        this.icon = icon;
+        this.icon = icon || 0;
 
         // create button
         this.button = document.createElement('input');
         this.button.className = 'fileman-button';
         this.button.type = 'button';
         this.button.value = name;
-        //TODO: set button icon
+        this.button.style.backgroundPosition = '2px '+String(-this.icon*28 + 5)+'px';
     }
 
     getName() {

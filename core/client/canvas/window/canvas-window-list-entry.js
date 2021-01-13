@@ -33,7 +33,7 @@ export class CanvasWindowListEntry {
         if(token) {
             // add image
             var img = new Image();
-            if(token.prop('imageID').getLong() > 0) img.src = '/image/'+token.prop('imageID').getLong();
+            if(token.prop('imagePath').getString() != '') img.src = '/data/files'+token.prop('imagePath').getString();
             img.style.width = '40px';
             img.style.height = '40px';
             img.style.objectFit = 'contain';

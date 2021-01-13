@@ -382,7 +382,8 @@ th, td {
     padding: 0 3px 0 18px;
 
     background-color: #f5deb3;
-    background-position: 3px center;
+    background-image: url(/core/files/img/fileman/sprite.png);
+    background-position: 2px center;
     background-repeat: no-repeat;
 }
 .fileman-button:hover {

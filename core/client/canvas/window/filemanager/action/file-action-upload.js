@@ -3,7 +3,7 @@ import { FileAction } from './file-action.js';
 
 export class FileActionUpload extends FileAction {
     constructor(window) {
-        super(window, 'Upload', null); //TODO: icon
+        super(window, 'Upload', 4);
     }
 
     showWithoutFile() {

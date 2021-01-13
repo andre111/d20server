@@ -31,10 +31,8 @@ export const ImageService = {
         ImageService.MISSING.src = '/core/files/img/missing.png';
     },
     
-    getImage: function(id, grayscale) {
-        grayscale = grayscale || false;
-        
-        return ImageService._getImage('/image/'+id, grayscale);
+    getImage: function(path, grayscale) {
+        return ImageService._getImage('/data/files'+path, grayscale || false);
     },
     
     getInternalImage: function(path, grayscale) {

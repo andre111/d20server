@@ -18,7 +18,7 @@ export class AmbientSoundManager {
             this.stop();
             var volume = token.prop('audioVolume').getDouble();
             this.sound = new Howl({
-                src: ['/audio/'+token.prop('audioID').getLong()],
+                src: ['/data/files'+token.prop('audioPath').getString()],
                 format: ['ogg'],
                 volume: volume
             });

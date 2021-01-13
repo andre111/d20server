@@ -1,4 +1,5 @@
 import { CanvasWindow } from '../canvas-window.js';
+import { toFormatedSize } from '../../../common/util/datautil.js';
 
 export class CanvasWindowFilemanagerUpload extends CanvasWindow {
     window;
@@ -78,7 +79,7 @@ export class CanvasWindowFilemanagerUpload extends CanvasWindow {
 
             const nameDiv = document.createElement('div');
             nameDiv.className = 'fileman-fileupload-name';
-            nameDiv.innerHTML = this.uploadFileList[i].file.name + ' (' + this.uploadFileList[i].file.size + ')'; //TODO: make size nicely readable
+            nameDiv.innerHTML = this.uploadFileList[i].file.name + ' (' + toFormatedSize(this.uploadFileList[i].file.size) + ')'; //TODO: make size nicely readable
             div.appendChild(nameDiv);
 
             const progressDiv = document.createElement('div');
@@ -104,6 +105,7 @@ export class CanvasWindowFilemanagerUpload extends CanvasWindow {
             const formData = new FormData();
             formData.append('action', 'upload');
             formData.append('method', 'ajax');
+            formData.append('k', this.window.getKey());
             formData.append('d', this.directory.getPath());
             formData.append('files[]', fileEntry.file);
 
@@ -148,15 +150,17 @@ export class CanvasWindowFilemanagerUpload extends CanvasWindow {
 
         // update gui
         fileEntry.progressDiv.style.width = '100%';
+        fileEntry.progressDiv.innerHTML = '';
         if(success) {
             fileEntry.progressDiv.className += ' fileman-fileupload-done';
-            fileEntry.progressDiv.innerHTML = '';
             fileEntry.done = true;
         } else {
             fileEntry.progressDiv.className += ' fileman-fileupload-error';
         }
 
         // refresh window (by reselecting the current directory)
-        this.window.selectDirectory(this.window.getSelectedDirectory(), true);
+        if(success) {
+            this.window.selectDirectory(this.window.getSelectedDirectory(), true);
+        }
     }
 }

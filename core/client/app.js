@@ -24,7 +24,6 @@ import { SidepanelTabPlayers } from './sidepanel/sidepanel-tab-players.js';
 import { SidepanelTabActors } from './sidepanel/sidepanel-tab-actors.js';
 import { SidepanelTabAttachments } from './sidepanel/sidepanel-tab-attachments.js';
 import { SidepanelTabMaps } from './sidepanel/sidepanel-tab-maps.js';
-import { SidepanelTabImages } from './sidepanel/sidepanel-tab-images.js';
 import { SidepanelTabLists } from './sidepanel/sidepanel-tab-lists.js';
 import { CanvasWindowImage } from './canvas/window/canvas-window-image.js';
 
@@ -112,7 +111,6 @@ Events.on('addSidepanelTabs', event => {
     event.addSidepanelTab(new SidepanelTabActors());
     event.addSidepanelTab(new SidepanelTabAttachments());
     event.addSidepanelTab(new SidepanelTabMaps());
-    event.addSidepanelTab(new SidepanelTabImages());
     event.addSidepanelTab(new SidepanelTabLists());
     //TODO: settings tab
 });
@@ -121,7 +119,7 @@ Events.on('actionCommand', event => {
     if(!event.isGM()) return; // only accept commands from gm
     
     if(event.getCommand() == 'SHOW_IMAGE') {
-        new CanvasWindowImage('/image/'+event.getID());
+        new CanvasWindowImage(event.getText());
     }
 });
 

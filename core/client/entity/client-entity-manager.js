@@ -93,7 +93,7 @@ export class ClientEntityManager extends EntityManager {
     }
 
     serverRemoveEntity(id) {
-        const entity = this.entities.get(id);
+        const entity = this.entities[String(id)];
         delete this.entities[String(id)];
 
         this.notifyListeners();

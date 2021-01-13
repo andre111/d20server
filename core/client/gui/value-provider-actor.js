@@ -9,7 +9,7 @@ export class ValueProviderActor extends ValueProviderDefault {
     getIconProperty(value) {
         var token = EntityManagers.get('token').find(value.prop('defaultToken').getLong());
         if(token) {
-            return token.prop('imageID');
+            return token.prop('imagePath');
         }
         return null;
     }

@@ -64,6 +64,22 @@ export class CanvasWindow {
         $(this.frame).dialog("option", "width", width);
         $(this.frame).dialog("option", "height", height);
     }
+
+    storeAndRestoreLocation(key) {
+        // restore location
+        const resloc = localStorage.getItem(key);
+        if(resloc) {
+            this.setLocation(JSON.parse(resloc));
+        }
+
+        // store location
+        const storeLocation = () => {
+            const loc = this.getLocation();
+            localStorage.setItem(key, JSON.stringify(loc));
+        };
+        $(this.frame).on('dialogdragstop', storeLocation);
+        $(this.frame).on('dialogresizestop', storeLocation);
+    }
     
     close() {
         if(this.closed) return;

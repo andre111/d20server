@@ -1,3 +1,3 @@
-SET DEBUG=d20node:* & npm start
+SET DEBUG=d20server:* & npm start
 PAUSE
 EXIT

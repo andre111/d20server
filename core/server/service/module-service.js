@@ -63,6 +63,7 @@ export class ModuleService {
                 // read basic entity definition
                 const type = name.substring(0, name.length-5);
                 const entityDefinition = readJsonFile(file);
+                if(type == 'image' || type == 'audio') { console.log(`Skipped: ${type}`); continue; } //TODO: remove this hack to skip old entities once all data is converted
                 console.log(`Entity: ${type}`);
 
                 // TODO: read extension definitions

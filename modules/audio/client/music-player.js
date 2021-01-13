@@ -1,17 +1,42 @@
+import { CanvasWindow } from '../../../core/client/canvas/canvas-window.js';
 import { ServerData } from '../../../core/client/server-data.js';
 import { MessageService } from '../../../core/client/service/message-service.js';
 
 import { Events } from '../../../core/common/events.js';
 import { ActionCommand } from '../../../core/common/messages.js';
 
+class MusicPlayerWindow extends CanvasWindow {
+    constructor(player) {
+        super('Music Player', false);
+
+        this.player = player;
+        this.frame.appendChild(this.player.audio);
+        this.setDimensions(340, 150);
+        this.storeAndRestoreLocation('music_player_window');
+    }
+
+    onClose() {
+        this.player.audio.pause(); // pause audio to prevent issues
+        super.onClose();
+    }
+}
+
+var _player = null;
+export function getMusicPlayer() {
+    if(!_player) {
+        _player = new MusicPlayer();
+    }
+    return _player;
+}
+
 export class MusicPlayer {
-    constructor(parent) {
+    constructor() {
         this.audio = document.createElement('audio');
         this.audio.controls = true;
         this.audio.loop = true;
-        parent.appendChild(this.audio);
+        this.window = null;
         
-        this.currentID = -1;
+        this.currentPath = '';
         this.lastUpdate = -1;
         
         // handle updating other clients
@@ -25,7 +50,7 @@ export class MusicPlayer {
         };
         this.audio.onplay = () => {
             if(ServerData.isGM()) {
-                const msg = new ActionCommand('PLAY_MUSIC', this.currentID, -1);
+                const msg = new ActionCommand('PLAY_MUSIC', -1, -1, -1, false, this.currentPath);
                 MessageService.send(msg);
             }
         };
@@ -36,10 +61,10 @@ export class MusicPlayer {
             
             switch(evt.getCommand()) {
             case 'LOAD_MUSIC':
-                this.serverDoLoad(evt.getID());
+                this.serverDoLoad(evt.getText());
                 break;
             case 'PLAY_MUSIC':
-                this.serverDoPlay(evt.getID(), evt.getX());
+                this.serverDoPlay(evt.getText(), evt.getX());
                 break;
             case 'PAUSE_MUSIC':
                 this.serverDoPause();
@@ -51,11 +76,21 @@ export class MusicPlayer {
         };
         Events.on('actionCommand', this.commandListener);
     }
+
+    show() {
+        // show window
+        if(!this.window || this.window.closed) {
+            this.window = new MusicPlayerWindow(this);
+        }
+    }
     
-    load(id) {
+    load(path) {
+        this.show();
+
+        // load
         const msg = new ActionCommand('STOP_MUSIC');
         MessageService.send(msg);
-        const msg2 = new ActionCommand('LOAD_MUSIC', id);
+        const msg2 = new ActionCommand('LOAD_MUSIC', -1, -1, -1, false, path);
         MessageService.send(msg2);
     }
     
@@ -71,21 +106,21 @@ export class MusicPlayer {
             if(ServerData.isGM()) {
                 if(!this.audio.paused) {
                     const time = Math.trunc(this.audio.currentTime * 44100);
-                    const msg = new ActionCommand('PLAY_MUSIC', this.currentID, time);
+                    const msg = new ActionCommand('PLAY_MUSIC', -1, time, -1, false, this.currentPath);
                     MessageService.send(msg);
                 }
             }
         }
     }
     
-    serverDoLoad(id) {
-        if(this.currentID == id) return;
-        this.currentID = id;
-        this.audio.src = '/audio/'+id;
+    serverDoLoad(path) {
+        if(this.currentPath == path) return;
+        this.currentPath = path;
+        this.audio.src = path;
     }
     
-    serverDoPlay(id, time) {
-        this.serverDoLoad(id);
+    serverDoPlay(path, time) {
+        this.serverDoLoad(path);
         if(this.audio.paused) this.audio.play();
         
         if(time < 0) return;

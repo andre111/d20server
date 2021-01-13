@@ -1,7 +1,6 @@
 import { PropertyEditor } from '../property-editor.js';
 import { GuiUtils } from '../../../util/guiutil.js';
-import { CanvasWindowFilemanager } from '../../../canvas/window/canvas-window-filemanager.js';
-import { ServerData } from '../../../server-data.js';
+import { createDefaultFileManager } from '../../../canvas/window/canvas-window-filemanager.js';
 
 import { Type } from '../../../../common/constants.js';
 
@@ -73,7 +72,7 @@ export class HTMLStringPropertyEditor extends PropertyEditor {
     }
 
     doOpenFilePicker(callback, value, meta) {
-        const manager = new CanvasWindowFilemanager(ServerData.isGM(), ServerData.editKey, ServerData.isGM() ? null : '/public');
+        const manager = createDefaultFileManager();
         //TODO: select existing file if possible (based on value)
         manager.init(file => {
             if(!file) return;

@@ -1,14 +1,14 @@
 import { PropertyEditor } from '../property-editor.js';
 import { GuiUtils } from '../../../util/guiutil.js';
-import { CanvasWindowChoose } from '../../../canvas/window/canvas-window-choose.js';
+import { createDefaultFileManager } from '../../../canvas/window/canvas-window-filemanager.js';
 
 import { Type } from '../../../../common/constants.js';
 
 export class ImagePropertyEditor extends PropertyEditor {
     constructor(tab, name, label) {
-        super(name, Type.LONG, label);
+        super(name, Type.STRING, label);
         
-        this.imageID = -1;
+        this.imagePath = '';
     }
     
     initContent(label) {
@@ -16,6 +16,7 @@ export class ImagePropertyEditor extends PropertyEditor {
         
         this.image = document.createElement('image');
         this.container.onclick = () => this.doEditImage();
+        this.container.oncontextmenu = () => this.doClearImage();
         this.container.appendChild(this.image);
         
         this.input = document.createElement('input');
@@ -24,20 +25,20 @@ export class ImagePropertyEditor extends PropertyEditor {
     }
     
     reloadValue(property) {
-        this.imageID = property.getLong();
+        this.imagePath = property.getString();
         this.reloadImage();
     }
     
     applyValue(property) {
-        property.setLong(this.imageID);
+        property.setString(this.imagePath);
     }
     
     reloadImage() {
         // replace image (just changing the src is not enough)
         if(this.image != null) this.container.removeChild(this.image);
-        if(this.imageID > 0) {
+        if(this.imagePath != '') {
             this.image = new Image();
-            this.image.src = '/image/'+this.imageID;
+            this.image.src = '/data/files'+this.imagePath;
             this.image.style.width = '100%';
             this.image.style.height = '100%';
             this.image.style.objectFit = 'contain';
@@ -49,10 +50,23 @@ export class ImagePropertyEditor extends PropertyEditor {
     
     doEditImage() {
         if(!this.input.disabled) {
-            new CanvasWindowChoose('image', id => {
-                this.imageID = id;
-                this.reloadImage();
+            const manager = createDefaultFileManager();
+            manager.init(file => {
+                if(!file) return;
+                if(file.getType() == 'image') {
+                    this.imagePath = file.getPath();
+                    this.reloadImage();
+
+                    manager.close();
+                }
             });
+        }
+    }
+
+    doClearImage() {
+        if(!this.input.disabled) {
+            this.imagePath = '';
+            this.reloadImage();
         }
     }
 }

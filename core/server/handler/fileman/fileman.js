@@ -1,7 +1,6 @@
 import express from 'express';
 import fs from 'fs-extra';
 import path from 'path';
-import sizeOf from 'image-size';
 import gm from 'gm';
 import multer  from 'multer';
 
@@ -27,16 +26,11 @@ router.post('/fileslist', function(req, res) {
     fs.readdirSync(pathDir).map(function(file) {
         var fileDir = path.join(pathDir, file);
         var info = fs.statSync(fileDir); 
-        if(info.isFile()){
-            var size = null;
-            try { size = sizeOf(fileDir); } catch(err) { size = {}; }
+        if(info.isFile()) {
             response.push({ 
                 p: path.join(req.body.d, file).replace(/\\/g, '/'), 
                 s: info.size,
-                t: (info.mtime.getTime() / 1000).toFixed(0),
-                w: size.width,
-                h: size.height,
-                l: 0
+                t: (info.mtime.getTime() / 1000).toFixed(0)
             });
         }
     });
@@ -122,6 +116,8 @@ router.get('/generatethumb', function(req, res) {
 /* Upload files */
 var storage = multer.diskStorage({
     destination: function (req, file, cb) {
+        if(req.body.k != EDIT_KEY) { cb('access denied', null); return; }
+
         cb(null, path.join(serverRoot, req.body.d));
     },
     filename: function (req, file, cb) {
@@ -131,8 +127,6 @@ var storage = multer.diskStorage({
 
 var upload = multer({ storage: storage }).array('files[]');
 router.post('/upload', function(req, res) {
-    //TODO: somehow check edit key here too
-
     upload(req, res, function (err) {
         if (err) {
             res.send({ res:'error', msg: err });

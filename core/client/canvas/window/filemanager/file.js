@@ -12,22 +12,13 @@ export class File {
     size;
     modified;
 
-    // image / media information
-    width;
-    height;
-    length;
-
-    constructor(window, directory, path, size, modified, width, height, length) {
+    constructor(window, directory, path, size, modified) {
         this.window = window;
         this.directory = directory;
 
         this.path = path;
         this.size = size;
         this.modified = modified;
-
-        this.width = width ? width : 0;
-        this.height = height ? height : 0;
-        this.length = length ? length : 0;
 
         this.createElement();
     }
@@ -141,7 +132,4 @@ export class File {
     setPath(path) {
         this.path = path;
     }
-
-    // client methods
-
 }

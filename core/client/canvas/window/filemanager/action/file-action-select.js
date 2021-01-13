@@ -2,7 +2,7 @@ import { FileAction } from './file-action.js';
 
 export class FileActionSelect extends FileAction {
     constructor(window) {
-        super(window, 'Select', null); //TODO: icon
+        super(window, 'Select', 5);
     }
 
     shouldShowFor(file) {

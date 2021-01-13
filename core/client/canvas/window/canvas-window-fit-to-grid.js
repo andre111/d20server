@@ -4,6 +4,7 @@ import { MouseController } from '../../mouse-controller.js';
 import { MouseControllerCamera } from '../mouse-controller-camera.js';
 import { ImageService } from '../../service/image-service.js';
 import { Events } from '../../../common/events.js';
+import { MapUtils } from '../../util/maputil.js';
 
 class CanvasWindowFitToGridMouseController extends MouseController {
     constructor(w) {
@@ -143,9 +144,9 @@ export class CanvasWindowFitToGrid extends CanvasWindow {
     }
     
     getImage() {
-        var imageID = this.reference.prop('imageID').getLong();
-        if(imageID > 0) {
-            return ImageService.getImage(imageID);
+        var imagePath = this.reference.prop('imagePath').getString();
+        if(imagePath && imagePath != '') {
+            return ImageService.getImage(imagePath);
         }
         return null;
     }

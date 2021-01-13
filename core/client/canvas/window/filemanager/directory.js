@@ -176,7 +176,7 @@ export class Directory {
                 success: files => {
                     // parse files
                     for(const file of files) {
-                        const f = new File(this.window, this, file.p, file.s, file.t, file.w, file.h, file.l);
+                        const f = new File(this.window, this, file.p, file.s, file.t);
                         newFiles.push(f);
                         if(selectedFilePath && file.p == selectedFilePath) newSelectedFile = f;
                     }

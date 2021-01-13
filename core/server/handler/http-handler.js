@@ -3,7 +3,6 @@ import http from 'http';
 import path from 'path';
 import morgan from 'morgan';
 import { router as filemanRouter } from './fileman/fileman.js';
-import httperrors from 'http-errors';
 
 import { ModuleService } from '../service/module-service.js';
 import { buildIndexPage, getIndexPage } from './index-page.js';
@@ -32,10 +31,9 @@ export class HttpHandler {
         buildIndexPage();
         server.get('/', getIndexPage);
 
-
         // TODO: remove: provide old image and audio entity data
-        server.use('/image', express.static(path.join(path.resolve(), '/data/entity/image'), { extensions: ['bin'], setHeaders: (res, path, stat) => { res.set('Content-Type', 'image/png') } }));
-        server.use('/audio', express.static(path.join(path.resolve(), '/data/entity/audio'), { extensions: ['bin'], setHeaders: (res, path, stat) => { res.set('Content-Type', 'application/ogg') } }));
+        //server.use('/image', express.static(path.join(path.resolve(), '/data/entity/image'), { extensions: ['bin'], setHeaders: (res, path, stat) => { res.set('Content-Type', 'image/png') } }));
+        //server.use('/audio', express.static(path.join(path.resolve(), '/data/entity/audio'), { extensions: ['bin'], setHeaders: (res, path, stat) => { res.set('Content-Type', 'application/ogg') } }));
 
         // file managers
         server.use('/fileman', filemanRouter);

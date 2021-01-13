@@ -3,7 +3,7 @@ import { FileAction } from './file-action.js';
 
 export class FileActionDelete extends FileAction {
     constructor(window) {
-        super(window, 'Delete', null); //TODO: icon
+        super(window, 'Delete', 7);
     }
 
     shouldShowFor(file) {
@@ -22,7 +22,7 @@ export class FileActionDelete extends FileAction {
                 success: data => {
                     if(data.res == 'ok') {
                         const dir = file.getDirectory();
-                        const index = dir.getFiles().indexOf(this);
+                        const index = dir.getFiles().indexOf(file);
                         if(index >= 0) dir.setFiles(dir.getFiles().slice(index, 1));
 
                         dir.setSelectedFile(null);

@@ -6,7 +6,7 @@ import { EntityManagers } from '../../../../common/entity/entity-managers.js';
 
 export class ReferencedImagePropertyEditor extends PropertyEditor {
     constructor(tab, name, label, referenceType, referenceProperty) {
-        super(name, Type.LONG, label);
+        super(name, Type.STRING, label);
         
         this.referenceType = referenceType;
         this.referenceProperty = referenceProperty;
@@ -22,17 +22,17 @@ export class ReferencedImagePropertyEditor extends PropertyEditor {
     }
     
     reloadValue(property) {
-        var imageID = 0;
+        var imagePath = '';
         var referencedEntity = EntityManagers.get(this.referenceType).find(property.getLong());
         if(referencedEntity != null && referencedEntity != undefined) {
-            imageID = referencedEntity.prop(this.referenceProperty).getLong();
+            imagePath = referencedEntity.prop(this.referenceProperty).getString();
         }
         
         // replace image (just changing the src is not enough)
         if(this.image != null) this.container.removeChild(this.image);
-        if(imageID > 0) {
+        if(imagePath && imagePath != '') {
             this.image = new Image();
-            this.image.src = '/image/'+imageID;
+            this.image.src = '/data/files'+imagePath;
             this.image.style.width = '100%';
             this.image.style.height = '100%';
             this.image.style.objectFit = 'contain';

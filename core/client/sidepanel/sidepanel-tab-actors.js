@@ -100,9 +100,9 @@ export class SidepanelTabActors extends SidepanelTab {
             const actor = EntityManagers.get('actor').find(id);
             const token = actor ? EntityManagers.get('token').find(actor.prop('defaultToken').getLong()) : null;
             if(token) {
-                const imageID = token.prop('imageID').getLong();
-                if(imageID > 0) {
-                    const msg = new ActionCommand('SHOW_IMAGE', imageID);
+                const imagePath = token.prop('imagePath').getString();
+                if(imagePath && imagePath != '') {
+                    const msg = new ActionCommand('SHOW_IMAGE', 0, 0, 0, false, '/data/files'+imagePath);
                     MessageService.send(msg);
                 }
             }

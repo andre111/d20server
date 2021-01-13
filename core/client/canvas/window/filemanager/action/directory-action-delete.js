@@ -3,7 +3,7 @@ import { CanvasWindowConfirm } from '../../canvas-window-confirm.js';
 
 export class DirectoryActionDelete extends DirectoryAction {
     constructor(window) {
-        super(window, 'Delete', null); //TODO: icon
+        super(window, 'Delete', 2);
     }
 
     shouldShowFor(directory) {

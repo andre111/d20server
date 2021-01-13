@@ -92,3 +92,12 @@ export function fromJson(text) {
     var object = JSON.parse(text);
     return assignType(object);
 }
+
+export function toFormatedSize(value) {
+    value = value || 0;
+    var suffix = 'B';
+    if(value > 1024) { value = value / 1024; suffix = 'KiB'; }
+    if(value > 1024) { value = value / 1024; suffix = 'MiB'; }
+    if(value > 1024) { value = value / 1024; suffix = 'GiB'; }
+    return new Number(value).toFixed(2) + ' ' + suffix;
+}

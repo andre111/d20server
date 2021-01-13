@@ -3,7 +3,7 @@ import { FileAction } from './file-action.js';
 
 export class FileActionRename extends FileAction {
     constructor(window) {
-        super(window, 'Rename', null); //TODO: icon
+        super(window, 'Rename', 6);
     }
 
     shouldShowFor(file) {

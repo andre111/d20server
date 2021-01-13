@@ -14,6 +14,7 @@ import { EntityReference } from '../../entity/entity-reference.js';
 
 import { EntityManagers } from '../../../common/entity/entity-managers.js';
 import { DefinitionUtils } from '../../../common/util/definitionutil.js'
+import { StringFilePropertyEditor } from '../../gui/property-editor/special/string-file-property-editor.js';
 
 export class CanvasWindowEditEntityTab {
     constructor(w, container, links, id, definition) {
@@ -104,6 +105,11 @@ export class CanvasWindowEditEntityTab {
                     if(type != 'STRING') throw 'Cannot use HTML_STRING editor for property of type: '+type;
 					editor = new HTMLStringPropertyEditor(this, property, compDefinition.text);
 					component = editor.getContainer();
+                    break;
+                case 'FILE':
+                    if(type != 'STRING') throw 'Cannot use FILE editor for property of type: '+type;
+                    editor = new StringFilePropertyEditor(this, property, compDefinition.text, compDefinition.filetype);
+                    component = editor.getContainer();
                     break;
                 case 'REFERENCE_SINGLE':
                     editor = new EntityReferencePropertyEditor(this, property, compDefinition.text, compDefinition.reference);

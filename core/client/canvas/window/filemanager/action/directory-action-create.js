@@ -3,7 +3,7 @@ import { DirectoryAction } from './directory-action.js';
 
 export class DirectoryActionCreate extends DirectoryAction {
     constructor(window) {
-        super(window, 'Create', null); //TODO: icon
+        super(window, 'Create', 1);
     }
 
     shouldShowFor(directory) {

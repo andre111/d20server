@@ -1,4 +1,7 @@
 import { CanvasWindow } from '../canvas-window.js';
+import { ServerData } from '../../server-data.js';
+import { toFormatedSize } from '../../../common/util/datautil.js';
+
 import { Directory } from './filemanager/directory.js';
 import { File } from './filemanager/file.js';
 import { DirectoryAction } from './filemanager/action/directory-action.js';
@@ -11,6 +14,10 @@ import { FileActionUpload } from './filemanager/action/file-action-upload.js';
 import { DirectoryActionCreate } from './filemanager/action/directory-action-create.js';
 import { DirectoryActionRename } from './filemanager/action/directory-action-rename.js';
 import { DirectoryActionDelete } from './filemanager/action/directory-action-delete.js';
+
+export function createDefaultFileManager() {
+    return new CanvasWindowFilemanager(ServerData.isGM(), ServerData.editKey, ServerData.isGM() ? null : '/public');
+}
 
 export class CanvasWindowFilemanager extends CanvasWindow {
     // settings
@@ -396,7 +403,7 @@ export class CanvasWindowFilemanager extends CanvasWindow {
         if(file) file.getElement().className = 'selected';
 
         // change status
-        if(file) this.setStatus('File: '+file.getPath()+' - Size: '+file.getSize()+' Last Modified: '+file.getModified());
+        if(file) this.setStatus('File: '+file.getPath()+' - Size: '+toFormatedSize(file.getSize())+' Last Modified: '+dayjs.unix(file.getModified()).format('lll'));
         else this.setStatus('');
         this.selectedDirectory.setSelectedFile(file);
         this.updateButtons();

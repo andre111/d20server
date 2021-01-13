@@ -31,7 +31,7 @@ export const TokenRenderer = {
     },
     
     renderToken: function(ctx, token, viewer, x, y, grayscale) {
-        var img = ImageService.getImage(token.prop('imageID').getLong(), grayscale);
+        var img = ImageService.getImage(token.prop('imagePath').getString(), grayscale);
         if(img == null) img = ImageService.MISSING;
         
         if(img != null) {

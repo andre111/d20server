@@ -41,7 +41,7 @@ export class GameService {
 
         // send game state
         GameService.reloadMaps(profile);
-        ChatService.sendHistory(profile, 200);
+        ChatService.sendHistory(profile, 100);
     }
 
     static reloadMaps(profile) {

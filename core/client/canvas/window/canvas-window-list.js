@@ -38,9 +38,7 @@ export class CanvasWindowList extends CanvasWindow {
         this.buttonPanel.appendChild(next);
         
         // store and resize location
-        this.restoreLocation();
-        $(this.frame).on('dialogdragstop', () => this.storeLocation());
-        $(this.frame).on('dialogresizestop', () => this.storeLocation());
+        this.storeAndRestoreLocation('token_list_window_'+this.list.id);
     }
     
     updateList(list, shouldShow) {
@@ -85,17 +83,5 @@ export class CanvasWindowList extends CanvasWindow {
         var reference = new EntityReference(this.list);
         reference.prop('currentIndex').setLong(index);
         reference.performUpdate();
-    }
-    
-    storeLocation() {
-        var loc = this.getLocation();
-        localStorage.setItem('token_list_window_'+this.list.id, JSON.stringify(loc));
-    }
-    
-    restoreLocation() {
-        var loc = localStorage.getItem('token_list_window_'+this.list.id);
-        if(loc) {
-            this.setLocation(JSON.parse(loc));
-        }
     }
 }

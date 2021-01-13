@@ -9,6 +9,13 @@
             "value": "-1"
         },
         {
+            "name": "audioPath",
+            "type": "STRING",
+            "editAccess": "GM",
+            "viewAccess": "GM",
+            "value": ""
+        },
+        {
             "name": "audioVolume",
             "type": "DOUBLE",
             "editAccess": "GM",
@@ -67,10 +74,10 @@
                 },
                 {
                     "type": "EDITOR",
-                    "editorType": "REFERENCE_SINGLE",
-                    "property": "audioID",
+                    "editorType": "FILE",
+                    "property": "audioPath",
                     "text": "",
-                    "reference": "audio"
+                    "filetype": "audio"
                 },
                 {
                     "type": "EMPTY"
