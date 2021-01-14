@@ -3,7 +3,7 @@ import { EntityManagers } from '../../common/entity/entity-managers.js';
 var requestingSave = [];
 var busy = false;
 
-function run() {
+async function run() {
     while(requestingSave.length > 0) {
         busy = true;
         const type = requestingSave.pop();

@@ -62,7 +62,7 @@ import me.andre111.d20server.service.SaveService;
 //    Rework the entity system (the current one always needs to transmit and iterate all for everything -> performance degradation with many maps)
 //      Maps, Actors and Attachments remain the only "global" entities
 //      Tokens, Walls, Drawings, ... are stored in the maps (not as properties, a sepparate system that can allow gradual loading of map content)
-//      Make it possible to store a single entity in a property (as a JSON string) -> use for actor default token
+//      - Make it possible to store a single entity in a property (as a JSON string) -> use for actor default token
 //      What do we do with lists? Is this the time to rework the whole combat system?
 //
 // Convert ALL entities to be FULLY data defined/driven
@@ -102,8 +102,8 @@ public class ServerMain {
 		// used to apply data chagnes needed for node server
 		//NodeConverter.convertData();
 		
-		System.out.println("Starting game server...");
+		//System.out.println("Starting game server...");
 		//TODO: set/configure correct ports
-		HttpServer.start(8082);
+		//HttpServer.start(8082);
 	}
 }

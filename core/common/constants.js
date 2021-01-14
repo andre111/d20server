@@ -52,6 +52,7 @@ export const Type = {
     LIGHT: 'LIGHT',
     EFFECT: 'EFFECT',
     COLOR: 'COLOR',
+    ENTITY: 'ENTITY',
     ACCESS: 'ACCESS'
 }
 

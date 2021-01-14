@@ -85,7 +85,8 @@ public class HttpServerHandler extends SimpleChannelInboundHandler<FullHttpReque
 			index = index.replace("!MODULE_LIBRARIES!", moduleLibraries.toString());
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
-			throw new RuntimeException(e);
+			e.printStackTrace();
+			index = "";
 		}
 	}
 	

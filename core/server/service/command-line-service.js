@@ -1,5 +1,6 @@
 import readline from 'readline';
 import { Role } from '../../common/constants.js';
+import { importData } from '../entity/importer.js';
 import { SaveService } from './save-service.js';
 import { UserService } from './user-service.js';
 
@@ -13,6 +14,10 @@ export class CommandLineService {
             const split = line.split(' ');
 
             switch(split[0]) {
+            case 'debugImport':
+                //TODO: generalize with an actual good importer
+                importData('../d20helper/generated/', true);
+                break;
             case 'register':
                 try {
                     if(split.length != 4) throw new Error('Invalid usage');

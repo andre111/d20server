@@ -14,7 +14,7 @@ import { EntityReference } from '../entity/entity-reference.js';
 
 import { Entity } from '../../common/entity/entity.js';
 import { EntityManagers } from '../../common/entity/entity-managers.js';
-import { ActionCommand, SetActorDefaultToken } from '../../common/messages.js';
+import { ActionCommand } from '../../common/messages.js';
 
 export class SidepanelTabActors extends SidepanelTab {
     constructor() {
@@ -77,7 +77,7 @@ export class SidepanelTabActors extends SidepanelTab {
         const id = this.tree.getSelectedValue();
         if(id) {
             const actor = EntityManagers.get('actor').find(id);
-            const token = actor ? EntityManagers.get('token').find(actor.prop('defaultToken').getLong()) : null;
+            const token = actor ? actor.prop('token').getEntity() : null;
             if(token) {
                 if(Client.getState() instanceof StateMain && Client.getState().getMode() instanceof CanvasModeEntities && Client.getState().getMode().entityType == 'token') {
                     Client.getState().getMode().setAddEntityAction(token);
@@ -89,8 +89,18 @@ export class SidepanelTabActors extends SidepanelTab {
     doSetDefaultToken() {
         const id = this.tree.getSelectedValue();
         if(id) {
-            const msg = new SetActorDefaultToken(id);
-            MessageService.send(msg);
+            const actor = EntityManagers.get('actor').find(id);
+            if(actor) {
+                if(Client.getState() instanceof StateMain && Client.getState().getMode() instanceof CanvasModeEntities && Client.getState().getMode().entityType == 'token') {
+                    if(Client.getState().getMode().activeEntities.length == 1) {
+                        const token = Client.getState().getMode().activeEntities[0].clone();
+
+                        const ref = new EntityReference(actor);
+                        ref.prop('token').setEntity(token);
+                        ref.performUpdate();
+                    }
+                }
+            }
         }
     }
     
@@ -98,7 +108,7 @@ export class SidepanelTabActors extends SidepanelTab {
         const id = this.tree.getSelectedValue();
         if(id) {
             const actor = EntityManagers.get('actor').find(id);
-            const token = actor ? EntityManagers.get('token').find(actor.prop('defaultToken').getLong()) : null;
+            const token = actor ? actor.prop('token').getEntity() : null;
             if(token) {
                 const imagePath = token.prop('imagePath').getString();
                 if(imagePath && imagePath != '') {

@@ -1,6 +1,11 @@
 package me.andre111.d20server.model;
 
 import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -15,38 +20,31 @@ import me.andre111.d20common.util.Utils;
 
 public class Importer {
 	public static void importEntities(File directory, boolean overwriteExisting) {
-		// import images and audio (with copying of the actual data)
-		Map<Long, Long> imageIDMap = importEntities(directory, overwriteExisting, true, "image", (originalID, image) -> {
-			File sourceFile = new File(directory, "image"+File.separator+originalID+".bin");
-			byte[] data = Utils.readBinary(sourceFile);
-			Utils.saveBinary("entity.image."+image.id(), data);
-		});
-		Map<Long, Long> audioIDMap = importEntities(directory, overwriteExisting, true, "audio", (originalID, audio) -> {
-			File sourceFile = new File(directory, "audio"+File.separator+originalID+".bin");
-			byte[] data = Utils.readBinary(sourceFile);
-			Utils.saveBinary("entity.audio."+audio.id(), data);
-		});
+		// import files
+		try {
+			Path fileDirectory = new File(directory, "/files/").toPath();
+			Files.walk(fileDirectory).filter(Files::isRegularFile).forEach(p -> {
+				String name = fileDirectory.relativize(p).toString();
+				name = name.replace("\\", "/");
+				
+				try {
+					Path target = Paths.get("./data/files/"+name);
+					if(!Files.exists(target)) {
+						Files.createDirectories(target.getParent());
+						Files.copy(p, target, StandardCopyOption.REPLACE_EXISTING);
+					}
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			});
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		
 		// import attachments
-		Map<Long, Long> attachmentIDMap = importEntities(directory, overwriteExisting, true, "attachment", (originalID, attachment) -> {
-			long imageID = attachment.prop("imageID").getLong();
-			if(imageID > 0) {
-				attachment.prop("imageID").setLong(imageIDMap.get(imageID));
-			}
-		});
-		
-		// import tokens
-		Map<Long, Long> tokenIDMap = importEntities(directory, overwriteExisting, false, "token", (originalID, token) -> {
-			long imageID = token.prop("imageID").getLong();
-			if(imageID > 0) {
-				token.prop("imageID").setLong(imageIDMap.get(imageID));
-			}
-			
-			long audioID = token.prop("audioID").getLong();
-			if(audioID > 0) {
-				token.prop("audioID").setLong(audioIDMap.get(audioID));
-			}
-		});
+		Map<Long, Long> attachmentIDMap = importEntities(directory, overwriteExisting, true, "attachment", (originalID, attachment) -> {});
 		
 		// import actors
 		Map<Long, Long> actorIDMap = importEntities(directory, overwriteExisting, true, "actor", (originalID, actor) -> {
@@ -54,28 +52,13 @@ public class Importer {
 			List<Long> attachmentIDs = actor.prop("attachments").getLongList().stream().map(oldID -> attachmentIDMap.get(oldID)).collect(Collectors.toList());
 			actor.prop("attachments").setLongList(attachmentIDs);
 			
-			// adjust default token
-			long tokenID = actor.prop("defaultToken").getLong();
-			if(tokenID > 0) {
-				actor.prop("defaultToken").setLong(tokenIDMap.get(tokenID));
+			// adjust token
+			Entity token = actor.prop("token").getEntity();
+			if(token != null) {
+				token.prop("actorID").setLong(actor.id());
+				actor.prop("token").setEntity(token);
 			}
 		});
-		
-		// deferred until actors exist: adjust token actors
-		ServerEntityManager tokenEM = (ServerEntityManager) D20Common.getEntityManager("token");
-		tokenEM.setSaveEnabled(false);
-		for(long tokenID : tokenIDMap.values()) {
-			Entity token = tokenEM.find(tokenID);
-			
-			// adjust actor
-			long actorID = token.prop("actorID").getLong();
-			if(actorID > 0) {
-				token.prop("actorID").setLong(actorIDMap.get(actorID));
-				tokenEM.add(token);
-			}
-		}
-		// reenable saving (causes automatical save all)
-		tokenEM.setSaveEnabled(true);
 		
 		// TODO: import more stuff
 		
@@ -110,14 +93,6 @@ public class Importer {
 				// by overwriting or keeping existing entities
 				if(overwriteExisting) {
 					Entity oldEntity = entityMap.get(entityToImport.getName());
-					//TODO: remove hardcoding - cleanup old default tokens of replaced actors
-					if(entityType.equals("actor")) {
-						long tokenID = oldEntity.prop("defaultToken").getLong();
-						if(tokenID > 0) {
-							D20Common.getEntityManager("token").remove(tokenID);
-						}
-					}
-					
 					entityToImport.transferIDFrom(oldEntity);
 					entityModifier.accept(originalID, entityToImport);
 					entityManager.add(entityToImport);

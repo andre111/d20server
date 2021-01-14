@@ -22,7 +22,6 @@ export { EnterMap } from './message/game/enter-map.js';
 export { MovePlayerToMap } from './message/game/move-player-to-map.js';
 export { PlayEffect } from './message/game/play-effect.js';
 export { SelectedTokens } from './message/game/selected-tokens.js';
-export { SetActorDefaultToken } from './message/game/set-actor-default-token.js';
 export { SetPlayerColor } from './message/game/set-player-color.js';
 export { TokenListValue } from './message/game/token-list-value.js'
 

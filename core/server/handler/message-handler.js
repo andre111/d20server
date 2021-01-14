@@ -3,7 +3,7 @@ import { MessageService } from '../service/message-service.js';
 import { UserService } from '../service/user-service.js';
 
 import { EntityManagers } from '../../common/entity/entity-managers.js';
-import { ActionCommand, AddEntity, EntityLoading, MovePlayerToMap, Ping, PlayEffect, PlayerList, RemoveEntity, RequestAccounts, ResponseFail, ResponseOk, SelectedTokens, SendChatMessage, SetActorDefaultToken, SetPlayerColor, SignIn, SignOut, TokenListValue, UpdateEntityProperties } from '../../common/messages.js';
+import { ActionCommand, AddEntity, EntityLoading, MovePlayerToMap, Ping, PlayEffect, PlayerList, RemoveEntity, RequestAccounts, ResponseFail, ResponseOk, SelectedTokens, SendChatMessage, SetPlayerColor, SignIn, SignOut, TokenListValue, UpdateEntityProperties } from '../../common/messages.js';
 import { Access, Role } from '../../common/constants.js';
 import { TokenListUtils } from '../../common/util/token-list-util.js';
 import { GameService } from '../service/game-service.js';
@@ -94,27 +94,6 @@ function _handleTokenListValue(profile, message) {
             }
         }
     }
-}
-
-function _handleSetActorDefaultToken(profile, message) {
-    if(profile.getRole() != Role.GM) return;
-
-    const actor = EntityManagers.get('actor').find(message.getActorID());
-    const token = profile.getSelectedToken(true);
-    if(!actor || !token) return;
-
-    // remove old default token
-    EntityManagers.get('token').remove(actor.prop('defaultToken').getLong());
-
-    // save token clone
-    const clone = token.clone();
-    clone.resetID();
-    clone.prop('map').setLong(-1);
-    EntityManagers.get('token').add(clone);
-
-    // add default token
-    actor.prop('defaultToken').setLong(clone.getID());
-    EntityManagers.get('actor').add(actor);
 }
 
 function _handleActionCommand(profile, message) {
@@ -214,8 +193,6 @@ export class MessageHandler {
             _handleSelectedTokens(profile, message);
         } else if(message instanceof TokenListValue) {
             _handleTokenListValue(profile, message);
-        } else if(message instanceof SetActorDefaultToken) {
-            _handleSetActorDefaultToken(profile, message);
         } else if(message instanceof ActionCommand) {
             _handleActionCommand(profile, message);
         } else if(message instanceof PlayEffect) {

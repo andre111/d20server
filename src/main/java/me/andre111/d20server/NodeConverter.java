@@ -37,6 +37,22 @@ public class NodeConverter {
 		});
 		((ServerEntityManager) D20Common.getEntityManager("attachment")).setSaveEnabled(true);
 		
+		// store tokens directly in actor properties not by reference
+		((ServerEntityManager) D20Common.getEntityManager("actor")).setSaveEnabled(false);
+		((ServerEntityManager) D20Common.getEntityManager("token")).setSaveEnabled(false);
+		D20Common.getEntityManager("actor").all().forEach(actor -> {
+			Entity token = D20Common.getEntityManager("token").find(actor.prop("defaultToken").getLong());
+			
+			if(token != null) {
+				actor.prop("token").setEntity(token);
+				actor.prop("defaultToken").setLong(-1);
+				
+				D20Common.getEntityManager("token").remove(token.id());
+			}
+		});
+		((ServerEntityManager) D20Common.getEntityManager("token")).setSaveEnabled(true);
+		((ServerEntityManager) D20Common.getEntityManager("actor")).setSaveEnabled(true);
+		
 		// save image and audio data to data/files/
 		D20Common.getEntityManager("image").all().forEach(image -> {
 			File sourceFile = new File("./data/entity/image/"+image.id()+".bin");
@@ -77,6 +93,8 @@ public class NodeConverter {
 		System.err.println("TODOS:");
 		System.err.println("  Create an id.json file in data with a high enough simplge value, e.g: 2000000");
 		System.err.println("  Delete the image and audio directories and json files in data/entities");
+		System.err.println("  Move profile access keys to sepparate file");
+		System.err.println("  (Once all data is converted) get rid of imageID,audioID properties in token, imageID in attachment and defaultToken in actor, image and audio entities");
 	}
 	
 	private static String normalizeName(String name) {

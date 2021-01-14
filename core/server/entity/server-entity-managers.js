@@ -42,9 +42,4 @@ export function setupCascadingDeletes() {
         EntityManagers.get('wall').removeAll(wall => wall.prop('map').getLong() == id);
         EntityManagers.get('drawing').removeAll(drawing => drawing.prop('map').getLong() == id);
     });
-
-    // remove default token on actor remove
-    EntityManagers.get('actor').addRemovalListener((id, actor) => {
-        if(actor) EntityManagers.get('token').remove(actor.prop('defaultToken').getLong());
-    });
 }

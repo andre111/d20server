@@ -1,5 +1,6 @@
-import { registerType } from '../util/datautil.js';
+import { fromJson, registerType, toJson } from '../util/datautil.js';
 import { Access, Type } from '../constants.js';
+import { Entity } from './entity.js';
 
 //TODO: verify values are actually of correct type!
 export class Property {
@@ -160,6 +161,22 @@ export class Property {
     setColor(value) {
         this.checkType(Type.COLOR);
         this.setInternal(String(parseInt(value.substring(1), 16)));
+    }
+
+    getEntity() {
+        this.checkType(Type.ENTITY);
+        const v = this.getInternal();
+        if(!v || v == '') return null;
+        
+        const e = fromJson(v);
+        if(!(e instanceof Entity)) return null;
+        return e;
+    }
+    setEntity(value) {
+        this.checkType(Type.ENTITY);
+        if(value == null) { this.setInternal(''); return; }
+        if(!(value instanceof Entity)) throw new Error('Invalid value, expected instance of Entity');
+        this.setInternal(toJson(value, false));
     }
 
     getAccessValue() {

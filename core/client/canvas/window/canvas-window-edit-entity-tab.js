@@ -175,7 +175,7 @@ export class CanvasWindowEditEntityTab {
                 };
                 break;
             case 'IMAGE_REFERENCE':
-                var imageEditor = new ReferencedImagePropertyEditor(this, compDefinition.property, 'Image', compDefinition.reference, compDefinition.text);
+                var imageEditor = new ReferencedImagePropertyEditor(this, compDefinition.property, 'Image', compDefinition.text);
                 this.editors.push(imageEditor);
                 component = imageEditor.getContainer();
                 break;

@@ -2,13 +2,11 @@ import { PropertyEditor } from '../property-editor.js';
 import { GuiUtils } from '../../../util/guiutil.js';
 
 import { Type } from '../../../../common/constants.js';
-import { EntityManagers } from '../../../../common/entity/entity-managers.js';
 
 export class ReferencedImagePropertyEditor extends PropertyEditor {
-    constructor(tab, name, label, referenceType, referenceProperty) {
+    constructor(tab, name, label, referenceProperty) {
         super(name, Type.STRING, label);
         
-        this.referenceType = referenceType;
         this.referenceProperty = referenceProperty;
     }
     
@@ -23,8 +21,8 @@ export class ReferencedImagePropertyEditor extends PropertyEditor {
     
     reloadValue(property) {
         var imagePath = '';
-        var referencedEntity = EntityManagers.get(this.referenceType).find(property.getLong());
-        if(referencedEntity != null && referencedEntity != undefined) {
+        const referencedEntity = property.getEntity();
+        if(referencedEntity) {
             imagePath = referencedEntity.prop(this.referenceProperty).getString();
         }
         

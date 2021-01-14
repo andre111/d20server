@@ -56,6 +56,13 @@
             "value": "-1"
         },
         {
+            "name": "token",
+            "type": "ENTITY",
+            "editAccess": "GM",
+            "viewAccess": "CONTROLLING_PLAYER",
+            "value": ""
+        },
+        {
             "name": "attachments",
             "type": "LONG_LIST",
             "editAccess": "CONTROLLING_PLAYER",
@@ -95,8 +102,7 @@
                 
                 {
                     "type": "IMAGE_REFERENCE",
-                    "property": "defaultToken",
-                    "reference": "token",
+                    "property": "token",
                     "text": "imagePath",
                     "w": 200,
                     "h": 200

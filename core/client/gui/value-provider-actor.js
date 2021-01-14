@@ -1,5 +1,4 @@
 import { ValueProviderDefault } from './value-provider-default.js';
-import { EntityManagers } from '../../common/entity/entity-managers.js';
 
 export class ValueProviderActor extends ValueProviderDefault {
     constructor() {
@@ -7,7 +6,7 @@ export class ValueProviderActor extends ValueProviderDefault {
     }
     
     getIconProperty(value) {
-        var token = EntityManagers.get('token').find(value.prop('defaultToken').getLong());
+        const token = value.prop('token').getEntity();
         if(token) {
             return token.prop('imagePath');
         }
