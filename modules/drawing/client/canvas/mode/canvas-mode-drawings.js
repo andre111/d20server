@@ -2,6 +2,7 @@ import { CanvasMode } from '../../../../../core/client/canvas/canvas-mode.js';
 import { CanvasWindowConfirm } from '../../../../../core/client/canvas/window/canvas-window-confirm.js';
 import { CanvasWindowInput } from '../../../../../core/client/canvas/window/canvas-window-input.js';
 import { ServerData } from '../../../../../core/client/server-data.js';
+import { EntityUtils } from '../../../../../core/client/util/entityutil.js';
 import { MapUtils } from '../../../../../core/client/util/maputil.js';
 
 import { Entity } from '../../../../../core/common/common.js';
