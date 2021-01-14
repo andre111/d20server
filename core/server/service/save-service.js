@@ -8,7 +8,7 @@ async function run() {
         busy = true;
         const type = requestingSave.pop();
         try {
-            EntityManagers.get(type)._performSave(true);
+            await EntityManagers.get(type)._performSave(true);
         } catch(error) {
             console.log(`Error trying to save: ${type}: ${error}`);
             if(error instanceof Error) console.log(error.trace);

@@ -1,5 +1,5 @@
 import path from 'path';
-import { copyFileSync, existsSync, readFileSync, writeFileSync } from 'fs';
+import fs from 'fs-extra';
 
 import { fromJson, toJson } from '../../common/util/datautil.js';
 
@@ -9,8 +9,8 @@ export function readJson(name) {
 }
 
 export function readJsonFile(file) {
-    if(existsSync(file)) {
-        const text = readFileSync(file, 'utf-8');
+    if(fs.existsSync(file)) {
+        const text = fs.readFileSync(file, 'utf-8');
         return fromJson(text);
     } else {
         return null;
@@ -19,12 +19,21 @@ export function readJsonFile(file) {
 
 export function saveJson(name, object) {
     const text = toJson(object);
-    writeFileSync(nameToPath(name, '.json'), text, );
+    fs.writeFileSync(nameToPath(name, '.json'), text);
+}
+export async function saveJsonAsync(name, object) {
+    const text = toJson(object);
+    await fs.writeFile(nameToPath(name, '.json'), text);
 }
 
 export function backupJson(name) {
-    if(existsSync(nameToPath(name, '.json'))) {
-        copyFileSync(nameToPath(name, '.json'), nameToPath(name, '.json.bck'));
+    if(fs.existsSync(nameToPath(name, '.json'))) {
+        fs.copyFileSync(nameToPath(name, '.json'), nameToPath(name, '.json.bck'));
+    }
+}
+export async function backupJsonAsync(name) {
+    if(fs.existsSync(nameToPath(name, '.json'))) {
+        await fs.copyFile(nameToPath(name, '.json'), nameToPath(name, '.json.bck'));
     }
 }
 

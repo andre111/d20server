@@ -5,7 +5,7 @@ import { AddEntity, ClearEntities, RemoveEntity, UpdateEntityProperties } from '
 import { MessageService } from '../service/message-service.js';
 import { SaveService } from '../service/save-service.js';
 import { UserService } from '../service/user-service.js';
-import { backupJson, readJson, saveJson } from '../util/fileutil.js';
+import { backupJsonAsync, readJson, saveJsonAsync } from '../util/fileutil.js';
 
 export class ServerEntityManager extends EntityManager {
     type;
@@ -179,12 +179,12 @@ export class ServerEntityManager extends EntityManager {
         }
     }
 
-    _performSave(backup) {
+    async _performSave(backup) {
 		// called from (async) save service
         if(backup) {
-            backupJson('entity.'+this.type);
+            await backupJsonAsync('entity.'+this.type);
         }
-        saveJson('entity.'+this.type, this.entities);
+        await saveJsonAsync('entity.'+this.type, this.entities);
     }
 
     // Listener Methods
