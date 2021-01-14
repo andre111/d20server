@@ -50,7 +50,7 @@ export class ImagePropertyEditor extends PropertyEditor {
     
     doEditImage() {
         if(!this.input.disabled) {
-            const manager = createDefaultFileManager();
+            const manager = createDefaultFileManager(this.imagePath);
             manager.init(file => {
                 if(!file) return;
                 if(file.getType() == 'image') {

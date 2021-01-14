@@ -72,8 +72,7 @@ export class HTMLStringPropertyEditor extends PropertyEditor {
     }
 
     doOpenFilePicker(callback, value, meta) {
-        const manager = createDefaultFileManager();
-        //TODO: select existing file if possible (based on value)
+        const manager = createDefaultFileManager(value.replace('data/files', ''));
         manager.init(file => {
             if(!file) return;
             if(meta.filetype == 'image' && file.getType() == 'image') {

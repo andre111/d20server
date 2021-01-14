@@ -15,8 +15,9 @@ import { DirectoryActionCreate } from './filemanager/action/directory-action-cre
 import { DirectoryActionRename } from './filemanager/action/directory-action-rename.js';
 import { DirectoryActionDelete } from './filemanager/action/directory-action-delete.js';
 
-export function createDefaultFileManager() {
-    return new CanvasWindowFilemanager(ServerData.isGM(), ServerData.editKey, ServerData.isGM() ? null : '/public');
+export function createDefaultFileManager(selectedPath) {
+    //TODO: implement selectedPath (select this file on startup if possible)
+    return new CanvasWindowFilemanager(ServerData.isGM(), ServerData.editKey, ServerData.isGM() ? null : '/public', selectedPath);
 }
 
 export class CanvasWindowFilemanager extends CanvasWindow {
@@ -25,6 +26,7 @@ export class CanvasWindowFilemanager extends CanvasWindow {
     key;
     forcedRoot;
     selectionCallback;
+    startupPath;
 
     fileActions;
     directoryActions;
@@ -48,12 +50,13 @@ export class CanvasWindowFilemanager extends CanvasWindow {
     selectedDirectory = null;
     selectedFile = null;
 
-    constructor(editable, key, forcedRoot) {
+    constructor(editable, key, forcedRoot, startupPath) {
         super('File Manager', true);
 
         this.editable = editable;
         this.key = key;
         this.forcedRoot = forcedRoot;
+        this.startupPath = startupPath;
 
         this.fileActions = [];
         this.directoryActions = [];
@@ -69,8 +72,13 @@ export class CanvasWindowFilemanager extends CanvasWindow {
     init(selectionCallback) {
         this.selectionCallback = selectionCallback;
 
+        var startupDir = '';
+        if(this.startupPath && this.startupPath.trim() != '') {
+            startupDir = this.startupPath.indexOf('/') >= 0 ? this.startupPath.substring(0, this.startupPath.lastIndexOf('/')) : this.startupPath;
+        }
+
         this.createBaseHTML();
-        this.loadDirectories();
+        this.loadDirectories(startupDir, this.startupPath);
         this.updateButtons();
     }
 
@@ -210,7 +218,7 @@ export class CanvasWindowFilemanager extends CanvasWindow {
         this.ulFileList.className = 'fileman-filelist';
     }
 
-    loadDirectories(selectedDirectoryPath) {
+    loadDirectories(selectedDirectoryPath, selectedFilePath) {
         // clear old data
         this.ulDirList.innerHTML = '';
         this.divDirLoading.style.display = 'block';
@@ -243,7 +251,7 @@ export class CanvasWindowFilemanager extends CanvasWindow {
 
                 // restore selection
                 if(selectedDirectoryPath && this.directories[selectedDirectoryPath]) {
-                    this.selectDirectory(this.directories[selectedDirectoryPath], false);
+                    this.selectDirectory(this.directories[selectedDirectoryPath], false, selectedFilePath);
                 }
             },
             error: data => {
@@ -337,7 +345,7 @@ export class CanvasWindowFilemanager extends CanvasWindow {
     }
 
     // selection
-    selectDirectory(directory, forceReload) {
+    selectDirectory(directory, forceReload, selectedFilePath) {
         if(!(directory instanceof Directory)) return;
         if(directory.getWindow() != this) return;
         if(this.directories[directory.getPath()] != directory) return;
@@ -368,6 +376,8 @@ export class CanvasWindowFilemanager extends CanvasWindow {
 
             this.divFilesLoading.style.display = 'none';
 
+            var selectedFile = directory.getSelectedFile();
+
             // create file elements
             if(directory.getFiles().length == 0) {
                 this.divFilesEmpty.style.display = 'block';
@@ -375,12 +385,13 @@ export class CanvasWindowFilemanager extends CanvasWindow {
                 this.divFilesEmpty.style.display = 'none';
                 for(const file of directory.getFiles()) {
                     this.ulFileList.append(file.getElement());
+                    if(selectedFilePath != '' && file.getPath() == selectedFilePath) selectedFile = file;
                 }
             }
 
             // restore file selection + search and order
-            if(directory.getSelectedFile()) {
-                this.selectFile(directory.getSelectedFile());
+            if(selectedFile) {
+                this.selectFile(selectedFile, true);
             }
             this.filterFiles();
         });
@@ -390,7 +401,7 @@ export class CanvasWindowFilemanager extends CanvasWindow {
         return this.selectedDirectory;
     }
 
-    selectFile(file) {
+    selectFile(file, scrollIntoView) {
         if(file && !(file instanceof File)) return;
         if(file && file.getWindow() != this) return;
         if(file && file.getDirectory() != this.selectedDirectory) return;
@@ -403,10 +414,13 @@ export class CanvasWindowFilemanager extends CanvasWindow {
         if(file) file.getElement().className = 'selected';
 
         // change status
-        if(file) this.setStatus('File: '+file.getPath()+' - Size: '+toFormatedSize(file.getSize())+' Last Modified: '+dayjs.unix(file.getModified()).format('lll'));
+        if(file) this.setStatus('File: '+file.getPath()+' - Size: '+toFormatedSize(file.getSize())+' - Last Modified: '+dayjs.unix(file.getModified()).format('lll'));
         else this.setStatus('');
+
+        // store selection, update buttons and make file visible
         this.selectedDirectory.setSelectedFile(file);
         this.updateButtons();
+        if(file && scrollIntoView) file.getElement().scrollIntoView();
     }
 
     getSelectedFile() {

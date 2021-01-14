@@ -7,7 +7,7 @@ export class StringFilePropertyEditor extends PropertyEditor {
         super(name, Type.STRING, label);
         
         this.filetype = filetype;
-        this.currentString = '';
+        this.currentPath = '';
     }
     
     initContent(label) {
@@ -19,24 +19,24 @@ export class StringFilePropertyEditor extends PropertyEditor {
     }
     
     reloadValue(property) {
-        this.currentString = property.getString();
+        this.currentPath = property.getString();
         this.updateButtonText();
     }
     
     applyValue(property) {
-        property.setString(this.currentString);
+        property.setString(this.currentPath);
     }
     
     updateButtonText() {
-        this.button.innerHTML = this.currentString;
+        this.button.innerHTML = this.currentPath;
     }
     
     doSelectFile() {
-        const manager = createDefaultFileManager();
+        const manager = createDefaultFileManager(this.currentPath);
         manager.init(file => {
             if(!file) return;
             if(file.getType() == this.filetype) {
-                this.currentString = file.getPath();
+                this.currentPath = file.getPath();
                 this.updateButtonText();
 
                 manager.close();
@@ -45,7 +45,7 @@ export class StringFilePropertyEditor extends PropertyEditor {
     }
 
     doClearFile() {
-        this.currentString = '';
+        this.currentPath = '';
         this.updateButtonText();
     }
 }
