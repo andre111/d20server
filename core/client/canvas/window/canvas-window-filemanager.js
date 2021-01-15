@@ -16,7 +16,6 @@ import { DirectoryActionRename } from './filemanager/action/directory-action-ren
 import { DirectoryActionDelete } from './filemanager/action/directory-action-delete.js';
 
 export function createDefaultFileManager(selectedPath) {
-    //TODO: implement selectedPath (select this file on startup if possible)
     return new CanvasWindowFilemanager(ServerData.isGM(), ServerData.editKey, ServerData.isGM() ? null : '/public', selectedPath);
 }
 
@@ -61,6 +60,7 @@ export class CanvasWindowFilemanager extends CanvasWindow {
         this.fileActions = [];
         this.directoryActions = [];
 
+        // register default actions
         if(editable) {
             this.registerEditActions();
         } else {
@@ -272,10 +272,10 @@ export class CanvasWindowFilemanager extends CanvasWindow {
         var hadFile = false;
         for(const file of directory.getFiles()) {
             if(!search || search == '' || file.getName().toLowerCase().indexOf(search) >= 0) {
-                file.getElement().style.display = 'list-item';
+                file.getElementStyle().display = 'list-item';
                 hadFile = true;
             } else {
-                file.getElement().style.display = 'none';
+                file.getElementStyle().display = 'none';
                 if(selectedFile == file) this.selectFile(null);
             }
         }

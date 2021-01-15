@@ -1,4 +1,200 @@
+class DirectoryNode {
+    tree;
+
+    name;
+    directories = [];
+    entries = [];
+    expanded = true;
+
+    // gui components
+    element;
+    elementStyle;
+    childElement;
+    childElementStyle;
+
+    constructor(tree, name) {
+        this.tree = tree;
+        this.name = name;
+    }
+
+    addDirectoryNode(directoryNode) {
+        this.directories.push(directoryNode);
+    }
+
+    addEntryNode(entryNode) {
+        this.entries.push(entryNode);
+    }
+
+    createElement() {
+        this.element = document.createElement('li');
+        this.elementStyle = this.element.style;
+
+        // icon / name
+        this.divContainer = document.createElement('div');
+        this.divContainer.onclick = () => this.setExpanded(!this.expanded);
+        this.element.appendChild(this.divContainer);
+
+        const directoryIcon = document.createElement('img');
+        directoryIcon.className = 'tree-list-icon';
+        directoryIcon.src = '/core/files/img/fileman/folder.png';
+        this.divContainer.appendChild(directoryIcon);
+
+        const spanName = document.createElement('span');
+        spanName.textContent = this.name;
+        this.divContainer.appendChild(spanName);
+
+        // sublist for children
+        this.childElement = document.createElement('ul');
+        this.childElementStyle = this.childElement.style;
+        this.childElement.className = 'tree-list';
+        this.element.appendChild(this.childElement);
+
+        // children
+        for(const directory of this.directories) {
+           this.childElement.appendChild(directory.createElement());
+        }
+        for(const entry of this.entries) {
+            this.childElement.appendChild(entry.createElement());
+        }
+        
+        this.setExpanded(false);
+
+        return this.element;
+    }
+
+    setExpanded(expanded) {
+        if(expanded == this.expanded) return;
+        if(!this.name) return; // do not expand or hide root
+
+        this.childElementStyle.display = expanded ? 'block' : 'none';
+        this.expanded = expanded;
+    }
+
+    search(searchText) {
+        // search children and track match state
+        var hadMatch = false;
+        for(const directory of this.directories) {
+            hadMatch = directory.search(searchText) || hadMatch;
+        }
+        for(const entry of this.entries) {
+            hadMatch = entry.search(searchText) || hadMatch;
+        }
+
+        // update gui
+        if(hadMatch) {
+            this.elementStyle.display = 'list-item';
+            if(searchText) this.setExpanded(true);
+        } else {
+            this.elementStyle.display = 'none';
+        }
+        if(!searchText) this.setExpanded(false);
+        return hadMatch;
+    }
+}
+
+class EntryNode {
+    tree;
+
+    id;
+    name;
+    description;
+    tags;
+    icon;
+    visible = true;
+
+    // gui elements
+    element;
+    elementStyle;
+
+    constructor(tree, id, name, description, tags, icon) {
+        this.tree = tree;
+        this.id = id;
+        this.name = name;
+        this.description = description;
+        this.tags = tags;
+        this.icon = icon;
+    }
+
+    createElement() {
+        this.element = document.createElement('li');
+        this.elementStyle = this.element.style;
+
+        // TODO: icon / name / description
+        this.divContainer = document.createElement('div');
+        this.divContainer.onclick = () => this.tree._onSelect(this);
+        this.element.appendChild(this.divContainer);
+
+        if(this.icon) {
+            const entryIcon = document.createElement('img');
+            entryIcon.className = 'tree-list-icon';
+            entryIcon.dataset.src = this.icon;
+            this.divContainer.appendChild(entryIcon);
+
+            this.tree.imageObserver.observe(entryIcon);
+        }
+
+        const spanName = document.createElement('span');
+        spanName.textContent = this.name;
+        this.divContainer.appendChild(spanName);
+
+        if(this.description) {
+            this.divContainer.appendChild(document.createElement('br'));
+
+            const spanDesc = document.createElement('span');
+            spanDesc.className = 'tree-entry-desc';
+            spanDesc.textContent = this.description;
+            this.divContainer.appendChild(spanDesc);
+        }
+
+        return this.element;
+    }
+
+    search(searchText) {
+        // perform search
+        var hadMatch = false;
+        if(searchText.startsWith('?')) {
+            // tag based search
+            if(searchText.length > 1) {
+                searchText = searchText.substring(1);
+                for(const tag of this.tags) {
+                    if(tag.startsWith(searchText)) hadMatch = true;
+                }
+            }
+        } else {
+            // name based search
+            hadMatch = this.name.toLowerCase().includes(searchText);
+        }
+
+        // update gui
+        this.setVisible(hadMatch);
+        if(!hadMatch && this.tree.selectedEntry == this) this.tree._onSelect(null);
+        return hadMatch;
+    }
+
+    setVisible(visible) {
+        if(visible == this.visible) return;
+        this.elementStyle.display = visible ? 'list-item' : 'none';
+        this.visible = visible;
+    }
+
+    _onSelect() {
+        this.divContainer.className = 'selected';
+    }
+
+    _onDeselect() {
+        this.divContainer.className = '';
+    }
+}
+
+
 export class SearchableIDTree {
+    rootDirectory;
+    selectedEntry;
+
+    valueProvider;
+
+    imageObserver;
+
     constructor(parent, identifier, valueProvider) {
         this.parent = parent;
         
@@ -7,45 +203,25 @@ export class SearchableIDTree {
         this.filter.type = 'text';
         this.filter.className = 'tree-search-input';
         this.filter.onchange = () => this._onFilter();
-        //this.filter.onkeyup = () => this._onFilter();
+        this.filter.onkeyup = () => this._onFilter();
         this.searchPanel.appendChild(this.filter);
         this.parent.appendChild(this.searchPanel);
         
         this.container = document.createElement('div');
-        this.container.style.width = '90%';
         this.parent.appendChild(this.container);
         
         this.valueProvider = valueProvider;
         
-        $(this.container).jstree({
-            'plugins': (identifier != null ? [ 'search', 'state' ] : [ 'search' ]),
-            'core': {
-                'animation': false
-            },
-            'search': {
-                'case_sensitive': false,
-                'show_only_matches': true,
-                'search_leaves_only': true,
-                'search_callback': (search, node) => {
-                    if(search.startsWith('?')) {
-                        // tag based search
-                        search = search.substring(1);
-                        for(const tag of node.original.tags) {
-                            if(tag.startsWith(search)) return true;
-                        }
-                        return false;
-                    } else {
-                        // name based search
-                        return node.original.name.toLowerCase().includes(search);
-                    }
+        // observer for lazy loading images (using loading=lazy does not work because chrome is too eager to load these list images for some reason)
+        this.imageObserver = new IntersectionObserver((entries, observer) => {
+            entries.forEach(entry => {
+                if(entry.isIntersecting) {
+                    const image = entry.target;
+                    image.src = image.dataset.src;
+                    this.imageObserver.unobserve(image);
                 }
-            },
-            'state': {
-                'key': identifier
-            }
+            });
         });
-        this.tree = $(this.container).jstree(true);
-        this.tree.settings.core.multiple = false;
         
         this.reload();
     }
@@ -79,67 +255,71 @@ export class SearchableIDTree {
             // else just compare the current name
             return p1[i1] < p2[i2] ? -1 : p1[i1] > p2[i2]; // seemingly way more efficient than localCompare
         });
+
         
         // rebuild tree
+        this.rootDirectory = new DirectoryNode(this, '');
+        this.selectedEntry = null;
+        this.imageObserver.disconnect();
+
         var directoryNodes = {};
-        var nodeList = [];
+        directoryNodes[''] = this.rootDirectory;
         for(const key of sorted) {
             var entry = map[key];
             
             var fullPath = this.valueProvider.getName(entry);
-            this._addDirectories(directoryNodes, nodeList, fullPath);
+            this._addDirectories(directoryNodes, fullPath);
             
-            var parentPath = fullPath.includes('/') ? fullPath.substring(0, fullPath.lastIndexOf('/')+1) : '#';
+            const parentPath = fullPath.includes('/') ? fullPath.substring(0, fullPath.lastIndexOf('/')+1) : '';
+            const parent = directoryNodes[parentPath];
             
-            var name = fullPath.includes('/') ? fullPath.substring(fullPath.lastIndexOf('/')+1) : fullPath;
-            var text = this.valueProvider.getSubText(entry);
-            text = (text != null && text != undefined) ? '<br><p class="tree-entry-text">'+text+'</p>' : '';
+            const name = fullPath.includes('/') ? fullPath.substring(fullPath.lastIndexOf('/')+1) : fullPath;
+            const text = this.valueProvider.getSubText(entry);
+            //text = (text != null && text != undefined) ? '<br><p class="tree-entry-text">'+text+'</p>' : '';
             
-            var node = {
-                id: key,
-                parent: parentPath,
-                text: name + text,
-                name: name,
-                tags: this.valueProvider.getTags(entry)
-            };
-            var icon = this.valueProvider.getIcon(entry);
-            if(icon != null && icon != undefined) node.icon = icon;
-            else node.icon = false;
-            nodeList.push(node);
+            const tags = this.valueProvider.getTags(entry);
+            const icon = this.valueProvider.getIcon(entry);
+
+            const entryNode = new EntryNode(this, key, name, text, tags, icon);
+            parent.addEntryNode(entryNode);
         }
-        
-        this.tree.settings.core.data = nodeList;
-        this.tree.refresh();
+
+        // build html
+        this.rootDirectory.createElement();
+        this.container.innerHTML = '';
+        this.container.appendChild(this.rootDirectory.childElement);
     }
 
-    _addDirectories(directoryNodes, nodeList, path) {
+    _addDirectories(directoryNodes, path) {
         var split = path.split('/', -1);
         var dirPath = '';
         for(var i=0; i<split.length-1; i++) {
-            var parent = (dirPath == '') ? '#' : directoryNodes[dirPath];
+            const parent = directoryNodes[dirPath];
             
             dirPath = dirPath + split[i] + '/';
-            if(directoryNodes[dirPath] == null || directoryNodes[dirPath] == undefined) {
-                var dirName = split[i];
-                var dirNode = {
-                    id: dirPath,
-                    parent: parent,
-                    text: dirName,
-                    name: dirName
-                };
+            if(!directoryNodes[dirPath]) {
+                const dirName = split[i];
                 
-                nodeList.push(dirNode); // add node
-                directoryNodes[dirPath] = dirPath; // store id
+                const dirNode = new DirectoryNode(this, dirName);
+                parent.addDirectoryNode(dirNode);
+
+                directoryNodes[dirPath] = dirNode;
             }
         }
     }
     
     _onFilter() {
-        this.tree.search(this.filter.value.toLowerCase());
+        this.rootDirectory.search(this.filter.value.toLowerCase());
+    }
+
+    _onSelect(entry) {
+        if(this.selectedEntry) this.selectedEntry._onDeselect();
+        this.selectedEntry = entry;
+        if(this.selectedEntry) this.selectedEntry._onSelect();
     }
     
     expandAll() {
-        this.tree.open_all();
+        //this.tree.open_all();
     }
     
     getSearchPanel() {
@@ -147,13 +327,7 @@ export class SearchableIDTree {
     }
     
     getSelectedValue() {
-        var entries = this.tree.get_selected();
-        if(entries.length == 1) {
-            var id = Number(entries[0]);
-            if(!Number.isNaN(id)) {
-                return id;
-            }
-        }
+        if(this.selectedEntry) return this.selectedEntry.id;
         return null;
     }
 }

@@ -141,9 +141,7 @@
                     "editorType": "REFERENCE_MULTI",
                     "property": "attachments",
                     "text": "Attachments",
-                    "reference": "attachment",
-                    "w": 900,
-                    "h": 483
+                    "reference": "attachment"
                 }
             ]
         },

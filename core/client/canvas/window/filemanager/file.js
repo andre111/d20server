@@ -4,6 +4,7 @@ export class File {
     window;
     directory;
     element;
+    elementStyle;
     imgIcon;
     spanName;
 
@@ -24,12 +25,13 @@ export class File {
     }
 
     createElement() {
-        //TODO...
         this.element = document.createElement('li');
         this.element.title = this.getName();
+        this.elementStyle = this.element.style;
 
         this.imgIcon = document.createElement('img');
-        this.imgIcon.src = '/core/files/img/fileman/blank.gif';
+        this.imgIcon.loading = 'lazy';
+        this.imgIcon.src = this.getThumbnail();
         this.imgIcon.className = 'fileman-thumbnail';
         this.element.appendChild(this.imgIcon);
 
@@ -63,8 +65,8 @@ export class File {
     }
 
     reloadElement() {
-        this.imgIcon.style.backgroundImage = 'url('+this.getThumbnail()+')';
-        this.spanName.innerHTML = this.getName();
+        //TODO: should the icon be reloaded?
+        this.spanName.textContent = this.getName();
     }
 
     // getters
@@ -78,6 +80,14 @@ export class File {
 
     getElement() {
         return this.element;
+    }
+
+    getElementStyle() {
+        return this.elementStyle;
+    }
+
+    getImgIcon() {
+        return this.imgIcon;
     }
 
     getPath() {
@@ -110,7 +120,7 @@ export class File {
     getThumbnail() {
         //TODO...
         //TODO get basic thumbnail path based on file type
-        var thumbURL = '';
+        var thumbURL = '/core/files/img/fileman/blank.gif';
 
         // get thumbnail path for images
         if(this.getType() == 'image') {
