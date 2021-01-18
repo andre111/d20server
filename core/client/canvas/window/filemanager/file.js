@@ -56,7 +56,7 @@ export class File {
             return false;
         };
         if(this.window.canEdit()) {
-            //TODO: make it draggable
+            //TODO: make it draggable to move into other directories
         }
         //TODO: tooltip
 

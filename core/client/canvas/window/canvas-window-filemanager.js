@@ -192,8 +192,7 @@ export class CanvasWindowFilemanager extends CanvasWindow {
         fileActionPane.appendChild(searchSpan);
         this.inputSearch = document.createElement('input');
         this.inputSearch.type = 'text';
-        this.inputSearch.onkeyup = () => this.filterFiles();
-        this.inputSearch.onchange = () => this.filterFiles();
+        this.inputSearch.oninput = () => this.filterFiles();
         fileActionPane.appendChild(this.inputSearch);
     }
 

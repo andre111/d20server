@@ -58,6 +58,7 @@ export class Directory {
         // create callbacks
         this.divContainer.onclick = e => {
             this.window.selectDirectory(this, false);
+            this.setExpanded(true);
         };
         this.divContainer.oncontextmenu = e => {
             e.preventDefault();

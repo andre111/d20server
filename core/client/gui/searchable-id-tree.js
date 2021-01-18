@@ -62,7 +62,15 @@ class DirectoryNode {
         return this.element;
     }
 
-    setExpanded(expanded) {
+    setExpanded(expanded, recursive) {
+        // recurse to children
+        if(recursive) {
+            for(const directory of this.directories) {
+                directory.setExpanded(expanded, true);
+            }
+        }
+
+        // update own state
         if(expanded == this.expanded) return;
         if(!this.name) return; // do not expand or hide root
 
@@ -202,8 +210,7 @@ export class SearchableIDTree {
         this.filter = document.createElement('input');
         this.filter.type = 'text';
         this.filter.className = 'tree-search-input';
-        this.filter.onchange = () => this._onFilter();
-        this.filter.onkeyup = () => this._onFilter();
+        this.filter.oninput = () => this._onFilter();
         this.searchPanel.appendChild(this.filter);
         this.parent.appendChild(this.searchPanel);
         
@@ -319,7 +326,7 @@ export class SearchableIDTree {
     }
     
     expandAll() {
-        //this.tree.open_all();
+        this.rootDirectory.setExpanded(true, true);
     }
     
     getSearchPanel() {
