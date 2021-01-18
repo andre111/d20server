@@ -55,8 +55,11 @@ export class HTMLStringPropertyEditor extends PropertyEditor {
     }
     
     reloadValue(property) {
-        this.value = property.getString();
-        this.setHTMLValue();
+        const newValue = property.getString();
+        if(newValue != this.value) {
+            this.value = property.getString();
+            this.setHTMLValue();
+        }
     }
     
     applyValue(property) {

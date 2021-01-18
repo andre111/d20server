@@ -163,7 +163,10 @@ export class Entity {
             if(!property) throw new Error(`Error in UpdateRule: Property ${ruleDef.property} does not exist`);
 
             try {
-                const expression = ParserInstance.parse(ruleDef.expression);
+                // use cached expression or parse from definition (because parsing is an expensive operation that can lock up the browser for a noticeable time)
+                const expression = ruleDef._transient_parsedExpression ? ruleDef._transient_parsedExpression : ParserInstance.parse(ruleDef.expression);
+                ruleDef._transient_parsedExpression = expression;
+
                 const result = expression.eval(new Context(null, null, this));
             
                 const value = result.getValue();

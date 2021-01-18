@@ -4,13 +4,21 @@ import { parseVariable } from '../variable/parser/variable-parsers.js';
 import { Dice } from './dice.js';
 import { Condition } from './condition.js';
 
+// precreate regex expressions as that is a very expensive operation
+const _isLetterExp = RegExp(/^\p{L}/, 'u');
 function isLetter(str) {
-    return RegExp(/^\p{L}/, 'u').test(str); // uses unicode category
+    return _isLetterExp.test(str); // uses unicode category
 }
 
+const _isDigitExp = RegExp(/^\d/);
 function isDigit(str) {
-    return RegExp(/^\d/).test(str); 
+    return _isDigitExp.test(str); 
 }
+
+const _isIntegerExp = RegExp(/^\d+$/);
+
+//TODO: this performs pretty badly in browser, see if it can be optimized 
+//      (the charactersheet had no noticeable delays in the old client while it has in the new without caching the parsed expression)
 
 //Grammar:
 // expression = term | expression `+` term | expression `-` term
@@ -345,7 +353,7 @@ export class Parser {
         const value = Number(valueString);
         if(isNaN(value)) throw new Error(`Not a praseable number: ${valueString} at ${startPos}`);
 
-        if(RegExp(/^\d+$/).test(valueString)) {
+        if(_isIntegerExp.test(valueString)) {
             return new Expr(c => new Result(Math.trunc(value), String(Math.trunc(value))));
         } else {
             return new Expr(c => new Result(value, String(value)));
