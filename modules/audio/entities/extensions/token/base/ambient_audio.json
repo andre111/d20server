@@ -2,13 +2,6 @@
     "displayName": "Ambient Audio",
     "properties": [
         {
-            "name": "audioID",
-            "type": "LONG",
-            "editAccess": "GM",
-            "viewAccess": "GM",
-            "value": "-1"
-        },
-        {
             "name": "audioPath",
             "type": "STRING",
             "editAccess": "GM",

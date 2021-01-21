@@ -93,7 +93,7 @@ public class NodeConverter {
 		System.err.println("TODOS:");
 		System.err.println("  Create an id.json file in data with a high enough simplge value, e.g: 2000000");
 		System.err.println("  Delete the image and audio directories and json files in data/entities");
-		System.err.println("  Move profile access keys to sepparate file");
+		System.err.println("  Move profile access keys to sepparate file (and add Profile __type to profiles.json)");
 		System.err.println("  (Once all data is converted) get rid of imageID,audioID properties in token, imageID in attachment and defaultToken in actor, image and audio entities");
 	}
 	

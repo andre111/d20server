@@ -15,7 +15,7 @@ export class CanvasWindowChoose extends CanvasWindow {
                 click: function() {
                     var choosen = tree.getSelectedValue();
                     if(choosen != null && choosen != undefined) {
-                        callback(choosen);
+                        callback(Number(choosen));
                     } else {
                         callback(-1);
                     }

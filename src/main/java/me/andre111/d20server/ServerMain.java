@@ -92,12 +92,13 @@ import me.andre111.d20server.service.SaveService;
 public class ServerMain {
 	public static void main(String[] args) {
 		//TODO: replace all System.out.*
-		System.out.println("Initializing...");
+		System.err.println("Server has been replaced with node based implementation");
+		/*System.out.println("Initializing...");
 		D20Common.init(AppType.SERVER, ServerEntityManager::new);
 		ModuleService.init();
 		SaveService.init();
 		GameService.init();
-		CommandLineService.init();
+		CommandLineService.init();*/
 		
 		// used to apply data chagnes needed for node server
 		//NodeConverter.convertData();

@@ -49,13 +49,6 @@
             "value": "CONTROLLING_PLAYER"
         },
         {
-            "name": "defaultToken",
-            "type": "LONG",
-            "editAccess": "GM",
-            "viewAccess": "CONTROLLING_PLAYER",
-            "value": "-1"
-        },
-        {
             "name": "token",
             "type": "ENTITY",
             "editAccess": "GM",

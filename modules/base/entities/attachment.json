@@ -27,13 +27,6 @@
             "value": ""
         },
         {
-            "name": "imageID",
-            "type": "LONG",
-            "editAccess": "GM",
-            "viewAccess": "EVERYONE",
-            "value": "-1"
-        },
-        {
             "name": "imagePath",
             "type": "STRING",
             "editAccess": "GM",
