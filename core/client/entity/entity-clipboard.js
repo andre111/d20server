@@ -15,7 +15,7 @@ export const EntityClipboard = {
             newReference.setMouseOffsetX(reference.getMouseOffsetX());
             newReference.setMouseOffsetY(reference.getMouseOffsetY());
             
-            _typedClipboard.get(entityType).push(newReference);
+            _typedClipboard.get(type).push(newReference);
         }
     },
 
