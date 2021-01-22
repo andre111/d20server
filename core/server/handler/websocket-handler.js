@@ -11,6 +11,7 @@ export class WebsocketHandler {
         wss.on('connection', WebsocketHandler.connected);
 
         // track alive status and disconnect dropped clients
+        // TODO: this may drop clients during loading
         setInterval(() => {
             wss.clients.forEach(ws => {
                 if (!ws.isAlive) return ws.terminate();
@@ -18,7 +19,7 @@ export class WebsocketHandler {
                 ws.isAlive = false;
                 ws.ping(null, false, true);
             });
-        }, 30 * 1000);
+        }, 2 * 60 * 1000);
     }
 
     static connected(ws) {
