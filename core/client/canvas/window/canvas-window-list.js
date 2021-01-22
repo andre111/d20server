@@ -46,7 +46,7 @@ export class CanvasWindowList extends CanvasWindow {
         
         // add entries
         this.frame.innerHTML = '';
-        var mainPanel = document.createElement('div');
+        const mainPanel = document.createElement('div');
         mainPanel.style.overflow = 'auto';
         mainPanel.style.margin = '0';
         mainPanel.style.padding = '6px';
@@ -55,7 +55,7 @@ export class CanvasWindowList extends CanvasWindow {
         this.frame.appendChild(mainPanel);
         
         var i = 0;
-        for(var tokenID of list.prop('tokens').getLongList()) {
+        for(const tokenID of list.prop('tokens').getLongList()) {
             var token = EntityManagers.get('token').find(tokenID);
             var editable = token == null || token == undefined || list.canEditWithAccess(TokenListUtils.getAccessLevel(ServerData.localProfile, list, token));
             new CanvasWindowListEntry(mainPanel, list, tokenID, TokenListUtils.getValue(list, tokenID), i==list.prop('currentIndex').getLong(), editable);
@@ -65,7 +65,7 @@ export class CanvasWindowList extends CanvasWindow {
         
         // add buttons
         if(list.canEdit(ServerData.localProfile)) {
-            this.frame.appendChild(this.buttonPanel);
+            mainPanel.appendChild(this.buttonPanel);
         }
     }
     
