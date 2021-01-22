@@ -13,7 +13,7 @@ import { EntityManagers } from '../../common/entity/entity-managers.js';
 
 export class SidepanelTabLists extends SidepanelTab {
     constructor() {
-        super('Lists', 'lists', ServerData.isGM());
+        super('Lists', ServerData.isGM());
         
         this.tab.style.display = 'grid';
         this.tab.style.gridTemplateRows = 'auto max-content max-content';

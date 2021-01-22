@@ -1,3 +1,5 @@
+import { ServerData } from '../server-data.js';
+
 export class SidepanelTab {
     name;
     visible;
@@ -8,7 +10,8 @@ export class SidepanelTab {
         this.visible = visible;
 
         this.tab = document.createElement('div');
-        this.tab.style.height = 'calc(100% - 63px)'; //TODO: move to css (use a class for sidepanel tabs)
+        // TODO: make this dynamically match the correct size, instead of this hard coded hack job (maybe only once I implement my own tab system)
+        this.tab.style.height = 'calc(100% - '+String(32*(ServerData.isGM() ? 2 : 1))+'px)'; 
         this.tab.style.overflow = 'auto';
     }
 
