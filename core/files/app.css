@@ -368,6 +368,12 @@ th, td {
 .fileman-dirlist div.selected {
     background-color: #faebd7;
 }
+.fileman-dirlist div.drop {
+    background-color: #faebd7;
+}
+.fileman-dirlist div * {
+    pointer-events: none; /* prevents drag and drop issues with child elements of the div */
+}
 .fileman-dirlist .fileman-expand {
     float: left;
 

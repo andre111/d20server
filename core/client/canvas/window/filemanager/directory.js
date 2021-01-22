@@ -73,7 +73,27 @@ export class Directory {
             this.setExpanded(!this.expanded);
         };
         if(this.window.canEdit()) {
-            //TODO: make it draggable
+            this.divContainer.ondragenter = (event) => {
+                event.preventDefault();
+                this.divContainer.classList.add('drop');
+            };
+            this.divContainer.ondragover = (event) => {
+                event.preventDefault();
+            };
+            this.divContainer.ondragleave = (event) => {
+                event.preventDefault();
+                this.divContainer.classList.remove('drop');
+            };
+            this.divContainer.ondrop = (event) => {
+                this.divContainer.classList.remove('drop');
+
+                const file = event.dataTransfer.getData('file');
+                if(file && file != '') {
+                    event.preventDefault();
+                    this.moveFile(file);
+                }
+            };
+            //TODO: make it draggable? should I allow moving whole directories?
         }
         
         // load data
@@ -197,6 +217,28 @@ export class Directory {
             this.sortFiles();
             callback();
         }
+    }
+
+    moveFile(filePath) {
+        const fileName = filePath.substring(filePath.lastIndexOf('/'));
+
+        const URL = '/fileman/move';
+        $.ajax({
+            url: URL,
+            type: 'POST',
+            data: { f: filePath, n: this.path + fileName, k: this.window.getKey() },
+            dataType: 'json',
+            cache: false,
+            success: data => {
+                if(data.res == 'ok') {
+                    // refresh window (by reselecting the dropped into directory)
+                    this.window.selectDirectory(this, true, this.path + fileName);
+                }
+            },
+            error: data => {
+                console.log('Error moving file', data);
+            }
+        });
     }
 
     sortFiles() {

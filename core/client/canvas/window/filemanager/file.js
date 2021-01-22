@@ -33,6 +33,7 @@ export class File {
         this.imgIcon.loading = 'lazy';
         this.imgIcon.src = this.getThumbnail();
         this.imgIcon.className = 'fileman-thumbnail';
+        this.imgIcon.draggable = false;
         this.element.appendChild(this.imgIcon);
 
         this.spanName = document.createElement('span');
@@ -56,7 +57,11 @@ export class File {
             return false;
         };
         if(this.window.canEdit()) {
-            //TODO: make it draggable to move into other directories
+            this.element.draggable = true;
+            this.element.ondragstart = (event) => {
+                this.window.selectFile(this);
+                event.dataTransfer.setData('file', this.path);
+            };
         }
         //TODO: tooltip
 
