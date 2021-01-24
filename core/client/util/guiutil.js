@@ -1,15 +1,32 @@
-//TODO: rewrite this to export single functions
+// for createInput
 var _nextID = 0;
+
+// for makeFancyBG (select and load random bg + source info)
+const bgMax = 4;
+const bgCurrent = Math.floor(Math.random() * (bgMax + 1));
+var bgSource = '';
+const xhr = new XMLHttpRequest();
+xhr.onload = () => {
+    if(xhr.status >= 200 && xhr.status < 300) {
+        bgSource = xhr.responseText;
+    } else {
+        bgSource = 'failed to load';
+    }
+};
+xhr.open('GET', `/core/files/img/bg/${bgCurrent}.txt`);
+xhr.send();
+
+//TODO: rewrite this to export single functions
 export const GuiUtils = {
     createInput: function(container, type, label) {
-        var id = 'i'+(_nextID++);
+        const id = 'i'+(_nextID++);
         
-        var inputElement = document.createElement('input');
+        const inputElement = document.createElement('input');
         inputElement.id = id;
         inputElement.type = type;
         container.appendChild(inputElement);
         
-        var labelElement = document.createElement('label');
+        const labelElement = document.createElement('label');
         labelElement.htmlFor = id;
         labelElement.innerHTML = label;
         container.appendChild(labelElement);
@@ -18,7 +35,7 @@ export const GuiUtils = {
     },
     
     createButton: function(container, text, onclick) {
-        var button = document.createElement('button');
+        const button = document.createElement('button');
         button.innerHTML = text;
         button.onclick = onclick;
         container.appendChild(button);
@@ -27,7 +44,7 @@ export const GuiUtils = {
     
     //TODO: do not use? fieldsets seem to be annoying to layout, currently only uses left are for quick temporary implementation of basic states
     createBorderedSet: function(label, fixedWidth, fixedHeight, useClass = true) {
-        var fieldset = document.createElement('fieldset');
+        const fieldset = document.createElement('fieldset');
         if(fixedWidth) {
             fieldset.style.width = fixedWidth;
         }
@@ -38,16 +55,27 @@ export const GuiUtils = {
             fieldset.className = 'ui-widget-content';
         }
         
-        var legend = document.createElement('legend');
+        const legend = document.createElement('legend');
         legend.innerHTML = label;
         fieldset.appendChild(legend);
         
         return fieldset;
     },
+
+    makeFancyBG: function(div) {
+        div.classList.add('fancy-bg');
+        div.style.background = `url(/core/files/img/bg/${bgCurrent}.jpg)`;
+
+        // create copyright div
+        const copyrightDiv = document.createElement('div');
+        copyrightDiv.className = 'copyright';
+        copyrightDiv.innerHTML = 'Copyright © 2021 André Schweiger<br>Image Source: '+bgSource;
+        div.appendChild(copyrightDiv);
+    },
     
     makeBordered: function(container, label) {
-        container.className += ' bordered';
-        var h1 = document.createElement('h1');
+        container.classList.add('bordered');
+        const h1 = document.createElement('h1');
         h1.className = 'border-title';
         h1.innerHTML = label ? label : '?';
         container.appendChild(h1);
@@ -55,18 +83,20 @@ export const GuiUtils = {
     
     // makes children elements hoverable (requires 'hoverable' class and a child with 'onhover' class)
     makeHoverable: function(element) {
-        $(element).find('.hoverable').hover(function(e) {
-            var onhover = $(this).find('.onhover');
-            var width = onhover.width();
-            var height = onhover.height();
-            var x = e.clientX - width/2;
-            var y = e.clientY;
-            
-            if(x+width > window.innerWidth) x = window.innerWidth - width;
-            if(y+height > window.innerHeight) y = window.innerHeight - height;
-            
-            onhover.css('left', x+'px');
-            onhover.css('top', y+'px');
-        });
+        for(const e of element.getElementsByClassName('hoverable')) {
+            e.onmouseover = (event) => {
+                const onhover = e.getElementsByClassName('onhover')[0];
+                const width = onhover.clientWidth;
+                const height = onhover.clientHeight;
+                var x = event.clientX - width / 2;
+                var y = event.clientY;
+                
+                if(x+width > window.innerWidth) x = window.innerWidth - width;
+                if(y+height > window.innerHeight) y = window.innerHeight - height;
+
+                onhover.style.left = x+'px';
+                onhover.style.top = y+'px';
+            };
+        }
     }
 }

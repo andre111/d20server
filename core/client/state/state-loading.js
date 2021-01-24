@@ -16,7 +16,8 @@ export class StateLoading extends State {
         // create loading div
         const div = document.createElement('div');
         div.id = 'loading';
-        div.className = 'full-overlay fancy-bg';
+        div.className = 'full-overlay';
+        GuiUtils.makeFancyBG(div);
         document.body.appendChild(div);
         
         // create loading bar

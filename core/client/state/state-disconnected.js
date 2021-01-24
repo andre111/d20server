@@ -10,7 +10,8 @@ export class StateDisconnected extends State {
         // create div
         const div = document.createElement('div');
         div.id = 'disconnected';
-        div.className = 'full-overlay fancy-bg';
+        div.className = 'full-overlay';
+        GuiUtils.makeFancyBG(div);
         document.body.appendChild(div);
 
         // create elements

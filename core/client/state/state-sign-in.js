@@ -19,7 +19,8 @@ export class StateSignIn extends State {
         // create signin div
         const div = document.createElement('div');
         div.id = 'signin';
-        div.className = 'full-overlay fancy-bg';
+        div.className = 'full-overlay';
+        GuiUtils.makeFancyBG(div);
         document.body.appendChild(div);
 
         // create signin elements

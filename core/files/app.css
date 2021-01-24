@@ -11,6 +11,9 @@ html, body {
     height: 100%;
     float: left;
 }
+#canvas:focus {
+    outline: none;
+}
 
 #sidepanel {
     width: 384px;
@@ -20,6 +23,9 @@ html, body {
     background: rgba(254, 238, 189, 0.85);
     border-radius: 8px 0 0 8px;
     box-shadow: 0px 0px 6px black;
+}
+#sidepanel:focus {
+    outline: none;
 }
 
 #overlay {
@@ -45,7 +51,6 @@ html, body {
 
 .fancy-bg {
     background-size: cover;
-    background-image: url(/core/files/img/bg.jpg);
 }
 
 .login-field {
@@ -53,6 +58,22 @@ html, body {
     padding: 2px;
     border-width: 1px;
     margin: 2px;
+}
+
+.copyright {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+
+    padding: 4px;
+
+    text-shadow: 0px 0px 3px black, 0px 0px 3px black;
+    text-align: right;
+    font-weight: bold;
+    color: white;
+}
+.copyright a {
+    color: white;
 }
 
 /* ModePanel/Window styles */
