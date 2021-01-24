@@ -30,20 +30,17 @@ class Module {
     }
 
     isEnabled() {
-        return true; //TODO: implement
+        return true; //TODO: implement (by used a disabled modules list in settings, once that exists)
     }
 }
 
 var modules = [];
 export class ModuleService {
-    //TODO...
     static init() {
-        modules.push(new Module('base', path.join(path.resolve(), '/modules/base/')));
-
         // scan for modules
         fs.readdirSync(path.join(path.resolve(), '/modules/')).forEach(file => {
             const directory = path.join(path.resolve(), '/modules/'+file+'/');
-            if(fs.statSync(directory).isDirectory() && file != 'base') {
+            if(fs.statSync(directory).isDirectory()) {
                 // check for module definition and add module
                 if(fs.existsSync(path.join(directory, 'module.json'))) {
                     modules.push(new Module(file, directory));
@@ -98,13 +95,19 @@ export class ModuleService {
 
     static getFilesIn(dirPath) {
         var files = {};
-        ModuleService.forEnabledModules(module => {
-            const dir = path.join(module.getDirectory(), dirPath);
+        const fileScanner = (dir) => {
             if(fs.existsSync(dir)) {
                 fs.readdirSync(dir).forEach(file => {
                     files[file] = path.join(dir, file);
                 });
             }
+        };
+
+        // Scan core + enabled modules
+        fileScanner(path.join(path.resolve(), '/core' + dirPath));
+        ModuleService.forEnabledModules(module => {
+            const dir = path.join(module.getDirectory(), dirPath);
+            fileScanner(dir);
         });
         return files;
     }

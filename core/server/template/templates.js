@@ -62,7 +62,7 @@ function parseTemplate(string, values) {
 }
 
 function loadTemplate(name, ...values) {
-    const file = path.join(path.resolve(), '/src/main/resources/templates/'+name+'_html.txt');
+    const file = path.join(path.resolve(), '/core/templates/'+name+'_html.txt');
     return parseTemplate(String(readFileSync(file)), values);
 }
 

@@ -1,0 +1,9 @@
+<div class="chat-box">
+	<div style="background-color:$0" class="chat-box-header">
+		<span style="font-weight:bold">%0:text%</span><br>
+		%1:text%
+	</div>
+	<div class="chat-box-content">
+		%4:text%
+	</div>
+</div>
