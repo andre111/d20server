@@ -30,7 +30,7 @@ export class UserService {
         accessKey = accessKey.trim();
 
         // validate
-        if(!RegExp(/^\w{3,}$/).test(username)) throw new Error('Invalid name');
+        if(!RegExp(/^\w[\w ]*\w/).test(username)) throw new Error('Invalid name');
         if(accessKey.length < 5) throw new Error('Access Key cannot be shorter than 5 characters');
 
         // check for existing profiles

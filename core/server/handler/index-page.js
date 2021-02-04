@@ -14,7 +14,7 @@ export function buildIndexPage() {
         moduleStyles = moduleStyles + `        <link rel="stylesheet" href="/modules/${module.getIdentifier()}/files/module.css">\n`;
         if(module.getDefinition().libraries) {
             for(const library of module.getDefinition().libraries) {
-                moduleLibraries = moduleLibraries + `        <script src="/modules/${module.getIdentifier()}/files${library}"></script>\n`;
+                moduleLibraries = moduleLibraries + `        <script src="/modules/${module.getIdentifier()}/files${library}" defer></script>\n`;
             }
         }
     });

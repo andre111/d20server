@@ -7,7 +7,10 @@ import { UserService } from '../service/user-service.js';
 var wss = null;
 export class WebsocketHandler {
     static init(server) {
-        wss = new websocket.Server({ server: server, path: '/ws' });
+        wss = new websocket.Server({ 
+            server: server, 
+            path: '/ws'
+        });
         wss.on('connection', WebsocketHandler.connected);
 
         // track alive status and disconnect dropped clients

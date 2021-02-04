@@ -29,6 +29,7 @@ export class ServerEntityManager extends EntityManager {
 
         // load entities (into map)
         this.entities = readJson('entity.'+type);
+        if(!this.entities) this.entities = {};
     }
 
     find(id) {

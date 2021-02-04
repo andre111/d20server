@@ -2,6 +2,7 @@ import express from 'express';
 import http from 'http';
 import path from 'path';
 import morgan from 'morgan';
+import compression from 'compression';
 import { router as filemanRouter } from './fileman/fileman.js';
 
 import { ModuleService } from '../service/module-service.js';
@@ -14,6 +15,7 @@ const port = 8082;
 export class HttpHandler {
     static init() {
         server.use(morgan('dev'));
+        server.use(compression());
         server.use(express.json());
         server.use(express.urlencoded({ extended: false }));
 
@@ -31,10 +33,6 @@ export class HttpHandler {
         buildIndexPage();
         server.get('/', getIndexPage);
 
-        // TODO: remove: provide old image and audio entity data
-        //server.use('/image', express.static(path.join(path.resolve(), '/data/entity/image'), { extensions: ['bin'], setHeaders: (res, path, stat) => { res.set('Content-Type', 'image/png') } }));
-        //server.use('/audio', express.static(path.join(path.resolve(), '/data/entity/audio'), { extensions: ['bin'], setHeaders: (res, path, stat) => { res.set('Content-Type', 'application/ogg') } }));
-
         // file managers
         server.use('/fileman', filemanRouter);
         server.use('/data/files', express.static(path.join(path.resolve(), '/data/files')));
@@ -44,13 +42,16 @@ export class HttpHandler {
 
         // catch 404 and forward to error handler
         server.use(function(req, res, next) {
-            //next(httperrors(404));
             res.status(404).send('Not found');
         });
 
         // start server
-        baseServer.listen(port, () => {
-            console.log(`Server listening on port ${port}`);
+        baseServer.listen(port, (error) => {
+            if(error) {
+                console.error(error);
+            } else {
+                console.log(`Server listening on port ${port}`);
+            }
         });
     }
 
