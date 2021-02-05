@@ -121,6 +121,6 @@ export class EntityMenu extends Menu {
     
     doDelete() {
         EntityManagers.get(this.mode.entityType).remove(this.reference.id);
-        this.mode.activeEntities = [];
+        this.mode.clearActiveEntities();
     }
 }

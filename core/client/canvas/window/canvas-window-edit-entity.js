@@ -1,13 +1,15 @@
 import { CanvasWindow } from '../canvas-window.js';
 import { CanvasWindowEditEntityTab } from './canvas-window-edit-entity-tab.js';
+import { EntityReference } from '../../entity/entity-reference.js';
 import { ServerData } from '../../server-data.js';
+
 import { Access } from '../../../common/constants.js';
 
 export class CanvasWindowEditEntity extends CanvasWindow {
     constructor(reference) {
         super('Edit '+reference.getDefinition().displayName, true);
         
-        this.reference = reference;
+        this.reference = new EntityReference(reference.getBackingEntity());
         this.tabs = [];
         
         //TODO: add entity listener to reload values when changed/close when delete
@@ -34,6 +36,9 @@ export class CanvasWindowEditEntity extends CanvasWindow {
         
         this.initTabs();
         this.reloadValues();
+
+        // listen to entity updates and reload window on changes
+        this.reference.addListener(this);
     }
     
     initTabs() {
@@ -75,7 +80,7 @@ export class CanvasWindowEditEntity extends CanvasWindow {
     }
     
     reloadValues() {
-        var accessLevel = this.getAccessLevel();
+        const accessLevel = this.getAccessLevel();
         for(const tab of this.tabs) {
             tab.reload(this.reference, accessLevel);
         }
@@ -83,7 +88,7 @@ export class CanvasWindowEditEntity extends CanvasWindow {
     
     doUpdateEntity() {
         // apply settings
-        var accessLevel = this.getAccessLevel();
+        const accessLevel = this.getAccessLevel();
         for(const tab of this.tabs) {
             tab.apply(this.reference, accessLevel);
         }
@@ -97,5 +102,17 @@ export class CanvasWindowEditEntity extends CanvasWindow {
         for(const tab of this.tabs) {
             tab.onClose();
         }
+
+        // remove entity listener
+        this.reference.removeListener(this);
+    }
+
+    // listener methods for EntityReference
+    entityChanged(reference) {
+        this.reloadValues();
+    }
+
+    entityRemoved(reference) {
+        $(this.frame).dialog('close');
     }
 }

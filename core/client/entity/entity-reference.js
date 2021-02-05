@@ -11,11 +11,21 @@ export class EntityReference extends Entity {
     mouseOffsetY = 0;
 
     listeners = [];
+    entityListener;
+    removalListener;
 
     constructor(entity) {
         super(entity.getType(), entity.getID());
 
         this.backingEntity = entity;
+
+        // prepare listeners (will only be registered when a listener is registered on this reference)
+        this.entityListener = (e) => {
+            if(e.getID() == this.getBackingEntity().getID()) this.entityChanged(e);
+        };
+        this.removalListener = (id, e) => {
+            if(id == this.getBackingEntity().getID()) this.entityRemoved();
+        }
     }
 
     getType() {
@@ -80,13 +90,26 @@ export class EntityReference extends Entity {
         this.mouseOffsetY = mouseOffsetY;
     }
 
+    //NOTE: When registering a listener we ALWAYS need to unregister the listeners again or the EntityReference will be leaked
     addListener(listener) {
+        // register with entitymanager
+        if(this.listeners.length == 0) {
+            EntityManagers.get(this.getType()).addEntityListener(this.entityListener);
+            EntityManagers.get(this.getType()).addRemovalListener(this.removalListener);
+        }
+
         this.listeners.push(listener);
     }
 
     removeListener(listener) {
         const index = this.listeners.indexOf(listener);
         if(index >= 0) this.listeners.splice(index, 1);
+
+        // unregister with entitymanager
+        if(this.listeners.length == 0) {
+            EntityManagers.get(this.getType()).removeEntityListener(this.entityListener);
+            EntityManagers.get(this.getType()).removeRemovalListener(this.removalListener);
+        }
     }
 
     performUpdate() {
@@ -120,7 +143,6 @@ export class EntityReference extends Entity {
         return backingEntity != null && backingEntity != undefined;
     }
 
-    //TODO: call these methods by registering listeners on all entity managers
     entityChanged(entity) {
         // update mouse offset
         if(entity.prop('x') && entity.prop('y')) {

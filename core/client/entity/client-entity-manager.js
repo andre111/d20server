@@ -62,12 +62,27 @@ export class ClientEntityManager extends EntityManager {
         this.listeners.push(listener);
     }
 
+    removeListener(listener) {
+        const index = this.listeners.indexOf(listener);
+        if(index >= 0) this.listeners.splice(index, 1);
+    }
+
     addEntityListener(entityListener) {
         this.entityListeners.push(entityListener);
     }
 
+    removeEntityListener(entityListener) {
+        const index = this.entityListeners.indexOf(entityListener);
+        if(index >= 0) this.entityListeners.splice(index, 1);
+    }
+
     addRemovalListener(removalListener) {
         this.removalListeners.push(removalListener);
+    }
+
+    removeRemovalListener(removalListener) {
+        const index = this.removalListeners.indexOf(removalListener);
+        if(index >= 0) this.removalListeners.splice(index, 1);
     }
 
     notifyListeners() {

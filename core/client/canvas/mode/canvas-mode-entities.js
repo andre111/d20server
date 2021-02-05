@@ -10,6 +10,7 @@ import { Client } from '../../app.js';
 
 import { IntMathUtils } from '../../../common/util/mathutil.js';
 import { SelectedTokens } from '../../../common/messages.js';
+import { Entity } from '../../../common/common.js';
 
 export class CanvasModeEntities extends CanvasMode {
     constructor(entityType, layer) {
@@ -19,16 +20,17 @@ export class CanvasModeEntities extends CanvasMode {
         this.layer = layer;
         
         this.action = new EntityActionSelect(this);
-        this.activeEntities = [];
+        this.activeEntities = []; // mode registers listeners -> never modify activeEntities directly, use clearActiveEntities or verifyActiveEntities
     }
     
     init() {
         this.setAction(new EntityActionSelect(this));
-        this.activeEntities = [];
+        this.clearActiveEntities();
         this.sendSelectedTokens();
     }
     
     exit() {
+        this.clearActiveEntities();
         this.action.exit();
     }
     
@@ -131,17 +133,37 @@ export class CanvasModeEntities extends CanvasMode {
     
     addActiveEntity(entity) {
         if(entity == null || entity == undefined) return;
-        
-        var reference = new EntityReference(entity);
+        if(!(entity instanceof Entity) && !(entity instanceof EntityReference)) return;
+
+        const reference = entity instanceof EntityReference ? entity : new EntityReference(entity);
         this.activeEntities.push(reference);
         this.sendSelectedTokens();
+
+        // add listener to update reference on changes 
+        // -> should fix "simultaneous" movement glitching/bugs (TODO: might need some more work, this does not seem to be 100% fixed)
+        // -> NEEDS to be removed again -> never modify activeEntities directly, use clearActiveEntities or verifyActiveEntities
+        reference.addListener(this);
     }
     
     validateActiveEntities() {
-        this.activeEntities = _.chain(this.activeEntities).filter(reference => reference.isValid()).value();
+        //TODO: remove lodash
+        this.activeEntities = _.chain(this.activeEntities).filter(reference => {
+            if(reference.isValid()) {
+                return true;
+            } else {
+                // IMPORTANT: unregister listener to prevent memory leaks -> never modify activeEntities directly, use clearActiveEntities or verifyActiveEntities
+                reference.removeListener(this);
+                return false;
+            }
+        }).value();
     }
     
     clearActiveEntities() {
+        // IMPORTANT: unregister all listeners to prevent memory leaks -> never modify activeEntities directly, use clearActiveEntities or verifyActiveEntities
+        for(const activeEntity of this.activeEntities) {
+            activeEntity.removeListener(this);
+        }
+
         this.activeEntities = [];
         this.sendSelectedTokens();
     }
@@ -221,7 +243,7 @@ export class CanvasModeEntities extends CanvasMode {
     }
     
     resetAction() {
-        this.activeEntities = [];
+        this.clearActiveEntities();
         this.sendSelectedTokens();
         
         this.setAction(new EntityActionSelect(this));
@@ -243,24 +265,24 @@ export class CanvasModeEntities extends CanvasMode {
         entity.prop('map').setLong(map.id);
         entity.prop('layer').setLayer(this.layer);
         
-        this.activeEntities = [];
+        this.clearActiveEntities();
         this.sendSelectedTokens();
         
-        this.activeEntities.push(new EntityReference(entity));
+        this.addActiveEntity(entity);
         this.setAction(new EntityActionAdd(this));
     }
     setAddEntitiesAction(references) {
         var map = MapUtils.currentMap();
         if(map == null || map == undefined) return;
         
-        this.activeEntities = [];
+        this.clearActiveEntities();
         this.sendSelectedTokens();
         
         for(const reference of references) {
             if(reference.getType() == this.entityType) {
                 reference.prop('map').setLong(map.id);
                 reference.prop('layer').setLayer(this.layer);
-                this.activeEntities.push(reference);
+                this.addActiveEntity(reference);
             }
         }
         

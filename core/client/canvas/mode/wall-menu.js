@@ -48,6 +48,5 @@ export class WallMenu extends Menu{
     
     doDelete() {
         EntityManagers.get('wall').remove(this.reference.id);
-        this.mode.activeEntities = [];
     }
 }

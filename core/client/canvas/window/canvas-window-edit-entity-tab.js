@@ -145,11 +145,13 @@ export class CanvasWindowEditEntityTab {
 					editor.getEditComponent().style.width = compDefinition.w+'px';
 					editor.getEditComponent().style.height = compDefinition.h+'px';
 				}
-				if(compDefinition.disabled) editor.setForceDisable(true);
-				if(compDefinition.update) editor.addChangeListener(() => {
-					// apply settings
-					this.apply(this.w.getReference(), this.w.getAccessLevel());
-					this.reload(this.w.getReference(), this.w.getAccessLevel());
+                if(compDefinition.disabled) editor.setForceDisable(true);
+                // automatically apply changes (to local reference), so reloading when the entity is changed does not revert locally modified values
+                const editorRef = editor; // requried as the editor variable would point all listeners to the last created editor instead
+				editor.addChangeListener(() => {
+                    editorRef.apply(this.w.getReference(), this.w.getAccessLevel());
+                    // reload if this editor is configured to auto update (-> character sheets or similar)
+					if(compDefinition.update) this.reload(this.w.getReference(), this.w.getAccessLevel());
 				});
                 break;
             case 'ACCESS_EDITOR':
