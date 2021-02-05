@@ -124,6 +124,7 @@ export class Dice extends Expression {
 		// calculate all required dice
         //---------------------------------------------------
         var results = [];
+        var realCount = 0;
         for(var i=0; i<countValue; i++) {
             var roll;
             var explodeCount = 0;
@@ -131,12 +132,18 @@ export class Dice extends Expression {
                 // calculate roll
                 roll = DiceRoller.roll(sidesValue);
 
+                realCount++;
+                if(realCount > 1000) throw new Error(`Number of rolls exceeded 1000`);
+
                 // handle re-rolling
                 var rerollCount = 0;
                 while(this.rerollCondition && this.rerollCondition.matches(roll) && rerollCount < this.maxRerollCount) {
                     results.push(new DiceResult(sidesValue, roll, this.criticalFailureCondition.matches(roll), this.criticalSuccessCondition.matches(roll), false));
                     roll = DiceRoller.roll(sidesValue);
                     rerollCount++;
+
+                    realCount++;
+                    if(realCount > 1000) throw new Error(`Number of rolls exceeded 1000`);
                 }
 
                 results.push(new DiceResult(sidesValue, roll, this.criticalFailureCondition.matches(roll), this.criticalSuccessCondition.matches(roll), true));
@@ -188,7 +195,7 @@ export class Dice extends Expression {
                 value += result.value;
             }
 
-            // track rolls //TODO: convert this to an actual class?
+            // track rolls //TODO: convert this to an actual class - maybe just use DiceResult?
             diceRolls.push({
                 sides: result.sides,
                 result: result.value,
