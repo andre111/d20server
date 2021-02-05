@@ -2,6 +2,8 @@ import { DiceBox } from './dice-box.js';
 import { DiceColors } from './dice-colors.js';
 import { DiceFactory } from './dice-factory.js';
 
+const DICE_LIMIT = 50; //TODO: configurable somewhere?
+
 export class DiceRoller {
     constructor() {
         this.isReady = false;
@@ -59,12 +61,23 @@ export class DiceRoller {
             this.box.preloadSounds();
             this.preloaded = true;
         }
+
+        // check dice limit
+        var dice = 0;
+        for(var tr of t) {
+            dice += tr.dice.length
+        }
+        if(dice > DICE_LIMIT) {
+            console.log(`Skipping 3d dice roll because of large dice count: ${dice}`);
+            for(var tr of t) if(tr.done) tr.done();
+            return true;
+        }
         
         // cancel potential fadeout
         $(this.canvas).stop();
         $(this.canvas).show();
         
-        // create throw
+        // create throw 
         return this.box.start_throw(t, () => {
             for(var tr of t) if(tr.done) tr.done();
             
