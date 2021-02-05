@@ -27,7 +27,8 @@ public abstract class ModuleService {
 	}
 	public static void init(File modulesDir) {
 		// load modules
-		modules.add(new Module("base", new File(modulesDir, "/base/"))); //TODO: allow full custom modules (including removing base?)
+		//modules.add(new Module("base", new File(modulesDir, "/base/"))); //TODO: allow full custom modules (including removing base?)
+		modules.add(new Module("core", new File(modulesDir, "../core/"))); //TODO: allow full custom modules (including removing base?)
 		
 		for(File file : modulesDir.listFiles()) {
 			if(file.isDirectory() && !file.getName().equals("base")) {
@@ -105,10 +106,14 @@ public abstract class ModuleService {
 			this.identifier = identifier;
 			this.directory = directory;
 			
-			try(InputStreamReader reader = new InputStreamReader(new FileInputStream(new File(directory, "module.json")), "UTF-8")) {
-				this.definition = (new Gson()).fromJson(reader, ModuleDefinition.class);
-			} catch(IOException e) {
-				throw new RuntimeException("Invalid module: "+identifier, e);
+			if(!identifier.equals("core")) {
+				try(InputStreamReader reader = new InputStreamReader(new FileInputStream(new File(directory, "module.json")), "UTF-8")) {
+					this.definition = (new Gson()).fromJson(reader, ModuleDefinition.class);
+				} catch(IOException e) {
+					throw new RuntimeException("Invalid module: "+identifier, e);
+				}
+			} else {
+				this.definition = new ModuleDefinition("core", "0", "temporary hack", false, new ArrayList<>());
 			}
 		}
 		
