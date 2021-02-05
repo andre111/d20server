@@ -26,7 +26,7 @@ export class CommandLineService {
                     console.log('Registered '+split[1]);
                 } catch(error) {
                     console.log(`${error}`);
-                    console.log('Usage: register <playername> <accesskey> <role(DEEFAULT,GM)>');
+                    console.log('Usage: register <playername> <accesskey> <role(DEFAULT,GM)>');
                 }
                 break;
             case 'stop':
