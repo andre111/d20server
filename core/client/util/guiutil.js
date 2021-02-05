@@ -13,7 +13,7 @@ xhr.onload = () => {
         bgSource = 'failed to load';
     }
 };
-xhr.open('GET', `/core/files/img/bg/${bgCurrent}.txt`);
+xhr.open('GET', `/core/files/img/bg/${bgCurrent}.txt`, false);
 xhr.send();
 
 //TODO: rewrite this to export single functions
