@@ -3,6 +3,7 @@ export class PropertyEditor {
         this.name = name;
         this.forceDisable = false;
         this.reloading = false;
+        this.changed = false;
         this.changeListeners = [];
         
         this.container = document.createElement('div');
@@ -38,15 +39,16 @@ export class PropertyEditor {
     //TODO: call onChange on changes, duh
     onChange() {
         if(this.reloading) return;
+        this.changed = true;
         
-        for(var listener of this.changeListeners) {
+        for(const listener of this.changeListeners) {
             listener();
         }
     }
     
     reload(reference, accessLevel) {
         // determine property
-        var property = reference.prop(this.name);
+        const property = reference.prop(this.name);
         if(property == null || property == undefined) {
             this.container.style.visibility = 'hidden';
             return;
@@ -61,11 +63,16 @@ export class PropertyEditor {
         this.reloading = true;
         this.reloadValue(property);
         this.reloading = false;
+        this.changed = false;
     }
     
     apply(reference, accessLevel) {
+        // do nothing if nothing changed -> optimizes response times
+        if(!this.changed) return;
+        this.changed = false;
+
         // determine property
-        var property = reference.prop(this.name);
+        const property = reference.prop(this.name);
         if(property == null || property == undefined) return;
         if(!property.canEdit(accessLevel)) return;
         if(this.editComponent.disabled) return;

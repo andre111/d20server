@@ -88,6 +88,7 @@ export class LongListPropertyEditor extends PropertyEditor {
             if(this.allowDuplicates || !this.valueList.includes(id)) {
                 this.valueList.push(id);
                 this.reloadTree();
+                this.onChange();
             }
         });
     }
@@ -97,6 +98,7 @@ export class LongListPropertyEditor extends PropertyEditor {
         if(entry != null) {
             this.valueList.splice(entry, 1);
             this.reloadTree();
+            this.onChange();
         }
     }
 }

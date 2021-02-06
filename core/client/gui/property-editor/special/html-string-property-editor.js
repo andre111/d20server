@@ -72,6 +72,7 @@ export class HTMLStringPropertyEditor extends PropertyEditor {
     
     doSubmit(editor) {
         this.value = editor.getContent();
+        this.onChange();
     }
 
     doOpenFilePicker(callback, value, meta) {

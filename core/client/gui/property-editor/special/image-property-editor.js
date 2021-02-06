@@ -56,6 +56,7 @@ export class ImagePropertyEditor extends PropertyEditor {
                 if(file.getType() == 'image') {
                     this.imagePath = file.getPath();
                     this.reloadImage();
+                    this.onChange();
 
                     manager.close();
                 }
@@ -67,6 +68,7 @@ export class ImagePropertyEditor extends PropertyEditor {
         if(!this.input.disabled) {
             this.imagePath = '';
             this.reloadImage();
+            this.onChange();
         }
     }
 }

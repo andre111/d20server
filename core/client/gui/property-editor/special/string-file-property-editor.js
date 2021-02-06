@@ -38,6 +38,7 @@ export class StringFilePropertyEditor extends PropertyEditor {
             if(file.getType() == this.filetype) {
                 this.currentPath = file.getPath();
                 this.updateButtonText();
+                this.onChange();
 
                 manager.close();
             }
@@ -47,5 +48,6 @@ export class StringFilePropertyEditor extends PropertyEditor {
     doClearFile() {
         this.currentPath = '';
         this.updateButtonText();
+        this.onChange();
     }
 }

@@ -37,6 +37,7 @@ export class EntityReferencePropertyEditor extends PropertyEditor {
             console.log(id);
             this.currentEntityID = id;
             this.updateButtonText();
+            this.onChange();
         });
     }
 }
