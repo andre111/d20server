@@ -212,11 +212,20 @@ export class CanvasModeEntities extends CanvasMode {
 			var xp = xm + reference.mouseOffsetX;
 			var yp = ym + reference.mouseOffsetY;
 			if(snap) {
-				xp = xm + Math.round(reference.mouseOffsetX / gridSize) * gridSize;
-				yp = ym + Math.round(reference.mouseOffsetY / gridSize) * gridSize;
-				
-				xp = Math.ceil(xp / gridSize) * gridSize - gridSize/2;
-				yp = Math.ceil(yp / gridSize) * gridSize - gridSize/2;
+                // check where to snap to, default -> center of cells
+                var xoffset = -gridSize/2;
+                var yoffset = -gridSize/2;
+
+                // when the entity is (about) a multiple of 2 cells wide -> corner of cells
+                const aabb = EntityUtils.getAABB(reference);
+                const wp = Math.round(aabb.width / gridSize);
+                const hp = Math.round(aabb.height / gridSize);
+                if(wp > 1 && wp % 2 == 0) xoffset = 0;
+                if(hp > 1 && hp % 2 == 0) yoffset = 0;
+
+                // do actual snapping
+				xp = Math.ceil(xp / gridSize) * gridSize + xoffset;
+				yp = Math.ceil(yp / gridSize) * gridSize + yoffset;
 			}
             xp = Math.trunc(xp);
             yp = Math.trunc(yp);
