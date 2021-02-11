@@ -19,6 +19,13 @@ export class HttpHandler {
         server.use(express.json());
         server.use(express.urlencoded({ extended: false }));
 
+        // set csp settings for all following handlers
+        //TODO: remove all inline styling (->template coloring, tinymce/htmlproperties) so I can limit style-src to self as well
+        server.use(function(req, res, next) {
+            res.setHeader('Content-Security-Policy', 'default-src \'self\'; img-src \'self\' data:; style-src \'self\' \'unsafe-inline\'');
+            return next();
+        });
+
         // provide application data (including modules)
         server.use('/core/common', express.static(path.join(path.resolve(), '/core/common')));
         server.use('/core/client', express.static(path.join(path.resolve(), '/core/client')));

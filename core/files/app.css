@@ -184,6 +184,30 @@ span.chat-dice-bg {
     place-content: center;
     line-height: 48px;
 }
+span.chat-dice-4 {
+    background-image: url(/core/files/img/dice/small/d4.png);
+}
+span.chat-dice-6 {
+    background-image: url(/core/files/img/dice/small/d6.png);
+}
+span.chat-dice-8 {
+    background-image: url(/core/files/img/dice/small/d8.png);
+}
+span.chat-dice-10 {
+    background-image: url(/core/files/img/dice/small/d10.png);
+}
+span.chat-dice-12 {
+    background-image: url(/core/files/img/dice/small/d12.png);
+}
+span.chat-dice-20 {
+    background-image: url(/core/files/img/dice/small/d20.png);
+}
+span.chat-dice-crit {
+    color: #008800;
+}
+span.chat-dice-fail {
+    color: #FF0000;
+}
 span.chat-dice-inline {
     width: 32px;
     height: 32px;

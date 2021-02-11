@@ -208,8 +208,7 @@ export class Dice extends Expression {
             // build string (with colored misses/crits)
             if(i > 0) string = string + '+';
             if(sidesValue == 4 || sidesValue == 6 || sidesValue == 8 || sidesValue == 10 || sidesValue == 12 || sidesValue == 20) {
-                const bg = `/core/files/img/dice/small/d${sidesValue}.png`;
-                string = string + this.getRollValue('', result, '', bg);
+                string = string + this.getRollValue('', result, '', `chat-dice-bg chat-dice-${sidesValue}`);
             } else {
                 string = string + this.getRollValue('&lt;', result, '&gt;', '');
             }
@@ -219,31 +218,19 @@ export class Dice extends Expression {
         return new Result(value, string, diceRolls);
     }
 
-    getRollValue(prefix, result, postfix, bg) {
-        // build style
-        var style = '';
+    getRollValue(prefix, result, postfix, cl) {
+        // build class name(s)
         if(result.criticalFailure) {
-            style = 'color:#FF0000';
+            cl = (cl === '' ? 'chat-dice-fail' : cl + ' chat-dice-fail')
         } else if(result.criticalSuccess) {
-            style = 'color:#008800';
-        }
-        if(bg != '') {
-            if(style != '') style = style + ';';
-            style = style + 'background-image:url('+bg+')';
+            cl = (cl === '' ? 'chat-dice-crit' : cl + ' chat-dice-crit')
         }
 
         // build string
         var string = prefix;
-        if(style != '' || bg != '') {
-            string = string + '<span';
-            if(style != '') string = string + ` style="${style}"`;
-            if(bg != '') string = string + ' class="chat-dice-bg"';
-            string = string + '>';
-        }
+        string = string + `<span class="${cl}">`;
         string = string + result.value;
-        if(style != '' || bg != '') {
-            string = string + '</span>';
-        }
+        string = string + '</span>';
         string = string + postfix;
 
         return string;

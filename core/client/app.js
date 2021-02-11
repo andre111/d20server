@@ -33,6 +33,9 @@ import { StateMain } from './state/state-main.js';
 // Initialize common code
 Common.init(new ClientIDProvider(), ClientEntityManager);
 
+// apply "catching" contextmenu listener to body
+document.body.oncontextmenu = () => false;
+
 // Export public 'interface'
 var _state = null;
 export const Client = {
