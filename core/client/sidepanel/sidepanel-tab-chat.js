@@ -79,20 +79,22 @@ export class SidepanelTabChat extends SidepanelTab {
     }
     
     add(entry) {
+        const sanitizedText = DOMPurify.sanitize(entry.getText(), {USE_PROFILES: {html: true}});
+
         if(entry.getReplaceParent() && entry.getReplaceParent() > 0) {
             // find replace parent
             if(!this.entries.has(entry.getReplaceParent())) { console.log('Ignoring replace with unknown parent'); return; }
             var container = this.entries.get(entry.getReplaceParent());
             
             // find replaceable object and replace content
-            $(container).find('#'+entry.getID()+'.replaceable').replaceWith(entry.getText());
+            $(container).find('#'+entry.getID()+'.replaceable').replaceWith(sanitizedText);
             GuiUtils.makeHoverable(container);
         } else {
             // create container
             var container = document.createElement('div');
             container.className = 'chat';
             
-            container.innerHTML = entry.getText();
+            container.innerHTML = sanitizedText;
             
             // add replaceable trigger
             for(const element of $(container).find('.replaceable')) {

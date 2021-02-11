@@ -67,7 +67,7 @@ export class HTMLStringPropertyEditor extends PropertyEditor {
     }
     
     setHTMLValue() {
-        this.textDiv.innerHTML = this.value;
+        this.textDiv.innerHTML = DOMPurify.sanitize(this.value, {USE_PROFILES: {html: true}}); 
     }
     
     doSubmit(editor) {
