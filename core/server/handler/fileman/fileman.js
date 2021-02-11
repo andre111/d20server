@@ -4,7 +4,7 @@ import path from 'path';
 import gm from 'gm';
 import multer  from 'multer';
 
-
+/* TODO: verify this has enough validation so you cannot for example delete any file on the system */
 export const EDIT_KEY = Math.trunc(Math.random() * 1144185);
 export const router = express.Router();
 const serverRoot = './data/files/';
@@ -22,14 +22,19 @@ router.post('/dirlist', function(req, res) {
 
 /* List files in a directory */
 router.post('/fileslist', function(req, res) {
-    const pathDir = serverRoot + req.body.d;
-    fs.readdir(pathDir)
+
+    // create and validate path
+    const dirPath = path.join(serverRoot, req.body.d);
+    if(!validatePath(dirPath)) { res.send({ res: 'error', msg: 'invalid path' }); return; }
+
+    // read files
+    fs.readdir(dirPath)
     .then(files => {
         var response = [];
 
         files.map(file => {
-            var fileDir = path.join(pathDir, file);
-            var info = fs.statSync(fileDir); //TODO: is this sync call still a problem?
+            const fileDir = path.join(dirPath, file);
+            const info = fs.statSync(fileDir); //TODO: is this sync call still a problem?
             if(info.isFile()) {
                 response.push({ 
                     p: path.join(req.body.d, file).replace(/\\/g, '/'), 
@@ -50,7 +55,14 @@ router.post('/fileslist', function(req, res) {
 router.post('/copy', function(req, res) {
     if(req.body.k != EDIT_KEY) { res.send({ res: 'error', msg: 'access denied' }); return; }
 
-    fs.copy(path.join(serverRoot, req.body.f || req.body.d), path.join(serverRoot, req.body.n))
+    // create and validate paths
+    const oldPath = path.join(serverRoot, req.body.f || req.body.d);
+    const newPath = path.join(serverRoot, req.body.n);
+    if(!validatePath(oldPath)) { res.send({ res: 'error', msg: 'invalid path' }); return; }
+    if(!validatePath(newPath)) { res.send({ res: 'error', msg: 'invalid path' }); return; }
+    
+    // perform copy
+    fs.copy(oldPath, newPath)
     .then(() => res.send({ res: 'ok' }))
     .catch(err => res.send({ res:'error', msg: err }));
 });
@@ -59,7 +71,12 @@ router.post('/copy', function(req, res) {
 router.post('/createdir', function(req, res) {
     if(req.body.k != EDIT_KEY) { res.send({ res: 'error', msg: 'access denied' }); return; }
 
-    fs.mkdirs(path.join(serverRoot, req.body.d, req.body.n))
+    // create and validate path
+    const dirPath = path.join(serverRoot, req.body.d, req.body.n);
+    if(!validatePath(dirPath)) { res.send({ res: 'error', msg: 'invalid path' }); return; }
+
+    // perform mkdirs
+    fs.mkdirs(dirPath)
     .then(() => res.send({ res: 'ok' }))
     .catch(err => res.send({ res:'error', msg: err }));
 });
@@ -68,7 +85,12 @@ router.post('/createdir', function(req, res) {
 router.post('/delete', function(req, res) {
     if(req.body.k != EDIT_KEY) { res.send({ res: 'error', msg: 'access denied' }); return; }
 
-    fs.remove(path.join(serverRoot, req.body.f || req.body.d))
+    // create and validate path
+    const filePath = path.join(serverRoot, req.body.f || req.body.d);
+    if(!validatePath(filePath)) { res.send({ res: 'error', msg: 'invalid path' }); return; }
+
+    // perform remove
+    fs.remove(filePath)
     .then(() => res.send({ res: 'ok' }))
     .catch(err => res.send({ res:'error', msg: err }));
 });
@@ -77,7 +99,14 @@ router.post('/delete', function(req, res) {
 router.post('/move', function(req, res) {
     if(req.body.k != EDIT_KEY) { res.send({ res: 'error', msg: 'access denied' }); return; }
     
-    fs.move(path.join(serverRoot, req.body.f || req.body.d), path.join(serverRoot, req.body.n))
+    // create and validate paths
+    const oldPath = path.join(serverRoot, req.body.f || req.body.d);
+    const newPath = path.join(serverRoot, req.body.n);
+    if(!validatePath(oldPath)) { res.send({ res: 'error', msg: 'invalid path' }); return; }
+    if(!validatePath(newPath)) { res.send({ res: 'error', msg: 'invalid path' }); return; }
+    
+    // perform move
+    fs.move(oldPath, newPath)
     .then(() => res.send({ res: 'ok' }))
     .catch(err => res.send({ res:'error', msg: err }));
 });
@@ -86,8 +115,15 @@ router.post('/move', function(req, res) {
 router.post('/rename', function(req, res) {
     if(req.body.k != EDIT_KEY) { res.send({ res: 'error', msg: 'access denied' }); return; }
 
-    var pathDir = path.dirname(req.body.f || req.body.d);
-    fs.rename(path.join(serverRoot, req.body.f || req.body.d), path.join(serverRoot, pathDir, req.body.n))
+    // create and validate paths
+    const pathDir = path.dirname(req.body.f || req.body.d);
+    const oldPath = path.join(serverRoot, req.body.f || req.body.d);
+    const newPath = path.join(serverRoot, pathDir, req.body.n);
+    if(!validatePath(oldPath)) { res.send({ res: 'error', msg: 'invalid path' }); return; }
+    if(!validatePath(newPath)) { res.send({ res: 'error', msg: 'invalid path' }); return; }
+
+    // perform rename
+    fs.rename(oldPath, newPath)
     .then(() => res.send({ res: 'ok' }))
     .catch(err => res.send({ res:'error', msg: err }));
 });
@@ -98,8 +134,13 @@ router.get('/generatethumb', function(req, res) {
 
     const width = req.query.width || 120;
     const height = req.query.height || 120;
-    
-    gm(path.join(serverRoot, req.query.f))
+
+    // create and validate path
+    const filePath = path.join(serverRoot, req.query.f);
+    if(!validatePath(filePath)) { res.send({ res: 'error', msg: 'invalid path' }); return; }
+
+    // call graphicsmagick (TODO: replace with no external dependency)
+    gm(filePath)
     .resize(width, height, '^')
     .gravity('Center')
     .crop(width, height)
@@ -112,7 +153,11 @@ const storage = multer.diskStorage({
     destination: function (req, file, cb) {
         if(req.body.k != EDIT_KEY) { cb('access denied', null); return; }
 
-        cb(null, path.join(serverRoot, req.body.d));
+        // create and validate path
+        const dirPath = path.join(serverRoot, req.body.d);
+        if(!validatePath(dirPath)) { cb('invalid path', null); return; }
+
+        cb(null, dirPath);
     },
     filename: function (req, file, cb) {
         cb(null, file.originalname);
@@ -148,4 +193,13 @@ function getDirectories(srcpath, response) {
             info.f++;
         }
     });
+}
+
+function validatePath(inputPath) {
+    /* TODO: Verify this is enough to limit user actions to inside the files directory */
+    // only allow relative paths that do not move upwards */
+    const relativePath = path.relative(serverRoot, inputPath);
+    const isRoot = relativePath === '';
+    const isContained = relativePath && !relativePath.startsWith('..') && !path.isAbsolute(relativePath);
+    return isRoot || isContained;
 }
