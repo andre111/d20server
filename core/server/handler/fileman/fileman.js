@@ -8,6 +8,10 @@ import multer  from 'multer';
 export const EDIT_KEY = Math.trunc(Math.random() * 1144185);
 export const router = express.Router();
 const serverRoot = './data/files/';
+const allowedFileEndings = [
+    '.png', '.jpg', '.jpeg', // image files
+    '.ogg', '.mp3' // audio files
+];
 
 /* List directory tree */
 router.post('/dirlist', function(req, res) {
@@ -156,6 +160,8 @@ const storage = multer.diskStorage({
         // create and validate path
         const dirPath = path.join(serverRoot, req.body.d);
         if(!validatePath(dirPath)) { cb('invalid path', null); return; }
+        const filePath = path.join(dirPath, file.originalname);
+        if(!validatePath(filePath)) { cb('invalid path', null); return; }
 
         cb(null, dirPath);
     },
@@ -196,10 +202,30 @@ function getDirectories(srcpath, response) {
 }
 
 function validatePath(inputPath) {
+    // find file/dir name
+    var inputName = inputPath;
+    if(inputName.includes(path.sep)) {
+        inputName = inputName.substring(inputName.lastIndexOf(path.sep)+1);
+    }
+    
+    // only allow files with known "good" endings
+    var hasFileEnding = inputName.includes('.');
+    if(hasFileEnding) {
+        var hasAllowedFileEnding = false;
+        for(const allowedFileEnding of allowedFileEndings) {
+            if(inputPath.endsWith(allowedFileEnding)) {
+                hasAllowedFileEnding = true;
+                break;
+            }
+        }
+        if(!hasAllowedFileEnding) return false;
+    }
+
     /* TODO: Verify this is enough to limit user actions to inside the files directory */
     // only allow relative paths that do not move upwards */
     const relativePath = path.relative(serverRoot, inputPath);
     const isRoot = relativePath === '';
     const isContained = relativePath && !relativePath.startsWith('..') && !path.isAbsolute(relativePath);
+
     return isRoot || isContained;
 }
