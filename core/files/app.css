@@ -257,16 +257,35 @@ div.chat-box-content th, div.chat-box-content td {
 
 /* used for onhover divs */
 .onhover {
-    display: none;
-    z-index: 20; /*TODO: this makes this unusable in windows, but for now only the chat uses this component and it fixes the order there */
-    box-shadow: 0px 0px 3px black;
-}
-.hoverable:hover .onhover {
-    display: block;
-    color: black;
+    visibility: none;
     position: fixed;
+    display: inline;
+    z-index: 20; /*TODO: this makes this unusable in windows, but for now only the chat uses this component and it fixes the order there */
+    
+    color: black;
     background-color: white;
     border: solid 1px black;
+    box-shadow: 0px 0px 3px black;
+
+    pointer-events: none;
+
+    /* Fade in tooltip */
+    opacity: 0;
+    transition: opacity 0.3s;
+}
+.onhover::after {
+    content: "";
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    margin-left: -5px;
+    border-width: 5px;
+    border-style: solid;
+    border-color: black transparent transparent transparent;
+}
+.hoverable:hover .onhover {
+    visibility: visible;
+    opacity: 1;
 }
 
 /* used in list windows */
