@@ -192,8 +192,9 @@ export class ChatService {
     }
 
     static escape(string) {
-        string = string.replace("<", "&lt;");
-        string = string.replace(">", "&gt;");
+        string = string.replace(/</g, '&lt;');
+        string = string.replace(/>/g, '&gt;');
+        string = string.replace(/"/g, '&quot;');
         return string;
     }
 }
