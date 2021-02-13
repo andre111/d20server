@@ -111,6 +111,11 @@ export class EntityActionSelect extends EntityAction {
         if(this.mode.activeEntities.length == 1) {
             var reference = this.mode.activeEntities[0];
             
+            // render token info when a single one is selected -> moves bars above wall occulsion when selected
+            if(this.mode.entityType == 'token') {
+                TokenRenderer.renderTokenInfo(ctx, reference, ServerData.localProfile, reference.prop('x').getLong(), reference.prop('y').getLong());
+            }
+
             // draw property boxes
             if(reference.prop('editBoxes') != null && reference.prop('editBoxes') != undefined) {
                 var bounds = EntityUtils.getAABB(reference);
