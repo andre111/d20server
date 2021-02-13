@@ -155,13 +155,13 @@ export class EntityReference extends Entity {
         // update backingEntity and notify listeners
         this.backingEntity = entity;
         for(const listener of this.listeners) {
-            listener.entityChanged(this);
+            if(listener.entityChanged) listener.entityChanged(this);
         }
     }
 
     entityRemoved() {
         for(const listener of this.listeners) {
-            listener.entityRemoved(this);
+            if(listener.entityRemoved) listener.entityRemoved(this);
         }
         this.backingEntity = null;
     }
