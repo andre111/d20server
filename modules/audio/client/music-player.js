@@ -32,7 +32,7 @@ export function getMusicPlayer() {
 export class MusicPlayer {
     constructor() {
         this.audio = document.createElement('audio');
-        this.audio.controls = true;
+        this.audio.controls = ServerData.isGM();
         this.audio.loop = true;
         this.window = null;
         
@@ -50,27 +50,37 @@ export class MusicPlayer {
         };
         this.audio.onplay = () => {
             if(ServerData.isGM()) {
-                const msg = new ActionCommand('PLAY_MUSIC', -1, -1, -1, false, this.currentPath);
+                const msg = new ActionCommand('PLAY_MUSIC', -1, -1, this.audio.volume, false, this.currentPath);
                 MessageService.send(msg);
             }
         };
+        this.audio.onvolumechange = () => {
+            if(ServerData.isGM()) {
+                const msg = new ActionCommand('VOLUME_MUSIC', -1, this.audio.volume);
+                MessageService.send(msg);
+            }
+        }
         
         // listen to commands
         this.commandListener = evt => {
             if(!evt.isGM()) return; // only accept commands from gm
+            if(evt.getSender() == ServerData.localProfile.getID()) return; // do not listen to events send from yourself (avoid feedback loops)
             
             switch(evt.getCommand()) {
             case 'LOAD_MUSIC':
                 this.serverDoLoad(evt.getText());
                 break;
             case 'PLAY_MUSIC':
-                this.serverDoPlay(evt.getText(), evt.getX());
+                this.serverDoPlay(evt.getText(), evt.getX(), evt.getY());
                 break;
             case 'PAUSE_MUSIC':
                 this.serverDoPause();
                 break;
             case 'STOP_MUSIC':
                 this.serverDoStop();
+                break;
+            case 'VOLUME_MUSIC':
+                this.serverSetVolume(evt.getX());
                 break;
             }
         };
@@ -88,6 +98,10 @@ export class MusicPlayer {
         this.show();
 
         // load
+        this.audio.pause();
+        this.serverDoLoad(path);
+
+        // transmit to others
         const msg = new ActionCommand('STOP_MUSIC');
         MessageService.send(msg);
         const msg2 = new ActionCommand('LOAD_MUSIC', -1, -1, -1, false, path);
@@ -106,7 +120,7 @@ export class MusicPlayer {
             if(ServerData.isGM()) {
                 if(!this.audio.paused) {
                     const time = Math.trunc(this.audio.currentTime * 44100);
-                    const msg = new ActionCommand('PLAY_MUSIC', -1, time, -1, false, this.currentPath);
+                    const msg = new ActionCommand('PLAY_MUSIC', -1, time, this.audio.volume, false, this.currentPath);
                     MessageService.send(msg);
                 }
             }
@@ -119,14 +133,20 @@ export class MusicPlayer {
         this.audio.src = path;
     }
     
-    serverDoPlay(path, time) {
+    serverDoPlay(path, time, volume) {
         this.serverDoLoad(path);
         if(this.audio.paused) this.audio.play();
         
+        // set time
         if(time < 0) return;
         var targetTime = time / 44100;
         if(Math.abs(this.audio.currentTime - targetTime) > 1) {
             this.audio.currentTime = targetTime;
+        }
+
+        // set volume
+        if(volume >= 0) {
+            this.audio.volume = volume;
         }
     }
     
@@ -136,5 +156,9 @@ export class MusicPlayer {
     
     serverDoStop() {
         this.audio.pause();
+    }
+
+    serverSetVolume(volume) {
+        this.audio.volume = volume;
     }
 }
