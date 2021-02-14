@@ -1,6 +1,9 @@
+import { SETTING_MUSIC_VOLUME } from './module.js';
+
 import { CanvasWindow } from '../../../core/client/canvas/canvas-window.js';
 import { ServerData } from '../../../core/client/server-data.js';
 import { MessageService } from '../../../core/client/service/message-service.js';
+import { SettingsUtils } from '../../../core/client/util/settingsutil.js';
 
 import { Events } from '../../../core/common/events.js';
 import { ActionCommand } from '../../../core/common/messages.js';
@@ -33,11 +36,24 @@ export class MusicPlayer {
     constructor() {
         this.audio = document.createElement('audio');
         this.audio.controls = ServerData.isGM();
+        this.audio.controlsList = 'nodownload';
         this.audio.loop = true;
+        this.audio.volume = SettingsUtils.getVolume(SETTING_MUSIC_VOLUME);
         this.window = null;
         
         this.currentPath = '';
         this.lastUpdate = -1;
+
+        // listen to setting changes
+        SettingsUtils.addVolumeSettingListener(SETTING_MUSIC_VOLUME, () => {
+            this.audio.volume = SettingsUtils.getVolume(SETTING_MUSIC_VOLUME);
+        });
+        //TODO: this currently overrides manual volume changing -> to remove this I need to build my own audio player controls (without volume slider)
+        this.audio.onvolumechange = () => {
+            if(this.audio.volume != SettingsUtils.getVolume(SETTING_MUSIC_VOLUME)) {
+                this.audio.volume = SettingsUtils.getVolume(SETTING_MUSIC_VOLUME);
+            }
+        }
         
         // handle updating other clients
         this.updateListener = () => this.updateState();
@@ -50,16 +66,10 @@ export class MusicPlayer {
         };
         this.audio.onplay = () => {
             if(ServerData.isGM()) {
-                const msg = new ActionCommand('PLAY_MUSIC', -1, -1, this.audio.volume, false, this.currentPath);
+                const msg = new ActionCommand('PLAY_MUSIC', -1, -1, -1, false, this.currentPath);
                 MessageService.send(msg);
             }
         };
-        this.audio.onvolumechange = () => {
-            if(ServerData.isGM()) {
-                const msg = new ActionCommand('VOLUME_MUSIC', -1, this.audio.volume);
-                MessageService.send(msg);
-            }
-        }
         
         // listen to commands
         this.commandListener = evt => {
@@ -71,16 +81,13 @@ export class MusicPlayer {
                 this.serverDoLoad(evt.getText());
                 break;
             case 'PLAY_MUSIC':
-                this.serverDoPlay(evt.getText(), evt.getX(), evt.getY());
+                this.serverDoPlay(evt.getText(), evt.getX());
                 break;
             case 'PAUSE_MUSIC':
                 this.serverDoPause();
                 break;
             case 'STOP_MUSIC':
                 this.serverDoStop();
-                break;
-            case 'VOLUME_MUSIC':
-                this.serverSetVolume(evt.getX());
                 break;
             }
         };
@@ -120,7 +127,7 @@ export class MusicPlayer {
             if(ServerData.isGM()) {
                 if(!this.audio.paused) {
                     const time = Math.trunc(this.audio.currentTime * 44100);
-                    const msg = new ActionCommand('PLAY_MUSIC', -1, time, this.audio.volume, false, this.currentPath);
+                    const msg = new ActionCommand('PLAY_MUSIC', -1, time, -1, false, this.currentPath);
                     MessageService.send(msg);
                 }
             }
@@ -156,9 +163,5 @@ export class MusicPlayer {
     
     serverDoStop() {
         this.audio.pause();
-    }
-
-    serverSetVolume(volume) {
-        this.audio.volume = volume;
     }
 }

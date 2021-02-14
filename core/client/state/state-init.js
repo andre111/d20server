@@ -4,6 +4,7 @@ import { StateDisconnected } from './state-disconnected.js';
 
 import { Connection } from '../connection.js';
 import { Client } from '../app.js';
+import { Settings } from '../settings/settings.js';
 
 export class StateInit extends State {
     constructor() {
@@ -27,6 +28,7 @@ export class StateInit extends State {
 
     onConnect() {
         document.body.innerHTML = '';
+        Settings.load();
         Client.setState(new StateSignIn());
     }
 

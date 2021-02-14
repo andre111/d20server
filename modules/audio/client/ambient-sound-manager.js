@@ -1,7 +1,9 @@
 import { Client } from '../../../core/client/app.js';
 import { MapUtils } from '../../../core/client/util/maputil.js';
+import { SettingsUtils } from '../../../core/client/util/settingsutil.js';
 
 import { IntMathUtils } from '../../../core/common/util/mathutil.js';
+import { SETTING_AMBIENT_VOLUME } from './module.js';
 
 export class AmbientSoundManager {
     constructor(token) {
@@ -16,7 +18,7 @@ export class AmbientSoundManager {
             
             // and play new sounds
             this.stop();
-            var volume = token.prop('audioVolume').getDouble();
+            var volume = token.prop('audioVolume').getDouble() * SettingsUtils.getVolume(SETTING_AMBIENT_VOLUME);
             this.sound = new Howl({
                 src: ['/data/files'+token.prop('audioPath').getString()],
                 format: ['ogg'],

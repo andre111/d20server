@@ -29,6 +29,8 @@ import { CanvasWindowImage } from './canvas/window/canvas-window-image.js';
 
 import { StateInit } from './state/state-init.js';
 import { StateMain } from './state/state-main.js';
+import { Settings } from './settings/settings.js';
+import { SettingsEntryNumberRange } from './settings/settings-entry-number-range.js';
 
 // Initialize common code
 Common.init(new ClientIDProvider(), ClientEntityManager);
@@ -125,6 +127,13 @@ Events.on('actionCommand', event => {
         new CanvasWindowImage(event.getText());
     }
 });
+
+export const SETTING_GLOBAL_VOLUME = new SettingsEntryNumberRange('Global Volume', 100, 0, 100);
+export const SETTING_WEATHER_VOLUME = new SettingsEntryNumberRange('Weather Volume', 100, 0, 100);
+export const SETTING_PAGE_GENERAL = Settings.createPage('general', 'General');
+export const SETTING_PAGE_AUDIO = Settings.createPage('audio', 'Audio');
+SETTING_PAGE_AUDIO.addEntry('volume', SETTING_GLOBAL_VOLUME);
+SETTING_PAGE_AUDIO.addEntry('weather_volume', SETTING_WEATHER_VOLUME);
 
 // initialize state
 Client.setState(new StateInit());

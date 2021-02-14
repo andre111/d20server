@@ -23,7 +23,7 @@ export class ModeButton {
     }
     
     shrink() {
-        this.button.className = 'mode-sub-button'
+        this.button.className = 'mode-button mode-sub-button'
     }
     
     updateState() {

@@ -1,5 +1,7 @@
 import { DICE_MODELS } from './dice-models.js';
 import { COLORSETS } from './dice-colors.js';
+import { SettingsUtils } from '../../../core/client/util/settingsutil.js';
+import { SETTING_3DDICE_VOLUME } from './module.js';
 
 export class DiceBox {
 	constructor(element_container, dice_factory, config) {
@@ -70,7 +72,6 @@ export class DiceBox {
 		this.deadDiceList = [];
 		this.framerate = (1/60);
 		this.sounds = true;
-		this.volume = 1;
 		this.soundDelay = 1; // time between sound effects in worldstep
 		this.soundsSurface = 'felt';
 		this.animstate = '';
@@ -139,7 +140,6 @@ export class DiceBox {
 	initialize() {
 		return new Promise(async resolve => {
 			this.sounds = this.config.sounds;
-			this.volume = this.config.soundsVolume;
 			this.soundsSurface = this.config.soundsSurface;
 			this.shadows = this.config.shadowQuality != 'none';
 			this.speed = 1;
@@ -573,7 +573,7 @@ export class DiceBox {
 	}
 
 	playSoundCollide(sound){
-		let volume = sound[1] * this.volume;
+		let volume = sound[1] * SettingsUtils.getVolume(SETTING_3DDICE_VOLUME);
 		new Howl({
 			src: sound[0],
 			volume: volume,

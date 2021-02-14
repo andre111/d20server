@@ -5,6 +5,8 @@ import { getMusicPlayer } from './music-player.js';
 import { ModeButton, ModeButtonExtended } from '../../../core/client/canvas/mode-panel.js';
 
 import { Events } from '../../../core/common/events.js';
+import { SETTING_PAGE_AUDIO } from '../../../core/client/app.js';
+import { SettingsEntryNumberRange } from '../../../core/client/settings/settings-entry-number-range.js';
 
 // ambient audio
 Events.on('addRenderLayers', event => {
@@ -35,3 +37,9 @@ Events.on('fileManagerSelect', event => {
         event.canceled = true;
     }
 });
+
+
+export const SETTING_AMBIENT_VOLUME = new SettingsEntryNumberRange('Ambient Volume', 100, 0, 100);
+export const SETTING_MUSIC_VOLUME = new SettingsEntryNumberRange('Music Volume', 25, 0, 100);
+SETTING_PAGE_AUDIO.addEntry('ambient_volume', SETTING_AMBIENT_VOLUME);
+SETTING_PAGE_AUDIO.addEntry('music_volume', SETTING_MUSIC_VOLUME);

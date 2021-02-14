@@ -5,13 +5,14 @@ import { Client } from '../app.js';
 import { StateMain } from '../state/state-main.js';
 import { CanvasWindowChoose } from '../canvas/window/canvas-window-choose.js';
 import { CanvasView } from '../canvas/canvas-view.js';
-
-import { Layer } from '../../common/constants.js';
-import { Events } from '../../common/events.js';
 import { createDefaultFileManager } from './window/canvas-window-filemanager.js';
 import { CanvasWindowImage } from './window/canvas-window-image.js';
 import { FileActionCreateToken } from './window/filemanager/action/file-action-create-token.js';
 import { FileActionShowToPlayers } from './window/filemanager/action/file-action-show-to-players.js';
+import { Settings } from '../settings/settings.js';
+
+import { Layer } from '../../common/constants.js';
+import { Events } from '../../common/events.js';
 
 export { ModeButton } from './mode-button.js';
 export { ModeButtonExtended } from './mode-button-extended.js';
@@ -49,6 +50,9 @@ export class ModePanel {
             this.buttons.push(new ModeButtonExtended(new ModeButton('/core/files/img/gui/fileman', 'Open File Manager', () => false, () => this.openFileManager()), 8));
             Events.trigger('addModeButtonsGM', event);
         }
+
+        // settings
+        this.buttons.push(new ModeButtonExtended(new ModeButton('/core/files/img/gui/settings', 'Open Settings', () => false, () => Settings.openWindow()), 8));
         
         // init html elements
         this.container = document.createElement('div');
