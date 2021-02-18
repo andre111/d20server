@@ -34,7 +34,7 @@ export const MessageService = {
         } else if(msg instanceof UpdateEntityProperties) {
             EntityManagers.get(msg.getType()).serverUpdateProperties(msg.getID(), msg.getProperties());
         } else if(msg instanceof EnterMap) {
-            //TODO: replace observable with event and use an actual class fot the event?
+            //TODO: replace observable with event and use an actual class for the event?
             const evt = {
                 oldMapID: ServerData.currentMap.get(),
                 newMapID: msg.getMapID()

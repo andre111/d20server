@@ -14,12 +14,11 @@ export class BattleEntry {
 
     #barFillers;
 
-    constructor(tokenID, active) {
-        this.#tokenID = tokenID;
-
+    constructor(opacity) {
         // create html elements
         this.#containerEl = document.createElement('li');
-        this.#containerEl.className = active ? 'battle-entry-active' : 'battle-entry';
+        this.#containerEl.className = 'battle-entry';
+        this.#containerEl.style.opacity = opacity;
 
         this.#imageEl = document.createElement('img');
         this.#containerEl.appendChild(this.#imageEl);
@@ -48,33 +47,29 @@ export class BattleEntry {
         this.#nameEl = document.createElement('span');
         this.#nameEl.className = 'battle-entry-name';
         this.#containerEl.appendChild(this.#nameEl);
-
         
         // add hover functionality
-        this.#containerEl.onmouseover = () => Client.getState().setHighlightToken(tokenID);
-        this.#containerEl.onmouseout = () => Client.getState().releaseHighlightToken(tokenID);
-
-        // load initial values
-        this.reloadValues();
+        this.#containerEl.onmouseover = () => Client.getState().setHighlightToken(this.#tokenID);
+        this.#containerEl.onmouseout = () => Client.getState().releaseHighlightToken(this.#tokenID);
     }
 
-    setActive(active) {
-        this.#containerEl.className = active ? 'battle-entry-active' : 'battle-entry';
-    }
+    //TODO: optimize this to change as little as possible
+    reloadValues(tokenID, active, current) {
+        this.#tokenID = tokenID;
 
-    reloadValues() {
         // find token
         const token = EntityManagers.get('token').find(this.#tokenID);
         if(!token) {
-            this.#containerEl.style.visibility = 'none';
-            console.log('Token for BattleEntry not found!');
+            this.#containerEl.style.display = 'none';
+            if(tokenID > 0) console.log('Token for BattleEntry not found!');
             return;
         }
         // get access level
         const accessLevel = token.getAccessLevel(ServerData.localProfile);
 
         // (re)load values
-        this.#containerEl.style.visibility = 'visible';
+        this.#containerEl.style.display = current && token.prop('battle_turnEnded').getBoolean() ? 'none' : 'flex';
+        this.#containerEl.className = active ? 'battle-entry-active' : 'battle-entry';
 
         this.#imageEl.src = '/data/files/'+token.prop('imagePath').getString();
 

@@ -3,9 +3,8 @@ import { MessageService } from '../service/message-service.js';
 import { UserService } from '../service/user-service.js';
 
 import { EntityManagers } from '../../common/entity/entity-managers.js';
-import { ActionCommand, AddEntity, EntityLoading, MovePlayerToMap, Ping, PlayEffect, PlayerList, RemoveEntity, RequestAccounts, ResponseFail, ResponseOk, SelectedTokens, SendChatMessage, SetPlayerColor, SignIn, SignOut, TokenListValue, UpdateEntityProperties } from '../../common/messages.js';
-import { Access, Role } from '../../common/constants.js';
-import { TokenListUtils } from '../../common/util/token-list-util.js';
+import { ActionCommand, AddEntity, EntityLoading, MovePlayerToMap, Ping, PlayEffect, PlayerList, RemoveEntity, RequestAccounts, ResponseFail, ResponseOk, SelectedTokens, SendChatMessage, SetPlayerColor, SignIn, SignOut, UpdateEntityProperties } from '../../common/messages.js';
+import { Role } from '../../common/constants.js';
 import { GameService } from '../service/game-service.js';
 import { Server } from '../app.js';
 
@@ -77,23 +76,6 @@ function _handleSelectedTokens(profile, message) {
     if(!selectedTokens) selectedTokens = [];
 
     profile.setSelectedTokens(selectedTokens);
-}
-
-function _handleTokenListValue(profile, message) {
-    const list = EntityManagers.get('token_list').find(message.getListID());
-    const token = EntityManagers.get('token').find(message.getTokenID());
-    if(list && token) {
-        // determine access level
-        const accessLevel = TokenListUtils.getAccessLevel(profile, list, token);
-        if(list.canEditWithAccess(accessLevel)) {
-            // apply change
-            if(message.doReset()) {
-                TokenListUtils.removeToken(list, token.getID());
-            } else {
-                TokenListUtils.addOrUpdateToken(profile, list, token, message.getValue(), accessLevel == Access.GM && message.isHidden());
-            }
-        }
-    }
 }
 
 function _handleActionCommand(profile, message) {
@@ -191,8 +173,6 @@ export class MessageHandler {
             _handleMovePlayerToMap(profile, message);
         } else if(message instanceof SelectedTokens) {
             _handleSelectedTokens(profile, message);
-        } else if(message instanceof TokenListValue) {
-            _handleTokenListValue(profile, message);
         } else if(message instanceof ActionCommand) {
             _handleActionCommand(profile, message);
         } else if(message instanceof PlayEffect) {

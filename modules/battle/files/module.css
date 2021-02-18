@@ -3,6 +3,7 @@
     pointer-events: none;
     position: absolute;
     left: 100px;
+    top: -4px;
     width: calc(100% - 384px - 200px);
     height: 200px;
     overflow: hidden;
@@ -12,7 +13,7 @@
 .battle-panel ul {
     list-style: none;
     width: 1000000000px; /* prevent the list from wrapping by making it much wider than ever needed */
-    margin-top: -4px;
+    margin: auto;
 }
 .battle-panel li {
     pointer-events: all;

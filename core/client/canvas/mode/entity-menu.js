@@ -7,8 +7,7 @@ import { MessageService } from '../../service/message-service.js';
 
 import { Access } from '../../../common/constants.js';
 import { EntityManagers } from '../../../common/entity/entity-managers.js';
-import { TokenListUtils } from '../../../common/util/token-list-util.js';
-import { SendChatMessage, TokenListValue } from '../../../common/messages.js';
+import { SendChatMessage } from '../../../common/messages.js';
 import { Events } from '../../../common/events.js';
 
 export class EntityMenu extends Menu {
@@ -58,16 +57,6 @@ export class EntityMenu extends Menu {
                     this.createItem(parent, value.displayName, () => this.doSendMacro('!'+key));
                 }
             }
-            
-            // adding to lists
-            //TODO: this is broken/the access check seems to be wrong somehow
-            var list = this.createCategory(this.container, 'Add to');
-            _.chain(EntityManagers.get('token_list').all()).forEach(tokenList => {
-                var listAccessLevel = TokenListUtils.getAccessLevel(ServerData.localProfile, tokenList, reference.getBackingEntity());
-                if(tokenList.canEditWithAccess(listAccessLevel)) {
-                    this.createItem(list, tokenList.prop('displayName').getString(), () => this.doTokenListInsert(tokenList));
-                }
-            }).value();
         }
 
         //TODO: move most functionality to listeners of this event!
@@ -97,11 +86,6 @@ export class EntityMenu extends Menu {
     
     doSendMacro(macroName) {
         const msg = new SendChatMessage('!'+macroName);
-        MessageService.send(msg);
-    }
-    
-    doTokenListInsert(tokenList) {
-        const msg = new TokenListValue(tokenList, this.reference.getID(), 0, false, false);
         MessageService.send(msg);
     }
     

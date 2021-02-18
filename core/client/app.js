@@ -24,7 +24,6 @@ import { SidepanelTabPlayers } from './sidepanel/sidepanel-tab-players.js';
 import { SidepanelTabActors } from './sidepanel/sidepanel-tab-actors.js';
 import { SidepanelTabAttachments } from './sidepanel/sidepanel-tab-attachments.js';
 import { SidepanelTabMaps } from './sidepanel/sidepanel-tab-maps.js';
-import { SidepanelTabLists } from './sidepanel/sidepanel-tab-lists.js';
 import { CanvasWindowImage } from './canvas/window/canvas-window-image.js';
 
 import { StateInit } from './state/state-init.js';
@@ -116,7 +115,6 @@ Events.on('addSidepanelTabs', event => {
     event.addSidepanelTab(new SidepanelTabActors());
     event.addSidepanelTab(new SidepanelTabAttachments());
     event.addSidepanelTab(new SidepanelTabMaps());
-    event.addSidepanelTab(new SidepanelTabLists());
     //TODO: settings tab
 });
 

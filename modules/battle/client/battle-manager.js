@@ -5,28 +5,41 @@ import { EntityReference } from '../../../core/client/entity/entity-reference.js
 import { Events } from '../../../core/common/events.js';
 import { EntityManagers } from '../../../core/common/entity/entity-managers.js';
 import { BattleEntry } from './battle-entry.js';
+import { CanvasWindowConfirm } from '../../../core/client/canvas/window/canvas-window-confirm.js';
+import { BattleList } from './battle-list.js';
 
 export class BattleManager {
-    static #tokens = [];
+    static #tokensIDs = [];
     static #container = null;
+    static #infoRoundEl = null;
+    static #entryList = null;
+    static #guiCallback = null;
 
     static scanState() {
         // find all participating tokens
-        BattleManager.#tokens = [];
+        var tokens = [];
         for(const token of MapUtils.currentEntities('token')) {
             if(token.prop('battle_active').getBoolean()) {
-                BattleManager.#tokens.push(token);
+                tokens.push(token);
             }
         }
 
         // sort by initiative
-        BattleManager.#tokens.sort((t1, t2) => {
+        tokens.sort((t1, t2) => {
             const v1 = t1.prop('battle_initiative').getDouble();
             const v2 = t2.prop('battle_initiative').getDouble();
             return v2 - v1;
         });
+        
+        // store ids only
+        BattleManager.#tokensIDs = [];
+        for(const token of tokens) {
+            BattleManager.#tokensIDs.push(token.getID());
+        }
 
-        BattleManager.updateGui();
+        // rebuild gui (scheduled on frame to group closely related changes into one update)
+        if(BattleManager.#guiCallback == null) BattleManager.#guiCallback = () => BattleManager.updateGui();
+        requestAnimationFrame(BattleManager.#guiCallback);
         //TODO: if GM -> check if currentToken has turn started and if not start it? (might cause race conditions with multiple gms when done here)
     }
 
@@ -48,6 +61,30 @@ export class BattleManager {
             container.className = 'battle-panel';
             document.body.appendChild(container);
 
+            // battle info
+            //TODO: extract into its own class?
+            const battleInfo = document.createElement('li');
+            battleInfo.className = 'battle-info';
+            BattleManager.#infoRoundEl = document.createElement('span');
+            battleInfo.appendChild(BattleManager.#infoRoundEl);
+            if(ServerData.isGM()) {
+                // controll buttons
+                const nextTurnButton = document.createElement('button');
+                nextTurnButton.innerText = 'Next Turn';
+                nextTurnButton.onclick = () => BattleManager.nextTurn();
+                battleInfo.appendChild(nextTurnButton);
+
+                const endBattleButton = document.createElement('button');
+                endBattleButton.innerText = 'End Battle';
+                endBattleButton.onclick = () => new CanvasWindowConfirm('End Battle', 'Do you want to end the current battle?', () => BattleManager.endBattle());
+                battleInfo.appendChild(endBattleButton);
+            }
+            container.appendChild(battleInfo);
+
+            // list
+            BattleManager.#entryList = new BattleList();
+            container.appendChild(BattleManager.#entryList.getElement());
+
             BattleManager.#container = container;
         }
         const container = BattleManager.#container;
@@ -58,57 +95,9 @@ export class BattleManager {
         const map = MapUtils.currentMap();
         if(!map) return;
 
-        //TODO: make this not clear always clear everything but only update changed parts (BattleEntry has some support for this already)
-        const ul = document.createElement('ul');
-
-        // TODO: battle info
-        const battleInfo = document.createElement('li');
-        battleInfo.className = 'battle-info';
-        const roundInfo = document.createElement('span');
-        roundInfo.innerHTML = 'Battle<br>Round '+map.prop('battle_round').getLong();
-        battleInfo.appendChild(roundInfo);
-        if(ServerData.isGM()) {
-            //TODO: controll buttons
-            const nextTurnButton = document.createElement('button');
-            nextTurnButton.innerText = 'Next Turn';
-            nextTurnButton.onclick = () => BattleManager.nextTurn();
-            battleInfo.appendChild(nextTurnButton);
-
-            const endBattleButton = document.createElement('button');
-            endBattleButton.innerText = 'End Battle';
-            endBattleButton.onclick = () => BattleManager.endBattle();
-            battleInfo.appendChild(endBattleButton);
-        }
-        ul.appendChild(battleInfo);
-
-        // TODO: current turn
-        var entries = 0;
-        var first = true;
-        for(const token of BattleManager.#tokens) {
-            if(!token.prop('battle_turnEnded').getBoolean()) {
-                entries++;
-                const entry = new BattleEntry(token.getID(), first);
-                ul.appendChild(entry.getContainer());
-                first = false;
-            }
-        }
-
-        // TODO: next turn
-        do {
-            const roundMarker = document.createElement('li');
-            roundMarker.className = 'battle-round-marker';
-            ul.appendChild(roundMarker);
-
-            for(const token of BattleManager.#tokens) {
-                entries++;
-                const entry = new BattleEntry(token.getID(), false);
-                ul.appendChild(entry.getContainer());
-            }
-        } while(entries < 20 && BattleManager.#tokens.length > 0);
-
-
-        container.innerHTML = '';
-        container.appendChild(ul);
+        //
+        BattleManager.#infoRoundEl.innerHTML = 'Battle<br>Round '+map.prop('battle_round').getLong();
+        BattleManager.#entryList.reload(BattleManager.#tokensIDs);
     }
 
     //----------------------------------------------------
@@ -158,8 +147,9 @@ export class BattleManager {
         // end turn of current token (and check if a next one exists)
         var current = null;
         var foundNext = false;
-        for(const token of BattleManager.#tokens) {
-            if(!token.prop('battle_turnEnded').getBoolean()) {
+        for(const tokenID of BattleManager.#tokensIDs) {
+            const token = EntityManagers.get('token').find(tokenID);
+            if(token && !token.prop('battle_turnEnded').getBoolean()) {
                 if(current == null) {
                     current = token;
                 } else {
@@ -178,11 +168,14 @@ export class BattleManager {
             const mapRef = new EntityReference(map);
             mapRef.prop('battle_round').setLong(mapRef.prop('battle_round').getLong()+1);
             mapRef.performUpdate();
-            for(const token of BattleManager.#tokens) {
-                const tokenRef = new EntityReference(token);
-                tokenRef.prop('battle_turnStarted').setBoolean(false);
-                tokenRef.prop('battle_turnEnded').setBoolean(false);
-                tokenRef.performUpdate();
+            for(const tokenID of BattleManager.#tokensIDs) {
+                const token = EntityManagers.get('token').find(tokenID);
+                if(token) {
+                    const tokenRef = new EntityReference(token);
+                    tokenRef.prop('battle_turnStarted').setBoolean(false);
+                    tokenRef.prop('battle_turnEnded').setBoolean(false);
+                    tokenRef.performUpdate();
+                }
             }
         }
     }

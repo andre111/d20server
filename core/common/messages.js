@@ -23,7 +23,6 @@ export { MovePlayerToMap } from './message/game/move-player-to-map.js';
 export { PlayEffect } from './message/game/play-effect.js';
 export { SelectedTokens } from './message/game/selected-tokens.js';
 export { SetPlayerColor } from './message/game/set-player-color.js';
-export { TokenListValue } from './message/game/token-list-value.js'
 
 // Util Messages
 export { Ping } from './message/util/ping.js';

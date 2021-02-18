@@ -4,7 +4,6 @@ import { EntityFinderMap } from '../../finder/entity-finder-map.js';
 import { VariableParserParent } from './variable-parser-parent.js';
 import { VariableParserParentTokenSelected } from './variable-parser-parent-token-selected.js';
 import { VariableParserEntityProperty } from './variable-parser-entity-property.js';
-import { VariableParserTokenList } from './variable-parser-token-list.js';
 import { VariableParserEntityID } from './variable-parser-entity-id.js';
 import { VariableParserParentActorToken } from './variable-parser-parent-actor-token.js';
 import { VariableParserParentEntityID } from './variable-parser-parent-entity-id.js';
@@ -13,7 +12,6 @@ export const rootParser = new VariableParserParent()
     .addChild('selected', new VariableParserParentTokenSelected()
         .addChild('id', new VariableParserEntityID('token'))
         .addChild('property', new VariableParserEntityProperty('token'))
-        .addChild('list', new VariableParserTokenList())
         .addChild('actor', new VariableParserParentActorToken()
             .addChild('id', new VariableParserEntityID('actor'))
             .addChild('property', new VariableParserEntityProperty('actor'))
@@ -22,7 +20,6 @@ export const rootParser = new VariableParserParent()
     .addChild('token', new VariableParserParentEntityID('token')
         .addChild('id', new VariableParserEntityID('token'))
         .addChild('property', new VariableParserEntityProperty('token'))
-        .addChild('list', new VariableParserTokenList())
         .addChild('actor', new VariableParserParentActorToken()
             .addChild('id', new VariableParserEntityID('actor'))
             .addChild('property', new VariableParserEntityProperty('actor'))

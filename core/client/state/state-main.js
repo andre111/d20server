@@ -9,7 +9,6 @@ import { CanvasRenderLayer } from '../canvas/canvas-renderlayer.js';
 import { CanvasEntityRenderer } from '../canvas/canvas-entityrenderer.js';
 import { SidepanelTab } from '../sidepanel/sidepanel-tab.js';
 import { ModePanel } from '../canvas/mode-panel.js';
-import { CanvasWindowListManager } from '../canvas/window/canvas-window-list-manager.js';
 import { ServerData } from '../server-data.js';
 import { MessageService } from '../service/message-service.js';
 import { MapUtils } from '../util/maputil.js';
@@ -95,7 +94,6 @@ export class StateMain extends State {
         ServerData.currentMap.addObserver(this.mapObserver);
         
         this.modePanel = new ModePanel();
-        this.listWindowManager = new CanvasWindowListManager();
         
         // calculate fps times
         this.fpsInterval = 1000 / Client.FPS;
