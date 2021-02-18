@@ -1,0 +1,22 @@
+{
+    "displayName": "Ambient Audio",
+    "properties": [
+        {
+            "name": "battle_active",
+            "type": "BOOLEAN",
+            "editAccess": "GM",
+            "viewAccess": "EVERYONE",
+            "value": "false"
+        },
+        {
+            "name": "battle_round",
+            "type": "LONG",
+            "editAccess": "GM",
+            "viewAccess": "EVERYONE",
+            "value": "0"
+        }
+    ],
+    "updateRules": [],
+    "macros": {},
+    "editorTabs": []
+}

@@ -9,6 +9,7 @@ import { Access } from '../../../common/constants.js';
 import { EntityManagers } from '../../../common/entity/entity-managers.js';
 import { TokenListUtils } from '../../../common/util/token-list-util.js';
 import { SendChatMessage, TokenListValue } from '../../../common/messages.js';
+import { Events } from '../../../common/events.js';
 
 export class EntityMenu extends Menu {
     constructor(mode, reference, isGM, x, y) {
@@ -68,6 +69,9 @@ export class EntityMenu extends Menu {
                 }
             }).value();
         }
+
+        //TODO: move most functionality to listeners of this event!
+        Events.trigger('entityMenu', { menu: this, entityType: this.mode.entityType, reference: reference, isGM: isGM });
         
         if(reference.prop('depth').canEdit(accessLevel)) {
             var move = this.createCategory(this.container, 'Move');

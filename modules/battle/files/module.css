@@ -1,0 +1,101 @@
+/* Battle Tests */
+.battle-panel {
+    pointer-events: none;
+    position: absolute;
+    left: 100px;
+    width: calc(100% - 384px - 200px);
+    height: 200px;
+    overflow: hidden;
+
+    /*background-color: darkgray;*/
+}
+.battle-panel ul {
+    list-style: none;
+    width: 1000000000px; /* prevent the list from wrapping by making it much wider than ever needed */
+    margin-top: -4px;
+}
+.battle-panel li {
+    pointer-events: all;
+    float: left;
+    clear: none;
+    position: relative;
+    margin-left: 6px;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    box-shadow: 0px 0px 4px 3px #e2cf9d; 
+    border: solid 3px #e2cf9d;
+    border-radius: 6px;
+    overflow: hidden;
+}
+.battle-info {
+    background-color: #fff4d2;
+
+    text-shadow: 0px 0px 3px black, 0px 0px 3px black;
+    font-weight: bold;
+    font-size: 2rem;
+    text-align: center;
+    color: white;
+}
+.battle-entry {
+    width: 80px;
+    height: 120px;
+    background-color: #fff4d2;
+}
+.battle-entry-active {
+    width: 120px;
+    height: 180px;
+    background-color: #fff4d2;
+}
+.battle-entry img {
+    width: 80px;
+    height: 80px;
+    margin-bottom: 2px;
+}
+.battle-entry-active img {
+    width: 120px;
+    height: 120px;
+}
+.battle-entry-ini {
+    position: absolute;
+    top: 0;
+    left: 0;
+
+    text-shadow: 0px 0px 3px black;
+    font-weight: bold;
+    font-size: 1.2rem;
+    color: white;
+}
+.battle-entry-ini :nth-child(2) {
+    font-size: 0.6rem;
+}
+.battle-entry-bar {
+    width: 100%;
+    height: 6px;
+    background-color: #f5deb3;
+    border: solid 1px #e2cf9d;
+}
+.battle-entry-bar div {
+    width: 100%;
+    height: 100%;
+    opacity: 50%;
+}
+.battle-entry-active .battle-entry-bar {
+    height: 9px;
+}
+.battle-entry-name {
+    margin-top: 2px;
+    font-size: 0.8rem;
+    white-space: nowrap;
+}
+.battle-entry-active .battle-entry-name {
+    font-size: 1.2rem;
+}
+.battle-round-marker {
+    width: 10px;
+    height: 120px;
+
+    background-color: #655e4e;
+}

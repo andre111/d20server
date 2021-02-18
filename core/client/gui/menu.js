@@ -43,6 +43,8 @@ export class Menu {
     }
     
     createCategory(parent, name) {
+        parent = parent || this.container;
+
         var category = document.createElement('li');
         var div = document.createElement('div');
         div.innerHTML = name;

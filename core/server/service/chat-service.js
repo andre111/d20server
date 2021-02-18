@@ -192,6 +192,7 @@ export class ChatService {
     }
 
     static escape(string) {
+        string = string.replace(/&/g, '&amp;');
         string = string.replace(/</g, '&lt;');
         string = string.replace(/>/g, '&gt;');
         string = string.replace(/"/g, '&quot;');
