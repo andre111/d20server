@@ -1,6 +1,6 @@
-import { Access } from '../../common/constants.js';
-import { Entity } from '../../common/entity/entity.js';
-import { EntityManagers } from '../../common/entity/entity-managers.js';
+import { Access } from '../constants.js';
+import { Entity } from './entity.js';
+import { EntityManagers } from './entity-managers.js';
 import { WrappedProperty } from './wrapped-property.js';
 
 export class EntityReference extends Entity {
@@ -128,7 +128,7 @@ export class EntityReference extends Entity {
 		// update properties (and clear changes)
         this.wrappedProperties = {};
         if(hasChanged) {
-            EntityManagers.get(this.getType()).updateProperties(this.getID(), changedProperties, Access.EVERYONE);
+            EntityManagers.get(this.getType()).updateProperties(this.getID(), changedProperties, Access.SYSTEM);
         }
     }
 

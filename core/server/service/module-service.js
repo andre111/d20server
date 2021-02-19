@@ -36,7 +36,7 @@ class Module {
 
 var modules = [];
 export class ModuleService {
-    static init() {
+    static async init() {
         // scan for modules
         fs.readdirSync(path.join(path.resolve(), '/modules/')).forEach(file => {
             const directory = path.join(path.resolve(), '/modules/'+file+'/');
@@ -48,8 +48,18 @@ export class ModuleService {
             }
         });
 
-        //
+        // load definitions
         ModuleService.loadDefinitions();
+
+        // load code
+        for(const module of modules) {
+            if(module.isEnabled()) {
+                const jsFile = path.join(module.getDirectory(), '/server/module.js');
+                if(fs.existsSync(jsFile)) {
+                    await import('../../../modules/'+module.getIdentifier()+'/server/module.js');
+                }
+            }
+        }
     }
 
     static loadDefinitions() {

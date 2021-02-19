@@ -1,4 +1,4 @@
-import { EntityReference } from "./entity-reference.js";
+import { EntityReference } from "../../common/entity/entity-reference.js";
 
 var _typedClipboard = new Map();
 export const EntityClipboard = {

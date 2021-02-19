@@ -6,10 +6,10 @@ import { CanvasWindowInput } from '../canvas/window/canvas-window-input.js';
 import { CanvasWindowConfirm } from '../canvas/window/canvas-window-confirm.js';
 import { GuiUtils } from '../util/guiutil.js';
 import { ServerData } from '../server-data.js';
-import { EntityReference } from '../entity/entity-reference.js';
 
 import { Entity } from '../../common/entity/entity.js';
 import { EntityManagers } from '../../common/entity/entity-managers.js';
+import { EntityReference } from '../../common/entity/entity-reference.js';
 
 export class SidepanelTabAttachments extends SidepanelTab {
     constructor() {

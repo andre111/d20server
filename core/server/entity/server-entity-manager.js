@@ -14,10 +14,6 @@ export class ServerEntityManager extends EntityManager {
 
     entities;
 
-    listeners = [];
-    entityListeners = [];
-    removalListeners = [];
-
     saveEnabled = true;
 
     constructor(type, entityDefinition) {
@@ -186,24 +182,5 @@ export class ServerEntityManager extends EntityManager {
             await backupJsonAsync('entity.'+this.type);
         }
         await saveJsonAsync('entity.'+this.type, this.entities);
-    }
-
-    // Listener Methods
-    addListener(listener) {
-        this.listeners.push(listener);
-    }
-
-    addEntityListener(entityListener) {
-        this.entityListeners.push(entityListener);
-    }
-
-    addRemovalListener(removalListener) {
-        this.removalListeners.push(removalListener);
-    }
-
-    notifyListeners() {
-        for(const listener of this.listeners) {
-            listener();
-        }
     }
 }

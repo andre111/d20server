@@ -1,4 +1,4 @@
-import { Property } from '../../common/entity/property.js';
+import { Property } from './property.js';
 
 export class WrappedProperty extends Property {
     reference;

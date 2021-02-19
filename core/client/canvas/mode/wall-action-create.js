@@ -1,11 +1,11 @@
 import { WallAction } from './wall-action.js';
 import { WallMenu } from './wall-menu.js';
-import { EntityReference } from '../../entity/entity-reference.js';
 import { MapUtils } from '../../util/maputil.js';
 import { ServerData } from '../../server-data.js'; 
 
 import { Entity } from '../../../common/common.js';
 import { EntityManagers } from '../../../common/entity/entity-managers.js';
+import { EntityReference } from '../../../common/entity/entity-reference.js';
 import { IntMathUtils } from '../../../common/util/mathutil.js';
 
 export class WallActionCreate extends WallAction {

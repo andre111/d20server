@@ -10,10 +10,10 @@ import { ServerData } from '../server-data.js';
 import { MessageService } from '../service/message-service.js';
 import { Client } from '../app.js';
 import { StateMain } from '../state/state-main.js';
-import { EntityReference } from '../entity/entity-reference.js';
 
 import { Entity } from '../../common/entity/entity.js';
 import { EntityManagers } from '../../common/entity/entity-managers.js';
+import { EntityReference } from '../../common/entity/entity-reference.js';
 import { ActionCommand } from '../../common/messages.js';
 
 export class SidepanelTabActors extends SidepanelTab {

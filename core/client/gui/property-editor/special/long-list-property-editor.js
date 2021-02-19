@@ -3,11 +3,11 @@ import { SearchableIDTree } from '../../../gui/searchable-id-tree.js';
 import { getValueProvider } from '../../../gui/value-providers.js';
 import { CanvasWindowChoose } from '../../../canvas/window/canvas-window-choose.js';
 import { CanvasWindowEditEntity } from '../../../canvas/window/canvas-window-edit-entity.js';
-import { EntityReference } from '../../../entity/entity-reference.js';
 import { GuiUtils } from '../../../util/guiutil.js';
 
 import { Type } from '../../../../common/constants.js';
 import { EntityManagers } from '../../../../common/entity/entity-managers.js';
+import { EntityReference } from '../../../../common/entity/entity-reference.js';
 
 
 export class LongListPropertyEditor extends PropertyEditor {

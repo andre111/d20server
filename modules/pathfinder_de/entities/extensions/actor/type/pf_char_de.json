@@ -1877,7 +1877,7 @@
             "displayName": "Initiative",
             "category": "",
             "commands": [
-                "/set selected.property.battle_active BOOLEAN true",
+                "/battle join",
                 "/set selected.property.battle_initiative DOUBLE 1d20cs>=100cf>=100+{selected.actor.property.pf_initMod}*1.01"
             ]
         },

@@ -1,9 +1,9 @@
 import { CanvasWindow } from '../canvas-window.js';
 import { CanvasWindowEditEntityTab } from './canvas-window-edit-entity-tab.js';
-import { EntityReference } from '../../entity/entity-reference.js';
 import { ServerData } from '../../server-data.js';
 
 import { Access } from '../../../common/constants.js';
+import { EntityReference } from '../../../common/entity/entity-reference.js';
 
 export class CanvasWindowEditEntity extends CanvasWindow {
     constructor(reference) {

@@ -10,9 +10,8 @@ import { ImagePropertyEditor } from '../../gui/property-editor/special/image-pro
 import { PropertyAccessEditor } from '../../gui/property-editor/special/property-access-editor.js';
 import { ReferencedImagePropertyEditor } from '../../gui/property-editor/special/referenced-image-property-editor.js';
 
-import { EntityReference } from '../../entity/entity-reference.js';
-
 import { EntityManagers } from '../../../common/entity/entity-managers.js';
+import { EntityReference } from '../../../common/entity/entity-reference.js';
 import { DefinitionUtils } from '../../../common/util/definitionutil.js'
 import { StringFilePropertyEditor } from '../../gui/property-editor/special/string-file-property-editor.js';
 

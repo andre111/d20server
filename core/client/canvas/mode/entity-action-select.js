@@ -5,14 +5,15 @@ import { EntityActionMove } from './entity-action-move.js';
 import { EntityMenu } from './entity-menu.js';
 import { CanvasWindowInput } from '../window/canvas-window-input.js';
 import { EntityClipboard } from '../../entity/entity-clipboard.js';
-import { EntityReference } from '../../entity/entity-reference.js';
 import { ImageService } from '../../service/image-service.js';
 import { ServerData } from '../../server-data.js';
 import { TokenRenderer } from '../../renderer/token-renderer.js';
 import { EntityUtils } from '../../util/entityutil.js';
 import { MapUtils } from '../../util/maputil.js';
-import { Access, Type } from '../../../common/constants.js';
 import { Client } from '../../app.js';
+
+import { Access, Type } from '../../../common/constants.js';
+import { EntityReference } from '../../../common/entity/entity-reference.js';
 
 class EntityActionSelectGizmo {
     constructor(widthMult, heightMult, xOffset, yOffset, renderSquare, onPress, requiredProperties) {

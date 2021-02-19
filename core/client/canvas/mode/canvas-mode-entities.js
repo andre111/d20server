@@ -4,13 +4,13 @@ import { EntityActionMove } from './entity-action-move.js';
 import { EntityActionSelect } from './entity-action-select.js';
 import { MapUtils } from '../../util/maputil.js';
 import { EntityUtils } from '../../util/entityutil.js';
-import { EntityReference } from '../../entity/entity-reference.js';
 import { MessageService } from '../../service/message-service.js';
 import { Client } from '../../app.js';
 
 import { IntMathUtils } from '../../../common/util/mathutil.js';
 import { SelectedTokens } from '../../../common/messages.js';
 import { Entity } from '../../../common/common.js';
+import { EntityReference } from '../../../common/entity/entity-reference.js';
 
 export class CanvasModeEntities extends CanvasMode {
     constructor(entityType, layer) {

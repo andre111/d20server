@@ -4,7 +4,7 @@
         {
             "name": "battle_active",
             "type": "BOOLEAN",
-            "editAccess": "CONTROLLING_PLAYER",
+            "editAccess": "SYSTEM",
             "viewAccess": "EVERYONE",
             "value": "false"
         },
@@ -18,7 +18,7 @@
         {
             "name": "battle_infoHidden",
             "type": "BOOLEAN",
-            "editAccess": "CONTROLLING_PLAYER",
+            "editAccess": "SYSTEM",
             "viewAccess": "EVERYONE",
             "value": "false"
         },
@@ -26,14 +26,14 @@
         {
             "name": "battle_turnStarted",
             "type": "BOOLEAN",
-            "editAccess": "GM",
+            "editAccess": "SYSTEM",
             "viewAccess": "EVERYONE",
             "value": "false"
         },
         {
             "name": "battle_turnEnded",
             "type": "BOOLEAN",
-            "editAccess": "GM",
+            "editAccess": "SYSTEM",
             "viewAccess": "EVERYONE",
             "value": "false"
         }

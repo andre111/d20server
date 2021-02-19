@@ -4,14 +4,14 @@
         {
             "name": "battle_active",
             "type": "BOOLEAN",
-            "editAccess": "GM",
+            "editAccess": "SYSTEM",
             "viewAccess": "EVERYONE",
             "value": "false"
         },
         {
             "name": "battle_round",
             "type": "LONG",
-            "editAccess": "GM",
+            "editAccess": "SYSTEM",
             "viewAccess": "EVERYONE",
             "value": "0"
         }
