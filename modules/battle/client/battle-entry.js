@@ -60,7 +60,6 @@ export class BattleEntry {
         setter(newValue);
     }
 
-    //TODO: optimize this to change as little as possible
     reloadValues(tokenID, active, current) {
         this.#tokenID = tokenID;
 
@@ -91,10 +90,10 @@ export class BattleEntry {
                 const max = token.prop('bar'+i+'Max').getLong();
                 const percentage = Math.max(0, Math.min(current, max)) / max * 100;
 
-                this.#barFillers[i-1].style.visibility = 'visible';
-                this.#barFillers[i-1].style.width = `${percentage}%`;
+                this.changeValue('barVisibility'+i, 'visible', v => this.#barFillers[i-1].style.visibility = v);
+                this.changeValue('barWidth'+i, `${percentage}%`, v => this.#barFillers[i-1].style.width = v);
             } else {
-                this.#barFillers[i-1].style.visibility = 'hidden';
+                this.changeValue('barVisibility'+i, 'hidden', v => this.#barFillers[i-1].style.visibility = v);
             }
         }
 
