@@ -1,5 +1,5 @@
 import { Connection } from '../connection.js';
-import { ActionCommand, AddEntity, ChatEntries, ClearEntities, EnterGame, EnterMap, EntityLoading, PlayEffect, PlayerList, RemoveEntity, ResponseFail, ResponseOk, ServerDefinitions, UpdateEntityProperties } from '../../common/messages.js';
+import { ActionCommand, AddEntity, ChatEntries, ClearEntities, EnterGame, EnterMap, EntityLoading, PlayEffect, PlayerList, RemoveEntity, ResponseFail, ResponseOk, SendNotification, ServerDefinitions, UpdateEntityProperties } from '../../common/messages.js';
 import { Events } from '../../common/events.js';
 import { ServerData } from '../server-data.js';
 import { StateLoading } from '../state/state-loading.js';
@@ -66,6 +66,10 @@ export const MessageService = {
                 for(const entity of msg.getEntries()) {
                     tab.onMessage(entity, msg.isHistorical());
                 }
+            }
+        } else if(msg instanceof SendNotification) {
+            if(Client.getState() instanceof StateMain) {
+                Client.getState().getNotificationManager().addNotification(msg.getContent(), msg.getTime() * Client.FPS);
             }
         } else {
             console.log('Recieved unsupported message: ', msg);

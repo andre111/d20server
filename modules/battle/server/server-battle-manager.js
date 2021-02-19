@@ -1,5 +1,9 @@
+import { token } from 'morgan';
 import { EntityManagers } from '../../../core/common/entity/entity-managers.js';
 import { EntityReference } from '../../../core/common/entity/entity-reference.js';
+import { SendNotification } from '../../../core/common/messages.js';
+import { MessageService } from '../../../core/server/service/message-service.js';
+import { UserService } from '../../../core/server/service/user-service.js';
 import { CommonBattleManager } from '../common/common-battle-manager.js';
 
 export class ServerBattleManager {
@@ -8,11 +12,15 @@ export class ServerBattleManager {
         if(CommonBattleManager.isBattleActive(map)) return;
 
         // activate battle
+        ServerBattleManager.resetTokens(map);
         const mapRef = new EntityReference(map);
         mapRef.prop('battle_active').setBoolean(true);
         mapRef.prop('battle_round').setLong(1);
         mapRef.performUpdate();
-        ServerBattleManager.resetTokens(map);
+
+        // send notification
+        const msg = new SendNotification(`Battle started!`, 5);
+        MessageService.broadcast(msg, map);
     }
 
     static endBattle(map) {
@@ -20,11 +28,15 @@ export class ServerBattleManager {
         if(!CommonBattleManager.isBattleActive(map)) return;
 
         // end battle
-        ServerBattleManager.resetTokens(map);
         const mapRef = new EntityReference(map);
         mapRef.prop('battle_active').setBoolean(false);
         mapRef.prop('battle_round').setLong(0);
         mapRef.performUpdate();
+        ServerBattleManager.resetTokens(map);
+
+        // send notification
+        const msg = new SendNotification(`Battle ended!`, 5);
+        MessageService.broadcast(msg, map);
     }
 
     static nextTurn(map) {
@@ -63,9 +75,15 @@ export class ServerBattleManager {
         if(!next) {
             // if no next one exists -> start a new round
             const mapRef = new EntityReference(map);
-            mapRef.prop('battle_round').setLong(mapRef.prop('battle_round').getLong()+1);
+            const round = mapRef.prop('battle_round').getLong()+1;
+            mapRef.prop('battle_round').setLong(round);
             mapRef.performUpdate();
 
+            // send notification
+            const msg = new SendNotification(`Round ${round}`, 5);
+            MessageService.broadcast(msg, map);
+
+            // reset token state
             for(const ref of references) {
                 ref.prop('battle_turnStarted').setBoolean(false);
                 ref.prop('battle_turnEnded').setBoolean(false);
@@ -93,7 +111,21 @@ export class ServerBattleManager {
     }
 
     static onTurnStart(map, tokenRef) {
-        //TODO: here is the place to subtract effects durations
+        // send out notification of turn (important: to everybody on the map BUT respect name visibility)
+        UserService.forEach(profile => {
+            if(profile.getCurrentMap() == map.getID()) {
+                const accessLevel = tokenRef.getAccessLevel(profile);
+                
+                var content = `???s Turn`
+                if(tokenRef.prop('name').canView(accessLevel) && tokenRef.prop('name').getString() != '') {
+                    content = `${tokenRef.prop('name').getString()}s Turn`;
+                }
+                const msg = new SendNotification(content, 5);
+                MessageService.send(msg, profile);
+            }
+        });
+
+        //TODO: here is the place to subtract effects durations (also send notification when an effect runs out, to controlling players and GMs)
 
     }
 

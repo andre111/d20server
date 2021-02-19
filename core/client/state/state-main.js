@@ -17,6 +17,7 @@ import { Access, Layer } from '../../common/constants.js';
 import { Events } from '../../common/events.js';
 import { PlayEffect } from '../../common/messages.js';
 import { EntityManagers } from '../../common/entity/entity-managers.js';
+import { NotificationManager } from '../gui/notification-manager.js';
 
 export class StateMain extends State {
     active;
@@ -38,6 +39,7 @@ export class StateMain extends State {
 
     renderLayers;
     entityRenderers;
+    notificationManager;
 
     mapObserver;
 
@@ -57,6 +59,9 @@ export class StateMain extends State {
         sidepanel.tabIndex = '2';
         sidepanel.appendChild(sidepanelLinks);
         document.body.appendChild(sidepanel);
+
+        this.notificationManager = new NotificationManager();
+        document.body.appendChild(this.notificationManager.getContainer());
         
         Events.trigger('createMainHTML', this);
         
@@ -184,6 +189,7 @@ export class StateMain extends State {
             
             Events.trigger('frameStart');
             this.draw(this.ctx);
+            this.notificationManager.update();
             Events.trigger('frameEnd');
         }
     }
@@ -389,6 +395,10 @@ export class StateMain extends State {
 
     getCamera() {
         return this.camera;
+    }
+
+    getNotificationManager() {
+        return this.notificationManager;
     }
 
     getTab(name) {

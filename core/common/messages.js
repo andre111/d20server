@@ -22,6 +22,7 @@ export { EnterMap } from './message/game/enter-map.js';
 export { MovePlayerToMap } from './message/game/move-player-to-map.js';
 export { PlayEffect } from './message/game/play-effect.js';
 export { SelectedTokens } from './message/game/selected-tokens.js';
+export { SendNotification } from './message/game/send-notification.js';
 export { SetPlayerColor } from './message/game/set-player-color.js';
 
 // Util Messages
