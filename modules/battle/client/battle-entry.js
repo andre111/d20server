@@ -4,7 +4,8 @@ import { ServerData } from '../../../core/client/server-data.js';
 import { EntityManagers } from '../../../core/common/entity/entity-managers.js';
 
 export class BattleEntry {
-    #tokenID;
+    #tokenID = -1;
+    #state = {};
 
     #containerEl;
     #imageEl;
@@ -53,6 +54,12 @@ export class BattleEntry {
         this.#containerEl.onmouseout = () => Client.getState().releaseHighlightToken(this.#tokenID);
     }
 
+    changeValue(key, newValue, setter) {
+        if(this.#state[key] == newValue) return;
+        this.#state[key] = newValue;
+        setter(newValue);
+    }
+
     //TODO: optimize this to change as little as possible
     reloadValues(tokenID, active, current) {
         this.#tokenID = tokenID;
@@ -60,7 +67,7 @@ export class BattleEntry {
         // find token
         const token = EntityManagers.get('token').find(this.#tokenID);
         if(!token) {
-            this.#containerEl.style.display = 'none';
+            this.changeValue('display', 'none', v => this.#containerEl.style.display = v);
             if(tokenID > 0) console.log('Token for BattleEntry not found!');
             return;
         }
@@ -68,14 +75,14 @@ export class BattleEntry {
         const accessLevel = token.getAccessLevel(ServerData.localProfile);
 
         // (re)load values
-        this.#containerEl.style.display = current && token.prop('battle_turnEnded').getBoolean() ? 'none' : 'flex';
-        this.#containerEl.className = active ? 'battle-entry-active' : 'battle-entry';
+        this.changeValue('display', current && token.prop('battle_turnEnded').getBoolean() ? 'none' : 'flex', v => this.#containerEl.style.display = v);
+        this.changeValue('className', active ? 'battle-entry-active' : 'battle-entry', v => this.#containerEl.className = v);
 
-        this.#imageEl.src = '/data/files/'+token.prop('imagePath').getString();
+        this.changeValue('imgSrc', '/data/files/'+token.prop('imagePath').getString(), v => this.#imageEl.src = v);
 
         const ini = token.prop('battle_initiative').getDouble();
-        this.#iniEl.innerText = ini.toFixed(0);
-        this.#iniSubEl.innerText = (ini % 1).toFixed(2).substring(1);
+        this.changeValue('initiative', ini.toFixed(0), v => this.#iniEl.innerText = v);
+        this.changeValue('initiativeSub', (ini % 1).toFixed(2).substring(1), v => this.#iniSubEl.innerText = v);
 
         // bars
         for(var i=1; i<=3; i++) {
@@ -92,11 +99,11 @@ export class BattleEntry {
         }
 
         // name
+        var name = '???';
         if(token.prop('name').canView(accessLevel)) {
-            this.#nameEl.innerText = token.prop('name').getString();
-        } else {
-            this.#nameEl.innerText = '???';
+            name = token.prop('name').getString();
         }
+        this.changeValue('name', name, v => this.#nameEl.innerText = v);
     }
 
     getContainer() {
