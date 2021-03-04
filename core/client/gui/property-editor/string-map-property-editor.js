@@ -114,6 +114,7 @@ export class StringMapPropertyEditor extends PropertyEditor {
                     var value = this.valueMap[oldName];
                     delete this.valueMap[oldName];
                     this.valueMap[name] = value;
+                    this.onChange();
                     this.reloadFromMap();
                 }
             });

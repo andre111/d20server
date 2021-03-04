@@ -26,8 +26,14 @@ export class EntityMenu extends Menu {
             // sending macros
             if(Access.matches(reference.prop('macroUse').getAccessValue(), accessLevel)) {
                 var macro = this.createCategory(this.container, 'Macros');
-                for(const [key, value] of Object.entries(reference.prop('macros').getStringMap())) {
-                    this.createItem(macro, key, () => this.doSendMacro(key));
+                
+                // get and sort macros before adding to menu
+                const names = Object.keys(reference.prop('macros').getStringMap());
+                names.sort();
+                for(const name of names) {
+                    if(name.startsWith('_')) continue;
+                    
+                    this.createItem(macro, name, () => this.doSendMacro(name));
                 }
             }
             
