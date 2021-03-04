@@ -2,6 +2,7 @@ import { Command } from './command.js';
 import { EffectCommand } from './effect-command.js';
 import { GetCommand } from './get-command.js';
 import { IfCommand } from './if-command.js';
+import { NotificationCommand } from './notification-command.js';
 import { RollCommand } from './roll-command.js';
 import { SayCommand } from './say-command.js';
 import { SetCommand } from './set-command.js';
@@ -9,6 +10,7 @@ import { TemplateCommand } from './template-command.js';
 import { TriggerCommand } from './trigger-command.js';
 import { WhisperCommand } from './whisper-command.js';
 
+//TODO: build a generic unified argument parser (multiple commands (attempt to) parse profile names with duplicated code currently)
 const COMMANDS_MAP = new Map();
 function register(command, name) {
     if(!(command instanceof Command)) throw new Error('Can only register instances of Command');
@@ -49,3 +51,4 @@ Commands.register(new TemplateCommand('hiddentemplate', ['ht'], false, true, fal
 Commands.register(new TriggerCommand('trigger', []));
 Commands.register(new EffectCommand('effect', []));
 Commands.register(new IfCommand('if', []));
+Commands.register(new NotificationCommand('notification', []));
