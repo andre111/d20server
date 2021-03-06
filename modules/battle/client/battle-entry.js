@@ -80,7 +80,7 @@ export class BattleEntry {
         this.changeValue('imgSrc', '/data/files/'+token.prop('imagePath').getString(), v => this.#imageEl.src = v);
 
         const ini = token.prop('battle_initiative').getDouble();
-        this.changeValue('initiative', ini.toFixed(0), v => this.#iniEl.innerText = v);
+        this.changeValue('initiative', Math.floor(ini).toFixed(0), v => this.#iniEl.innerText = v);
         this.changeValue('initiativeSub', (ini % 1).toFixed(2).substring(1), v => this.#iniSubEl.innerText = v);
 
         // bars
@@ -90,10 +90,9 @@ export class BattleEntry {
                 const max = token.prop('bar'+i+'Max').getLong();
                 const percentage = Math.max(0, Math.min(current, max)) / max * 100;
 
-                this.changeValue('barVisibility'+i, 'visible', v => this.#barFillers[i-1].style.visibility = v);
                 this.changeValue('barWidth'+i, `${percentage}%`, v => this.#barFillers[i-1].style.width = v);
             } else {
-                this.changeValue('barVisibility'+i, 'hidden', v => this.#barFillers[i-1].style.visibility = v);
+                this.changeValue('barWidth'+i, `0`, v => this.#barFillers[i-1].style.width = v);
             }
         }
 

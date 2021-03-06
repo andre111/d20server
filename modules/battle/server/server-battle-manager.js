@@ -15,7 +15,7 @@ export class ServerBattleManager {
         ServerBattleManager.resetTokens(map);
         const mapRef = new EntityReference(map);
         mapRef.prop('battle_active').setBoolean(true);
-        mapRef.prop('battle_round').setLong(1);
+        mapRef.prop('battle_round').setLong(0);
         mapRef.performUpdate();
 
         // send notification

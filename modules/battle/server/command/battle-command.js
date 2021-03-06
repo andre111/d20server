@@ -3,6 +3,7 @@ import { EntityManagers } from '../../../../core/common/entity/entity-managers.j
 import { EntityReference } from '../../../../core/common/entity/entity-reference.js';
 import { Command } from '../../../../core/server/command/command.js';
 import { ChatService } from '../../../../core/server/service/chat-service.js';
+import { CommonBattleManager } from '../../common/common-battle-manager.js';
 import { ServerBattleManager } from '../server-battle-manager.js';
 
 class BattleAction {
@@ -32,14 +33,22 @@ const ACTIONS = [
 
     // Token Actions (can be performed by any controlling player, should setInitiative be done here to and not as a normal property access?)
     new BattleAction('join', false, true, (profile, map, token, args) => {
+        if(!CommonBattleManager.isBattleActive(map)) return;
+        
         const accessLevel = token.getAccessLevel(profile);
         if(Access.matches(Access.CONTROLLING_PLAYER, accessLevel)) {
             const tokenRef = new EntityReference(token);
             tokenRef.prop('battle_active').setBoolean(true);
+            if(CommonBattleManager.getBattleRound(map) == 0) {
+                tokenRef.prop('battle_turnStarted').setBoolean(true);
+                tokenRef.prop('battle_turnEnded').setBoolean(true);
+            }
             tokenRef.performUpdate();
         }
     }),
     new BattleAction('leave', false, true, (profile, map, token, args) => {
+        if(!CommonBattleManager.isBattleActive(map)) return;
+        
         const accessLevel = token.getAccessLevel(profile);
         if(Access.matches(Access.CONTROLLING_PLAYER, accessLevel)) {
             const tokenRef = new EntityReference(token);

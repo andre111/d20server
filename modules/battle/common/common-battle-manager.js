@@ -47,4 +47,9 @@ export class CommonBattleManager {
         if(!map) return false;
         return map.prop('battle_active').getBoolean();
     }
+    
+    static getBattleRound(map) {
+        if(!map) return -1;
+        return map.prop('battle_round').getLong();
+    }
 }
