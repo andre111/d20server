@@ -80,8 +80,8 @@ export class BattleEntry {
         this.changeValue('imgSrc', '/data/files/'+token.prop('imagePath').getString(), v => this.#imageEl.src = v);
 
         const ini = token.prop('battle_initiative').getDouble();
-        this.changeValue('initiative', Math.floor(ini).toFixed(0), v => this.#iniEl.innerText = v);
-        this.changeValue('initiativeSub', (ini % 1).toFixed(2).substring(1), v => this.#iniSubEl.innerText = v);
+        this.changeValue('initiative', Math.trunc(ini).toFixed(0), v => this.#iniEl.innerText = v);
+        this.changeValue('initiativeSub', Math.abs(ini % 1).toFixed(2).substring(1), v => this.#iniSubEl.innerText = v);
 
         // bars
         for(var i=1; i<=3; i++) {
