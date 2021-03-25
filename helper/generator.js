@@ -300,12 +300,7 @@ ModuleService.init().then(() => {
             gmBio += entry['secAngriff'].replace(/\n/g, '<br>');
             gmBio += '</p>';
             gmBio += createValuesSection(entry);
-            if(entry['secLebensweise']) {
-                gmBio += '<p>';
-                gmBio += '<strong>Lebensweise:</strong><br>';
-                gmBio += entry['secLebensweise'].replace(/\n/g, '<br>');
-                gmBio += '</p>';
-            }
+            gmBio += createEcologySection(entry);
             if(entry['secBesondereFähigkeiten']) {
                 gmBio += '<p>';
                 gmBio += '<strong>Besondere Fähigkeiten:</strong><br>';
@@ -654,6 +649,26 @@ function createValuesSection(entry) {
     if(entry['BesondereEigenschaften'].length > 0) {
         sb += `<strong>Besondere Eigenschaften</strong> ${getCombinedString(entry['BesondereEigenschaften'], false)}<br>`;
     }
+    
+    sb += '</p>';
+    return sb;
+}
+
+function createEcologySection(entry) {
+    if(!entry['Lebensweise']) return '';
+
+    // build string
+    var sb = '<p>';
+    sb += '<strong>Lebensweise:</strong><br>';
+
+    // Umgebung <value>
+    sb += `<strong>Umgebung</strong> ${entry['Lebensweise']['Umgebung']}<br>`;
+
+    // Organisation <value>
+    sb += `<strong>Organisation</strong> ${entry['Lebensweise']['Organisation']}<br>`;
+    
+	// Schätze <value>
+    sb += `<strong>Schätze</strong> ${entry['Lebensweise']['Schätze']}<br>`;
     
     sb += '</p>';
     return sb;
