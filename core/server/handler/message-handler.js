@@ -6,7 +6,7 @@ import { EntityManagers } from '../../common/entity/entity-managers.js';
 import { ActionCommand, AddEntity, EntityLoading, MovePlayerToMap, Ping, PlayEffect, PlayerList, RemoveEntity, RequestAccounts, ResponseFail, ResponseOk, SelectedTokens, SendChatMessage, SetPlayerColor, SignIn, SignOut, UpdateEntityProperties } from '../../common/messages.js';
 import { Role } from '../../common/constants.js';
 import { GameService } from '../service/game-service.js';
-import { Server } from '../app.js';
+import { VERSION } from '../version.js';
 
 function _handleRequestAccounts(ws, message) {
     MessageService._send(new PlayerList(UserService.getAllProfiles()), ws);
@@ -14,7 +14,7 @@ function _handleRequestAccounts(ws, message) {
 
 function _handleSignIn(ws, message) {
     // check version
-    if(message.getAppVersion() != Server.VERSION) {
+    if(message.getAppVersion() != VERSION) {
         MessageService._send(new ResponseFail('SignIn', 'Version not matching server.'), ws);
         return;
     }

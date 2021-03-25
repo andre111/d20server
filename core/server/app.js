@@ -10,10 +10,6 @@ import { GameService } from './service/game-service.js';
 import { ModuleService } from './service/module-service.js';
 import { SaveService } from './service/save-service.js';
 
-export const Server = {
-    VERSION: 9
-}
-
 Common.init(new ServerIDProvider(), ServerEntityManager);
 ModuleService.init().then(() => { // locate and load module definitions and dynamically load server sided module code
     EntityManagers.createAll(); // create entity managers

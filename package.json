@@ -5,6 +5,7 @@
   "type": "module",
   "scripts": {
     "start": "node ./core/server/app.js",
+    "generator": "node ./helper/generator.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "dependencies": {

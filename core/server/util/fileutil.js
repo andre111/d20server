@@ -7,7 +7,6 @@ import { fromJson, toJson } from '../../common/util/datautil.js';
 export function readJson(name) {
     return readJsonFile(nameToPath(name, '.json'));
 }
-
 export function readJsonFile(file) {
     if(fs.existsSync(file)) {
         const text = fs.readFileSync(file, 'utf-8');
@@ -18,8 +17,11 @@ export function readJsonFile(file) {
 }
 
 export function saveJson(name, object) {
+    saveJsonFile(nameToPath(name, '.json'), object);
+}
+export function saveJsonFile(file, object) {
     const text = toJson(object);
-    fs.writeFileSync(nameToPath(name, '.json'), text);
+    fs.writeFileSync(file, text);
 }
 export async function saveJsonAsync(name, object) {
     const text = toJson(object);

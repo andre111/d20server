@@ -16,6 +16,6 @@ export class CLICommandDebugImport extends CLICommand {
 
     execute(args) { 
         //TODO: generalize with an actual good importer
-        importData('../d20helper/generated/', true);
+        importData('./generated/', true);
     }
 }

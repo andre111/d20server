@@ -14,15 +14,15 @@ import me.andre111.d20server.service.SaveService;
 //TODO: current plans:
 // allow interacting with doors in CanvasModeEntities as long as a controllable entity is near it (toggle isOpen or play locked sound)
 // add motd (and maybe more?) to login screen
-// Replace serverside hardcoded image and audio upload/download with generic file upload/download (also get rid of image/audio "entities" and just use paths for that)
+// - Replace serverside hardcoded image and audio upload/download with generic file upload/download (also get rid of image/audio "entities" and just use paths for that)
 
 //TODO: web client todos:
-// Somehow live update update rules ("parser implementation problems")
-// file server should send lastModified data and respond with use cached when applicable
+// - Somehow live update update rules ("parser implementation problems")
+// - file server should send lastModified data and respond with use cached when applicable
 
 //TODO: when the web client porting is done:
 // Separate into modules 
-//    audio module still needs serverside functionality (audio upload/download) in module (needs to wait until server is running on javascript as well)
+//    - audio module still needs serverside functionality (audio upload/download) in module (needs to wait until server is running on javascript as well)
 // "Area" module (you can define areas, maybe using the drawing system, that can influence stuff, 
 //               first idea: "no weather/indoor" areas where the WeatherRenderer does not spawn particles)
 
@@ -63,7 +63,7 @@ import me.andre111.d20server.service.SaveService;
 //      Maps, Actors and Attachments remain the only "global" entities
 //      Tokens, Walls, Drawings, ... are stored in the maps (not as properties, a sepparate system that can allow gradual loading of map content)
 //      - Make it possible to store a single entity in a property (as a JSON string) -> use for actor default token
-//      What do we do with lists? Is this the time to rework the whole combat system?
+//      - What do we do with lists? Is this the time to rework the whole combat system?
 //
 // Convert ALL entities to be FULLY data defined/driven
 //    Third.1 step: Add remaining data defined stuff: cascading deletes
