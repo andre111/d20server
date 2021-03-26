@@ -108,14 +108,12 @@ Events.on('addEntityRenderers', event => {
     event.addEntityRenderer('token', new CanvasEntityRendererToken());
 });
 
-//TODO: reimplement the missing stuff
 Events.on('addSidepanelTabs', event => {
     event.addSidepanelTab(new SidepanelTabChat());
     event.addSidepanelTab(new SidepanelTabPlayers());
     event.addSidepanelTab(new SidepanelTabActors());
     event.addSidepanelTab(new SidepanelTabAttachments());
     event.addSidepanelTab(new SidepanelTabMaps());
-    //TODO: settings tab
 });
 
 Events.on('actionCommand', event => {

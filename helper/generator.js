@@ -308,6 +308,7 @@ ModuleService.init().then(() => {
                 gmBio += '</p>';
             }
             gmBio += '<p>';
+            gmBio += '<strong>Beschreibung:</strong><br>';
             gmBio += entry['GMBeschreibung'].replace(/\n/g, '<br>');
             gmBio += '</p>';
             gmBio += '<p>';
@@ -331,6 +332,23 @@ ModuleService.init().then(() => {
                     }
 
                     attachmentList.push(talenteIDMap[talent]);
+                }
+
+                // spells
+                for(var zauberListe of entry['Zauberlisten']) {
+                    for(var zauberEntry of zauberListe['Einträge']) {
+                        for(var zauber of zauberEntry['Zauber']) {
+                            zauber = toUnifiedName(zauber['Wert'], true);
+
+                            // try to find the matching spell
+                            if(!zauberIDMap[zauber]) {
+                                console.error(`${name}: Skipping unknown spell: ${zauber}`);
+                                continue;
+                            }
+        
+                            attachmentList.push(zauberIDMap[zauber]);
+                        }
+                    }
                 }
             }
             monsterActor.prop('attachments').setLongList(attachmentList);
@@ -392,8 +410,28 @@ function getCombinedJsonData(directory) {
     return combinedData;
 }
 
-function toUnifiedName(name) {
-    return name.toLowerCase().replace(/\s/g, '').replace(/-/g, '').trim();
+function toUnifiedName(name, removeModifier) {
+    name = name.toLowerCase();
+    if(removeModifier) {
+        if(name.startsWith('schnelles ')) name = name.substring(10);
+        if(name.startsWith('schneller ')) name = name.substring(10);
+        if(name.startsWith('schnelle ')) name = name.substring(9);
+        
+        if(name.startsWith('maximiertes ')) name = name.substring(12);
+        if(name.startsWith('maximierter ')) name = name.substring(12);
+        if(name.startsWith('maximierte ')) name = name.substring(11);
+        
+        if(name.startsWith('mächtiges ')) name = name.substring(10);
+        if(name.startsWith('mächtiger ')) name = name.substring(10);
+        if(name.startsWith('mächtige ')) name = name.substring(9);
+        
+        if(name.startsWith('ausgedehntes ')) name = name.substring(13);
+        if(name.startsWith('ausgedehnter ')) name = name.substring(13);
+        if(name.startsWith('ausgedehnte ')) name = name.substring(12);
+
+        if(name.startsWith('massen ')) name = name.substring(7);
+    }
+    return name.replace(/\s/g, '').replace(/-/g, '').trim();
 }
 
 function getCombinedString(array, brackets) {
@@ -449,7 +487,7 @@ function createGradString(grad) {
 
 function appendGradTags(tags, grad) {
     for(var i=0; i<gradProperties.length; i++) {
-        if(grad[gradProperties[i]]) {
+        if(grad[gradProperties[i]] != undefined && grad[gradProperties[i]] != null) {
             for(const split of gradShorthands[i].split('/')) {
                 tags += `zauber:${split.toLowerCase()}:${grad[gradProperties[i]]}\n`;
             }
@@ -525,7 +563,7 @@ function createBaseSection(entry) {
 
     // INI <annotatedValue>; Sinne <commaSepValues>; Wahrnehmung <value>
     sb += `<strong>INI</strong> ${getStringWithNotes(getSigned(entry['Initiative']['Wert']), entry['Initiative']['Anmerkung'], true)}`;
-    if(entry['Sinne'].length > 0) sb += `; ${getCombinedString(entry['Sinne'], false)}`;
+    if(entry['Sinne'].length > 0) sb += `; <strong>Sinne</strong> ${getCombinedString(entry['Sinne'], false)}`;
     sb += `; Wahrnehmung ${getSigned(perception)}<br>`;
 
     // [Aura <commaSepValues>]
