@@ -86,7 +86,7 @@ export class SidepanelTabChat extends SidepanelTab {
             if(!this.entries.has(entry.getReplaceParent())) { console.log('Ignoring replace with unknown parent'); return; }
             var container = this.entries.get(entry.getReplaceParent());
             
-            // find replaceable object and replace content
+            // find replaceable object and replace content //TODO: this breaks the &gt; display?
             $(container).find('#'+entry.getID()+'.replaceable').replaceWith(sanitizedText);
             GuiUtils.makeHoverable(container);
         } else {

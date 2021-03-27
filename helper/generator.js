@@ -295,10 +295,7 @@ ModuleService.init().then(() => {
             var gmBio = '';
             gmBio += createBaseSection(entry);
             gmBio += createDefenseSection(entry);
-            gmBio += '<p>';
-            gmBio += '<strong>Angriff:</strong><br>';
-            gmBio += entry['secAngriff'].replace(/\n/g, '<br>');
-            gmBio += '</p>';
+            gmBio += createAttackSection(entry);
             gmBio += createValuesSection(entry);
             gmBio += createEcologySection(entry);
             if(entry['secBesondereFähigkeiten']) {
@@ -352,6 +349,31 @@ ModuleService.init().then(() => {
                 }
             }
             monsterActor.prop('attachments').setLongList(attachmentList);
+
+            // create attack macros
+            var macros = {};
+            for(var type of ['Nahkampf', 'Fernkampf']) {
+                const atEntry = entry['Angriff'][type];
+                if(atEntry) {
+                    for(const attack of atEntry) {
+                        var macro = '';
+                        for(var i=0; i<attack['Anzahl']; i++) {
+                            const critRange = attack['KritischWert'] < 20 ? `cs>=${attack['KritischWert']}` : '';
+                            const modCount = attack['Modifikatoren'].length;
+                            for(var m=0; m<modCount; m++) {
+                                macro += `/template attack21 ${attack['Name']};${(attack['Berührung'] ? 'Berührung' : '')+(modCount > 1 ? ` ${m+1}. Angriff ` : '')};Angriff;1d20${critRange}+${attack['Modifikatoren'][m]};Schaden;${attack['Formel']};${attack['SchadenUndEffekte']}\n`;
+                            }
+                        }
+
+                        var macroName = type+'/';
+                        if(attack['Anzahl'] > 1) macroName += `${attack['Anzahl']} `;
+                        macroName += attack['Name'];
+
+                        macros[macroName] = macro;
+                    }
+                }
+            }
+            monsterActor.prop('macros').setStringMap(macros);
 
             // create default token
             const monsterToken = new Entity('token');
@@ -633,6 +655,104 @@ function createDefenseSection(entry) {
     // [Schwächen]
     if(entry['Verteidigung']['Schwächen'].length > 0) {
         sb += `<strong>Schwächen</strong> ${getCombinedString(entry['Verteidigung']['Schwächen'], false)}<br>`;
+    }
+
+    sb += '</p>';
+    return sb;
+}
+
+// Bewegungsrate <annotatedValue>[, Fliegen <annotatedValue>][, Schwimmen <annotatedValue>][, Klettern <annotatedValue>][, Graben <annotatedValue>][; <movementAbilities>]
+// [Nahkampf <commaSepAttacks>]
+// [Fernkampf <commaSepAttacks>]
+// [Angriffsfläche <value>; Reichweite <annotatedValue>]
+// [Besondere Angriffe <commaSepAnnotatedValues>]
+// [Zauberähnliche Fähigkeiten/Bekannte Zauber/... (ZS <value>[; Konzentration <value>])]
+//     REPEATED: <grad+usage> - <commaSepAnnotatedValues>
+//     [* <notes>]
+// [...]
+function createAttackSection(entry) {
+    // build string
+    var sb = '<p>';
+    sb += '<strong>Angriff:</strong><br>';
+
+    // Bewegungsrate <annotatedValue>[, Fliegen <annotatedValue>][, Schwimmen <annotatedValue>][, Klettern <annotatedValue>][, Graben <annotatedValue>][; <movementAbilities>]
+    var br = '';
+    for(var type of ['Normal', 'Fliegen', 'Schwimmen', 'Klettern', 'Graben']) {
+        const brEntry = entry['Bewegungsraten'][type];
+        if(brEntry) {
+            if(br) br += ', ';
+            if(type != 'Normal') br += `${type} `;
+            br += `${getStringWithNotes(brEntry['Wert']+' m', brEntry['Anmerkung'], true)}`;
+        }
+    }
+    if(entry['Bewegungsraten']['Fähigkeiten']) br += `; ${entry['Bewegungsraten']['Fähigkeiten']}`;
+    sb += `<strong>Bewegungsrate</strong> ${br}<br>`;
+
+    // [Nahkampf <commaSepAttacks>]
+    // [Fernkampf <commaSepAttacks>]
+    for(var type of ['Nahkampf', 'Fernkampf']) {
+        const atEntry = entry['Angriff'][type];
+        if(atEntry) {
+            var at = '';
+            for(const attack of atEntry) {
+                if(at) at += ', ';
+
+                if(attack['Anzahl'] > 1) at += `${attack['Anzahl']} `;
+                at += attack['Name'];
+                if(attack['Berührung']) at += ' Berührung';
+                
+                var mods = '';
+                for(var mod of attack['Modifikatoren']) {
+                    if(mods) mods += '/';
+                    mods += getSigned(mod);
+                }
+                at += ` ${mods} (${attack['SchadenUndEffekte']})`;
+            }
+            sb += `<strong>${type}</strong> ${at}<br>`;
+        }
+    }
+
+    // [Angriffsfläche <value>; Reichweite <annotatedValue>]
+    if(entry['Angriff']['Angriffsfläche']) {
+        sb += `<strong>Angriffsfläche</strong> ${getStringWithNotes(entry['Angriff']['Angriffsfläche']['Wert']+' m', entry['Angriff']['Angriffsfläche']['Anmerkung'], true)}`;
+        if(entry['Angriff']['Reichweite']) sb += `; <strong>Reichweite</strong> ${getStringWithNotes(entry['Angriff']['Reichweite']['Wert']+' m', entry['Angriff']['Reichweite']['Anmerkung'], true)}`;
+        sb += '<br>';
+    }
+
+    // [Besondere Angriffe <commaSepAnnotatedValues>]
+    if(entry['Angriff']['BesondereAngriffe']) {
+        var at = '';
+        for(const attack of entry['Angriff']['BesondereAngriffe']) {
+            if(at) at += ', ';
+            at += `${getStringWithNotes(attack['Wert'], attack['Anmerkung'] , true)}`;
+        }
+        sb += `<strong>Besondere Angriffe</strong> ${at}<br>`;
+    }
+
+    // [Zauberähnliche Fähigkeiten/Bekannte Zauber/... (ZS <value>[; Konzentration <value>])]
+    //     REPEATED: <grad+usage> - <commaSepAnnotatedValues>
+    //     [* <notes>]
+    for(var spellList of entry['Zauberlisten']) {
+        sb += `<strong>${spellList['Name']}</strong>`;
+        if(spellList['ZS']) {
+            sb += ` (ZS ${spellList['ZS']}`;
+            if(spellList['Konzentration']) sb += `; Konzentration ${getSigned(spellList['Konzentration'])}`;
+            sb += ')<br>';
+        }
+
+        for(var spellListEntry of spellList['Einträge']) {
+            var sl = '';
+            for(var spell of spellListEntry['Zauber']) {
+                if(sl) sl += ', ';
+                sl += `${getStringWithNotes(spell['Wert'], spell['Anmerkung'], true)}`;
+            }
+            sb += `${spellListEntry['GradUndLimits']} - ${sl}<br>`;
+        }
+    }
+
+    // [...]
+    for(var annotation of entry['Angriff']['Anmerkungen']) {
+        sb += `<strong>${annotation['Wert']}</strong> ${annotation['Anmerkung']}`;
     }
 
     sb += '</p>';

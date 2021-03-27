@@ -25,22 +25,41 @@ export class EntityMenu extends Menu {
         if(this.mode.entityType == 'token') {
             // sending macros
             if(Access.matches(reference.prop('macroUse').getAccessValue(), accessLevel)) {
-                var macro = this.createCategory(this.container, 'Macros');
-                
                 // get and sort macros before adding to menu
                 const names = Object.keys(reference.prop('macros').getStringMap());
                 names.sort();
-                for(const name of names) {
-                    if(name.startsWith('_')) continue;
-                    
-                    this.createItem(macro, name, () => this.doSendMacro(name));
+                
+                if(names.length > 0) {
+                    var macro = this.createCategory(this.container, 'Token Macros');
+                    for(const name of names) {
+                        if(name.startsWith('_')) continue;
+                        
+                        this.createItem(macro, name, () => this.doSendMacro(name));
+                    }
                 }
             }
             
             // sending actor macros
             var actor = EntityManagers.get('actor').find(reference.prop('actorID').getLong());
             if(actor != null && actor != undefined) {
-                var actorMacro = this.createCategory(this.container, 'Actor Macros');
+                var actorAccessLevel = actor.getAccessLevel(ServerData.localProfile);
+                if(Access.matches(actor.prop('macroUse').getAccessValue(), actorAccessLevel)) {
+                    // get and sort macros before adding to menu
+                    const names = Object.keys(actor.prop('macros').getStringMap());
+                    names.sort();
+                    
+                    if(names.length > 0) {
+                        var macro = this.createCategory(this.container, 'Actor Macros');
+                        for(const name of names) {
+                            if(name.startsWith('_')) continue;
+                            
+                            this.createItem(macro, name, () => this.doSendMacro(name));
+                        }
+                    }
+                }
+
+                // Inbuilt macros
+                var actorMacro = this.createCategory(this.container, 'Inbuilt Macros');
                 
                 //TODO: get and sort macros before adding to menu
                 var macros = actor.getPredefinedMacros();

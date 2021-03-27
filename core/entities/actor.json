@@ -75,6 +75,21 @@
             "editAccess": "GM",
             "viewAccess": "GM",
             "value": ""
+        },
+        
+        {
+            "name": "macros",
+            "type": "STRING_MAP",
+            "editAccess": "CONTROLLING_PLAYER",
+            "viewAccess": "CONTROLLING_PLAYER",
+            "value": ""
+        },
+        {
+            "name": "macroUse",
+            "type": "ACCESS",
+            "editAccess": "GM",
+            "viewAccess": "EVERYONE",
+            "value": "CONTROLLING_PLAYER"
         }
     ],
     "updateRules": [
@@ -135,6 +150,20 @@
                     "property": "attachments",
                     "text": "Attachments",
                     "reference": "attachment"
+                }
+            ]
+        },
+        {
+            "name": "Macros",
+            "access": "CONTROLLING_PLAYER",
+            "layout": "Y_AXIS",
+            "layoutParameters": [],
+            "layoutGlue": "false",
+            "components": [
+                {
+                    "type": "EDITOR",
+                    "property": "macros",
+                    "text": "Macros"
                 }
             ]
         },

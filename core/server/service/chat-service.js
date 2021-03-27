@@ -76,7 +76,7 @@ export class ChatService {
                 return;
             }
 
-            // find macro (!<name> -> custom in token, !!<name> -> predefined)
+            // find macro (!<name> -> custom in token or actor, !!<name> -> predefined)
             var macro = null;
             if(macroName.startsWith('!')) {
                 const predefMacros = token.getPredefinedMacros();
@@ -92,8 +92,14 @@ export class ChatService {
                     }
                 }
             } else {
+                const actor = EntityManagers.get('actor').find(token.prop('actorID').getLong());
+                if(actor) {
+                    const actorMacros = actor.prop('macros').getStringMap();
+                    macro = actorMacros[macroName];
+                }
+
                 const tokenMacros = token.prop('macros').getStringMap();
-                macro = tokenMacros[macroName];
+                if(tokenMacros[macroName]) macro = tokenMacros[macroName];
             }
             if(!macro) {
                 ChatService.appendNote(profile, `Could not find macro: ${macroName}`);
