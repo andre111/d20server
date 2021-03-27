@@ -477,7 +477,7 @@ const gradShorthands = [ 'ALC', 'ANP', 'BAR', 'BLU', 'DRU', 'HEX', 'HXM/MAG', 'I
 function createGradString(grad) {
     var result = '';
     for(var i=0; i<gradProperties.length; i++) {
-        if(grad[gradProperties[i]]) {
+        if(grad[gradProperties[i]] != undefined && grad[gradProperties[i]] != null) {
             if(result) result += ', ';
             result += `${gradShorthands[i]} ${grad[gradProperties[i]]}`;
         }
