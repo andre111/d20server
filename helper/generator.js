@@ -145,9 +145,9 @@ ModuleService.init().then(() => {
             // build full description
             var descFull = '';
             {
-                if(entry['Vorraussetzung']) {
+                if(entry['Voraussetzung']) {
                     descFull += '<p>';
-                    descFull += `<strong>Vorraussetzung:</strong> ${entry['Vorraussetzung']}`;
+                    descFull += `<strong>Voraussetzung:</strong> ${entry['Voraussetzung']}`;
                     descFull += '</p>';
                 }
 
