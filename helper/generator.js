@@ -298,12 +298,7 @@ ModuleService.init().then(() => {
             gmBio += createAttackSection(entry);
             gmBio += createValuesSection(entry);
             gmBio += createEcologySection(entry);
-            if(entry['secBesondereFähigkeiten']) {
-                gmBio += '<p>';
-                gmBio += '<strong>Besondere Fähigkeiten:</strong><br>';
-                gmBio += entry['secBesondereFähigkeiten'].replace(/\n/g, '<br>');
-                gmBio += '</p>';
-            }
+            gmBio += createSpecialAbilitiesSection(entry);
             gmBio += '<p>';
             gmBio += '<strong>Beschreibung:</strong><br>';
             gmBio += entry['GMBeschreibung'].replace(/\n/g, '<br>');
@@ -827,6 +822,21 @@ function createEcologySection(entry) {
     
 	// Schätze <value>
     sb += `<strong>Schätze</strong> ${entry['Lebensweise']['Schätze']}<br>`;
+    
+    sb += '</p>';
+    return sb;
+}
+
+function createSpecialAbilitiesSection(entry) {
+    if(entry['BesondereFähigkeiten'].length == 0) return '';
+
+    // build string
+    var sb = '<p>';
+    sb += '<strong>Besondere Fähigkeiten:</strong><br>';
+
+    for(const specialAbility of entry['BesondereFähigkeiten']) {
+        sb += `<strong>${specialAbility['Name']} (${specialAbility['Art']})</strong> ${specialAbility['Beschreibung'].replace('\n', '<br>')}<br><br>`;
+    }
     
     sb += '</p>';
     return sb;
