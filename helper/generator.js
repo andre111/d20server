@@ -293,16 +293,18 @@ ModuleService.init().then(() => {
             monsterActor.prop('bio').setString(entry['Beschreibung']);
 
             var gmBio = '';
-            gmBio += createBaseSection(entry);
-            gmBio += createDefenseSection(entry);
-            gmBio += createAttackSection(entry);
-            gmBio += createValuesSection(entry);
-            gmBio += createEcologySection(entry);
-            gmBio += createSpecialAbilitiesSection(entry);
-            gmBio += '<p>';
-            gmBio += '<strong>Beschreibung:</strong><br>';
-            gmBio += entry['GMBeschreibung'].replace(/\n/g, '<br>');
-            gmBio += '</p>';
+            gmBio += createBaseSection(entry) + '<p></p>';
+            gmBio += createDefenseSection(entry) + '<p></p>';
+            gmBio += createAttackSection(entry) + '<p></p>';
+            gmBio += createValuesSection(entry) + '<p></p>';
+            gmBio += createEcologySection(entry) + '<p></p>';
+            gmBio += createSpecialAbilitiesSection(entry) + '<p></p>';
+            gmBio += '<hr><strong>BESCHREIBUNG:</strong><hr>';
+            for(const descParagraph of entry['GMBeschreibung'].split('\n')) {
+                gmBio += '<p>';
+                gmBio += descParagraph;
+                gmBio += '</p>';
+            }
             gmBio += '<p>';
             gmBio += `${entry['Regelwerk']} - Seite ${entry['Seite']}`;
             gmBio += '</p>';
@@ -593,8 +595,8 @@ function createBaseSection(entry) {
 
 function createDefenseSection(entry) {
     // build string
-    var sb = '<p>';
-    sb += '<strong>Verteidigung:</strong><br>';
+    var sb = '<hr><strong>VERTEIDIGUNG:</strong><hr>';
+    sb += '<p>';
 
     // RK <value>, Berührung <value>, auf dem falschen Fuß <value> (<modifiers>; <notes>)
     sb += `<strong>RK</strong> ${entry['RK']['Normal']}, <strong>Berührung</strong> ${entry['RK']['Berührung']}, <strong>auf dem falschen Fuß</strong> ${entry['RK']['AufDemFalschenFuß']} (`;
@@ -667,8 +669,8 @@ function createDefenseSection(entry) {
 // [...]
 function createAttackSection(entry) {
     // build string
-    var sb = '<p>';
-    sb += '<strong>Angriff:</strong><br>';
+    var sb = '<hr><strong>ANGRIFF:</strong><hr>';
+    sb += '<p>';
 
     // Bewegungsrate <annotatedValue>[, Fliegen <annotatedValue>][, Schwimmen <annotatedValue>][, Klettern <annotatedValue>][, Graben <annotatedValue>][; <movementAbilities>]
     var br = '';
@@ -756,8 +758,8 @@ function createAttackSection(entry) {
 
 function createValuesSection(entry) {
     // build string
-    var sb = '<p>';
-    sb += '<strong>Spielwerte:</strong><br>';
+    var sb = '<hr><strong>SPIELWERTE:</strong><hr>';
+    sb += '<p>';
 
     // ST <value>, GE <value>, KO <value>, IN <value>, WE <value>, CH <value>
     sb += `<strong>ST</strong> ${entry['Attribute']['Stärke']}, `;
@@ -811,8 +813,8 @@ function createEcologySection(entry) {
     if(!entry['Lebensweise']) return '';
 
     // build string
-    var sb = '<p>';
-    sb += '<strong>Lebensweise:</strong><br>';
+    var sb = '<hr><strong>LEBENSWEISE:</strong><hr>';
+    sb += '<p>';
 
     // Umgebung <value>
     sb += `<strong>Umgebung</strong> ${entry['Lebensweise']['Umgebung']}<br>`;
@@ -831,8 +833,8 @@ function createSpecialAbilitiesSection(entry) {
     if(entry['BesondereFähigkeiten'].length == 0) return '';
 
     // build string
-    var sb = '<p>';
-    sb += '<strong>Besondere Fähigkeiten:</strong><br>';
+    var sb = '<hr><strong>BESONDERE FÄHIGKEITEN:</strong><hr>';
+    sb += '<p>';
 
     for(const specialAbility of entry['BesondereFähigkeiten']) {
         sb += `<strong>${specialAbility['Name']} (${specialAbility['Art']})</strong> ${specialAbility['Beschreibung'].replace('\n', '<br>')}<br><br>`;
