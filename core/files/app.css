@@ -31,8 +31,8 @@ CONTENTS:
     --color-medium: #f5deb3;
     --color-dark: #e2cf9d;
 
-    --shadow-hover: 0px 0px 4px 3px #e2cf9d; 
-    --shadow-active: 0px 0px 4px 3px #e2cf9d; 
+    --shadow-hover: 0px 0px 4px 3px var(--color-dark); 
+    --shadow-active: 0px 0px 4px 3px var(--color-dark);
 }
 
 /*
@@ -203,6 +203,7 @@ button:active, input:focus {
 /* Custom Scrollbars (TODO: only works in webkit based browsers (so no firefox) and doesn't even look that great?) */
 ::-webkit-scrollbar {
     width: 12px;
+    height: 12px;
 }
 ::-webkit-scrollbar-track {
     box-shadow: inset 0 0 6px rgba(0,0,0,0.3); 
@@ -711,9 +712,48 @@ div.chat-box-content th, div.chat-box-content td {
 }
 
 /* jQueryUI overrides */
+.ui-state-default,
+.ui-widget-content .ui-state-default,
+.ui-widget-header .ui-state-default,
+.ui-button,
+html .ui-button.ui-state-disabled:hover,
+html .ui-button.ui-state-disabled:active {
+	border: 1px solid black !important;
+	background: var(--color-dark) !important;
+	background: linear-gradient(0deg, var(--color-dark) 0%, var(--color-medium) 100%) !important;
+}
+.ui-state-hover,
+.ui-widget-content .ui-state-hover,
+.ui-widget-header .ui-state-hover,
+.ui-state-focus,
+.ui-widget-content .ui-state-focus,
+.ui-widget-header .ui-state-focus,
+.ui-button:hover,
+.ui-button:focus {
+	border: 1px solid black !important;
+	background: var(--color-light) !important;
+}
+.ui-state-active, 
+.ui-widget-content .ui-state-active, 
+.ui-widget-header .ui-state-active, 
+a.ui-button:active, 
+.ui-button:active, 
+.ui-button.ui-state-active:hover {
+    background: #ffffff !important;
+}
+.ui-tabs .ui-tabs-nav li {
+    border-bottom-width: 0 !important;
+}
+.ui-widget.ui-widget-content,
+fieldset.ui-widget-content {
+    background: var(--color-bg-transparent) !important;
+    border-color: black !important;
+}
+
 .ui-menu .ui-menu-item {
     font-size: 10px !important;
 }
+
 .ui-tabs .ui-tabs-nav {
     padding: 0 !important;
     border: none !important;
@@ -726,6 +766,7 @@ div.chat-box-content th, div.chat-box-content td {
     padding: 5px !important;
     border: 1px solid !important;
 }
+
 .ui-dialog {
     background: var(--color-bg-transparent) !important;
     box-shadow: 0px 0px 6px black !important;
