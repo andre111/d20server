@@ -20,7 +20,7 @@
 //TODO: Current Priorities:
 // make pf character sheet more complete (atleast: movementrates, ...) AND replace with custom no copyright sheet
 // journal: entity with a single string (parsed by layoutengine), that can be shown/viewed - needs atleast text and image (based on id) support
-// more keyboard shortcuts (delete, camera moving, ...)
+// more keyboard shortcuts (camera moving, ...)
 // Add optional "attachment" macros
 
 //TODO: And the completely insane next plan:

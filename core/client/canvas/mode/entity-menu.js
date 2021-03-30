@@ -133,7 +133,7 @@ export class EntityMenu extends Menu {
     }
     
     doDelete() {
-        EntityManagers.get(this.mode.entityType).remove(this.reference.id);
+        EntityManagers.get(this.mode.entityType).remove(this.reference.getID());
         this.mode.clearActiveEntities();
     }
 }

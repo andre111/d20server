@@ -11,6 +11,8 @@ import { IntMathUtils } from '../../../common/util/mathutil.js';
 import { SelectedTokens } from '../../../common/messages.js';
 import { Entity } from '../../../common/common.js';
 import { EntityReference } from '../../../common/entity/entity-reference.js';
+import { CanvasWindowConfirm } from '../window/canvas-window-confirm.js';
+import { EntityManagers } from '../../../common/entity/entity-managers.js';
 
 export class CanvasModeEntities extends CanvasMode {
     constructor(entityType, layer) {
@@ -124,6 +126,16 @@ export class CanvasModeEntities extends CanvasMode {
                 rotation = (rotation + 45) % 360;
 				reference.prop('rotation').setDouble(rotation);
 				reference.performUpdate();
+            }
+        // deleting tokens
+        } else if(a == 'delete') {
+            if(this.activeEntities.length > 0) {
+                new CanvasWindowConfirm('Delete Token(s)', 'Do you want to delete all selected token?', () => {
+                    for(const reference of this.activeEntities) {
+                        EntityManagers.get(this.entityType).remove(reference.getID());
+                    }
+                    this.clearActiveEntities();
+                });
             }
         // any other input -> pass along to action
         } else {
