@@ -74,14 +74,17 @@ export class RollFormatter {
     }
 
     static normalizeExpression(expression) {
-        expression = expression.replace('+', ' + ');
-		expression = expression.replace('-', ' - ');
-		expression = expression.replace('*', ' * ');
-		expression = expression.replace('/', ' / ');
-		expression = expression.replace('(', '( ');
-		expression = expression.replace(',', ', ');
-		expression = expression.replace(')', ' )');
-		expression = expression.replace(/ +/, ' ');
+        // prevents double escaping by reverting already escaped characters
+        expression = ChatService.unescape(expression);
+
+        expression = expression.replace(/\+/g, ' + ');
+		expression = expression.replace(/-/g, ' - ');
+		expression = expression.replace(/\*/g, ' * ');
+		expression = expression.replace(/\//g, ' / ');
+		expression = expression.replace(/\(/g, '( ');
+		expression = expression.replace(/,/g, ', ');
+		expression = expression.replace(/\)/g, ' )');
+		expression = expression.replace(/ +/g, ' ');
 		return expression;
     }
 }

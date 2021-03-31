@@ -204,4 +204,12 @@ export class ChatService {
         string = string.replace(/"/g, '&quot;');
         return string;
     }
+
+    static unescape(string) {
+        string = string.replace(/&quot;/g, '"');
+        string = string.replace(/&gt;/g, '>');
+        string = string.replace(/&lt;/g, '<');
+        string = string.replace(/&amp;/g, '&');
+        return string;
+    }
 }
