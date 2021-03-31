@@ -747,7 +747,7 @@ a.ui-button:active,
 .ui-tabs .ui-tabs-nav li {
     border-bottom-width: 0 !important;
 }
-.ui-widget.ui-widget-content,
+.ui-menu.ui-widget-content,
 fieldset.ui-widget-content {
     background: var(--color-bg-transparent) !important;
     border-color: black !important;
