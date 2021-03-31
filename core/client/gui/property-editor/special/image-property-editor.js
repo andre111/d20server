@@ -3,6 +3,7 @@ import { GuiUtils } from '../../../util/guiutil.js';
 import { createDefaultFileManager } from '../../../canvas/window/canvas-window-filemanager.js';
 
 import { Type } from '../../../../common/constants.js';
+import { FILE_TYPE_IMAGE } from '../../../../common/util/datautil.js';
 
 export class ImagePropertyEditor extends PropertyEditor {
     constructor(tab, name, label) {
@@ -53,7 +54,7 @@ export class ImagePropertyEditor extends PropertyEditor {
             const manager = createDefaultFileManager(this.imagePath);
             manager.init(file => {
                 if(!file) return;
-                if(file.getType() == 'image') {
+                if(file.getType() == FILE_TYPE_IMAGE) {
                     this.imagePath = file.getPath();
                     this.reloadImage();
                     this.onChange();

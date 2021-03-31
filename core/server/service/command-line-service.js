@@ -4,6 +4,7 @@ import { CLICommandStop } from './cli/cli-command-stop.js';
 import { CLICommandRegister } from './cli/cli-command-register.js';
 import { CLICommandDebugImport } from './cli/cli-command-debug-import.js';
 import { CLICommandHelp } from './cli/cli-command-help.js';
+import { splitArguments } from '../../common/util/stringutil.js';
 
 export var clicommands = {};
 export function addCLICommand(command) {
@@ -25,7 +26,7 @@ export class CommandLineService {
         console.log('Type "stop" to stop the server, or "help" for a list of commands');
 
         rl.on('line', line => {
-            const split = CommandLineService.splitArguments(line);
+            const split = splitArguments(line);
             const name = split[0];
             const args = split.slice(1);
 
@@ -35,36 +36,5 @@ export class CommandLineService {
                 console.log('Unknown command, type "help" for a list of commands');
             }
         });
-    }
-
-    // split line at "spaces but only outside Quotes" and "quotes" to sepparate arguments
-    static splitArguments(line) {
-        var split = [];
-
-        var start = 0;
-        var inQuotes = false;
-        var shouldSplit = false;
-        for(var i=0; i<=line.length; i++) {
-            shouldSplit = false;
-            if(i == line.length) {
-                shouldSplit = true;
-            } else if(line[i] == '"') {
-                inQuotes = !inQuotes;
-                shouldSplit = true;
-            } else if(line[i] == ' ' && !inQuotes) {
-                shouldSplit = true;
-            }
-
-            if(shouldSplit) {
-                if(start != i) split.push(line.substring(start, i));
-                start = i + 1;
-            }
-        }
-        if(inQuotes) {
-            console.log('Unclosed quotes');
-            return [];
-        }
-
-        return split;
     }
 }

@@ -101,3 +101,50 @@ export function toFormatedSize(value) {
     if(value > 1024) { value = value / 1024; suffix = 'GiB'; }
     return new Number(value).toFixed(2) + ' ' + suffix;
 }
+
+// FileType related
+export class FileType {
+    #name;
+    #allowsUpload;
+
+    constructor(name, allowsUpload) {
+        this.#name = name;
+        this.#allowsUpload = allowsUpload;
+    }
+
+    getName() {
+        return this.#name;
+    }
+
+    allowsUpload() {
+        return this.#allowsUpload;
+    }
+}
+
+const knownFileEndings = {};
+export function registerFileEnding(ending, type) {
+    if(!(type instanceof FileType)) throw new Error('Provided Object is not a FileType.');
+    knownFileEndings[ending.toLowerCase()] = type;
+}
+export function getFileType(filePath) {
+    const hasFileEnding = filePath.includes('.');
+    if(hasFileEnding) {
+        const fileEnding = filePath.substring(filePath.lastIndexOf('.')+1).toLowerCase();
+        if(knownFileEndings[fileEnding])  {
+            return knownFileEndings[fileEnding];
+        }
+    }
+    return FILE_TYPE_UNKNOWN;
+}
+
+export const FILE_TYPE_UNKNOWN = new FileType('unknown', false);
+
+export const FILE_TYPE_IMAGE = new FileType('image', true);
+registerFileEnding('png', FILE_TYPE_IMAGE);
+registerFileEnding('jpg', FILE_TYPE_IMAGE);
+registerFileEnding('jpeg', FILE_TYPE_IMAGE);
+
+export const FILE_TYPE_AUDIO = new FileType('audio', true);
+registerFileEnding('ogg', FILE_TYPE_AUDIO);
+registerFileEnding('mp3', FILE_TYPE_AUDIO);
+

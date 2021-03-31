@@ -1,5 +1,5 @@
 import path from 'path';
-import { readFileSync } from 'fs';
+import fs from 'fs-extra';
 
 import { ModuleService } from '../service/module-service.js';
 
@@ -10,7 +10,15 @@ export function buildIndexPage() {
     var moduleStyles = '';
     var moduleLibraries = '';
     ModuleService.forEnabledModules(module => {
-        moduleScripts = moduleScripts + `        <script src="/modules/${module.getIdentifier()}/client/module.js" type="module"></script>\n`;
+        const commonJSFile = path.join(module.getDirectory(), '/common/module.js');
+        if(fs.existsSync(commonJSFile)) {
+            moduleScripts = moduleScripts + `        <script src="/modules/${module.getIdentifier()}/common/module.js" type="module"></script>\n`;
+        }
+        const clientJSFile = path.join(module.getDirectory(), '/client/module.js');
+        if(fs.existsSync(clientJSFile)) {
+            moduleScripts = moduleScripts + `        <script src="/modules/${module.getIdentifier()}/client/module.js" type="module"></script>\n`;
+        }
+        
         moduleStyles = moduleStyles + `        <link rel="stylesheet" href="/modules/${module.getIdentifier()}/files/module.css">\n`;
         if(module.getDefinition().libraries) {
             for(const library of module.getDefinition().libraries) {
@@ -21,7 +29,7 @@ export function buildIndexPage() {
 
     // create index page string
     const file = path.join(path.resolve(), '/core/index.html');
-    text = readFileSync(file, 'utf-8');
+    text = fs.readFileSync(file, 'utf-8');
     text = text.replace('!MODULE_SCRIPTS!', moduleScripts);
     text = text.replace('!MODULE_STYLES!', moduleStyles);
     text = text.replace('!MODULE_LIBRARIES!', moduleLibraries);

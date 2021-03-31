@@ -3,6 +3,7 @@ import { GuiUtils } from '../../../util/guiutil.js';
 import { createDefaultFileManager } from '../../../canvas/window/canvas-window-filemanager.js';
 
 import { Type } from '../../../../common/constants.js';
+import { FILE_TYPE_IMAGE } from '../../../../common/util/datautil.js';
 
 export class HTMLStringPropertyEditor extends PropertyEditor {
     constructor(tab, name, label) {
@@ -79,7 +80,7 @@ export class HTMLStringPropertyEditor extends PropertyEditor {
         const manager = createDefaultFileManager(value.replace('data/files', ''));
         manager.init(file => {
             if(!file) return;
-            if(meta.filetype == 'image' && file.getType() == 'image') {
+            if(meta.filetype == 'image' && file.getType() == FILE_TYPE_IMAGE) {
                 callback('/data/files' + file.getPath(), { alt: file.getName() });
                 manager.close();
             }

@@ -440,6 +440,9 @@ div.chat-box-content th, div.chat-box-content td {
 .settings-number-range {
     margin: auto;
 }
+.settings-text {
+    margin: auto;
+}
 
 /* 
 ---------------------------------------

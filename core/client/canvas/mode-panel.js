@@ -13,6 +13,7 @@ import { Settings } from '../settings/settings.js';
 
 import { Layer } from '../../common/constants.js';
 import { Events } from '../../common/events.js';
+import { FILE_TYPE_IMAGE } from '../../common/util/datautil.js';
 
 export { ModeButton } from './mode-button.js';
 export { ModeButtonExtended } from './mode-button-extended.js';
@@ -118,16 +119,13 @@ export class ModePanel {
         manager.registerFileAction(new FileActionShowToPlayers(manager));
         manager.init(file => {
             if(!file) return;
-            if(file.getType() == 'image') {
-                new CanvasWindowImage('/data/files' + file.getPath());
-            } else {
-                const evt = {
-                    file: file,
-                    manager: manager,
-                    canceled: false
-                };
-                Events.trigger('fileManagerSelect', evt);
-            }
+            
+            const evt = {
+                file: file,
+                manager: manager,
+                canceled: false
+            };
+            Events.trigger('fileManagerSelect', evt);
         });
     }
 }

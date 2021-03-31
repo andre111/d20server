@@ -54,8 +54,13 @@ export class ModuleService {
         // load code
         for(const module of modules) {
             if(module.isEnabled()) {
-                const jsFile = path.join(module.getDirectory(), '/server/module.js');
-                if(fs.existsSync(jsFile)) {
+                const commonJSFile = path.join(module.getDirectory(), '/common/module.js');
+                if(fs.existsSync(commonJSFile)) {
+                    await import('../../../modules/'+module.getIdentifier()+'/common/module.js');
+                }
+
+                const serverJSFile = path.join(module.getDirectory(), '/server/module.js');
+                if(fs.existsSync(serverJSFile)) {
                     await import('../../../modules/'+module.getIdentifier()+'/server/module.js');
                 }
             }

@@ -30,6 +30,7 @@ import { StateInit } from './state/state-init.js';
 import { StateMain } from './state/state-main.js';
 import { Settings } from './settings/settings.js';
 import { SettingsEntryNumberRange } from './settings/settings-entry-number-range.js';
+import { FILE_TYPE_IMAGE } from '../common/util/datautil.js';
 
 // Initialize common code
 Common.init(new ClientIDProvider(), ClientEntityManager);
@@ -121,6 +122,15 @@ Events.on('actionCommand', event => {
     
     if(event.getCommand() == 'SHOW_IMAGE') {
         new CanvasWindowImage(event.getText());
+    }
+});
+
+Events.on('fileManagerSelect', event => {
+    if(event.canceled) return;
+
+    if(event.file.getType() == FILE_TYPE_IMAGE) {
+        new CanvasWindowImage('/data/files' + event.file.getPath());
+        event.canceled = true;
     }
 });
 

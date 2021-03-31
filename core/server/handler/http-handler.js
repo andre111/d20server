@@ -3,7 +3,7 @@ import http from 'http';
 import path from 'path';
 import morgan from 'morgan';
 import compression from 'compression';
-import { router as filemanRouter } from './fileman/fileman.js';
+import { router as filemanRouter } from './filemanager.js';
 
 import { ModuleService } from '../service/module-service.js';
 import { buildIndexPage, getIndexPage } from './index-page.js';

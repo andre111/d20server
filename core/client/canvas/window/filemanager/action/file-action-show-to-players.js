@@ -1,4 +1,5 @@
 import { ActionCommand } from '../../../../../common/messages.js';
+import { FILE_TYPE_IMAGE } from '../../../../../common/util/datautil.js';
 import { MessageService } from '../../../../service/message-service.js';
 import { FileAction } from './file-action.js';
 
@@ -8,7 +9,7 @@ export class FileActionShowToPlayers extends FileAction {
     }
 
     shouldShowFor(file) {
-        return file && file.getType() == 'image';
+        return file && file.getType() == FILE_TYPE_IMAGE;
     }
 
     applyTo(file) {

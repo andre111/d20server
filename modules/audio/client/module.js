@@ -7,6 +7,7 @@ import { ModeButton, ModeButtonExtended } from '../../../core/client/canvas/mode
 import { Events } from '../../../core/common/events.js';
 import { SETTING_PAGE_AUDIO } from '../../../core/client/app.js';
 import { SettingsEntryNumberRange } from '../../../core/client/settings/settings-entry-number-range.js';
+import { FILE_TYPE_AUDIO } from '../../../core/common/util/datautil.js';
 
 // ambient audio
 Events.on('addRenderLayers', event => {
@@ -31,7 +32,7 @@ Events.on('addModeButtonsGM', event => {
 Events.on('fileManagerSelect', event => {
     if(event.canceled) return;
 
-    if(event.file.getType() == 'audio') {
+    if(event.file.getType() == FILE_TYPE_AUDIO) {
         getMusicPlayer().load('/data/files' + event.file.getPath());
         event.manager.close();
         event.canceled = true;

@@ -3,15 +3,12 @@ import fs from 'fs-extra';
 import path from 'path';
 import gm from 'gm';
 import multer  from 'multer';
+import { getFileType } from '../../common/util/datautil.js';
 
 /* TODO: verify this has enough validation so you cannot for example delete any file on the system */
 export const EDIT_KEY = Math.trunc(Math.random() * 1144185);
 export const router = express.Router();
 const serverRoot = './data/files/';
-const allowedFileEndings = [
-    '.png', '.jpg', '.jpeg', // image files
-    '.ogg', '.mp3' // audio files
-];
 
 /* List directory tree */
 router.post('/dirlist', function(req, res) {
@@ -209,16 +206,11 @@ function validatePath(inputPath) {
     }
     
     // only allow files with known "good" endings
-    var hasFileEnding = inputName.includes('.');
-    if(hasFileEnding) {
-        var hasAllowedFileEnding = false;
-        for(const allowedFileEnding of allowedFileEndings) {
-            if(inputPath.endsWith(allowedFileEnding)) {
-                hasAllowedFileEnding = true;
-                break;
-            }
+    if(inputName.includes('.')) {
+        const fileType = getFileType(inputPath);
+        if(!fileType.allowsUpload()) {
+            return false;
         }
-        if(!hasAllowedFileEnding) return false;
     }
 
     /* TODO: Verify this is enough to limit user actions to inside the files directory */

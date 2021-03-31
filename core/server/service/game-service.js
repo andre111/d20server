@@ -1,5 +1,5 @@
 import { fullSync } from '../entity/server-entity-managers.js';
-import { EDIT_KEY } from '../handler/fileman/fileman.js';
+import { EDIT_KEY } from '../handler/filemanager.js';
 import { ChatService } from './chat-service.js';
 import { MessageService } from './message-service.js';
 import { UserService } from './user-service.js';

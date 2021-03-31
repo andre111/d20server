@@ -1,3 +1,4 @@
+import { FILE_TYPE_IMAGE, getFileType } from '../../../../common/util/datautil.js';
 import { FileMenu } from './file-menu.js';
 
 export class File {
@@ -109,17 +110,7 @@ export class File {
     }
 
     getType() {
-        const ext = this.getExtension().toLowerCase();
-        switch(ext) {
-        case 'png':
-        case 'jpg':
-        case 'jpeg':
-            return 'image';
-        case 'ogg':
-            return 'audio';
-        default:
-            return 'unknown';
-        }
+        return getFileType(this.getName());
     }
 
     getThumbnail() {
@@ -128,7 +119,7 @@ export class File {
         var thumbURL = '/core/files/img/fileman/blank.gif';
 
         // get thumbnail path for images
-        if(this.getType() == 'image') {
+        if(this.getType() == FILE_TYPE_IMAGE) {
             thumbURL = '/fileman/generatethumb?f='+encodeURIComponent(this.getPath())+'&width=120&height=120';
         }
 

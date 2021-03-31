@@ -35,7 +35,7 @@ export class StringFilePropertyEditor extends PropertyEditor {
         const manager = createDefaultFileManager(this.currentPath);
         manager.init(file => {
             if(!file) return;
-            if(file.getType() == this.filetype) {
+            if(file.getType().getName() == this.filetype) {
                 this.currentPath = file.getPath();
                 this.updateButtonText();
                 this.onChange();

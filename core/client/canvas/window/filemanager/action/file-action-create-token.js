@@ -4,6 +4,7 @@ import { StateMain } from '../../../../state/state-main.js';
 import { CanvasModeEntities } from '../../../mode/canvas-mode-entities.js';
 
 import { Entity } from '../../../../../common/common.js';
+import { FILE_TYPE_IMAGE } from '../../../../../common/util/datautil.js';
 
 export class FileActionCreateToken extends FileAction {
     constructor(window) {
@@ -11,7 +12,7 @@ export class FileActionCreateToken extends FileAction {
     }
 
     shouldShowFor(file) {
-        return file && file.getType() == 'image';
+        return file && file.getType() == FILE_TYPE_IMAGE;
     }
 
     applyTo(file) {
