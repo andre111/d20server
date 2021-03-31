@@ -58,9 +58,12 @@ export class UserService {
         return profiles[String(id)];
     }
 
-    static findByUsername(username) {
+    static findByUsername(username, ignoreCase = false) {
+        if(ignoreCase) username = username.toLowerCase();
+
         for(const profile of Object.values(profiles)) {
-            if(profile.getUsername() == username) return profile;
+            if(ignoreCase && profile.getUsername().toLowerCase() == username) return profile;
+            else if(!ignoreCase && profile.getUsername() == username) return profile;
         }
         return null;
     }

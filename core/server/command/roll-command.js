@@ -15,7 +15,7 @@ export class RollCommand extends Command {
     parser;
 
     constructor(name, aliases, showPublic, showSelf, showGM) {
-        super(name, aliases);
+        super(name, aliases, false);
 
         this.showPublic = showPublic;
         this.showSelf = showSelf;

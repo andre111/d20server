@@ -8,6 +8,7 @@ import { parseVariable } from '../../common/scripting/variable/parser/variable-p
 import { Type } from '../../common/constants.js';
 import { RollFormatter } from '../util/roll-formatter.js';
 import { ChatEntry } from '../../common/message/chat/chat-entry.js';
+import { splitArguments } from '../../common/util/stringutil.js';
 
 export class SetCommand extends Command {
     showPublic;
@@ -16,7 +17,7 @@ export class SetCommand extends Command {
     parser;
 
     constructor(name, aliases, showPublic, hidden) {
-        super(name, aliases);
+        super(name, aliases, false);
 
         this.showPublic = showPublic;
         this.hidden = hidden;
@@ -25,50 +26,46 @@ export class SetCommand extends Command {
     }
 
     execute(profile, args) {
-        try {
-            const split = args.split(' ');
-            if(split.length < 3) throw new Error('Wrong argument count: <variable> <type> <expression>');
+        const split = splitArguments(args, 3);
+        if(split.length < 3) throw 'Wrong argument count: <variable> <type> <expression>';
 
-            const context = new Context(profile, EntityManagers.get('map').find(profile.getCurrentMap()), null);
+        const context = new Context(profile, EntityManagers.get('map').find(profile.getCurrentMap()), null);
 
-            const variable = parseVariable(split[0]);
-            const type = split[1].toUpperCase();
-            const valueString = split.slice(2).join(' ');
+        const variable = parseVariable(split[0]);
+        const type = split[1].toUpperCase();
+        const valueString = split[2];
 
-            if(type == Type.LONG || type == Type.DOUBLE) {
-                // evaluate as expression
-                const expr = this.parser.parse(valueString);
-                const result = expr.eval(context);
+        if(type == Type.LONG || type == Type.DOUBLE) {
+            // evaluate as expression
+            const expr = this.parser.parse(valueString);
+            const result = expr.eval(context);
 
-                // cast and set
-                if(type == Type.LONG) {
-                    variable.set(context, Math.trunc(result.getValue()));
-                } else {
-                    variable.set(context, result.getValue());
-                }
-
-                // send roll message
-                if(!this.hidden) {
-                    const rollMessage = RollFormatter.formatDiceRoll(profile, valueString, this.showPublic, result, null);
-                    const recipents = this.buildRecipents(profile, this.showPublic, true);
-                    const entry = new ChatEntry(rollMessage, profile.getID(), true, recipents);
-                    if(result) entry.setRolls(result.getDiceRolls());
-                    ChatService.append(true, entry);
-                }
-            } else if(type == Type.STRING) {
-                variable.set(context, valueString);
-            } else if(type == Type.BOOLEAN) {
-                variable.set(context, valueString.toLowerCase() == 'true');
-            } else if(type == Type.LAYER || type == Type.LIGHT || type == Type.EFFECT || type == Type.ACCESS) {
-                //TODO: verification
-                variable.set(context, valueString);
+            // cast and set
+            if(type == Type.LONG) {
+                variable.set(context, Math.trunc(result.getValue()));
             } else {
-				//TODO: handle more types (LONG_LIST?)
-                throw new Error(`Cannot set value of Type: ${type}`);
+                variable.set(context, result.getValue());
             }
-			//TODO: send info messsage
-        } catch(error) {
-            ChatService.appendNote(profile, `Could not set ${args.split(' ')[0]}:`, `${error}`);
+
+            // send roll message
+            if(!this.hidden) {
+                const rollMessage = RollFormatter.formatDiceRoll(profile, valueString, this.showPublic, result, null);
+                const recipents = this.buildRecipents(profile, this.showPublic, true);
+                const entry = new ChatEntry(rollMessage, profile.getID(), true, recipents);
+                if(result) entry.setRolls(result.getDiceRolls());
+                ChatService.append(true, entry);
+            }
+        } else if(type == Type.STRING) {
+            variable.set(context, valueString);
+        } else if(type == Type.BOOLEAN) {
+            variable.set(context, valueString.toLowerCase() == 'true');
+        } else if(type == Type.LAYER || type == Type.LIGHT || type == Type.EFFECT || type == Type.ACCESS) {
+            //TODO: verification
+            variable.set(context, valueString);
+        } else {
+            //TODO: handle more types (LONG_LIST?)
+            throw `Cannot set value of Type: ${type}`;
         }
+        //TODO: send info messsage
     }
 }

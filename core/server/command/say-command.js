@@ -8,20 +8,16 @@ import { parseVariable } from '../../common/scripting/variable/parser/variable-p
 
 export class SayCommand extends Command {
     constructor(name, aliases) {
-        super(name, aliases);
+        super(name, aliases, false);
     }
 
     execute(profile, args) {
-        try {
-            const variable = parseVariable('selected.property.name');
-            const name = variable.get(new Context(profile, EntityManagers.get('map').find(profile.getCurrentMap()), null));
+        const variable = parseVariable('selected.property.name');
+        const name = variable.get(new Context(profile, EntityManagers.get('map').find(profile.getCurrentMap()), null));
 
-            var text = '<p class="chat-sender">' + ChatService.escape(''+name) + ' (' + ChatService.escape(profile.getUsername()) + '): </p>';
-            text = text + '<p class="chat-message">' + ChatService.escape(args) + '</p>';
+        var text = '<p class="chat-sender">' + ChatService.escape(''+name) + ' (' + ChatService.escape(profile.getUsername()) + '): </p>';
+        text = text + '<p class="chat-message">' + ChatService.escape(args) + '</p>';
 
-            ChatService.append(true, new ChatEntry(text, profile.getID()));
-        } catch(error) {
-            ChatService.appendNote(profile, `Could nor send message:`, `${error}`);
-        }
+        ChatService.append(true, new ChatEntry(text, profile.getID()));
     }
 }

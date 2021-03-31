@@ -54,8 +54,17 @@ export class ChatService {
             
             const command = Commands.get(commandName);
             if(command) {
+                if(command.requiresGM() && profile.getRole() != Role.GM) {
+                    ChatService.appendNote(profile, 'You do not have permission to use this command');
+                    return;
+                }
+
                 // handle command
-                command.execute(profile, commandArgs);
+                try {
+                    command.execute(profile, commandArgs);
+                } catch(error) {
+                    ChatService.appendNote(profile, `Error in /${command.getName()}:`, `${error}`);
+                }
             } else {
                 ChatService.appendNote(profile, `Unknown command: ${commandName}`);
                 return;

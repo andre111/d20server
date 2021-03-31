@@ -1,20 +1,26 @@
 export class Command {
-    name;
-    aliases;
+    #name;
+    #aliases;
+    #requiresGM;
 
-    constructor(name, aliases) {
-        this.name = name;
-        this.aliases = aliases;
+    constructor(name, aliases, requiresGM) {
+        this.#name = name;
+        this.#aliases = aliases;
+        this.#requiresGM = requiresGM;
     }
 
     execute(profile, args) { throw new Error('Cannot call abstract function'); }
 
     getName() {
-        return this.name;
+        return this.#name;
     }
 
     getAliases() {
-        return this.aliases;
+        return this.#aliases;
+    }
+
+    requiresGM() {
+        return this.#requiresGM;
     }
 
     buildRecipents(sender, showPublic, showSelf) {

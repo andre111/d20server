@@ -60,35 +60,25 @@ const ACTIONS = [
 
 export class BattleCommand extends Command {
     constructor(name, aliases) {
-        super(name, aliases);
+        super(name, aliases, false);
     }
 
     execute(profile, args) {
         // validate some input and find required objects
         const argsSplit = args.split(' ');
-        if(argsSplit.length < 1) {
-            ChatService.appendNote(profile, `Usage: /battle <action> ...`);
-            return;
-        }
+        if(argsSplit.length < 1) throw `Usage: /battle <action> ...`;
+
         const map = EntityManagers.get('map').find(profile.getCurrentMap());
-        if(!map) {
-            ChatService.appendNote(profile, `Battle actions can only be performed on a map`);
-            return;
-        }
+        if(!map) throw `Battle actions can only be performed on a map`;
+
         const token = profile.getSelectedToken(true);
 
         // find action
         for(const action of ACTIONS) {
             if(action.name == argsSplit[0]) {
                 // validate action requirements
-                if(action.requiresGM && profile.getRole() != Role.GM) {
-                    ChatService.appendNote(profile, `This action can only be performed by GMs`);
-                    return;
-                }
-                if(action.requiresToken && !token) {
-                    ChatService.appendNote(profile, `This action requries a selected token`);
-                    return;
-                }
+                if(action.requiresGM && profile.getRole() != Role.GM) throw `This action can only be performed by GMs`;
+                if(action.requiresToken && !token) throw `This action requries a selected token`;
 
                 // perform action
                 action.callback(profile, map, token, argsSplit.slice(1));
@@ -97,6 +87,6 @@ export class BattleCommand extends Command {
         }
 
         // -> no action found
-        ChatService.appendNote(profile, `Unknown battle action ${argsSplit[0]}`);
+        throw `Unknown battle action ${argsSplit[0]}`;
     }
 }
