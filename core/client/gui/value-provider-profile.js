@@ -10,14 +10,14 @@ export class ValueProviderProfile extends ValueProvider {
     getData() {
         // convert map to object as is expected in new code
         const map = {};
-        for(const [key, value] of ServerData.profiles.get().entries()) {
+        for(const [key, value] of ServerData.profiles.entries()) {
             map[String(key)] = value;
         }
         return map;
     }
     
     getValue(id) {
-        return ServerData.profiles.get().get(id);
+        return ServerData.profiles.get(id);
     }
     
     getName(value) {

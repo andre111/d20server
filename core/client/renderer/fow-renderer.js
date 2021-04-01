@@ -39,5 +39,5 @@ export const FOWRenderer = {
         return seenArea;
     }
 }
-Events.on('mapChange', evt => FOWRenderer.reset());
-Events.on('viewChange', evt => FOWRenderer.reset());
+Events.on('mapChange', event => FOWRenderer.reset());
+Events.on('viewChange', event => FOWRenderer.reset());

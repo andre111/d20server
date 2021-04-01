@@ -18,9 +18,9 @@ export class CanvasRenderLayerMeasurements extends CanvasRenderLayer {
         const gridSize = map.prop('gridSize').getLong();
         
         for (const [profile, measurement] of Measurements) {
-            if(measurement.map != ServerData.currentMap.get()) continue;
+            if(measurement.map != ServerData.currentMap) continue;
             
-            const color = '#' + (ServerData.profiles.get().get(profile).getColor() & 0x00FFFFFF).toString(16).padStart(6, '0');
+            const color = '#' + (ServerData.profiles.get(profile).getColor() & 0x00FFFFFF).toString(16).padStart(6, '0');
             ctx.fillStyle = color;
             ctx.strokeStyle = color;
             ctx.lineWidth = 4;
@@ -75,7 +75,7 @@ export class CanvasRenderLayerMeasurements extends CanvasRenderLayer {
                 ctx.restore();
             }
             
-            //TODO: draw end points
+            // draw end points
             var size = 16;
             ctx.fillStyle = color;
             if(measurement.x1 != undefined && measurement.y1 != undefined) ctx.fillRect(measurement.x1-size/2, measurement.y1-size/2, size, size);

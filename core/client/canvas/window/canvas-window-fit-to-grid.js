@@ -81,8 +81,7 @@ export class CanvasWindowFitToGrid extends CanvasWindow {
         ]);
         
         // register rendering
-        this.listener = () => this.render();
-        Events.on('frameEnd', this.listener);
+        this.listener = Events.on('frameEnd', event => this.render());
     }
     
     render() {

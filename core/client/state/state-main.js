@@ -41,7 +41,7 @@ export class StateMain extends State {
     entityRenderers;
     notificationManager;
 
-    mapObserver;
+    mapChangeListener;
 
     highlightToken;
     viewToken;
@@ -63,7 +63,7 @@ export class StateMain extends State {
         this.notificationManager = new NotificationManager();
         document.body.appendChild(this.notificationManager.getContainer());
         
-        Events.trigger('createMainHTML', this);
+        Events.trigger('createMainHTML', {state: this});
         
         // get reference to main canvas
         this.canvas = document.getElementById('canvas');
@@ -95,8 +95,7 @@ export class StateMain extends State {
         this.highlightToken = -1;
         this.viewToken = -1;
         
-        this.mapObserver = (evt) => this.onMapChange(evt);
-        ServerData.currentMap.addObserver(this.mapObserver);
+        this.mapChangeListener = Events.on('mapChange', event => this.onMapChange());
         
         this.modePanel = new ModePanel();
         
@@ -110,34 +109,34 @@ export class StateMain extends State {
         
         // collect render layers
         this.renderLayers = [];
-        var event = {
+        var data = {
             addRenderLayer: layer => {
                 if(!(layer instanceof CanvasRenderLayer)) throw new Error('Can only add instances of CanvasRenderLayer');
                 this.renderLayers.push(layer);
             }
         };
-        Events.trigger('addRenderLayers', event);
+        Events.trigger('addRenderLayers', data);
         this.renderLayers = _.chain(this.renderLayers).sortBy(layer => layer.getLevel()).value();
         
         // collect entity renderers
         this.entityRenderers = {};
-        event = {
+        data = {
             addEntityRenderer: (type, renderer) => {
                 if(!(renderer instanceof CanvasEntityRenderer)) throw new Error('Can only add instances of CanvasEntityRenderer');
                 this.entityRenderers[type] = renderer;
             }
         };
-        Events.trigger('addEntityRenderers', event);
+        Events.trigger('addEntityRenderers', data);
         
         // collect tabs
         this.sidepanelTabs = [];
-        event = {
+        data = {
             addSidepanelTab: tab => {
                 if(!(tab instanceof SidepanelTab)) throw new Error('Can only add instances of SidePanelTab');
                 this.sidepanelTabs.push(tab);
             }
         };
-        Events.trigger('addSidepanelTabs', event);
+        Events.trigger('addSidepanelTabs', data);
 
         // create tabs
         var tabID = 0;
@@ -166,7 +165,7 @@ export class StateMain extends State {
     exit() {
         //TODO: improve this
         this.active = false;
-        ServerData.currentMap.removeObserver(this.mapObserver);
+        Events.remove('mapChange', this.mapChangeListener);
         document.body.innerHTML = '';
     }
 
@@ -209,7 +208,7 @@ export class StateMain extends State {
         }
     }
     
-    onMapChange(evt) {
+    onMapChange() {
         this.centerCamera(true);
     }
 
@@ -384,12 +383,11 @@ export class StateMain extends State {
     }
 
     setView(view) {
-        //TODO: replace with actual event class?
-        const evt = {
+        const data = {
             oldView: this.view,
             newView: view
         };
-        Events.trigger('viewChange', evt);
+        Events.trigger('viewChange', data);
         this.view = view;
     }
 

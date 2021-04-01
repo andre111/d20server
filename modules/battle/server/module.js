@@ -5,7 +5,7 @@ import { Commands } from '../../../core/server/command/commands.js';
 import { BattleCommand } from './command/battle-command.js';
 import { EntityManagers } from '../../../core/common/entity/entity-managers.js';
 
-Events.on('serverInit', () => {
+Events.on('serverInit', event => {
     // listen to any token changes (including deletion) and update battle state
     EntityManagers.get('token').addEntityListener(e => {
         const map = EntityManagers.get('map').find(e.prop('map').getLong());

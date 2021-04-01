@@ -56,8 +56,7 @@ export class MusicPlayer {
         }
         
         // handle updating other clients
-        this.updateListener = () => this.updateState();
-        Events.on('frameEnd', this.updateListener);
+        this.updateListener = Events.on('frameEnd', event => this.updateState());
         this.audio.onpause = () => {
             if(ServerData.isGM()) {
                 const msg = new ActionCommand('PAUSE_MUSIC');
@@ -72,16 +71,16 @@ export class MusicPlayer {
         };
         
         // listen to commands
-        this.commandListener = evt => {
-            if(!evt.isGM()) return; // only accept commands from gm
-            if(evt.getSender() == ServerData.localProfile.getID()) return; // do not listen to events send from yourself (avoid feedback loops)
+        this.commandListener = Events.on('actionCommand', event => {
+            if(!event.data.isGM()) return; // only accept commands from gm
+            if(event.data.getSender() == ServerData.localProfile.getID()) return; // do not listen to events send from yourself (avoid feedback loops)
             
-            switch(evt.getCommand()) {
+            switch(event.data.getCommand()) {
             case 'LOAD_MUSIC':
-                this.serverDoLoad(evt.getText());
+                this.serverDoLoad(event.data.getText());
                 break;
             case 'PLAY_MUSIC':
-                this.serverDoPlay(evt.getText(), evt.getX());
+                this.serverDoPlay(event.data.getText(), event.data.getX());
                 break;
             case 'PAUSE_MUSIC':
                 this.serverDoPause();
@@ -90,8 +89,7 @@ export class MusicPlayer {
                 this.serverDoStop();
                 break;
             }
-        };
-        Events.on('actionCommand', this.commandListener);
+        });
     }
 
     show() {

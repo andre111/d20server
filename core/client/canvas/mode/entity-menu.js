@@ -85,7 +85,12 @@ export class EntityMenu extends Menu {
         }
 
         //TODO: move most functionality to listeners of this event!
-        Events.trigger('entityMenu', { menu: this, entityType: this.mode.entityType, reference: reference, isGM: isGM });
+        Events.trigger('entityMenu', { 
+            menu: this, 
+            entityType: this.mode.entityType, 
+            reference: reference, 
+            isGM: isGM 
+        });
         
         if(reference.prop('depth').canEdit(accessLevel)) {
             var move = this.createCategory(this.container, 'Move');

@@ -5,12 +5,12 @@ import { EntityManagers } from '../../common/entity/entity-managers.js';
 
 export const MapUtils =  {
     currentMap: function() {
-        const currentMap = ServerData.currentMap.get();
+        const currentMap = ServerData.currentMap;
         return EntityManagers.get('map').find(currentMap);
     },
     
     currentEntities: function(type) {
-        const currentMap = ServerData.currentMap.get();
+        const currentMap = ServerData.currentMap;
         return _.chain(EntityManagers.get(type).all()).filter(e => e.prop('map').getLong() == currentMap); 
     },
     

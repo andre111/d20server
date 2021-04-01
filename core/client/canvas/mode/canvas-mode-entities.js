@@ -93,7 +93,7 @@ export class CanvasModeEntities extends CanvasMode {
         
         var gridSize = map.prop('gridSize').getLong();
         
-        // moving tokens
+        // moving entities
         if(a == 'move_left') {
             var moveAction = new EntityActionMove(this, 0, 0);
             moveAction.doMove(-gridSize, 0, false, true);
@@ -110,7 +110,7 @@ export class CanvasModeEntities extends CanvasMode {
             var moveAction = new EntityActionMove(this, 0, 0);
             moveAction.doMove(0, gridSize, false, true);
             moveAction.finishMove();
-        // rotating tokens
+        // rotating entities
         } else if(a == 'rotate_left') {
             if(this.activeEntities.length == 1) {
                 var reference = this.activeEntities[0];
@@ -127,10 +127,10 @@ export class CanvasModeEntities extends CanvasMode {
 				reference.prop('rotation').setDouble(rotation);
 				reference.performUpdate();
             }
-        // deleting tokens
+        // deleting entities
         } else if(a == 'delete') {
             if(this.activeEntities.length > 0) {
-                new CanvasWindowConfirm('Delete Token(s)', 'Do you want to delete all selected token?', () => {
+                new CanvasWindowConfirm('Delete Object(s)', 'Do you want to delete all selected objects?', () => {
                     for(const reference of this.activeEntities) {
                         EntityManagers.get(this.entityType).remove(reference.getID());
                     }
@@ -153,7 +153,7 @@ export class CanvasModeEntities extends CanvasMode {
 
         // add listener to update reference on changes 
         // -> should fix "simultaneous" movement glitching/bugs (TODO: might need some more work, this does not seem to be 100% fixed)
-        // -> NEEDS to be removed again -> never modify activeEntities directly, use clearActiveEntities or verifyActiveEntities
+        // -> NEEDS to be removed again -> never modify activeEntities directly, use clearActiveEntities or validateActiveEntities
         reference.addListener(this);
     }
     
@@ -163,7 +163,7 @@ export class CanvasModeEntities extends CanvasMode {
             if(reference.isValid()) {
                 return true;
             } else {
-                // IMPORTANT: unregister listener to prevent memory leaks -> never modify activeEntities directly, use clearActiveEntities or verifyActiveEntities
+                // IMPORTANT: unregister listener to prevent memory leaks -> never modify activeEntities directly, use clearActiveEntities or validateActiveEntities
                 reference.removeListener(this);
                 return false;
             }
@@ -171,7 +171,7 @@ export class CanvasModeEntities extends CanvasMode {
     }
     
     clearActiveEntities() {
-        // IMPORTANT: unregister all listeners to prevent memory leaks -> never modify activeEntities directly, use clearActiveEntities or verifyActiveEntities
+        // IMPORTANT: unregister all listeners to prevent memory leaks -> never modify activeEntities directly, use clearActiveEntities or validateActiveEntities
         for(const activeEntity of this.activeEntities) {
             activeEntity.removeListener(this);
         }

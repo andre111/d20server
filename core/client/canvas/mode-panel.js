@@ -6,14 +6,12 @@ import { StateMain } from '../state/state-main.js';
 import { CanvasWindowChoose } from '../canvas/window/canvas-window-choose.js';
 import { CanvasView } from '../canvas/canvas-view.js';
 import { createDefaultFileManager } from './window/canvas-window-filemanager.js';
-import { CanvasWindowImage } from './window/canvas-window-image.js';
 import { FileActionCreateToken } from './window/filemanager/action/file-action-create-token.js';
 import { FileActionShowToPlayers } from './window/filemanager/action/file-action-show-to-players.js';
 import { Settings } from '../settings/settings.js';
 
 import { Layer } from '../../common/constants.js';
 import { Events } from '../../common/events.js';
-import { FILE_TYPE_IMAGE } from '../../common/util/datautil.js';
 
 export { ModeButton } from './mode-button.js';
 export { ModeButtonExtended } from './mode-button-extended.js';
@@ -24,14 +22,14 @@ export class ModePanel {
         
         // create buttons
         this.buttons = [];
-        const event = {
+        const data = {
             panel: this,
             addButton: button => { 
                 if(!(button instanceof ModeButtonExtended)) throw new Error('Invalid parameters, can only add ModeButtonExtended objects!');
                 this.buttons.push(button); 
             }
         };
-        Events.trigger('addModeButtons', event);
+        Events.trigger('addModeButtons', data);
         
         // add core buttons
         if(ServerData.isGM()) {
@@ -49,7 +47,7 @@ export class ModePanel {
         
             // files
             this.buttons.push(new ModeButtonExtended(new ModeButton('/core/files/img/gui/fileman', 'Open File Manager', () => false, () => this.openFileManager()), 8));
-            Events.trigger('addModeButtonsGM', event);
+            Events.trigger('addModeButtonsGM', data);
         }
 
         // settings
@@ -65,15 +63,14 @@ export class ModePanel {
         this.updateState();
         
         // add callback
-        ServerData.currentMap.addObserver(() => this.updateState());
+        Events.on('mapChange', event => this.updateState());
     }
     
     updateState() {
         // check for invalid modes and switch out
-        const event = {
+        Events.trigger('updateModeState', {
             panel: this
-        };
-        Events.trigger('updateModeState', event);
+        });
         
         // update buttons
         for(const button of this.buttons) {
@@ -106,7 +103,7 @@ export class ModePanel {
         } else {
             new CanvasWindowChoose('profile', id => {
                 if(id > 0) {
-                    Client.getState().setView(new CanvasView(ServerData.profiles.get().get(id), true, true, true, false));
+                    Client.getState().setView(new CanvasView(ServerData.profiles.get(id), true, true, true, false));
                     this.updateState();
                 }
             });
@@ -120,12 +117,10 @@ export class ModePanel {
         manager.init(file => {
             if(!file) return;
             
-            const evt = {
+            Events.trigger('fileManagerSelect', {
                 file: file,
-                manager: manager,
-                canceled: false
-            };
-            Events.trigger('fileManagerSelect', evt);
+                manager: manager
+            }, true);
         });
     }
 }

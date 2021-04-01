@@ -11,36 +11,36 @@ import { ClientBattleManager } from './client-battle-manager.js';
 import { CommonBattleManager } from '../common/common-battle-manager.js';
 
 Events.on('addModeButtonsGM', event => {
-    event.addButton(new ModeButtonExtended(new ModeButton('/modules/battle/files/img/gui/battle', 'Start Battle', () => false, () => {
+    event.data.addButton(new ModeButtonExtended(new ModeButton('/modules/battle/files/img/gui/battle', 'Start Battle', () => false, () => {
         const msg = new SendChatMessage('/battle start');
         MessageService.send(msg);
     }), 0));
 });
 
 Events.on('entityMenu', event => {
-    if(event.entityType != 'token') return;
+    if(event.data.entityType != 'token') return;
     if(!CommonBattleManager.isBattleActive(MapUtils.currentMap())) return;
 
-    const category = event.menu.createCategory(null, 'Battle');
+    const category = event.data.menu.createCategory(null, 'Battle');
 
-    if(event.reference.prop('battle_active').getBoolean()) {
-        event.menu.createItem(category, 'Set Initiative', () => {
-            new CanvasWindowInput('Set Initiative', 'Enter initiative for selected token: ', event.reference.prop('battle_initiative').getDouble(), value => {
+    if(event.data.reference.prop('battle_active').getBoolean()) {
+        event.data.menu.createItem(category, 'Set Initiative', () => {
+            new CanvasWindowInput('Set Initiative', 'Enter initiative for selected token: ', event.data.reference.prop('battle_initiative').getDouble(), value => {
                 if(value == null || value == undefined || value == '') return;
             
                 const newValue = Number(value);
                 if(newValue != NaN) {
-                    event.reference.prop('battle_initiative').setDouble(newValue);
-                    event.reference.performUpdate();
+                    event.data.reference.prop('battle_initiative').setDouble(newValue);
+                    event.data.reference.performUpdate();
                 }
             });
         });
-        event.menu.createItem(category, 'Leave Battle', () => {
+        event.data.menu.createItem(category, 'Leave Battle', () => {
             const msg = new SendChatMessage('/battle leave');
             MessageService.send(msg);
         });
     } else {
-        event.menu.createItem(category, 'Join Battle', () => {
+        event.data.menu.createItem(category, 'Join Battle', () => {
             const msg = new SendChatMessage('/battle join');
             MessageService.send(msg);
         });
@@ -48,9 +48,8 @@ Events.on('entityMenu', event => {
 });
 
 // listen for any change that could cause the battle state to change
-Events.on('mapChange', () => ClientBattleManager.scanState());
-Events.on('createMainHTML', () => {
+Events.on('mapChange', event => ClientBattleManager.scanState());
+Events.on('createMainHTML', event => {
     EntityManagers.get('map').addListener(() => ClientBattleManager.scanState());
     EntityManagers.get('token').addListener(() => ClientBattleManager.scanState());
 });
-

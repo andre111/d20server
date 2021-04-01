@@ -10,29 +10,28 @@ import { Settings } from '../../../core/client/settings/settings.js';
 
 var diceRoller = null;
 
-Events.on('createMainHTML', state => {
+Events.on('createMainHTML', event => {
     diceRoller = new DiceRoller();
 });
 
-Events.on('chatMessage', evt => {
-    if(evt.canceled) return;
+Events.on('chatMessage', event => {
     if(!SETTING_3DDICE_ENABLE.value) return;
     
     // catch chat entries with rolls and that are not in the past
-    if(!evt.entry.getRolls()) return;
-    if(evt.entry.getRolls().length == 0) return;
-    if(evt.historical) return;
+    if(!event.data.entry.getRolls()) return;
+    if(event.data.entry.getRolls().length == 0) return;
+    if(event.data.historical) return;
     
     // cancel the event to avoid showing the result instantly
-    evt.canceled = true;
+    event.cancel();
     
     // throw dice and only add chat entry once they are done
-    var t = [
+    const t = [
         {
-            dice: evt.entry.getRolls(),
+            dice: event.data.entry.getRolls(),
             done: () => {
                 if(Client.getState() instanceof StateMain) {
-                    Client.getState().getTab('Chat').add(evt.entry);
+                    Client.getState().getTab('Chat').add(event.data.entry);
                 }
             }
         }
@@ -40,7 +39,7 @@ Events.on('chatMessage', evt => {
     diceRoller.addThrows(t, true);
 });
 
-Events.on('frameEnd', () => {
+Events.on('frameEnd', event => {
     diceRoller.onFrame();
 });
 

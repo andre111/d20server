@@ -5,11 +5,12 @@ import { GuiUtils } from '../util/guiutil.js';
 import { MessageService } from '../service/message-service.js';
 
 import { RequestAccounts, SignIn } from '../../common/messages.js';
+import { Events } from '../../common/events.js';
 
 export class StateSignIn extends State {
     playerList;
     accessKeyField;
-    observer;
+    listener;
 
     constructor() {
         super();
@@ -48,8 +49,7 @@ export class StateSignIn extends State {
         fieldset.appendChild(b);
 
         // add player list observer
-        this.observer = () => this.onPlayerList();
-        ServerData.profiles.addObserver(this.observer);
+        this.listener = Events.on('profileListChange', event => this.onPlayerList());
         
         // send player list request
         const msg = new RequestAccounts();
@@ -57,7 +57,7 @@ export class StateSignIn extends State {
     }
 
     exit() {
-        ServerData.profiles.removeObserver(this.observer);
+        Events.remove('profileListChange', this.listener);
 
         const div = document.getElementById('signin');
         div.parentElement.removeChild(div);
@@ -65,7 +65,7 @@ export class StateSignIn extends State {
 
     onPlayerList() {
         this.playerList.innerHTML = '';
-        for(const [key, profile] of ServerData.profiles.get().entries()) {
+        for(const [key, profile] of ServerData.profiles.entries()) {
             const opt = document.createElement('option');
             opt.innerHTML = profile.getUsername();
             if(profile.isConnected()) opt.disabled = true;

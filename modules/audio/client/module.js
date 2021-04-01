@@ -12,7 +12,7 @@ import { FILE_TYPE_AUDIO } from '../../../core/common/util/datautil.js';
 // ambient audio
 Events.on('addRenderLayers', event => {
     // use a render layer to get access to viewers and camera position
-    event.addRenderLayer(new CanvasRenderLayerAmbientSounds());
+    event.data.addRenderLayer(new CanvasRenderLayerAmbientSounds());
 });
 
 Events.on('mapChange', event => {
@@ -26,16 +26,14 @@ Events.on('createMainHTML', event => {
 });
 
 Events.on('addModeButtonsGM', event => {
-    event.addButton(new ModeButtonExtended(new ModeButton('/modules/audio/files/img/gui/player', 'Open Music Player', () => false, () => getMusicPlayer().show()), 0));
+    event.data.addButton(new ModeButtonExtended(new ModeButton('/modules/audio/files/img/gui/player', 'Open Music Player', () => false, () => getMusicPlayer().show()), 0));
 });
 
 Events.on('fileManagerSelect', event => {
-    if(event.canceled) return;
-
-    if(event.file.getType() == FILE_TYPE_AUDIO) {
-        getMusicPlayer().load('/data/files' + event.file.getPath());
-        event.manager.close();
-        event.canceled = true;
+    if(event.data.file.getType() == FILE_TYPE_AUDIO) {
+        getMusicPlayer().load('/data/files' + event.data.file.getPath());
+        event.data.manager.close();
+        event.cancel();
     }
 });
 

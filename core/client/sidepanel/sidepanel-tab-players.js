@@ -7,6 +7,7 @@ import { ServerData } from '../server-data.js';
 import { MessageService } from '../service/message-service.js';
 
 import { SetPlayerColor } from '../../common/messages.js';
+import { Events } from '../../common/events.js';
 
 export class SidepanelTabPlayers extends SidepanelTab {
     constructor() {
@@ -19,7 +20,7 @@ export class SidepanelTabPlayers extends SidepanelTab {
         treePanel.style.overflow = 'auto';
         this.tab.appendChild(treePanel);
         this.tree = new SearchableIDTree(treePanel, 'sidepanel-tab-players', getValueProvider('profile'));
-        ServerData.profiles.addObserver(() => this.tree.reload());
+        Events.on('profileListChange', event => this.tree.reload());
         
         var buttonPanel1 = document.createElement('div');
         this.tab.appendChild(buttonPanel1);

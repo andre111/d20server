@@ -80,57 +80,55 @@ ImageService.init();
 
 Events.on('addModeButtons', event => {
     // token mode
-    event.addButton(new ModeButtonExtended(new ModeButton('/core/files/img/gui/cursor', 'Edit Tokens', () => Client.getState() instanceof StateMain && Client.getState().getMode() instanceof CanvasModeEntities && Client.getState().getMode().entityType == 'token', () => event.panel.setMode(new CanvasModeEntities('token', event.panel.currentLayer))), 0));
+    event.data.addButton(new ModeButtonExtended(new ModeButton('/core/files/img/gui/cursor', 'Edit Tokens', () => Client.getState() instanceof StateMain && Client.getState().getMode() instanceof CanvasModeEntities && Client.getState().getMode().entityType == 'token', () => event.data.panel.setMode(new CanvasModeEntities('token', event.data.panel.currentLayer))), 0));
     
     // wall mode
     if(ServerData.isGM()) {
-        event.addButton(new ModeButtonExtended(new ModeButton('/core/files/img/gui/wall', 'Edit Walls', () => Client.getState() instanceof StateMain && Client.getState().getMode() instanceof CanvasModeWalls, () => event.panel.setMode(new CanvasModeWalls())), 0, [
-            new ModeButton('/core/files/img/gui/wall', 'Create Walls', () => Client.getState() instanceof StateMain && Client.getState().getMode() instanceof CanvasModeWalls && Client.getState().getMode().action instanceof WallActionCreateWall, () => { event.panel.setMode(new CanvasModeWalls()); Client.getState().getMode().setAction(new WallActionCreateWall(Client.getState().getMode())); event.panel.updateState(); }),
-            new ModeButton('/core/files/img/gui/window', 'Create Windows', () => Client.getState() instanceof StateMain && Client.getState().getMode() instanceof CanvasModeWalls && Client.getState().getMode().action instanceof WallActionCreateWindow, () => { event.panel.setMode(new CanvasModeWalls()); Client.getState().getMode().setAction(new WallActionCreateWindow(Client.getState().getMode())); event.panel.updateState(); }),
-            new ModeButton('/core/files/img/gui/door', 'Create Doors', () => Client.getState() instanceof StateMain && Client.getState().getMode() instanceof CanvasModeWalls && Client.getState().getMode().action instanceof WallActionCreateDoor, () => { event.panel.setMode(new CanvasModeWalls()); Client.getState().getMode().setAction(new WallActionCreateDoor(Client.getState().getMode())); event.panel.updateState(); })
+        event.data.addButton(new ModeButtonExtended(new ModeButton('/core/files/img/gui/wall', 'Edit Walls', () => Client.getState() instanceof StateMain && Client.getState().getMode() instanceof CanvasModeWalls, () => event.data.panel.setMode(new CanvasModeWalls())), 0, [
+            new ModeButton('/core/files/img/gui/wall', 'Create Walls', () => Client.getState() instanceof StateMain && Client.getState().getMode() instanceof CanvasModeWalls && Client.getState().getMode().action instanceof WallActionCreateWall, () => { event.data.panel.setMode(new CanvasModeWalls()); Client.getState().getMode().setAction(new WallActionCreateWall(Client.getState().getMode())); event.data.panel.updateState(); }),
+            new ModeButton('/core/files/img/gui/window', 'Create Windows', () => Client.getState() instanceof StateMain && Client.getState().getMode() instanceof CanvasModeWalls && Client.getState().getMode().action instanceof WallActionCreateWindow, () => { event.data.panel.setMode(new CanvasModeWalls()); Client.getState().getMode().setAction(new WallActionCreateWindow(Client.getState().getMode())); event.data.panel.updateState(); }),
+            new ModeButton('/core/files/img/gui/door', 'Create Doors', () => Client.getState() instanceof StateMain && Client.getState().getMode() instanceof CanvasModeWalls && Client.getState().getMode().action instanceof WallActionCreateDoor, () => { event.data.panel.setMode(new CanvasModeWalls()); Client.getState().getMode().setAction(new WallActionCreateDoor(Client.getState().getMode())); event.data.panel.updateState(); })
         ]));
     }
 });
 
 Events.on('addRenderLayers', event => {
-    event.addRenderLayer(new CanvasRenderLayerTokens(-1000, Layer.BACKGROUND, false));
-    event.addRenderLayer(new CanvasRenderLayerGrid(0));
-    event.addRenderLayer(new CanvasRenderLayerTokens(1000, Layer.MAIN, false));
-    event.addRenderLayer(new CanvasRenderLayerEffects(1500, false));
-    event.addRenderLayer(new CanvasRenderLayerWeather(1600));
-    event.addRenderLayer(new CanvasRenderLayerWallOcclusion(1700));
-    event.addRenderLayer(new CanvasRenderLayerLights(1800));
-    event.addRenderLayer(new CanvasRenderLayerTokens(2000, Layer.GMOVERLAY, false, 0.5, true));
-    event.addRenderLayer(new CanvasRenderLayerWallLines(2500));
-    event.addRenderLayer(new CanvasRenderLayerEffects(2600, true));
+    event.data.addRenderLayer(new CanvasRenderLayerTokens(-1000, Layer.BACKGROUND, false));
+    event.data.addRenderLayer(new CanvasRenderLayerGrid(0));
+    event.data.addRenderLayer(new CanvasRenderLayerTokens(1000, Layer.MAIN, false));
+    event.data.addRenderLayer(new CanvasRenderLayerEffects(1500, false));
+    event.data.addRenderLayer(new CanvasRenderLayerWeather(1600));
+    event.data.addRenderLayer(new CanvasRenderLayerWallOcclusion(1700));
+    event.data.addRenderLayer(new CanvasRenderLayerLights(1800));
+    event.data.addRenderLayer(new CanvasRenderLayerTokens(2000, Layer.GMOVERLAY, false, 0.5, true));
+    event.data.addRenderLayer(new CanvasRenderLayerWallLines(2500));
+    event.data.addRenderLayer(new CanvasRenderLayerEffects(2600, true));
 });
 
 Events.on('addEntityRenderers', event => {
-    event.addEntityRenderer('token', new CanvasEntityRendererToken());
+    event.data.addEntityRenderer('token', new CanvasEntityRendererToken());
 });
 
 Events.on('addSidepanelTabs', event => {
-    event.addSidepanelTab(new SidepanelTabChat());
-    event.addSidepanelTab(new SidepanelTabPlayers());
-    event.addSidepanelTab(new SidepanelTabActors());
-    event.addSidepanelTab(new SidepanelTabAttachments());
-    event.addSidepanelTab(new SidepanelTabMaps());
+    event.data.addSidepanelTab(new SidepanelTabChat());
+    event.data.addSidepanelTab(new SidepanelTabPlayers());
+    event.data.addSidepanelTab(new SidepanelTabActors());
+    event.data.addSidepanelTab(new SidepanelTabAttachments());
+    event.data.addSidepanelTab(new SidepanelTabMaps());
 });
 
 Events.on('actionCommand', event => {
-    if(!event.isGM()) return; // only accept commands from gm
+    if(!event.data.isGM()) return; // only accept commands from gm
     
-    if(event.getCommand() == 'SHOW_IMAGE') {
-        new CanvasWindowImage(event.getText());
+    if(event.data.getCommand() == 'SHOW_IMAGE') {
+        new CanvasWindowImage(event.data.getText());
     }
 });
 
 Events.on('fileManagerSelect', event => {
-    if(event.canceled) return;
-
-    if(event.file.getType() == FILE_TYPE_IMAGE) {
-        new CanvasWindowImage('/data/files' + event.file.getPath());
-        event.canceled = true;
+    if(event.data.file.getType() == FILE_TYPE_IMAGE) {
+        new CanvasWindowImage('/data/files' + event.data.file.getPath());
+        event.cancel();
     }
 });
 

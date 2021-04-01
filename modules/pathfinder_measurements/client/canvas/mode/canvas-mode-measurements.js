@@ -58,10 +58,10 @@ export class CanvasModeMeasurements extends CanvasMode {
         
 		// update measurement
         if(this.step == 0) {
-            const msg = new ActionCommand('PF_MEASUREMENT', ServerData.currentMap.get(), x, y, true, this.type);
+            const msg = new ActionCommand('PF_MEASUREMENT', ServerData.currentMap, x, y, true, this.type);
             MessageService.send(msg);
         } else if(this.step == 1) {
-            const msg = new ActionCommand('PF_MEASUREMENT', ServerData.currentMap.get(), x, y, false, this.type);
+            const msg = new ActionCommand('PF_MEASUREMENT', ServerData.currentMap, x, y, false, this.type);
             MessageService.send(msg);
         }
     }

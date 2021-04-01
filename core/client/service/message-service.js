@@ -34,13 +34,12 @@ export const MessageService = {
         } else if(msg instanceof UpdateEntityProperties) {
             EntityManagers.get(msg.getType()).serverUpdateProperties(msg.getID(), msg.getProperties());
         } else if(msg instanceof EnterMap) {
-            //TODO: replace observable with event and use an actual class for the event?
-            const evt = {
-                oldMapID: ServerData.currentMap.get(),
+            const data = {
+                oldMapID: ServerData.currentMap,
                 newMapID: msg.getMapID()
             };
-            ServerData.currentMap.set(msg.getMapID());
-            Events.trigger('mapChange', evt);
+            ServerData.currentMap = msg.getMapID();
+            Events.trigger('mapChange', data);
         } else if(msg instanceof PlayerList) {
             var index = new Map();
             for(const profile of msg.getPlayers()) {
@@ -51,7 +50,8 @@ export const MessageService = {
                     ServerData.localProfile = profile;
                 }
             }
-            ServerData.profiles.set(index);
+            ServerData.profiles = index;
+            Events.trigger('profileListChange');
         } else if(msg instanceof ActionCommand) {
             Events.trigger('actionCommand', msg);
         } else if(msg instanceof PlayEffect) {

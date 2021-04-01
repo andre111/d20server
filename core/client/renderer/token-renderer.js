@@ -165,4 +165,4 @@ export const TokenRenderer = {
         return currentLocation;
     }
 };
-Events.on('mapChange', evt => TokenRenderer.onMapChange());
+Events.on('mapChange', event => TokenRenderer.onMapChange());
