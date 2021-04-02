@@ -31,7 +31,7 @@ export const AmbientAudio = {
                 }
                 managers.get(token.id).update(token, listenerX, listenerY);
             }
-        }).value();
+        });
     },
     
     stop: function() {

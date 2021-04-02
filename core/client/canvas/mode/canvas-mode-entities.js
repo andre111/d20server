@@ -156,8 +156,7 @@ export class CanvasModeEntities extends CanvasMode {
     }
     
     validateActiveEntities() {
-        //TODO: remove lodash
-        this.activeEntities = _.chain(this.activeEntities).filter(reference => {
+        this.activeEntities = this.activeEntities.filter(reference => {
             if(reference.isValid()) {
                 return true;
             } else {
@@ -165,7 +164,7 @@ export class CanvasModeEntities extends CanvasMode {
                 reference.removeListener(this);
                 return false;
             }
-        }).value();
+        });
     }
     
     clearActiveEntities() {
@@ -250,7 +249,7 @@ export class CanvasModeEntities extends CanvasMode {
                             doMove = false;
                         }
                     }
-                }).value();
+                });
 			}
 			
 			// move temp token
@@ -309,7 +308,7 @@ export class CanvasModeEntities extends CanvasMode {
     }
     
     sendSelectedEntities() {
-        const msg = new SelectedEntities(this.entityType, _.chain(this.activeEntities).map(ref => ref.getID()).value());
+        const msg = new SelectedEntities(this.entityType, this.activeEntities.map(ref => ref.getID()));
         MessageService.send(msg);
     }
 }

@@ -118,7 +118,7 @@ export class StateMain extends State {
             }
         };
         Events.trigger('addRenderLayers', data);
-        this.renderLayers = _.chain(this.renderLayers).sortBy(layer => layer.getLevel()).value();
+        this.renderLayers.sort((a, b) => a.getLevel() - b.getLevel());
         
         // collect entity renderers
         this.entityRenderers = {};
@@ -276,7 +276,7 @@ export class StateMain extends State {
             if(Access.matches(token.prop('sharedVision').getAccessValue(), accessLevel)) {
                 viewers.push(token);
             }
-        }).value();
+        });
         // ...which are potentially overridden
         var forceWallOcclusion = false;
         if(this.viewToken > 0) {

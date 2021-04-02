@@ -114,7 +114,6 @@ export class File {
     }
 
     getThumbnail() {
-        //TODO...
         //TODO get basic thumbnail path based on file type
         var thumbURL = '/core/files/img/fileman/blank.gif';
 

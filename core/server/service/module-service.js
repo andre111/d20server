@@ -77,7 +77,7 @@ export class ModuleService {
                 const entityDefinition = readJsonFile(file);
                 console.log(`Entity: ${type}`);
 
-                // TODO: read extension definitions
+                // read extension definitions
                 for(const extensionPoint of entityDefinition.extensionPoints) {
                     extensionPoint.extensionDefinitions = {};
                     for(const [ename, efile] of Object.entries(ModuleService.getFilesIn('/entities/extensions/'+type+'/'+extensionPoint.name+'/'))) {

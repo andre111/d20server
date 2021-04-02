@@ -22,7 +22,7 @@ export class CanvasRenderLayerWallOcclusion extends CanvasRenderLayer {
             if(viewers.length != 0) {
                 // extend viewport to avoid rounding errors
                 var extendedViewport = new Rect(viewport.x-4, viewport.y-4, viewport.width+8, viewport.height+8);
-                var pwr = WallRenderer.calculateWalls(MapUtils.currentEntities('wall').value(), extendedViewport, viewers);
+                var pwr = WallRenderer.calculateWalls(MapUtils.currentEntities('wall'), extendedViewport, viewers);
                 WallRenderer.renderPrecalculatedWallRender(ctx, pwr);
                 
                 // draw fow background tokens
@@ -47,7 +47,7 @@ export class CanvasRenderLayerWallOcclusion extends CanvasRenderLayer {
                         ctx.moveTo(wall.prop('x1').getLong(), wall.prop('y1').getLong());
                         ctx.lineTo(wall.prop('x2').getLong(), wall.prop('y2').getLong());
                     }
-                }).value();
+                });
                 ctx.stroke();
             }
         }

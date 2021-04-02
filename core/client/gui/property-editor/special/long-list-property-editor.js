@@ -40,17 +40,7 @@ export class LongListPropertyEditor extends PropertyEditor {
         return document.createElement('div');
     }
     
-    //TODO...
-    reload(reference, accessLevel) {
-        super.reload(reference, accessLevel);
-        
-        // determine property
-		var property = reference.prop(name);
-		if(property == null || property == undefined) return;
-
-		// update state
-        //TODO...
-    }
+    //TODO disable edit access if not allowed
     
     reloadValue(property) {
         this.valueList = property.getLongList();

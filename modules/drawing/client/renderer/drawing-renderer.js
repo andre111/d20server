@@ -4,7 +4,7 @@ export const DrawingRenderer = {
     FONT_BG: 'rgba(0, 0, 0, 0.59)',
     
     renderDrawings: function(ctx, drawings) {
-        drawings.forEach(d => DrawingRenderer.renderDrawing(ctx, d)).value();
+        drawings.forEach(d => DrawingRenderer.renderDrawing(ctx, d));
     },
     
     renderDrawing: function(ctx, drawing) {

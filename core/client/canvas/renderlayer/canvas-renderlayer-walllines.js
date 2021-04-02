@@ -21,7 +21,7 @@ export class CanvasRenderLayerWallLines extends CanvasRenderLayer {
                     ctx.lineTo(wall.prop('x2').getLong(), wall.prop('y2').getLong());
                     ctx.stroke();
                 }
-            }).value();
+            });
             ctx.fillStyle = 'rgb(100, 100, 255)';
             MapUtils.currentEntities('wall').forEach(wall => {
                 ctx.fillRect(wall.prop('x1').getLong()-5, wall.prop('y1').getLong()-5, 10, 10);
@@ -37,7 +37,7 @@ export class CanvasRenderLayerWallLines extends CanvasRenderLayer {
                         ctx.drawImage(icon, x+offset-24/2, y-24/2, 24, 24);
                     }
                 }
-            }).value();
+            });
         }
     }
     

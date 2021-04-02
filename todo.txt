@@ -45,6 +45,9 @@
 // language support
 // a "map" function for an actual map somehow?
 
+//TODO: Get rid of rarely used libraries:
+// jquery (including jquery ui): needs writing my own tab, window and context menu system, search for "$.ajax(" and "$(" to find remaining usages
+
 //TODO: future (not sure about how to implement it technically)
 // implement a "local token copy" of actor system (one global actor, but changes made are stored per token not in the actor? needs to work differently on a technical level)
 // -> allows for creating an in tool "monster manual" that can easily spawn in premade tokens but keep temporary modifier changes per token

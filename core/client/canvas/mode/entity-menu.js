@@ -121,14 +121,14 @@ export class EntityMenu extends Menu {
     }
     
     doMoveToFront() {
-        var currentMinDepth = MapUtils.currentEntitiesInLayer(this.mode.entityType, Client.getState().getLayer()).map(e => e.prop('depth').getLong()).min().value();
+        var currentMinDepth = MapUtils.currentEntitiesInLayer(this.mode.entityType, Client.getState().getLayer()).map(e => e.prop('depth').getLong()).reduce((a, b) => Math.min(a, b), 0);
         if(currentMinDepth == undefined) currentMinDepth = 0;
         this.reference.prop('depth').setLong(currentMinDepth-1);
         this.reference.performUpdate();
     }
     
     doMoveToBack() {
-        var currentMaxDepth = MapUtils.currentEntitiesInLayer(this.mode.entityType, Client.getState().getLayer()).map(e => e.prop('depth').getLong()).max().value();
+        var currentMaxDepth = MapUtils.currentEntitiesInLayer(this.mode.entityType, Client.getState().getLayer()).map(e => e.prop('depth').getLong()).reduce((a, b) => Math.max(a, b), 0);
         if(currentMaxDepth == undefined) currentMaxDepth = 0;
         this.reference.prop('depth').setLong(currentMaxDepth+1);
         this.reference.performUpdate();

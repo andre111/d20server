@@ -1,7 +1,7 @@
 import { Expression } from '../expression.js';
 import { Result } from '../result.js';
 
-// used for quick on the fly expression creation in parser TODO: there should be a better way to do this in javscript
+// used for quick on the fly expression creation in parser
 export class Expr extends Expression {
     func;
 

@@ -65,9 +65,8 @@ export class WallActionCreate extends WallAction {
                 var clickedWall = MapUtils.currentEntities('wall')
                     .map(wall => { return { w: wall, dist: IntMathUtils.getDistanceSQTo(wall.prop('x1').getLong(), wall.prop('y1').getLong(), wall.prop('x2').getLong(), wall.prop('y2').getLong(), this.currentX, this.currentY) } })
                     .filter(wwd => wwd.dist <= 10*10)
-                    .sortBy('dist')
-                    .map(wwd => wwd.w)
-                    .head().value();
+                    .sort((a, b) => a.dist - b.dist)
+                    .map(wwd => wwd.w)[0];
                 
                 // open menu for selecting edit or delete
 				if(clickedWall != null) {
@@ -113,7 +112,7 @@ export class WallActionCreate extends WallAction {
             var map = MapUtils.currentMap();
             if(map != null && map != undefined) {
                 var wallSnapDist = 4;
-                for(var wall of MapUtils.currentEntities('wall').value()) {
+                for(var wall of MapUtils.currentEntities('wall')) {
                     var dist1 = Math.abs(wall.prop('x1').getLong() - x) + Math.abs(wall.prop('y1').getLong() - y);
 					if(dist1 <= wallSnapDist+wallSnapDist) {
 						x = wall.prop('x1').getLong();

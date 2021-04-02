@@ -79,7 +79,7 @@ export class CanvasWindowFilemanagerUpload extends CanvasWindow {
 
             const nameDiv = document.createElement('div');
             nameDiv.className = 'fileman-fileupload-name';
-            nameDiv.innerHTML = this.uploadFileList[i].file.name + ' (' + toFormatedSize(this.uploadFileList[i].file.size) + ')'; //TODO: make size nicely readable
+            nameDiv.innerHTML = this.uploadFileList[i].file.name + ' (' + toFormatedSize(this.uploadFileList[i].file.size) + ')';
             div.appendChild(nameDiv);
 
             const progressDiv = document.createElement('div');

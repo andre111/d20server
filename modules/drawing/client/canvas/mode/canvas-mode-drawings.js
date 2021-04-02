@@ -65,9 +65,10 @@ export class CanvasModeDrawings extends CanvasMode {
                 });
                 break;
             case 'DELETE':
-                var clickedDrawing = MapUtils.currentEntitiesSorted('drawing', Client.getState().getLayer()).filter(drawing => {
+                const clickedDrawing = MapUtils.currentEntitiesSorted('drawing', Client.getState().getLayer()).filter(drawing => {
                     return drawing.canEdit(ServerData.localProfile) && EntityUtils.isPointInside(drawing, e.xm, e.ym);
-                }).last().value();
+                }).reduce((a, b) => b, null);
+
                 if(clickedDrawing != null && clickedDrawing != undefined) {
                     EntityManagers.get('drawing').remove(clickedDrawing.id);
                 }
@@ -163,7 +164,7 @@ export class CanvasModeDrawings extends CanvasMode {
     
     deleteAllDrawings() {
         new CanvasWindowConfirm('Delete Drawings', 'Delete all (accessible) drawings on the current layer?', () => {
-            const drawings = MapUtils.currentEntitiesInLayer('drawing', Client.getState().getLayer()).filter(drawing => drawing.canEdit(ServerData.localProfile)).value();
+            const drawings = MapUtils.currentEntitiesInLayer('drawing', Client.getState().getLayer()).filter(drawing => drawing.canEdit(ServerData.localProfile));
             for(const drawing of drawings) {
                 EntityManagers.get('drawing').remove(drawing.id);
             }

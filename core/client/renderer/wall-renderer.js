@@ -3,12 +3,12 @@ import { IntMathUtils } from '../../common/util/mathutil.js';
 
 export const WallRenderer = {
     hasToRenderWalls: function(walls, viewport, viewer) {
-        var minX = viewport.x;
-        var maxX = viewport.x + viewport.width;
-        var minY = viewport.y;
-        var maxY = viewport.y + viewport.height;
+        const minX = viewport.x;
+        const maxX = viewport.x + viewport.width;
+        const minY = viewport.y;
+        const maxY = viewport.y + viewport.height;
         
-        for(var wall of walls.value()) {
+        for(const wall of walls) {
             if(!wall.prop('seeThrough').getBoolean() && (!wall.prop('door').getBoolean() || !wall.prop('open').getBoolean())) {
                 if(IntMathUtils.getClippedLine(wall.prop('x1').getLong(), wall.prop('y1').getLong(), wall.prop('x2').getLong(), wall.prop('y2').getLong(), minX, maxX, minY, maxY) != null) return true;
             }

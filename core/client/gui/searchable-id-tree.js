@@ -127,7 +127,7 @@ class EntryNode {
         this.element = document.createElement('li');
         this.elementStyle = this.element.style;
 
-        // TODO: icon / name / description
+        // icon / name / description
         this.divContainer = document.createElement('div');
         this.divContainer.onclick = () => this.tree._onSelect(this);
         this.divContainer.ondblclick = () => this.tree._onSelect(this, true);

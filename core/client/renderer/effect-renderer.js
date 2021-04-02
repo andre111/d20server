@@ -29,7 +29,7 @@ class PingEffect extends AbstractEffect {
     
     update() {
         this.age++;
-        return this.age > 20;
+        return this.age <= 20;
     }
     
     drawEffect(ctx) {
@@ -72,6 +72,13 @@ export const EffectRenderer = {
     },
     
     updateAndDraw(ctx, effects) {
-        return _.chain(effects).filter(effect => !effect.update()).forEach(effect => effect.draw(ctx)).value();
+        return effects.filter(effect => {
+            if(effect.update()) {
+                effect.draw(ctx);
+                return true;
+            } else {
+                return false;
+            }
+        });
     }
 }

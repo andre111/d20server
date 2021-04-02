@@ -15,8 +15,7 @@ export function fullSync(profile) {
 
     // TODO: weird place, but sync definitions here
     MessageService.send(new ServerDefinitions(getDefinitions()), profile);
-    // TODO: is waiting here still required, lets try it without
-
+    
     // send actual data
     for(const manager of EntityManagers.getAll()) {
         manager.fullSync(profile);

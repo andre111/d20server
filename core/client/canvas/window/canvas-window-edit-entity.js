@@ -12,8 +12,6 @@ export class CanvasWindowEditEntity extends CanvasWindow {
         this.reference = new EntityReference(reference.getBackingEntity());
         this.tabs = [];
         
-        //TODO: add entity listener to reload values when changed/close when delete
-        
         var w = this;
         $(this.frame).dialog('option', 'buttons', [
             {

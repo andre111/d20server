@@ -87,7 +87,7 @@ export class UserService {
     }
 
     static checkAccessKey(profile, accessKey) {
-        return bcrypt.compareSync(accessKey, accessKeys[profile.getID()]);
+        return bcrypt.compareSync(accessKey, accessKeys[String(profile.getID())]);
     }
 
     // "callbacks"

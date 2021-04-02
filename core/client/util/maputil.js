@@ -11,7 +11,7 @@ export const MapUtils =  {
     
     currentEntities: function(type) {
         const currentMap = ServerData.currentMap;
-        return _.chain(EntityManagers.get(type).all()).filter(e => e.prop('map').getLong() == currentMap); 
+        return EntityManagers.get(type).all().filter(e => e.prop('map').getLong() == currentMap); 
     },
     
     currentEntitiesInLayer: function(type, l) {
@@ -19,7 +19,7 @@ export const MapUtils =  {
     },
     
     currentEntitiesSorted: function(type, l) {
-        return MapUtils.currentEntitiesInLayer(type, l).sortBy(e => -e.getID()).sortBy(e => -e.prop('depth').getLong());
+        return MapUtils.currentEntitiesInLayer(type, l).sort(e => -e.getID()).sort(e => -e.prop('depth').getLong());
     },
     
     findControllableTokens: function(profile) {
@@ -28,7 +28,7 @@ export const MapUtils =  {
             if(token.getControllingPlayers().includes(profile.getID())) {
                 controllableTokens.push(token);
             }
-        }).value();
+        });
         return controllableTokens;
     }
 }

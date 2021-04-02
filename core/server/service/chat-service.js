@@ -63,7 +63,7 @@ export class ChatService {
                 try {
                     command.execute(profile, commandArgs);
                 } catch(error) {
-                    ChatService.appendNote(profile, `Error in /${command.getName()}:`, `${error}`);
+                    ChatService.appendNote(profile, `Error in /${commandName}:`, `${error}`);
                 }
             } else {
                 ChatService.appendNote(profile, `Unknown command: ${commandName}`);

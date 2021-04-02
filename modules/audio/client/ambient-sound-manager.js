@@ -54,7 +54,7 @@ export class AmbientSoundManager {
                     if(!wall.prop('seeThrough').getBoolean() && (!wall.prop('door').getBoolean() || !wall.prop('open').getBoolean()) && IntMathUtils.doLineSegmentsIntersect(x1, y1, x2, y2, wall.prop('x1').getLong(), wall.prop('y1').getLong(), wall.prop('x2').getLong(), wall.prop('y2').getLong())) {
                         muffle = true;
                     }
-                }).value();
+                });
             }
             // 
             if(muffle) {

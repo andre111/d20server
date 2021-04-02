@@ -28,7 +28,6 @@ export class Profile {
         this.lastLogin = new Date().getTime();
     }
 
-    //TODO... remaining implementation
     getID() {
         if(this.id == null || this.id == undefined) this.id = ID.next();
         return this.id;

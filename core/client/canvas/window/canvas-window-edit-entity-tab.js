@@ -40,13 +40,7 @@ export class CanvasWindowEditEntityTab {
     }
     
     initContent(content) {
-        // that was for the old client -> not applicable here
-        /*if(this.definition.preferredWidth > 0 && this.definition.preferredHeight > 0) {
-            content.style.width = this.definition.preferredWidth+'px';
-            content.style.height = this.definition.preferredHeight+'px';
-        }*/
-        
-        //TODO: create content layout
+        // create content layout
         var styleAttributes = [];
         var styleValues = [];
         switch(this.definition.layout) {

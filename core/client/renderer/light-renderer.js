@@ -127,7 +127,7 @@ export const LightRenderer = {
 						LightRenderer.paintLight(ctx1, token, null, false, centerX, centerY, lightRadius);
 					}
                 }
-            }).value();
+            });
         }
         
         // render sight (directly when a single viewer is present, with extra buffer otherwise)
@@ -224,7 +224,7 @@ export const LightRenderer = {
     getLightWallCache: function(token, light, centerX, centerY, maxLightRadius, lightViewport) {
         var cached = LightRenderer._cache[light].get(token.id);
         if(cached == null || cached == undefined || !cached.isCompatible(centerX, centerY, maxLightRadius)) {
-            var pwr =  WallRenderer.calculateWalls(MapUtils.currentEntities('wall').value(), lightViewport, [token]);
+            var pwr =  WallRenderer.calculateWalls(MapUtils.currentEntities('wall'), lightViewport, [token]);
             var clip = FOWRenderer.calculateSeenArea(pwr, lightViewport);
             cached = new LightWallCache(clip, centerX, centerY, maxLightRadius);
             LightRenderer._cache[light].set(token.id, cached);

@@ -282,7 +282,7 @@ export class EntityActionSelect extends EntityAction {
                         if(this.canSelect(entity) && EntityUtils.isEntityInside(entity, selX1, selY1, selX2, selY2)) {
                             this.mode.addActiveEntity(entity);
                         }
-                    }).value();
+                    });
                     this.mode.storeMouseOffsets(e.xm, e.ym);
                 } else {
                     //WEB CLIENT: moved from mouseClicked, because that has ordering issues
@@ -290,7 +290,7 @@ export class EntityActionSelect extends EntityAction {
                     if(this.mode.entityType == 'token') {
                         // -> change bar value //TODO: can this be simplified?
                         var viewer = Client.getState().getView().getProfile();
-                        for(var token of MapUtils.currentEntitiesSorted(this.mode.entityType, Client.getState().getLayer()).value()) {
+                        for(var token of MapUtils.currentEntitiesSorted(this.mode.entityType, Client.getState().getLayer())) {
                             var accessLevel = token.getAccessLevel(viewer);
                             var bounds = EntityUtils.getAABB(token);
                             var tx = token.prop('x').getLong();
@@ -359,12 +359,11 @@ export class EntityActionSelect extends EntityAction {
     }
     
     selectLast(x, y) {
-        var map = MapUtils.currentMap();
+        const map = MapUtils.currentMap();
         if(map == null || map == undefined) return;
         
-        var toSelect = MapUtils.currentEntitiesSorted(this.mode.entityType, Client.getState().getLayer())
-                .filter(entity => this.canSelect(entity)).filter(entity => EntityUtils.isPointInside(entity, x, y))
-                .last().value();
+        const toSelect = MapUtils.currentEntitiesSorted(this.mode.entityType, Client.getState().getLayer())
+                .filter(entity => this.canSelect(entity)).filter(entity => EntityUtils.isPointInside(entity, x, y)).reduce((a, b) => b, null);
                 
         this.mode.clearActiveEntities();
         if(toSelect != null && toSelect != undefined) {

@@ -108,7 +108,7 @@ export const WeatherRenderer = {
             if(effect == Effect.RAIN_LIGHT || effect == Effect.RAIN_HEAVY || effect == Effect.RAIN_STORM) {
                 ctx.lineWidth = 1.5;
             }
-            WeatherRenderer._particles = _.chain(WeatherRenderer._particles).filter(particle => {
+            WeatherRenderer._particles = WeatherRenderer._particles.filter(particle => {
                 particle.height += particle.vh;
                 if(particle.height <= 0) {
                     //TODO: add rain splashes on impact
@@ -147,7 +147,7 @@ export const WeatherRenderer = {
                     
                     return true;
                 }
-            }).value();
+            });
             ctx.restore();
         }
         

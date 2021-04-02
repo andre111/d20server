@@ -3,9 +3,7 @@ import { EntityUtils } from '../util/entityutil.js';
 import { ImageService } from '../service/image-service.js';
 
 export const TokenRenderer = {
-    renderTokens: function(ctx, tokenStream, viewer, highlightToken, grayscale) {
-        var tokens = tokenStream.value();
-        
+    renderTokens: function(ctx, tokens, viewer, highlightToken, grayscale) {
         // render token
         for(var token of tokens) {
             var loc = TokenRenderer.getTokenLocation(token, true);
@@ -71,7 +69,7 @@ export const TokenRenderer = {
             }
         }
         
-        // bars (TODO: display toggle?)
+        // bars
         var barW = TokenRenderer.getBarWidth(token, bounds, viewer);
         var barH = TokenRenderer.getBarHeight(token, bounds, viewer);
         for(var i=1; i<=3; i++) {
