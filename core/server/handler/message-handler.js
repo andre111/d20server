@@ -3,7 +3,7 @@ import { MessageService } from '../service/message-service.js';
 import { UserService } from '../service/user-service.js';
 
 import { EntityManagers } from '../../common/entity/entity-managers.js';
-import { ActionCommand, AddEntity, EntityLoading, MovePlayerToMap, Ping, PlayEffect, PlayerList, RemoveEntity, RequestAccounts, ResponseFail, ResponseOk, SelectedTokens, SendChatMessage, SetPlayerColor, SignIn, SignOut, UpdateEntityProperties } from '../../common/messages.js';
+import { ActionCommand, AddEntity, EntityLoading, MovePlayerToMap, Ping, PlayEffect, PlayerList, RemoveEntity, RequestAccounts, ResponseFail, ResponseOk, SelectedEntities, SendChatMessage, SetPlayerColor, SignIn, SignOut, UpdateEntityProperties } from '../../common/messages.js';
 import { Role } from '../../common/constants.js';
 import { GameService } from '../service/game-service.js';
 import { VERSION } from '../version.js';
@@ -71,8 +71,10 @@ function _handleMovePlayerToMap(profile, message) {
     }
 }
 
-function _handleSelectedTokens(profile, message) {
-    var selectedTokens = message.getSelectedTokens();
+function _handleSelectedEntities(profile, message) {
+    if(message.getType() != 'token') return; //TODO: handle other types
+
+    var selectedTokens = message.getEntities();
     if(!selectedTokens) selectedTokens = [];
 
     profile.setSelectedTokens(selectedTokens);
@@ -149,14 +151,14 @@ export class MessageHandler {
         var profile = null;
         if(message.requiresAuthentication()) {
             profile = UserService.getProfileFor(ws);
-            if(!profile) throw new Error('Not authenticated');
+            if(!profile) throw 'Not authenticated';
         }
 
         // get map
         var map = null;
         if(message.requiresMap()) {
             map = EntityManagers.get('map').find(profile.getCurrentMap());
-            if(!map) throw new Error('No map loaded');
+            if(!map) throw 'No map loaded';
         }
 
         // handle message
@@ -171,8 +173,8 @@ export class MessageHandler {
         // In Game Messages
         else if(message instanceof MovePlayerToMap) {
             _handleMovePlayerToMap(profile, message);
-        } else if(message instanceof SelectedTokens) {
-            _handleSelectedTokens(profile, message);
+        } else if(message instanceof SelectedEntities) {
+            _handleSelectedEntities(profile, message);
         } else if(message instanceof ActionCommand) {
             _handleActionCommand(profile, message);
         } else if(message instanceof PlayEffect) {

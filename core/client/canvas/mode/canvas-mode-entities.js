@@ -8,7 +8,7 @@ import { MessageService } from '../../service/message-service.js';
 import { Client } from '../../app.js';
 
 import { IntMathUtils } from '../../../common/util/mathutil.js';
-import { SelectedTokens } from '../../../common/messages.js';
+import { SelectedEntities } from '../../../common/messages.js';
 import { Entity } from '../../../common/common.js';
 import { EntityReference } from '../../../common/entity/entity-reference.js';
 import { CanvasWindowConfirm } from '../window/canvas-window-confirm.js';
@@ -28,7 +28,7 @@ export class CanvasModeEntities extends CanvasMode {
     init() {
         this.setAction(new EntityActionSelect(this));
         this.clearActiveEntities();
-        this.sendSelectedTokens();
+        this.sendSelectedEntities();
     }
     
     exit() {
@@ -149,7 +149,7 @@ export class CanvasModeEntities extends CanvasMode {
 
         const reference = entity instanceof EntityReference ? entity : new EntityReference(entity);
         this.activeEntities.push(reference);
-        this.sendSelectedTokens();
+        this.sendSelectedEntities();
 
         // add listener to update reference on changes 
         // -> should fix "simultaneous" movement glitching/bugs (TODO: might need some more work, this does not seem to be 100% fixed)
@@ -177,7 +177,7 @@ export class CanvasModeEntities extends CanvasMode {
         }
 
         this.activeEntities = [];
-        this.sendSelectedTokens();
+        this.sendSelectedEntities();
     }
     
     renderActiveEntities(ctx, drawNormal, drawSelectionOutline) {
@@ -265,7 +265,7 @@ export class CanvasModeEntities extends CanvasMode {
     
     resetAction() {
         this.clearActiveEntities();
-        this.sendSelectedTokens();
+        this.sendSelectedEntities();
         
         this.setAction(new EntityActionSelect(this));
     }
@@ -287,7 +287,7 @@ export class CanvasModeEntities extends CanvasMode {
         entity.prop('layer').setLayer(this.layer);
         
         this.clearActiveEntities();
-        this.sendSelectedTokens();
+        this.sendSelectedEntities();
         
         this.addActiveEntity(entity);
         this.setAction(new EntityActionAdd(this));
@@ -297,7 +297,7 @@ export class CanvasModeEntities extends CanvasMode {
         if(map == null || map == undefined) return;
         
         this.clearActiveEntities();
-        this.sendSelectedTokens();
+        this.sendSelectedEntities();
         
         for(const reference of references) {
             if(reference.getType() == this.entityType) {
@@ -310,10 +310,8 @@ export class CanvasModeEntities extends CanvasMode {
         this.setAction(new EntityActionAdd(this));
     }
     
-    sendSelectedTokens() {
-        if(this.entityType == 'token') {
-            const msg = new SelectedTokens(_.chain(this.activeEntities).map(ref => ref.id).value());
-            MessageService.send(msg);
-        }
+    sendSelectedEntities() {
+        const msg = new SelectedEntities(this.entityType, _.chain(this.activeEntities).map(ref => ref.getID()).value());
+        MessageService.send(msg);
     }
 }
