@@ -9,6 +9,7 @@ import { Access } from '../../../common/constants.js';
 import { EntityManagers } from '../../../common/entity/entity-managers.js';
 import { SendChatMessage } from '../../../common/messages.js';
 import { Events } from '../../../common/events.js';
+import { Client } from '../../app.js';
 
 export class EntityMenu extends Menu {
     constructor(mode, reference, isGM, x, y) {
@@ -120,14 +121,14 @@ export class EntityMenu extends Menu {
     }
     
     doMoveToFront() {
-        var currentMinDepth = MapUtils.currentEntitiesInLayer(this.mode.entityType, this.mode.layer).map(e => e.prop('depth').getLong()).min().value();
+        var currentMinDepth = MapUtils.currentEntitiesInLayer(this.mode.entityType, Client.getState().getLayer()).map(e => e.prop('depth').getLong()).min().value();
         if(currentMinDepth == undefined) currentMinDepth = 0;
         this.reference.prop('depth').setLong(currentMinDepth-1);
         this.reference.performUpdate();
     }
     
     doMoveToBack() {
-        var currentMaxDepth = MapUtils.currentEntitiesInLayer(this.mode.entityType, this.mode.layer).map(e => e.prop('depth').getLong()).max().value();
+        var currentMaxDepth = MapUtils.currentEntitiesInLayer(this.mode.entityType, Client.getState().getLayer()).map(e => e.prop('depth').getLong()).max().value();
         if(currentMaxDepth == undefined) currentMaxDepth = 0;
         this.reference.prop('depth').setLong(currentMaxDepth+1);
         this.reference.performUpdate();

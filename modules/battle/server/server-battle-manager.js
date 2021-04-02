@@ -43,7 +43,6 @@ export class ServerBattleManager {
         if(!map) return;
         if(!CommonBattleManager.isBattleActive(map)) return;
 
-        //TODO...
         const tokenIDs = CommonBattleManager.getParticipatingTokens(map);
 
         // end turn of current token (and check if a next one exists)

@@ -427,7 +427,6 @@ export class CanvasWindowFilemanager extends CanvasWindow {
     }
 
     confirmSelection() {
-        //TODO...
         if(this.selectionCallback) {
             this.selectionCallback(this.getSelectedFile());
         }

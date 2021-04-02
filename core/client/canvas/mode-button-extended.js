@@ -14,7 +14,7 @@ export class ModeButtonExtended {
         if(margin > 0) {
             this.mainButton.button.style.marginTop = margin+'px';
         }
-        if(this.subButtons != null && this.subButtons != undefined) {
+        if(this.subButtons) {
             const p = document.createElement('p');
             p.className = 'mode-sub-panel';
             this.container.appendChild(p);
@@ -28,7 +28,7 @@ export class ModeButtonExtended {
     
     updateState() {
         const active = this.mainButton.updateState();
-        if(this.subButtons != null && this.subButtons != undefined) {
+        if(this.subButtons) {
             for(const subButton of this.subButtons) {
                 subButton.updateState();
                 subButton.button.style.display = active ? 'inline-block' : 'none';

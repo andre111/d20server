@@ -36,6 +36,7 @@ export class StateMain extends State {
     mcc;
     mode;
     view;
+    #layer;
 
     renderLayers;
     entityRenderers;
@@ -86,7 +87,8 @@ export class StateMain extends State {
         canvas.addEventListener('mouseleave', e => this.mcc.mouseExited(e), true);
         
         //...
-        this.setMode(new CanvasModeEntities('token', Layer.MAIN));
+        this.#layer = Layer.MAIN;
+        this.setMode(new CanvasModeEntities('token', this.#layer));
         if(ServerData.isGM()) {
             this.setView(new CanvasView(ServerData.localProfile, false, false, false, true));
         } else {
@@ -389,6 +391,15 @@ export class StateMain extends State {
         };
         Events.trigger('viewChange', data);
         this.view = view;
+    }
+
+    getLayer() {
+        return this.#layer;
+    }
+
+    setLayer(layer) {
+        this.#layer = layer;
+        if(this.mode) this.mode.onLayerChange();
     }
 
     getCamera() {

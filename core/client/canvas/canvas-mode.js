@@ -7,7 +7,8 @@ export class CanvasMode extends MouseController {
     
     init() { throw new Error('Cannot call abstract function'); }
     exit() { throw new Error('Cannot call abstract function'); }
-    setLayer(layer) { throw new Error('Cannot call abstract function'); }
     renderOverlay(ctx) { throw new Error('Cannot call abstract function'); }
     actionPerformed(action) { throw new Error('Cannot call abstract function'); }
+
+    onLayerChange() {}
 }

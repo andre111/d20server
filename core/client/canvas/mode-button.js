@@ -1,3 +1,5 @@
+import { Events } from '../../common/events.js';
+
 export class ModeButton {
     iconName;
     tooltip;
@@ -17,9 +19,14 @@ export class ModeButton {
         this.button = document.createElement('button');
         this.button.className = 'mode-button';
         this.button.title = tooltip;
-        this.button.onclick = action;
+        this.button.onclick = () => this.onClick();
         this.icon = document.createElement('img');
         this.button.appendChild(this.icon);
+    }
+    
+    onClick() {
+        this.action();
+        Events.trigger('updateModeState');
     }
     
     shrink() {

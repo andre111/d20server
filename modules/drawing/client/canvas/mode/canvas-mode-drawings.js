@@ -1,3 +1,4 @@
+import { Client } from '../../../../../core/client/app.js';
 import { CanvasMode } from '../../../../../core/client/canvas/canvas-mode.js';
 import { CanvasWindowConfirm } from '../../../../../core/client/canvas/window/canvas-window-confirm.js';
 import { CanvasWindowInput } from '../../../../../core/client/canvas/window/canvas-window-input.js';
@@ -15,7 +16,7 @@ export const CanvasModeDrawingsGlobals = {
 }
 
 export class CanvasModeDrawings extends CanvasMode {
-    constructor(layer, action) {
+    constructor(action) {
         super();
         
         this.action = action;
@@ -23,18 +24,12 @@ export class CanvasModeDrawings extends CanvasMode {
         this.startX = 0;
         this.startY = 0;
         this.currentDrawing = null;
-        
-        this.layer = layer;
     }
     
     init() {
     }
 
     exit() {
-    }
-    
-    setLayer(layer) {
-        this.layer = layer;
     }
     
     renderOverlay(ctx) {
@@ -57,20 +52,20 @@ export class CanvasModeDrawings extends CanvasMode {
             
             switch(this.action) {
             case 'DRAW_RECT':
-                this.currentDrawing = this.newDrawing(ServerData.localProfile, map, this.layer, this.xStart-1, this.yStart-1, 2, 2, 0, e.shiftKey ? 'rectOutline' : 'rect', CanvasModeDrawingsGlobals.color);
+                this.currentDrawing = this.newDrawing(ServerData.localProfile, map, this.xStart-1, this.yStart-1, 2, 2, 0, e.shiftKey ? 'rectOutline' : 'rect', CanvasModeDrawingsGlobals.color);
                 break;
             case 'DRAW_OVAL':
-                this.currentDrawing = this.newDrawing(ServerData.localProfile, map, this.layer, this.xStart-1, this.yStart-1, 2, 2, 0, e.shiftKey ? 'ovalOutline' : 'oval', CanvasModeDrawingsGlobals.color);
+                this.currentDrawing = this.newDrawing(ServerData.localProfile, map, this.xStart-1, this.yStart-1, 2, 2, 0, e.shiftKey ? 'ovalOutline' : 'oval', CanvasModeDrawingsGlobals.color);
                 break;
             case 'WRITE_TEXT':
                 new CanvasWindowInput('Add Text', 'Enter Text: ', '', text => {
                     if(text != null && text != undefined && text != '') {
-                        EntityManagers.get('drawing').add(this.newDrawing(ServerData.localProfile, map, this.layer, this.xStart-16, this.yStart-16, DrawingRenderer.getTextWidth(text)+8, 40, 0, 'text:'+text, CanvasModeDrawingsGlobals.color));
+                        EntityManagers.get('drawing').add(this.newDrawing(ServerData.localProfile, map, this.xStart-16, this.yStart-16, DrawingRenderer.getTextWidth(text)+8, 40, 0, 'text:'+text, CanvasModeDrawingsGlobals.color));
                     }
                 });
                 break;
             case 'DELETE':
-                var clickedDrawing = MapUtils.currentEntitiesSorted('drawing', this.layer).filter(drawing => {
+                var clickedDrawing = MapUtils.currentEntitiesSorted('drawing', Client.getState().getLayer()).filter(drawing => {
                     return drawing.canEdit(ServerData.localProfile) && EntityUtils.isPointInside(drawing, e.xm, e.ym);
                 }).last().value();
                 if(clickedDrawing != null && clickedDrawing != undefined) {
@@ -88,7 +83,7 @@ export class CanvasModeDrawings extends CanvasMode {
         }
     }
     
-    newDrawing(creator, map, layer, x, y, width, height, rotation, shape, color) {
+    newDrawing(creator, map, x, y, width, height, rotation, shape, color) {
         var drawing = new Entity('drawing');
         
         drawing.prop('creator').setLong(creator.id);
@@ -99,7 +94,7 @@ export class CanvasModeDrawings extends CanvasMode {
 		drawing.prop('width').setLong(width);
 		drawing.prop('height').setLong(height);
 		drawing.prop('rotation').setDouble(rotation);
-		drawing.prop('layer').setLayer(layer);
+		drawing.prop('layer').setLayer(Client.getState().getLayer());
 		
 		drawing.prop('shape').setString(shape);
 		drawing.prop('color').setColor(color);
@@ -168,7 +163,7 @@ export class CanvasModeDrawings extends CanvasMode {
     
     deleteAllDrawings() {
         new CanvasWindowConfirm('Delete Drawings', 'Delete all (accessible) drawings on the current layer?', () => {
-            const drawings = MapUtils.currentEntitiesInLayer('drawing', this.layer).filter(drawing => drawing.canEdit(ServerData.localProfile)).value();
+            const drawings = MapUtils.currentEntitiesInLayer('drawing', Client.getState().getLayer()).filter(drawing => drawing.canEdit(ServerData.localProfile)).value();
             for(const drawing of drawings) {
                 EntityManagers.get('drawing').remove(drawing.id);
             }

@@ -278,7 +278,7 @@ export class EntityActionSelect extends EntityAction {
 				// select (add as temp token) all tokens in the selection box
                 if(selX1 != selX2 && selY1 != selY2) {
                     this.mode.clearActiveEntities();
-                    MapUtils.currentEntitiesInLayer(this.mode.entityType, this.mode.layer).forEach(entity => {
+                    MapUtils.currentEntitiesInLayer(this.mode.entityType, Client.getState().getLayer()).forEach(entity => {
                         if(this.canSelect(entity) && EntityUtils.isEntityInside(entity, selX1, selY1, selX2, selY2)) {
                             this.mode.addActiveEntity(entity);
                         }
@@ -290,7 +290,7 @@ export class EntityActionSelect extends EntityAction {
                     if(this.mode.entityType == 'token') {
                         // -> change bar value //TODO: can this be simplified?
                         var viewer = Client.getState().getView().getProfile();
-                        for(var token of MapUtils.currentEntitiesSorted(this.mode.entityType, this.mode.layer).value()) {
+                        for(var token of MapUtils.currentEntitiesSorted(this.mode.entityType, Client.getState().getLayer()).value()) {
                             var accessLevel = token.getAccessLevel(viewer);
                             var bounds = EntityUtils.getAABB(token);
                             var tx = token.prop('x').getLong();
@@ -351,7 +351,7 @@ export class EntityActionSelect extends EntityAction {
     
     canSelect(entity) {
         if(entity.getType() != this.mode.entityType) return false;
-        if(entity.prop('layer').getLayer() != this.mode.layer) return false;
+        if(entity.prop('layer').getLayer() != Client.getState().getLayer()) return false;
         
         if(entity.prop('alwaysSelectable') != null && entity.prop('alwaysSelectable') != undefined && entity.prop('alwaysSelectable').getBoolean()) return true;
         
@@ -362,7 +362,7 @@ export class EntityActionSelect extends EntityAction {
         var map = MapUtils.currentMap();
         if(map == null || map == undefined) return;
         
-        var toSelect = MapUtils.currentEntitiesSorted(this.mode.entityType, this.mode.layer)
+        var toSelect = MapUtils.currentEntitiesSorted(this.mode.entityType, Client.getState().getLayer())
                 .filter(entity => this.canSelect(entity)).filter(entity => EntityUtils.isPointInside(entity, x, y))
                 .last().value();
                 

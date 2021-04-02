@@ -1,13 +1,15 @@
 import { Common } from '../common/common.js';
 import { Events } from '../common/events.js';
 import { Layer } from '../common/constants.js';
+import { FILE_TYPE_IMAGE } from '../common/util/datautil.js';
 
 import { ClientIDProvider } from './entity/id.js';
 import { ClientEntityManager } from './entity/client-entity-manager.js';
 
+import { ServerData } from './server-data.js';
 import { InputService } from './service/input-service.js';
 import { ImageService } from './service/image-service.js';
-import { ServerData } from './server-data.js';
+import { CanvasView } from './canvas/canvas-view.js';
 import { ModeButton, ModeButtonExtended } from './canvas/mode-panel.js';
 import { CanvasModeEntities } from './canvas/mode/canvas-mode-entities.js';
 import { CanvasModeWalls, WallActionCreateWall, WallActionCreateWindow, WallActionCreateDoor } from './canvas/mode/canvas-mode-walls.js';
@@ -25,12 +27,15 @@ import { SidepanelTabActors } from './sidepanel/sidepanel-tab-actors.js';
 import { SidepanelTabAttachments } from './sidepanel/sidepanel-tab-attachments.js';
 import { SidepanelTabMaps } from './sidepanel/sidepanel-tab-maps.js';
 import { CanvasWindowImage } from './canvas/window/canvas-window-image.js';
+import { CanvasWindowChoose } from './canvas/window/canvas-window-choose.js';
+import { createDefaultFileManager } from './canvas/window/canvas-window-filemanager.js';
+import { FileActionCreateToken } from './canvas/window/filemanager/action/file-action-create-token.js';
+import { FileActionShowToPlayers } from './canvas/window/filemanager/action/file-action-show-to-players.js';
 
 import { StateInit } from './state/state-init.js';
 import { StateMain } from './state/state-main.js';
 import { Settings } from './settings/settings.js';
 import { SettingsEntryNumberRange } from './settings/settings-entry-number-range.js';
-import { FILE_TYPE_IMAGE } from '../common/util/datautil.js';
 
 // Initialize common code
 Common.init(new ClientIDProvider(), ClientEntityManager);
@@ -80,16 +85,51 @@ ImageService.init();
 
 Events.on('addModeButtons', event => {
     // token mode
-    event.data.addButton(new ModeButtonExtended(new ModeButton('/core/files/img/gui/cursor', 'Edit Tokens', () => Client.getState() instanceof StateMain && Client.getState().getMode() instanceof CanvasModeEntities && Client.getState().getMode().entityType == 'token', () => event.data.panel.setMode(new CanvasModeEntities('token', event.data.panel.currentLayer))), 0));
+    event.data.addButton(new ModeButtonExtended(new ModeButton('/core/files/img/gui/cursor', 'Edit Tokens', () => Client.getState() instanceof StateMain && Client.getState().getMode() instanceof CanvasModeEntities && Client.getState().getMode().entityType == 'token', () => Client.getState().setMode(new CanvasModeEntities('token'))), 0));
     
     // wall mode
     if(ServerData.isGM()) {
-        event.data.addButton(new ModeButtonExtended(new ModeButton('/core/files/img/gui/wall', 'Edit Walls', () => Client.getState() instanceof StateMain && Client.getState().getMode() instanceof CanvasModeWalls, () => event.data.panel.setMode(new CanvasModeWalls())), 0, [
-            new ModeButton('/core/files/img/gui/wall', 'Create Walls', () => Client.getState() instanceof StateMain && Client.getState().getMode() instanceof CanvasModeWalls && Client.getState().getMode().action instanceof WallActionCreateWall, () => { event.data.panel.setMode(new CanvasModeWalls()); Client.getState().getMode().setAction(new WallActionCreateWall(Client.getState().getMode())); event.data.panel.updateState(); }),
-            new ModeButton('/core/files/img/gui/window', 'Create Windows', () => Client.getState() instanceof StateMain && Client.getState().getMode() instanceof CanvasModeWalls && Client.getState().getMode().action instanceof WallActionCreateWindow, () => { event.data.panel.setMode(new CanvasModeWalls()); Client.getState().getMode().setAction(new WallActionCreateWindow(Client.getState().getMode())); event.data.panel.updateState(); }),
-            new ModeButton('/core/files/img/gui/door', 'Create Doors', () => Client.getState() instanceof StateMain && Client.getState().getMode() instanceof CanvasModeWalls && Client.getState().getMode().action instanceof WallActionCreateDoor, () => { event.data.panel.setMode(new CanvasModeWalls()); Client.getState().getMode().setAction(new WallActionCreateDoor(Client.getState().getMode())); event.data.panel.updateState(); })
+        event.data.addButton(new ModeButtonExtended(new ModeButton('/core/files/img/gui/wall', 'Edit Walls', () => Client.getState() instanceof StateMain && Client.getState().getMode() instanceof CanvasModeWalls, () => Client.getState().setMode(new CanvasModeWalls())), 0, [
+            new ModeButton('/core/files/img/gui/wall', 'Create Walls', () => Client.getState() instanceof StateMain && Client.getState().getMode() instanceof CanvasModeWalls && Client.getState().getMode().action instanceof WallActionCreateWall, () => { Client.getState().setMode(new CanvasModeWalls()); Client.getState().getMode().setAction(new WallActionCreateWall(Client.getState().getMode())); }),
+            new ModeButton('/core/files/img/gui/window', 'Create Windows', () => Client.getState() instanceof StateMain && Client.getState().getMode() instanceof CanvasModeWalls && Client.getState().getMode().action instanceof WallActionCreateWindow, () => { Client.getState().setMode(new CanvasModeWalls()); Client.getState().getMode().setAction(new WallActionCreateWindow(Client.getState().getMode())); }),
+            new ModeButton('/core/files/img/gui/door', 'Create Doors', () => Client.getState() instanceof StateMain && Client.getState().getMode() instanceof CanvasModeWalls && Client.getState().getMode().action instanceof WallActionCreateDoor, () => { Client.getState().setMode(new CanvasModeWalls()); Client.getState().getMode().setAction(new WallActionCreateDoor(Client.getState().getMode())); })
         ]));
     }
+});
+
+Events.on('addModeButtonsGM', event => {
+    // select layer
+    var showLayerButtons = false;
+    event.data.addButton(new ModeButtonExtended(new ModeButton('/core/files/img/gui/layers', 'Select Layer', () => showLayerButtons, () => { showLayerButtons = !showLayerButtons; }), 0, [
+            new ModeButton('/core/files/img/gui/bg', 'Background Layer', () => Client.getState().getLayer() == Layer.BACKGROUND, () => { Client.getState().setLayer(Layer.BACKGROUND); showLayerButtons = false; }),
+            new ModeButton('/core/files/img/gui/token', 'Token Layer', () => Client.getState().getLayer() == Layer.MAIN, () => { Client.getState().setLayer(Layer.MAIN); showLayerButtons = false; }),
+            new ModeButton('/core/files/img/gui/gm', 'GM Overlay Layer', () => Client.getState().getLayer() == Layer.GMOVERLAY, () => { Client.getState().setLayer(Layer.GMOVERLAY); showLayerButtons = false; })
+        ])
+    );
+
+    // select view
+    event.data.addButton(new ModeButtonExtended(new ModeButton('/core/files/img/gui/viewGM', 'GM-View', () => !Client.getState().getView().isPlayerView(), () => Client.getState().setView(new CanvasView(ServerData.localProfile, false, false, false, true))), 8));
+    event.data.addButton(new ModeButtonExtended(new ModeButton('/core/files/img/gui/viewPlayer', 'Player-View', () => Client.getState().getView().isPlayerView(), () => {
+        new CanvasWindowChoose('profile', id => {
+            if(id > 0) Client.getState().setView(new CanvasView(ServerData.profiles.get(id), true, true, true, false));
+            Events.trigger('updateModeState');
+        });
+    }), 0));
+
+    // files
+    event.data.addButton(new ModeButtonExtended(new ModeButton('/core/files/img/gui/fileman', 'Open File Manager', () => false, () => {
+        const manager = createDefaultFileManager();
+        manager.registerFileAction(new FileActionCreateToken(manager));
+        manager.registerFileAction(new FileActionShowToPlayers(manager));
+        manager.init(file => {
+            if(!file) return;
+            
+            Events.trigger('fileManagerSelect', {
+                file: file,
+                manager: manager
+            }, true);
+        });
+    }), 8));
 });
 
 Events.on('addRenderLayers', event => {

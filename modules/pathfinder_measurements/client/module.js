@@ -11,7 +11,7 @@ import { ServerData } from '../../../core/client/server-data.js';
 
 
 Events.on('addModeButtons', event => {
-    event.data.addButton(new ModeButtonExtended(new ModeButton('/modules/pathfinder_measurements/files/img/gui/line', 'Measurements', () => Client.getState() instanceof StateMain && Client.getState().getMode() instanceof CanvasModeMeasurements, () => {
+    event.data.addButton(new ModeButtonExtended(new ModeButton('/modules/pathfinder_measurements/files/img/gui/line', 'Measurements', () => Client.getState().getMode() instanceof CanvasModeMeasurements, () => {
             // restore/keep existing state when clicking main button
             var type = 'LINE';
             var reset = true;
@@ -25,13 +25,13 @@ Events.on('addModeButtons', event => {
             
             // enter detected state
             if(type == undefined || type == null) type = 'LINE';
-            event.data.panel.setMode(new CanvasModeMeasurements(type, reset, step))
+            Client.getState().setMode(new CanvasModeMeasurements(type, reset, step))
         }), 0, [
-            new ModeButton('/modules/pathfinder_measurements/files/img/gui/line', 'Measure Line', () => Client.getState() instanceof StateMain && Client.getState().getMode() instanceof CanvasModeMeasurements && Client.getState().getMode().type == 'LINE', () => event.data.panel.setMode(new CanvasModeMeasurements('LINE', true))),
-            new ModeButton('/modules/pathfinder_measurements/files/img/gui/circle', 'Measure Circle', () => Client.getState() instanceof StateMain && Client.getState().getMode() instanceof CanvasModeMeasurements && Client.getState().getMode().type == 'CIRCLE', () => event.data.panel.setMode(new CanvasModeMeasurements('CIRCLE', true))),
-            new ModeButton('/modules/pathfinder_measurements/files/img/gui/cone', 'Measure Cone', () => Client.getState() instanceof StateMain && Client.getState().getMode() instanceof CanvasModeMeasurements && Client.getState().getMode().type == 'CONE', () => event.data.panel.setMode(new CanvasModeMeasurements('CONE', true))),
-            new ModeButton('/modules/pathfinder_measurements/files/img/gui/trash', 'Delete Measurement', () => false, () => { if(!(Client.getState() instanceof StateMain && Client.getState().getMode() instanceof CanvasModeMeasurements)) event.data.panel.setMode(new CanvasModeMeasurements('LINE', true)); Client.getState().getMode().deleteOwnMeasurement(); event.data.panel.setMode(new CanvasModeEntities('token', event.data.panel.currentLayer)); }),
-            new ModeButton('/modules/pathfinder_measurements/files/img/gui/trashAll', 'Delete All Measurements', () => false, () => { if(!(Client.getState() instanceof StateMain && Client.getState().getMode() instanceof CanvasModeMeasurements)) event.data.panel.setMode(new CanvasModeMeasurements('LINE', true)); Client.getState().getMode().deleteAllMeasurements(); event.data.panel.setMode(new CanvasModeEntities('token', event.data.panel.currentLayer)); })
+            new ModeButton('/modules/pathfinder_measurements/files/img/gui/line', 'Measure Line', () => Client.getState().getMode() instanceof CanvasModeMeasurements && Client.getState().getMode().type == 'LINE', () => Client.getState().setMode(new CanvasModeMeasurements('LINE', true))),
+            new ModeButton('/modules/pathfinder_measurements/files/img/gui/circle', 'Measure Circle', () => Client.getState().getMode() instanceof CanvasModeMeasurements && Client.getState().getMode().type == 'CIRCLE', () => Client.getState().setMode(new CanvasModeMeasurements('CIRCLE', true))),
+            new ModeButton('/modules/pathfinder_measurements/files/img/gui/cone', 'Measure Cone', () => Client.getState().getMode() instanceof CanvasModeMeasurements && Client.getState().getMode().type == 'CONE', () => Client.getState().setMode(new CanvasModeMeasurements('CONE', true))),
+            new ModeButton('/modules/pathfinder_measurements/files/img/gui/trash', 'Delete Measurement', () => false, () => { if(!(Client.getState().getMode() instanceof CanvasModeMeasurements)) Client.getState().setMode(new CanvasModeMeasurements('LINE', true)); Client.getState().getMode().deleteOwnMeasurement(); Client.getState().setMode(new CanvasModeEntities('token')); }),
+            new ModeButton('/modules/pathfinder_measurements/files/img/gui/trashAll', 'Delete All Measurements', () => false, () => { if(!(Client.getState().getMode() instanceof CanvasModeMeasurements)) Client.getState().setMode(new CanvasModeMeasurements('LINE', true)); Client.getState().getMode().deleteAllMeasurements(); Client.getState().setMode(new CanvasModeEntities('token')); })
         ])
     );
 });

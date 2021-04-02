@@ -16,18 +16,17 @@ import { CanvasEntityRendererDrawing } from './canvas/entityrenderer/canvas-enti
 Events.on('addModeButtons', event => {
     CanvasModeDrawingsGlobals.color = '#' + (ServerData.localProfile.getColor() & 0x00FFFFFF).toString(16).padStart(6, '0');
     
-    event.data.addButton(new ModeButtonExtended(new ModeButton('/modules/drawing/files/img/gui/brush', 'Draw Shapes', () => (Client.getState() instanceof StateMain && (Client.getState().getMode() instanceof CanvasModeDrawings || (Client.getState().getMode() instanceof CanvasModeEntities && Client.getState().getMode().entityType == 'drawing'))), () => event.data.panel.setMode(new CanvasModeDrawings(event.data.panel.currentLayer, 'DRAW_RECT'))), 0, [
-            new ModeButton('/modules/drawing/files/img/gui/cursor', 'Edit Drawings', () => Client.getState() instanceof StateMain && Client.getState().getMode() instanceof CanvasModeEntities && Client.getState().getMode().entityType == 'drawing', () => event.data.panel.setMode(new CanvasModeEntities('drawing', event.data.panel.currentLayer))),
-            new ModeButton('/modules/drawing/files/img/gui/rect', 'Draw Rectangles', () => Client.getState() instanceof StateMain && Client.getState().getMode() instanceof CanvasModeDrawings && Client.getState().getMode().action == 'DRAW_RECT', () => event.data.panel.setMode(new CanvasModeDrawings(event.data.panel.currentLayer, 'DRAW_RECT'))),
-            new ModeButton('/modules/drawing/files/img/gui/oval', 'Draw Ovals', () => Client.getState() instanceof StateMain && Client.getState().getMode() instanceof CanvasModeDrawings && Client.getState().getMode().action == 'DRAW_OVAL', () => event.data.panel.setMode(new CanvasModeDrawings(event.data.panel.currentLayer, 'DRAW_OVAL'))),
-            new ModeButton('/modules/drawing/files/img/gui/text', 'Write Text', () => Client.getState() instanceof StateMain && Client.getState().getMode() instanceof CanvasModeDrawings && Client.getState().getMode().action == 'WRITE_TEXT', () => event.data.panel.setMode(new CanvasModeDrawings(event.data.panel.currentLayer, 'WRITE_TEXT'))),
-            new ModeButton('/modules/drawing/files/img/gui/trash', 'Delete Drawings', () => Client.getState() instanceof StateMain && Client.getState().getMode() instanceof CanvasModeDrawings && Client.getState().getMode().action == 'DELETE', () => event.data.panel.setMode(new CanvasModeDrawings(event.data.panel.currentLayer, 'DELETE'))),
-            new ModeButton('/modules/drawing/files/img/gui/trashAll', 'Delete All Drawings', () => false, () => { if(!(Client.getState() instanceof StateMain && Client.getState().getMode() instanceof CanvasModeDrawings)) event.data.panel.setMode(new CanvasModeDrawings(event.data.panel.currentLayer, 'DELETE')); Client.getState().getMode().deleteAllDrawings(); event.data.panel.updateState(); }),
+    event.data.addButton(new ModeButtonExtended(new ModeButton('/modules/drawing/files/img/gui/brush', 'Draw Shapes', () => (Client.getState().getMode() instanceof CanvasModeDrawings || (Client.getState().getMode() instanceof CanvasModeEntities && Client.getState().getMode().entityType == 'drawing')), () => Client.getState().setMode(new CanvasModeDrawings('DRAW_RECT'))), 0, [
+            new ModeButton('/modules/drawing/files/img/gui/cursor', 'Edit Drawings', () => Client.getState().getMode() instanceof CanvasModeEntities && Client.getState().getMode().entityType == 'drawing', () => Client.getState().setMode(new CanvasModeEntities('drawing'))),
+            new ModeButton('/modules/drawing/files/img/gui/rect', 'Draw Rectangles', () => Client.getState().getMode() instanceof CanvasModeDrawings && Client.getState().getMode().action == 'DRAW_RECT', () => Client.getState().setMode(new CanvasModeDrawings('DRAW_RECT'))),
+            new ModeButton('/modules/drawing/files/img/gui/oval', 'Draw Ovals', () => Client.getState().getMode() instanceof CanvasModeDrawings && Client.getState().getMode().action == 'DRAW_OVAL', () => Client.getState().setMode(new CanvasModeDrawings('DRAW_OVAL'))),
+            new ModeButton('/modules/drawing/files/img/gui/text', 'Write Text', () => Client.getState().getMode() instanceof CanvasModeDrawings && Client.getState().getMode().action == 'WRITE_TEXT', () => Client.getState().setMode(new CanvasModeDrawings('WRITE_TEXT'))),
+            new ModeButton('/modules/drawing/files/img/gui/trash', 'Delete Drawings', () => Client.getState().getMode() instanceof CanvasModeDrawings && Client.getState().getMode().action == 'DELETE', () => Client.getState().setMode(new CanvasModeDrawings('DELETE'))),
+            new ModeButton('/modules/drawing/files/img/gui/trashAll', 'Delete All Drawings', () => false, () => { if(!(Client.getState().getMode() instanceof CanvasModeDrawings)) Client.getState().setMode(new CanvasModeDrawings('DELETE')); Client.getState().getMode().deleteAllDrawings(); }),
             new ModeButton('/core/files/img/gui/x_empty', 'Select Color', (mb) => { mb.button.style.backgroundColor = CanvasModeDrawingsGlobals.color; return false; }, () => { 
                 new CanvasWindowColorInput('Select Drawing Color', CanvasModeDrawingsGlobals.color, color => { 
-                    if(color) { 
-                        CanvasModeDrawingsGlobals.color = color; event.data.panel.updateState(); 
-                    }
+                    if(color) CanvasModeDrawingsGlobals.color = color; 
+                    Events.trigger('updateModeState');
                 }) 
             })
         ])
@@ -38,8 +37,8 @@ Events.on('updateModeState', event => {
     var allowDrawing = false;
     var map = MapUtils.currentMap();
     if(map && (ServerData.isGM() || map.prop('playersCanDraw').getBoolean())) allowDrawing = true;
-    if(!allowDrawing && (Client.getState() instanceof StateMain && (Client.getState().getMode() instanceof CanvasModeDrawings || (Client.getState().getMode() instanceof CanvasModeEntities && Client.getState().getMode().entityType == 'drawing')))) {
-        event.data.panel.setMode(new CanvasModeEntities('token', event.data.panel.currentLayer));
+    if(!allowDrawing && (Client.getState().getMode() instanceof CanvasModeDrawings || (Client.getState().getMode() instanceof CanvasModeEntities && Client.getState().getMode().entityType == 'drawing'))) {
+        Client.getState().setMode(new CanvasModeEntities('token'));
     }
 });
 

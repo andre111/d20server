@@ -15,11 +15,10 @@ import { CanvasWindowConfirm } from '../window/canvas-window-confirm.js';
 import { EntityManagers } from '../../../common/entity/entity-managers.js';
 
 export class CanvasModeEntities extends CanvasMode {
-    constructor(entityType, layer) {
+    constructor(entityType) {
         super();
         
         this.entityType = entityType;
-        this.layer = layer;
         
         this.action = new EntityActionSelect(this);
         this.activeEntities = []; // mode registers listeners -> never modify activeEntities directly, use clearActiveEntities or verifyActiveEntities
@@ -36,8 +35,7 @@ export class CanvasModeEntities extends CanvasMode {
         this.action.exit();
     }
     
-    setLayer(layer) {
-        this.layer = layer;
+    onLayerChange() {
         this.init();
     }
     
@@ -284,7 +282,7 @@ export class CanvasModeEntities extends CanvasMode {
         entity = entity.clone();
         entity.id = 0;
         entity.prop('map').setLong(map.id);
-        entity.prop('layer').setLayer(this.layer);
+        entity.prop('layer').setLayer(Client.getState().getLayer());
         
         this.clearActiveEntities();
         this.sendSelectedEntities();
@@ -302,7 +300,7 @@ export class CanvasModeEntities extends CanvasMode {
         for(const reference of references) {
             if(reference.getType() == this.entityType) {
                 reference.prop('map').setLong(map.id);
-                reference.prop('layer').setLayer(this.layer);
+                reference.prop('layer').setLayer(Client.getState().getLayer());
                 this.addActiveEntity(reference);
             }
         }
