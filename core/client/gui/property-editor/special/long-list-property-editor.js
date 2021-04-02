@@ -23,7 +23,7 @@ export class LongListPropertyEditor extends PropertyEditor {
         GuiUtils.makeBordered(this.container, label);
         this.container.style.overflow = 'auto';
         
-        this.tree = new SearchableIDTree(this.container, null, this.valueProvider);
+        this.tree = new SearchableIDTree(this.container, null, this.valueProvider, () => this.doOpen());
         if(referenceType != 'profile') this.addButton('Open', false, () => this.doOpen());
         this.addButton('Add', false, () => this.doAdd());
         this.addButton('Remove', false, () => this.doRemove());
@@ -72,7 +72,9 @@ export class LongListPropertyEditor extends PropertyEditor {
     }
     
     doOpen() {
-        var entry = this.tree.getSelectedValue();
+        if(this.referenceType == 'profile') return;
+
+        const entry = this.tree.getSelectedValue();
         if(entry != null) {
             var entity = EntityManagers.get(this.referenceType).find(this.valueList[entry]);
             if(entity != null && entity != undefined) {

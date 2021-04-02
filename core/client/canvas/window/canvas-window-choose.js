@@ -3,31 +3,35 @@ import { getValueProvider } from '../../gui/value-providers.js';
 import { SearchableIDTree } from '../../gui/searchable-id-tree.js';
 
 export class CanvasWindowChoose extends CanvasWindow {
+    #callback;
+    #tree;
+
     constructor(type, callback) {
         super('Select '+type, true);
+
+        this.#callback = callback;
        
-        //TODO: create html elements
-        var tree = new SearchableIDTree(this.frame, null, getValueProvider(type));
+        this.#tree = new SearchableIDTree(this.frame, null, getValueProvider(type), () => this.onChoose());
         
         $(this.frame).dialog('option', 'buttons', [
             {
                 text: 'Ok',
-                click: function() {
-                    var choosen = tree.getSelectedValue();
-                    if(choosen != null && choosen != undefined) {
-                        callback(Number(choosen));
-                    } else {
-                        callback(-1);
-                    }
-                    $(this).dialog('close');
-                }
+                click: () => this.onChoose()
             },
             {
                 text: 'Cancel',
-                click: function() {
-                    $(this).dialog('close');
-                }
+                click: () => $(this.frame).dialog('close')
             }
         ]);
+    }
+
+    onChoose() {
+        const choosen = this.#tree.getSelectedValue();
+        if(choosen != null && choosen != undefined) {
+            this.#callback(Number(choosen));
+        } else {
+            this.#callback(-1);
+        }
+        $(this.frame).dialog('close');
     }
 }

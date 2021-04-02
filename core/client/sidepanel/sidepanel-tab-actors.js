@@ -26,7 +26,7 @@ export class SidepanelTabActors extends SidepanelTab {
         var treePanel = document.createElement('div');
         treePanel.style.overflow = 'auto';
         this.tab.appendChild(treePanel);
-        this.tree = new SearchableIDTree(treePanel, 'sidepanel-tab-actors', getValueProvider('actor'));
+        this.tree = new SearchableIDTree(treePanel, 'sidepanel-tab-actors', getValueProvider('actor'), () => this.doOpen());
         EntityManagers.get('actor').addListener(() => this.tree.reload());
         
         var buttonPanel1 = document.createElement('div');

@@ -130,6 +130,7 @@ class EntryNode {
         // TODO: icon / name / description
         this.divContainer = document.createElement('div');
         this.divContainer.onclick = () => this.tree._onSelect(this);
+        this.divContainer.ondblclick = () => this.tree._onSelect(this, true);
         this.element.appendChild(this.divContainer);
 
         if(this.icon) {
@@ -138,7 +139,7 @@ class EntryNode {
             entryIcon.dataset.src = this.icon;
             this.divContainer.appendChild(entryIcon);
 
-            this.tree.imageObserver.observe(entryIcon);
+            this.tree._getImageObserver().observe(entryIcon);
         }
 
         const spanName = document.createElement('span');
@@ -175,7 +176,7 @@ class EntryNode {
 
         // update gui
         this.setVisible(hadMatch);
-        if(!hadMatch && this.tree.selectedEntry == this) this.tree._onSelect(null);
+        if(!hadMatch && this.tree._getSelectedEntry() == this) this.tree._onSelect(null);
         return hadMatch;
     }
 
@@ -196,36 +197,42 @@ class EntryNode {
 
 
 export class SearchableIDTree {
-    rootDirectory;
-    selectedEntry;
+    #rootDirectory;
+    #selectedEntry;
 
-    valueProvider;
+    #valueProvider;
+    #selectionCallback;
 
-    imageObserver;
+    #imageObserver;
+    #parent;
+    #searchPanel;
+    #filter;
+    #container;
 
-    constructor(parent, identifier, valueProvider) {
-        this.parent = parent;
+    constructor(parent, identifier, valueProvider, selectionCallback) {
+        this.#parent = parent;
         
-        this.searchPanel = document.createElement('div');
-        this.filter = document.createElement('input');
-        this.filter.type = 'text';
-        this.filter.className = 'tree-search-input';
-        this.filter.oninput = () => this._onFilter();
-        this.searchPanel.appendChild(this.filter);
-        this.parent.appendChild(this.searchPanel);
+        this.#searchPanel = document.createElement('div');
+        this.#filter = document.createElement('input');
+        this.#filter.type = 'text';
+        this.#filter.className = 'tree-search-input';
+        this.#filter.oninput = () => this._onFilter();
+        this.#searchPanel.appendChild(this.#filter);
+        this.#parent.appendChild(this.#searchPanel);
         
-        this.container = document.createElement('div');
-        this.parent.appendChild(this.container);
+        this.#container = document.createElement('div');
+        this.#parent.appendChild(this.#container);
         
-        this.valueProvider = valueProvider;
+        this.#valueProvider = valueProvider;
+        this.#selectionCallback = selectionCallback;
         
         // observer for lazy loading images (using loading=lazy does not work because chrome is too eager to load these list images for some reason)
-        this.imageObserver = new IntersectionObserver((entries, observer) => {
+        this.#imageObserver = new IntersectionObserver((entries, observer) => {
             entries.forEach(entry => {
                 if(entry.isIntersecting) {
                     const image = entry.target;
                     image.src = image.dataset.src;
-                    this.imageObserver.unobserve(image);
+                    this.#imageObserver.unobserve(image);
                 }
             });
         });
@@ -234,13 +241,13 @@ export class SearchableIDTree {
     }
     
     reload(map) {
-        if(map == null || map == undefined) map = this.valueProvider.getData();
+        if(map == null || map == undefined) map = this.#valueProvider.getData();
         
         // sort keys by value names
-        var sorted = Array.from(Object.keys(map));
+        const sorted = Array.from(Object.keys(map));
         sorted.sort((o1, o2) => {
-            var p1 = this.valueProvider.getName(map[o1]).split('/');
-            var p2 = this.valueProvider.getName(map[o2]).split('/');
+            var p1 = this.#valueProvider.getName(map[o1]).split('/');
+            var p2 = this.#valueProvider.getName(map[o2]).split('/');
             
             // skip all equal parts
             var i1 = 0;
@@ -265,36 +272,36 @@ export class SearchableIDTree {
 
         
         // rebuild tree
-        this.rootDirectory = new DirectoryNode(this, '');
-        this.selectedEntry = null;
-        this.imageObserver.disconnect();
+        this.#rootDirectory = new DirectoryNode(this, '');
+        this.#selectedEntry = null;
+        this.#imageObserver.disconnect();
 
         var directoryNodes = {};
-        directoryNodes[''] = this.rootDirectory;
+        directoryNodes[''] = this.#rootDirectory;
         for(const key of sorted) {
             var entry = map[key];
             
-            var fullPath = this.valueProvider.getName(entry);
+            var fullPath = this.#valueProvider.getName(entry);
             this._addDirectories(directoryNodes, fullPath);
             
             const parentPath = fullPath.includes('/') ? fullPath.substring(0, fullPath.lastIndexOf('/')+1) : '';
             const parent = directoryNodes[parentPath];
             
             const name = fullPath.includes('/') ? fullPath.substring(fullPath.lastIndexOf('/')+1) : fullPath;
-            const text = this.valueProvider.getSubText(entry);
+            const text = this.#valueProvider.getSubText(entry);
             //text = (text != null && text != undefined) ? '<br><p class="tree-entry-text">'+text+'</p>' : '';
             
-            const tags = this.valueProvider.getTags(entry);
-            const icon = this.valueProvider.getIcon(entry);
+            const tags = this.#valueProvider.getTags(entry);
+            const icon = this.#valueProvider.getIcon(entry);
 
             const entryNode = new EntryNode(this, key, name, text, tags, icon);
             parent.addEntryNode(entryNode);
         }
 
         // build html
-        this.rootDirectory.createElement();
-        this.container.innerHTML = '';
-        this.container.appendChild(this.rootDirectory.childElement);
+        this.#rootDirectory.createElement();
+        this.#container.innerHTML = '';
+        this.#container.appendChild(this.#rootDirectory.childElement);
     }
 
     _addDirectories(directoryNodes, path) {
@@ -316,25 +323,34 @@ export class SearchableIDTree {
     }
     
     _onFilter() {
-        this.rootDirectory.search(this.filter.value.toLowerCase());
+        this.#rootDirectory.search(this.#filter.value.toLowerCase());
     }
 
-    _onSelect(entry) {
-        if(this.selectedEntry) this.selectedEntry._onDeselect();
-        this.selectedEntry = entry;
-        if(this.selectedEntry) this.selectedEntry._onSelect();
+    _onSelect(entry, confirm = false) {
+        if(this.#selectedEntry) this.#selectedEntry._onDeselect();
+        this.#selectedEntry = entry;
+        if(this.#selectedEntry) this.#selectedEntry._onSelect();
+        if(this.#selectedEntry && confirm && this.#selectionCallback) this.#selectionCallback(this.#selectedEntry.id);
+    }
+
+    _getSelectedEntry() {
+        return this.#selectedEntry;
+    }
+
+    _getImageObserver() {
+        return this.#imageObserver;
     }
     
     expandAll() {
-        this.rootDirectory.setExpanded(true, true);
+        this.#rootDirectory.setExpanded(true, true);
     }
     
     getSearchPanel() {
-        return this.searchPanel;
+        return this.#searchPanel;
     }
     
     getSelectedValue() {
-        if(this.selectedEntry) return this.selectedEntry.id;
+        if(this.#selectedEntry) return this.#selectedEntry.id;
         return null;
     }
 }

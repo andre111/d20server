@@ -481,6 +481,7 @@ div.chat-box-content th, div.chat-box-content td {
     padding: 0;
     
     list-style: none;
+    user-select: none;
 }
 .tree-list li {
     width: 100%;

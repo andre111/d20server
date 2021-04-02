@@ -21,7 +21,7 @@ export class SidepanelTabAttachments extends SidepanelTab {
         var treePanel = document.createElement('div');
         treePanel.style.overflow = 'auto';
         this.tab.appendChild(treePanel);
-        this.tree = new SearchableIDTree(treePanel, 'sidepanel-tab-attachments', getValueProvider('attachment'));
+        this.tree = new SearchableIDTree(treePanel, 'sidepanel-tab-attachments', getValueProvider('attachment'), () => this.doOpen());
         EntityManagers.get('attachment').addListener(() => this.tree.reload());
         
         var buttonPanel1 = document.createElement('div');

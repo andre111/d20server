@@ -23,7 +23,7 @@ export class SidepanelTabMaps extends SidepanelTab {
         var treePanel = document.createElement('div');
         treePanel.style.overflow = 'auto';
         this.tab.appendChild(treePanel);
-        this.tree = new SearchableIDTree(treePanel, 'sidepanel-tab-maps', getValueProvider('map'));
+        this.tree = new SearchableIDTree(treePanel, 'sidepanel-tab-maps', getValueProvider('map'), () => this.doOpenMap());
         EntityManagers.get('map').addListener(() => this.tree.reload());
         
         var buttonPanel1 = document.createElement('div');
