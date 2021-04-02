@@ -66,10 +66,10 @@ export class BattleCommand extends Command {
     execute(profile, args) {
         // validate some input and find required objects
         const argsSplit = args.split(' ');
-        if(argsSplit.length < 1) throw `Usage: /battle <action> ...`;
+        if(argsSplit.length < 1) throw new Error(`Usage: /battle <action> ...`);
 
         const map = EntityManagers.get('map').find(profile.getCurrentMap());
-        if(!map) throw `Battle actions can only be performed on a map`;
+        if(!map) throw new Error(`Battle actions can only be performed on a map`);
 
         const token = profile.getSelectedToken(true);
 
@@ -77,8 +77,8 @@ export class BattleCommand extends Command {
         for(const action of ACTIONS) {
             if(action.name == argsSplit[0]) {
                 // validate action requirements
-                if(action.requiresGM && profile.getRole() != Role.GM) throw `This action can only be performed by GMs`;
-                if(action.requiresToken && !token) throw `This action requries a selected token`;
+                if(action.requiresGM && profile.getRole() != Role.GM) throw new Error(`This action can only be performed by GMs`);
+                if(action.requiresToken && !token) throw new Error(`This action requries a selected token`);
 
                 // perform action
                 action.callback(profile, map, token, argsSplit.slice(1));
@@ -87,6 +87,6 @@ export class BattleCommand extends Command {
         }
 
         // -> no action found
-        throw `Unknown battle action ${argsSplit[0]}`;
+        throw new Error(`Unknown battle action ${argsSplit[0]}`);
     }
 }

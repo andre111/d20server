@@ -19,14 +19,14 @@ export class TemplateCommand extends Command {
 
     execute(profile, args) {
         const split = splitArguments(args, 2);
-        if(split.length < 2) throw 'Usage: /template <name> <argument>[;<argument>[;...]]';
+        if(split.length < 2) throw new Error('Usage: /template <name> <argument>[;<argument>[;...]]');
 
         const name = split[0].toLowerCase();
         const templateArguments = split[1];
 
         // find template
         const template = Templates.get(name);
-        if(!template) throw `Unknown template: ${name}`;
+        if(!template) throw new Error(`Unknown template: ${name}`);
 
         // parse template
         var inputs = templateArguments.split(';');

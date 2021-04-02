@@ -96,17 +96,17 @@ export class CanvasWindowEditEntityTab {
                     component = editor.getContainer();
                     break;
                 case 'MULTI_LINE_STRING':
-                    if(type != 'STRING') throw 'Cannot use MULTI_LINE_STRING editor for property of type: '+type;
+                    if(type != 'STRING') throw new Error('Cannot use MULTI_LINE_STRING editor for property of type: '+type);
 					editor = new MultiLineStringPropertyEditor(this, property, compDefinition.text);
 					component = editor.getContainer();
                     break;
                 case 'HTML_STRING':
-                    if(type != 'STRING') throw 'Cannot use HTML_STRING editor for property of type: '+type;
+                    if(type != 'STRING') throw new Error('Cannot use HTML_STRING editor for property of type: '+type);
 					editor = new HTMLStringPropertyEditor(this, property, compDefinition.text);
 					component = editor.getContainer();
                     break;
                 case 'FILE':
-                    if(type != 'STRING') throw 'Cannot use FILE editor for property of type: '+type;
+                    if(type != 'STRING') throw new Error('Cannot use FILE editor for property of type: '+type);
                     editor = new StringFilePropertyEditor(this, property, compDefinition.text, compDefinition.filetype);
                     component = editor.getContainer();
                     break;
@@ -119,9 +119,9 @@ export class CanvasWindowEditEntityTab {
                     component = editor.getContainer();
                     break;
                 case 'EXTENSION_SELECT':
-                    if(type != 'STRING') throw 'Cannot use EXTENSION_SELECT editor for property of type: '+type;
+                    if(type != 'STRING') throw new Error('Cannot use EXTENSION_SELECT editor for property of type: '+type);
                     var extensionPoint = DefinitionUtils.getExtensionPointForProperty(this.w.getReference().getDefinition(), property);
-                    if(extensionPoint == null || extensionPoint == undefined) throw 'Property is not used as an extension point: '+property;
+                    if(extensionPoint == null || extensionPoint == undefined) throw new Error('Property is not used as an extension point: '+property);
                     var extensions = {};
                     for(const [key, value] of Object.entries(extensionPoint.extensionDefinitions)) {
                         extensions[key] = value.displayName;
@@ -134,7 +134,7 @@ export class CanvasWindowEditEntityTab {
                     component = editor.getContainer();
                     break;
                 default:
-                    throw 'Editor Type not implemented: '+editorType;
+                    throw new Error('Editor Type not implemented: '+editorType);
                 }
                 this.editors.push(editor);
                 
@@ -188,7 +188,7 @@ export class CanvasWindowEditEntityTab {
                 component = document.createElement('div');
                 break;
             default:
-                throw 'Component type not implemented: '+compDefinition.type;
+                throw new Error('Component type not implemented: '+compDefinition.type);
             }
             
             // size / position override

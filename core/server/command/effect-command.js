@@ -20,13 +20,13 @@ export class EffectCommand extends Command {
 
     execute(profile, args) {
         const split = splitArguments(args);
-        if(split.length != 6) throw 'Wrong argument count: <type> <x:expression> <y:expression> <rotation:expression> <scale:expression> <aboveOcc>';
+        if(split.length != 6) throw new Error('Wrong argument count: <type> <x:expression> <y:expression> <rotation:expression> <scale:expression> <aboveOcc>');
 
         const map = EntityManagers.get('map').find(profile.getCurrentMap());
         const context = new Context(profile, map, null);
 
         const type = split[0];
-        if(!EffectCommand.EFFECTS.includes(type)) throw `Unknown effect type: ${type}`;
+        if(!EffectCommand.EFFECTS.includes(type)) throw new Error(`Unknown effect type: ${type}`);
 
         const x = this.parser.parse(split[1]).eval(context);
         const y = this.parser.parse(split[2]).eval(context);

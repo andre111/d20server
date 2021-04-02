@@ -12,7 +12,7 @@ export class NotificationCommand extends Command {
 
     execute(profile, args) {
         const split = splitArguments(args, 2);
-        if(split.length < 2) throw 'Usage: /notification <all/map/player:name> <message>';
+        if(split.length < 2) throw new Error('Usage: /notification <all/map/player:name> <message>');
 
         const target = split[0].toLowerCase();
         const message = split[1];
@@ -22,7 +22,7 @@ export class NotificationCommand extends Command {
             MessageService.broadcast(msg, null);
         } else if(target == 'map') {
             const map = EntityManagers.get('map').find(profile.getCurrentMap());
-            if(!map) throw 'You do not have a map loaded';
+            if(!map) throw new Error('You do not have a map loaded');
             
             MessageService.broadcast(msg, map);
         } else if(target.startsWith('player:')) {
@@ -30,7 +30,7 @@ export class NotificationCommand extends Command {
 
             // find receiver
             const reciever = UserService.findByUsername(name, true);
-            if(!reciever) throw `Unknown player: ${name}`;
+            if(!reciever) throw new Error(`Unknown player: ${name}`);
 
             MessageService.send(msg, reciever);
         }

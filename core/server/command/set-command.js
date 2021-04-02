@@ -27,7 +27,7 @@ export class SetCommand extends Command {
 
     execute(profile, args) {
         const split = splitArguments(args, 3);
-        if(split.length < 3) throw 'Wrong argument count: <variable> <type> <expression>';
+        if(split.length < 3) throw new Error('Wrong argument count: <variable> <type> <expression>');
 
         const context = new Context(profile, EntityManagers.get('map').find(profile.getCurrentMap()), null);
 
@@ -64,7 +64,7 @@ export class SetCommand extends Command {
             variable.set(context, valueString);
         } else {
             //TODO: handle more types (LONG_LIST?)
-            throw `Cannot set value of Type: ${type}`;
+            throw new Error(`Cannot set value of Type: ${type}`);
         }
         //TODO: send info messsage
     }

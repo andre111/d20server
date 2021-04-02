@@ -9,7 +9,7 @@ export class TriggerCommand extends Command {
 
     execute(profile, args) {
         const split = splitArguments(args);
-        if(split.length != 2) throw 'Wrong argument count: <messageid> <contentid>';
+        if(split.length != 2) throw new Error('Wrong argument count: <messageid> <contentid>');
 
         const messageID = Number(split[0]);
         const contentID = Number(split[1]);

@@ -17,7 +17,7 @@ export class IfCommand extends Command {
     execute(profile, args) {
         // parse components
         const split = splitArguments(args, 4);
-        if(split.length < 4) throw 'Wrong arguments: "<expression>" <condition> "<expression>" ...';
+        if(split.length < 4) throw new Error('Wrong arguments: "<expression>" <condition> "<expression>" ...');
 
         const firstExpression = split[0];
         const comparison = split[1];
@@ -41,7 +41,7 @@ export class IfCommand extends Command {
         case '<': isTrue = value1 < value2; break;
         case '>=': isTrue = value1 >= value2; break;
         case '<=': isTrue = value1 <= value2; break;
-        default: throw `Unknown comparison type: ${comparison}`;
+        default: throw new Error(`Unknown comparison type: ${comparison}`);
         }
 
         // send message/command if isTrue

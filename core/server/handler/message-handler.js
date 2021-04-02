@@ -151,14 +151,14 @@ export class MessageHandler {
         var profile = null;
         if(message.requiresAuthentication()) {
             profile = UserService.getProfileFor(ws);
-            if(!profile) throw 'Not authenticated';
+            if(!profile) throw new Error('Not authenticated');
         }
 
         // get map
         var map = null;
         if(message.requiresMap()) {
             map = EntityManagers.get('map').find(profile.getCurrentMap());
-            if(!map) throw 'No map loaded';
+            if(!map) throw new Error('No map loaded');
         }
 
         // handle message
