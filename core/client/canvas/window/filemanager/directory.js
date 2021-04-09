@@ -71,6 +71,8 @@ export class Directory {
         };
         this.imgExpandIcon.onclick = e => {
             this.setExpanded(!this.expanded);
+            e.stopPropagation();
+            e.preventDefault();
         };
         if(this.window.canEdit()) {
             this.divContainer.ondragenter = (event) => {

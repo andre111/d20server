@@ -585,6 +585,7 @@ div.chat-box-content th, div.chat-box-content td {
     float: left;
 
     margin: 3px 3px 0 0;
+    pointer-events: all;
 }
 .fileman-dirlist .fileman-diricon {
     float: left;
