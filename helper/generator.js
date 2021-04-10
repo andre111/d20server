@@ -281,7 +281,7 @@ ModuleService.init().then(() => {
                 if(abilityNameMap[abilityName]) {
                     monsterActor.prop(abilityNameMap[abilityName]+'Class').setBoolean(true);
                     const currentAbilityValue = monsterActor.prop(abilityNameMap[abilityName]).getLong();
-                    const targetAbilityValue = entry['Wert'];
+                    const targetAbilityValue = abilityObject['Wert'];
                     monsterActor.prop(abilityNameMap[abilityName]+'Misc').setLong(targetAbilityValue - currentAbilityValue);
                     if(abilityText) monsterActor.prop(abilityNameMap[abilityName]+'Text').setString(abilityText);
                 } else {
