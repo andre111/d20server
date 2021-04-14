@@ -1,0 +1,9 @@
+{
+    "name": "Video and Audio Chat",
+    "version": "0.0.1",
+    "description": "",
+    "disableable": true,
+    "libraries": [
+        "/libs/adapter.js"
+    ]
+}

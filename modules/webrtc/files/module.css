@@ -1,0 +1,47 @@
+.webrtc-container {
+    position: absolute;
+
+    left: 10px;
+    bottom: 10px;
+    height: 182px;
+    width: calc(100% - 384px);
+
+    display: flex;
+}
+
+.webrtc-entry {
+    width: 162px;
+    height: 182px;
+
+    margin-right: 7px;
+
+    background-color: var(--color-bg);
+    box-shadow: var(--shadow-active);
+
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+.webrtc-entry div {
+    display: flex;
+}
+
+.webrtc-entry div img {
+    width: 20px;
+    height: 20px;
+}
+
+.webrtc-entry div p {
+    margin-right: auto;
+}
+
+.webrtc-entry video {
+    width: 288px;
+    height: 162px;
+    min-height: 162px; /* Needed to fix height of "empty" videos, why? */
+
+    margin-left: -70px;
+
+    background-color: black;
+}

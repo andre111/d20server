@@ -1,17 +1,37 @@
 import express from 'express';
 import http from 'http';
+import https from 'https';
 import path from 'path';
 import morgan from 'morgan';
 import compression from 'compression';
+import fs from 'fs-extra';
 import { router as filemanRouter } from './filemanager.js';
 
 import { ModuleService } from '../service/module-service.js';
 import { buildIndexPage, getIndexPage } from './index-page.js';
 import { WebsocketHandler } from './websocket-handler.js';
 
-const server = express();
-const baseServer = http.createServer(server);
 const port = 8082;
+const server = express();
+const baseServer = createBaseServer();
+var isHTTPS = false;
+
+function createBaseServer() {
+    const privateKeyPath = path.join(path.resolve(), '/config/privkey.pem');
+    const certificatePath = path.join(path.resolve(), '/config/fullchain.pem');
+    if(fs.existsSync(privateKeyPath) && fs.existsSync(certificatePath)) {
+        const privateKey = fs.readFileSync(privateKeyPath);
+        const certificate = fs.readFileSync(certificatePath);
+
+        isHTTPS = true;
+        console.log('Creating HTTPS server...');
+        return https.createServer({ key: privateKey, cert: certificate }, server);
+    } else {
+        console.log('Creating HTTP server...');
+        return http.createServer(server);
+    }
+}
+
 export class HttpHandler {
     static init() {
         server.use(morgan('dev'));
@@ -64,5 +84,9 @@ export class HttpHandler {
 
     static getServer() {
         return server;
+    }
+
+    static isHTTPS() {
+        return isHTTPS;
     }
 }

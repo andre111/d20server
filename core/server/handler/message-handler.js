@@ -7,6 +7,7 @@ import { ActionCommand, AddEntity, EntityLoading, MovePlayerToMap, Ping, PlayEff
 import { Role } from '../../common/constants.js';
 import { GameService } from '../service/game-service.js';
 import { VERSION } from '../version.js';
+import { Events } from '../../common/events.js';
 
 function _handleRequestAccounts(ws, message) {
     MessageService._send(new PlayerList(UserService.getAllProfiles()), ws);
@@ -194,7 +195,10 @@ export class MessageHandler {
         } else if(message instanceof EntityLoading) {
 			// discard client callbacks for now
         } else {
-            throw new Error(`Recieved unhandled message: ${message}`);
+            const event = Events.trigger('customMessage', { message: message, profile: profile, map: map }, true);
+            if(!event.canceled) {
+                throw new Error(`Recieved unhandled message: ${message}`);
+            }
         }
     }
 }

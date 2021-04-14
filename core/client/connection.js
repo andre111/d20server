@@ -5,7 +5,8 @@ var _ws = null;
 
 export const Connection = {
     init: function(callback, closecallback) {
-        _ws = new WebSocket('ws://'+location.host+'/ws');
+        var path = location.protocol == 'https:' ? 'wss://'+location.host+'/ws' : 'ws://'+location.host+'/ws';
+        _ws = new WebSocket(path);
         _ws.onopen = callback;
         _ws.onmessage = Connection.read;
         _ws.onclose = closecallback;
