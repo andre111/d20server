@@ -50,7 +50,7 @@
 
 .webrtc-volume input {
     width: 0px;
-    height: 20px;
+    height: 16px;
     opacity: 0;
     transition: all 0.5s ease;
 }
