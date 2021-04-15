@@ -10,6 +10,7 @@ import { EntityManagers } from '../../../common/entity/entity-managers.js';
 import { SendChatMessage } from '../../../common/messages.js';
 import { Events } from '../../../common/events.js';
 import { Client } from '../../app.js';
+import { CanvasWindowText } from '../window/canvas-window-text.js';
 
 export class EntityMenu extends Menu {
     constructor(mode, reference, isGM, x, y) {
@@ -102,6 +103,7 @@ export class EntityMenu extends Menu {
         // gm actions
         if(isGM) {
             if(this.mode.entityType == 'token') {
+                this.createItem(this.container, 'View Notes', () => new CanvasWindowText('GM Notes', this.reference.prop('gmNotes').getString()));
                 this.createItem(this.container, 'Fit to Grid', () => this.doFitToGrid());
             }
             

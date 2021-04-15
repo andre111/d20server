@@ -36,6 +36,7 @@ import { StateInit } from './state/state-init.js';
 import { StateMain } from './state/state-main.js';
 import { Settings } from './settings/settings.js';
 import { SettingsEntryNumberRange } from './settings/settings-entry-number-range.js';
+import { CanvasWindowText } from './canvas/window/canvas-window-text.js';
 
 // Initialize common code
 Common.init(new ClientIDProvider(), ClientEntityManager);
@@ -162,6 +163,8 @@ Events.on('actionCommand', event => {
     
     if(event.data.getCommand() == 'SHOW_IMAGE') {
         new CanvasWindowImage(event.data.getText());
+    } else if(event.data.getCommand() == 'SHOW_TEXT') {
+        new CanvasWindowText('Text', event.data.getText());
     }
 });
 
