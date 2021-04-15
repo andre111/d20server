@@ -47,3 +47,53 @@
 
     background-color: black;
 }
+
+.webrtc-volume input {
+    width: 0px;
+    height: 20px;
+    opacity: 0;
+    transition: all 0.5s ease;
+}
+
+.webrtc-volume:hover input {
+    width: 60px;
+    opacity: 1;
+}
+
+
+/* Custom range slider scaling: based on http://danielstern.ca/range.css/#/ */
+.webrtc-volume input {
+    background-color: transparent;
+    -webkit-appearance: none;
+}
+.webrtc-volume input:focus {
+    outline: none;
+}
+.webrtc-volume input::-webkit-slider-runnable-track {
+    background: black;
+    width: 100%;
+    height: 3px;
+    cursor: pointer;
+}
+.webrtc-volume input::-webkit-slider-thumb {
+    margin-top: -5.5px;
+    width: 5px;
+    height: 14px;
+    background: black;
+    border: none;
+    cursor: pointer;
+    -webkit-appearance: none;
+}
+.webrtc-volume input::-moz-range-track {
+    background: black;
+    width: 100%;
+    height: 3px;
+    cursor: pointer;
+}
+.webrtc-volume input::-moz-range-thumb {
+    width: 5px;
+    height: 14px;
+    background: black;
+    border: none;
+    cursor: pointer;
+}

@@ -14,7 +14,6 @@ export class WebRTCEntry {
 
     #textContainer;
     #icon;
-    #name;
     #toggleMic;
     #toggleCam;
 
@@ -37,11 +36,12 @@ export class WebRTCEntry {
         this.#icon = document.createElement('img');
         this.#textContainer.appendChild(this.#icon);
         
-        this.#name = document.createElement('p');
-        this.#name.innerText = ServerData.profiles.get(profileID).getUsername();
-        this.#textContainer.appendChild(this.#name);
+        const name = document.createElement('p');
+        name.innerText = ServerData.profiles.get(profileID).getUsername();
+        this.#textContainer.appendChild(name);
 
         if(this.#localStream) {
+            // controlls for local input
             this.#toggleMic = document.createElement('img');
             this.#toggleMic.src = '/modules/webrtc/files/img/mic-on.svg';
             this.#toggleMic.onclick = event => this.toggleMic();
@@ -51,6 +51,23 @@ export class WebRTCEntry {
             this.#toggleCam.src = '/modules/webrtc/files/img/cam-on.svg';
             this.#toggleCam.onclick = event => this.toggleCam();
             this.#textContainer.appendChild(this.#toggleCam);
+        } else {
+            // controlls for remote stream
+            const volumeDiv = document.createElement('div');
+            volumeDiv.className = 'webrtc-volume';
+            this.#textContainer.appendChild(volumeDiv);
+
+            const volumeInput = document.createElement('input');
+            volumeInput.type = 'range';
+            volumeInput.value = 100;
+            volumeInput.onchange = event => {
+                this.#video.volume = volumeInput.value / 100;
+            };
+            volumeDiv.appendChild(volumeInput);
+
+            const volumeIcon = document.createElement('img');
+            volumeIcon.src = '/modules/webrtc/files/img/volume.svg';
+            volumeDiv.appendChild(volumeIcon);
         }
 
         this.updateIcons();
