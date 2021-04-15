@@ -198,6 +198,7 @@ button:active, input:focus {
     font-weight: normal;
     margin: -27px 2px 5px 0;
     width: fit-content;
+    position: absolute;
 }
 
 /* Custom Scrollbars (TODO: only works in webkit based browsers (so no firefox) and doesn't even look that great?) */
