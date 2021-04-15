@@ -20,6 +20,8 @@ const errorHandler = e => console.error(e);
 function setupPeer(profileID, initCall = false) {
     profileID = String(profileID);
 
+    removePeerConnection(profileID);
+    
     const entry = new WebRTCEntry(Number(profileID));
     videoContainer.appendChild(entry.getContainer());
 
@@ -74,9 +76,7 @@ function gotRemoteStream(event, profileID) {
 function checkPeerDisconnect(event, profileID) {
     const state = peerConnections[profileID].pc.iceConnectionState;
     if(state == 'failed' || state == 'closed' || state == 'disconnected') {
-        peerConnections[profileID].entry.onDestroy();
-        videoContainer.removeChild(peerConnections[profileID].entry.getContainer());
-        delete peerConnections[profileID];
+        removePeerConnection(profileID);
     }
 }
 
@@ -84,6 +84,19 @@ function createdDescription(description, profileID) {
     peerConnections[profileID].pc.setLocalDescription(description).then(() => {
         MessageService.send(new WebRTCMessage('sdp', Number(profileID), peerConnections[profileID].pc.localDescription));
     }).catch(errorHandler);
+}
+
+function removePeerConnection(profileID) {
+    if(!peerConnections[profileID]) return;
+
+    peerConnections[profileID].pc.onicecandidate = null;
+    peerConnections[profileID].pc.ontrack = null;
+    peerConnections[profileID].pc.oniceconnectionstatechange = null;
+
+    peerConnections[profileID].entry.onDestroy();
+    videoContainer.removeChild(peerConnections[profileID].entry.getContainer());
+    
+    delete peerConnections[profileID];
 }
 
 // create event listeners (to startup local stream/messaging)
