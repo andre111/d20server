@@ -353,8 +353,6 @@ export class EntityActionSelect extends EntityAction {
         if(entity.getType() != this.mode.entityType) return false;
         if(entity.prop('layer').getLayer() != Client.getState().getLayer()) return false;
         
-        if(entity.prop('alwaysSelectable') != null && entity.prop('alwaysSelectable') != undefined && entity.prop('alwaysSelectable').getBoolean()) return true;
-        
         return Access.matches(Access.CONTROLLING_PLAYER, entity.getAccessLevel(ServerData.localProfile));
     }
     
