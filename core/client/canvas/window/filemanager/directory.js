@@ -157,6 +157,13 @@ export class Directory {
         this.selectedFile = selectedFile;
     }
 
+    getFileIndex(filepath) {
+        for(var i=0; i<this.files.length; i++) {
+            if(this.files[i].getPath() == filepath) return i;
+        }
+        return -1;
+    }
+
     // client methods
     setExpanded(expanded) {
         if(this.dirCount == 0) return;
@@ -233,8 +240,16 @@ export class Directory {
             cache: false,
             success: data => {
                 if(data.res == 'ok') {
-                    // refresh window (by reselecting the dropped into directory)
-                    this.window.selectDirectory(this, true, this.path + fileName);
+                    // determine next file (to select it)
+                    var selIndex = this.window.getSelectedDirectory().getFileIndex(filePath);
+                    var selPath = null;
+                    if(selIndex + 1 < this.window.getSelectedDirectory().getFiles().length) {
+                        selPath = this.window.getSelectedDirectory().getFiles()[selIndex+1].getPath();
+                    }
+
+                    // refresh window (by reloading the target directory reselecting the current directory)
+                    this.loadFiles(true, () => {});
+                    this.window.selectDirectory(this.window.getSelectedDirectory(), true, selPath);
                 }
             },
             error: data => {

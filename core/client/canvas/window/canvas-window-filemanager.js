@@ -384,7 +384,7 @@ export class CanvasWindowFilemanager extends CanvasWindow {
                 this.divFilesEmpty.style.display = 'none';
                 for(const file of directory.getFiles()) {
                     this.ulFileList.append(file.getElement());
-                    if(selectedFilePath != '' && file.getPath() == selectedFilePath) selectedFile = file;
+                    if(selectedFilePath && file.getPath() == selectedFilePath) selectedFile = file;
                 }
             }
 
