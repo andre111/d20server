@@ -138,13 +138,13 @@ Events.on('addModeButtonsGM', event => {
 Events.on('addRenderLayers', event => {
     event.data.addRenderLayer(new CanvasRenderLayerTokens(-1000, Layer.BACKGROUND, false));
     event.data.addRenderLayer(new CanvasRenderLayerGrid(0));
+    event.data.addRenderLayer(new CanvasRenderLayerWallLines(500));
     event.data.addRenderLayer(new CanvasRenderLayerTokens(1000, Layer.MAIN, false));
     event.data.addRenderLayer(new CanvasRenderLayerEffects(1500, false));
     event.data.addRenderLayer(new CanvasRenderLayerWeather(1600));
     event.data.addRenderLayer(new CanvasRenderLayerWallOcclusion(1700));
     event.data.addRenderLayer(new CanvasRenderLayerLights(1800));
     event.data.addRenderLayer(new CanvasRenderLayerTokens(2000, Layer.GMOVERLAY, false, 0.5, true));
-    event.data.addRenderLayer(new CanvasRenderLayerWallLines(2500));
     event.data.addRenderLayer(new CanvasRenderLayerEffects(2600, true));
 });
 
