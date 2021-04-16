@@ -12,7 +12,7 @@ import { ImageService } from './service/image-service.js';
 import { CanvasView } from './canvas/canvas-view.js';
 import { ModeButton, ModeButtonExtended } from './canvas/mode-panel.js';
 import { CanvasModeEntities } from './canvas/mode/canvas-mode-entities.js';
-import { CanvasModeWalls, WallActionCreateWall, WallActionCreateWindow, WallActionCreateDoor } from './canvas/mode/canvas-mode-walls.js';
+import { CanvasModeWalls, WallActionCreateWall, WallActionCreateOneSidedWall, WallActionCreateWindow, WallActionCreateDoor } from './canvas/mode/canvas-mode-walls.js';
 import { CanvasRenderLayerEffects } from './canvas/renderlayer/canvas-renderlayer-effects.js';
 import { CanvasRenderLayerGrid } from './canvas/renderlayer/canvas-renderlayer-grid.js';
 import { CanvasRenderLayerLights } from './canvas/renderlayer/canvas-renderlayer-lights.js';
@@ -86,14 +86,15 @@ ImageService.init();
 
 Events.on('addModeButtons', event => {
     // token mode
-    event.data.addButton(new ModeButtonExtended(new ModeButton('/core/files/img/gui/cursor', 'Edit Tokens', () => Client.getState() instanceof StateMain && Client.getState().getMode() instanceof CanvasModeEntities && Client.getState().getMode().entityType == 'token', () => Client.getState().setMode(new CanvasModeEntities('token'))), 0));
+    event.data.addButton(new ModeButtonExtended(new ModeButton('/core/files/img/gui/cursor', 'Edit Tokens', () => Client.getState().getMode() instanceof CanvasModeEntities && Client.getState().getMode().entityType == 'token', () => Client.getState().setMode(new CanvasModeEntities('token'))), 0));
     
     // wall mode
     if(ServerData.isGM()) {
-        event.data.addButton(new ModeButtonExtended(new ModeButton('/core/files/img/gui/wall', 'Edit Walls', () => Client.getState() instanceof StateMain && Client.getState().getMode() instanceof CanvasModeWalls, () => Client.getState().setMode(new CanvasModeWalls())), 0, [
-            new ModeButton('/core/files/img/gui/wall', 'Create Walls', () => Client.getState() instanceof StateMain && Client.getState().getMode() instanceof CanvasModeWalls && Client.getState().getMode().action instanceof WallActionCreateWall, () => { Client.getState().setMode(new CanvasModeWalls()); Client.getState().getMode().setAction(new WallActionCreateWall(Client.getState().getMode())); }),
-            new ModeButton('/core/files/img/gui/window', 'Create Windows', () => Client.getState() instanceof StateMain && Client.getState().getMode() instanceof CanvasModeWalls && Client.getState().getMode().action instanceof WallActionCreateWindow, () => { Client.getState().setMode(new CanvasModeWalls()); Client.getState().getMode().setAction(new WallActionCreateWindow(Client.getState().getMode())); }),
-            new ModeButton('/core/files/img/gui/door', 'Create Doors', () => Client.getState() instanceof StateMain && Client.getState().getMode() instanceof CanvasModeWalls && Client.getState().getMode().action instanceof WallActionCreateDoor, () => { Client.getState().setMode(new CanvasModeWalls()); Client.getState().getMode().setAction(new WallActionCreateDoor(Client.getState().getMode())); })
+        event.data.addButton(new ModeButtonExtended(new ModeButton('/core/files/img/gui/wall', 'Edit Walls', () => Client.getState().getMode() instanceof CanvasModeWalls, () => Client.getState().setMode(new CanvasModeWalls())), 0, [
+            new ModeButton('/core/files/img/gui/wall', 'Create Walls', () => Client.getState().getMode() instanceof CanvasModeWalls && Client.getState().getMode().action instanceof WallActionCreateWall, () => { Client.getState().setMode(new CanvasModeWalls()); Client.getState().getMode().setAction(new WallActionCreateWall(Client.getState().getMode())); }),
+            new ModeButton('/core/files/img/gui/onesidedwall', 'Create One Sided Walls', () => Client.getState().getMode() instanceof CanvasModeWalls && Client.getState().getMode().action instanceof WallActionCreateOneSidedWall, () => { Client.getState().setMode(new CanvasModeWalls()); Client.getState().getMode().setAction(new WallActionCreateOneSidedWall(Client.getState().getMode())); }),
+            new ModeButton('/core/files/img/gui/window', 'Create Windows', () => Client.getState().getMode() instanceof CanvasModeWalls && Client.getState().getMode().action instanceof WallActionCreateWindow, () => { Client.getState().setMode(new CanvasModeWalls()); Client.getState().getMode().setAction(new WallActionCreateWindow(Client.getState().getMode())); }),
+            new ModeButton('/core/files/img/gui/door', 'Create Doors', () => Client.getState().getMode() instanceof CanvasModeWalls && Client.getState().getMode().action instanceof WallActionCreateDoor, () => { Client.getState().setMode(new CanvasModeWalls()); Client.getState().getMode().setAction(new WallActionCreateDoor(Client.getState().getMode())); })
         ]));
     }
 });

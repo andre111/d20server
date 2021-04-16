@@ -81,6 +81,13 @@
             "editAccess": "GM",
             "viewAccess": "EVERYONE",
             "value": "false"
+        },
+        {
+            "name": "oneSided",
+            "type": "BOOLEAN",
+            "editAccess": "GM",
+            "viewAccess": "EVERYONE",
+            "value": "false"
         }
     ],
     "updateRules": [
@@ -92,7 +99,7 @@
             "name": "Main",
             "access": "GM",
             "layout": "GRID",
-            "layoutParameters": [ "5", "3" ],
+            "layoutParameters": [ "6", "3" ],
             "layoutGlue": "true",
             "components": [
                 {
@@ -146,8 +153,20 @@
                 },
                 {
                     "type": "EDITOR",
+                    "property": "oneSided",
+                    "text": "One Sided (visual only)"
+                },
+                
+                {
+                    "type": "EMPTY"
+                },
+                {
+                    "type": "EDITOR",
                     "property": "door",
                     "text": "Door"
+                },
+                {
+                    "type": "EMPTY"
                 },
                 
                 {

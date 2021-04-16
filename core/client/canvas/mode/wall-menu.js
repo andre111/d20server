@@ -4,7 +4,7 @@ import { ServerData } from '../../server-data.js';
 
 import { EntityManagers } from '../../../common/entity/entity-managers.js';
 
-export class WallMenu extends Menu{
+export class WallMenu extends Menu {
     constructor(mode, reference, isGM, x, y) {
         super(x, y);
 
@@ -17,6 +17,10 @@ export class WallMenu extends Menu{
             
             // create html elements
             this.createItem(this.container, 'Edit', () => this.doEdit());
+
+            if(this.reference.prop('oneSided').getBoolean()) {
+                this.createItem(this.container, 'Flip', () => this.doFlip());
+            }
             
             if(this.reference.prop('door').getBoolean()) {
                 if(this.reference.prop('open').getBoolean()) this.createItem(this.container, 'Close Door', () => this.doOpen(false));
@@ -34,6 +38,16 @@ export class WallMenu extends Menu{
     
     doEdit() {
         new CanvasWindowEditEntity(this.reference);
+    }
+
+    doFlip() {
+        const x1 = this.reference.prop('x1').getLong();
+        const y1 = this.reference.prop('y1').getLong();
+        this.reference.prop('x1').setLong(this.reference.prop('x2').getLong());
+        this.reference.prop('y1').setLong(this.reference.prop('y2').getLong());
+        this.reference.prop('x2').setLong(x1);
+        this.reference.prop('y2').setLong(y1);
+        this.reference.performUpdate();
     }
     
     doOpen(open) {

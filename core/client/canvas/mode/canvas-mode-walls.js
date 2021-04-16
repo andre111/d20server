@@ -3,6 +3,7 @@ import { WallActionCreateWall } from './wall-action-create-wall.js';
 import { MapUtils } from '../../util/maputil.js';
 
 export { WallActionCreateWall } from './wall-action-create-wall.js';
+export { WallActionCreateOneSidedWall } from './wall-action-create-one-sided-wall.js';
 export { WallActionCreateWindow } from './wall-action-create-window.js';
 export { WallActionCreateDoor } from './wall-action-create-door.js';
 export class CanvasModeWalls extends CanvasMode {

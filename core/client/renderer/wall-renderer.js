@@ -6,12 +6,17 @@ export const WallRenderer = {
         const minX = viewport.x;
         const maxX = viewport.x + viewport.width;
         const minY = viewport.y;
-        const maxY = viewport.y + viewport.height;
+		const maxY = viewport.y + viewport.height;
+		
+		const viewerX = viewer.prop('x').getLong();
+		const viewerY = viewer.prop('y').getLong();
         
         for(const wall of walls) {
-            if(!wall.prop('seeThrough').getBoolean() && (!wall.prop('door').getBoolean() || !wall.prop('open').getBoolean())) {
-                if(IntMathUtils.getClippedLine(wall.prop('x1').getLong(), wall.prop('y1').getLong(), wall.prop('x2').getLong(), wall.prop('y2').getLong(), minX, maxX, minY, maxY) != null) return true;
-            }
+			if(wall.prop('seeThrough').getBoolean()) continue;
+			if(wall.prop('door').getBoolean() && wall.prop('open').getBoolean()) continue;
+			if(wall.prop('oneSided').getBoolean() && !IntMathUtils.isPointLeftOfLine(wall.prop('x1').getLong(), wall.prop('y1').getLong(), wall.prop('x2').getLong(), wall.prop('y2').getLong(), viewerX, viewerY)) continue;
+
+            if(IntMathUtils.getClippedLine(wall.prop('x1').getLong(), wall.prop('y1').getLong(), wall.prop('x2').getLong(), wall.prop('y2').getLong(), minX, maxX, minY, maxY) != null) return true;
 		}
         return false;
     },
@@ -20,23 +25,28 @@ export const WallRenderer = {
         var cpr = new ClipperLib.Clipper();
         
         var combined = null;
-        for(var viewer of viewers) {
+        for(const viewer of viewers) {
+			const viewerX = viewer.prop('x').getLong();
+			const viewerY = viewer.prop('y').getLong();
+
             // create view for single viewer
             var localCombined = [];
             for(var wall of walls) {
-                if(!wall.prop('seeThrough').getBoolean() && (!wall.prop('door').getBoolean() || !wall.prop('open').getBoolean())) {
-                    var poly = WallRenderer.calculateOccolusionPolygon(viewport, wall, viewer.prop('x').getLong(), viewer.prop('y').getLong());
-                    if(poly != null && poly != undefined) {
-                        //localCombined = union(localCombined, poly);
-                        var result = new ClipperLib.Paths();
-                        cpr.Clear();
-                        cpr.AddPaths(localCombined, ClipperLib.PolyType.ptSubject, true);
-                        cpr.AddPath(poly, ClipperLib.PolyType.ptClip, true);
-                        cpr.Execute(ClipperLib.ClipType.ctUnion, result);
-                        result = ClipperLib.Clipper.CleanPolygons(result, 1.1); //TODO tweak this value
-                        localCombined = result;
-                    }
-                }
+				if(wall.prop('seeThrough').getBoolean()) continue;
+				if(wall.prop('door').getBoolean() && wall.prop('open').getBoolean()) continue;
+				if(wall.prop('oneSided').getBoolean() && !IntMathUtils.isPointLeftOfLine(wall.prop('x1').getLong(), wall.prop('y1').getLong(), wall.prop('x2').getLong(), wall.prop('y2').getLong(), viewerX, viewerY)) continue;
+
+				var poly = WallRenderer.calculateOccolusionPolygon(viewport, wall, viewerX, viewerY);
+				if(poly != null && poly != undefined) {
+					//localCombined = union(localCombined, poly);
+					var result = new ClipperLib.Paths();
+					cpr.Clear();
+					cpr.AddPaths(localCombined, ClipperLib.PolyType.ptSubject, true);
+					cpr.AddPath(poly, ClipperLib.PolyType.ptClip, true);
+					cpr.Execute(ClipperLib.ClipType.ctUnion, result);
+					result = ClipperLib.Clipper.CleanPolygons(result, 1.1); //TODO tweak this value
+					localCombined = result;
+				}
             }
             
             // combine all viewers

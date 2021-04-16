@@ -9,11 +9,12 @@ import { EntityReference } from '../../../common/entity/entity-reference.js';
 import { IntMathUtils } from '../../../common/util/mathutil.js';
 
 export class WallActionCreate extends WallAction {
-    constructor(mode, seeThrough, door) {
+    constructor(mode, seeThrough, door, oneSided) {
         super(mode);
         
         this.seeThrough = seeThrough;
         this.door = door;
+        this.oneSided = oneSided;
         
         this.startX = 0;
         this.startY = 0;
@@ -83,6 +84,7 @@ export class WallActionCreate extends WallAction {
 				newWall.prop('y2').setLong(this.currentY);
 				newWall.prop('seeThrough').setBoolean(this.seeThrough);
                 newWall.prop('door').setBoolean(this.door);
+                newWall.prop('oneSided').setBoolean(this.oneSided);
                 EntityManagers.get('wall').add(newWall);
                 
                 this.startX = this.currentX;
