@@ -70,7 +70,7 @@ export const MessageService = {
             }
         } else if(msg instanceof SendNotification) {
             if(Client.getState() instanceof StateMain) {
-                Client.getState().getNotificationManager().addNotification(msg.getContent(), msg.getTime() * Client.FPS);
+                Client.getState().getNotificationManager().addNotification(msg.getContent(), msg.getTime());
             }
         } else if(msg instanceof ModuleDefinitions) {
             ModuleSettings.onModuleDefinitions(msg.getModuleDefinitions());

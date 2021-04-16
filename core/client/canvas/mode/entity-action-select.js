@@ -386,8 +386,10 @@ export class EntityActionSelect extends EntityAction {
     }
     
     doCopy() {
-        if(this.mode.activeEntities.length > 0) {
+        const count = this.mode.activeEntities.length;
+        if(count > 0) {
             EntityClipboard.setEntities(this.mode.entityType, this.mode.activeEntities);
+            Client.getState().getNotificationManager().addNotification(count > 1 ? count + ' Entities copied' : '1 Entity copied', 2);
         }
     }
     
