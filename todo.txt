@@ -1,16 +1,21 @@
 //TODO: current plans:
+// one sided walls ?
+// module settings (enable/disable) for gms
+// webrtc settings (input devices)
 // allow interacting with doors in CanvasModeEntities as long as a controllable entity is near it (toggle isOpen or play locked sound)
 // add motd (and maybe more?) to login screen
+// support sending selected entities of other types
+// Doppelklick um Dinge zu öffnen
+// create real "import" command line functionality on server (+ other commands?)
+
+//TODO: Long term technical todos
+// Use Mocha (https://mochajs.org/#getting-started) for writing unit tests
+// Maybe: Switch to TypeScript (would be nice to have typed variables/... but might come with multiple complications)
 
 //TODO: when the web client porting is done:
 // Add an "fileRenamed" event and a listener that adjusts token imagePath and audioPath properties to server
 // "Area" module (you can define areas, maybe using the drawing system, that can influence stuff, 
 //               first idea: "no weather/indoor" areas where the WeatherRenderer does not spawn particles)
-
-//TODO: Current Plans:
-// support sending selected entities of other types
-// Doppelklick um Dinge zu öffnen
-// create real "import" command line functionality on server (+ other commands?)
 
 //TODO: dice/template/scripting rework
 //    not as important: (using a string property as part of the expression (cheap solution would be replacing before parsing, but that can be done better...))
@@ -40,7 +45,6 @@
 
 //TODO: Nice to haves:
 // more "Effects" for use with the effect command (-> i.e. attack animations and magic)
-// one sided walls ?
 // Script support (server side, how would I keep them "safe", maybe just keep it at modules)
 // language support
 // a "map" function for an actual map somehow?
