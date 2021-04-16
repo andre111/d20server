@@ -3,11 +3,12 @@ import { MessageService } from '../service/message-service.js';
 import { UserService } from '../service/user-service.js';
 
 import { EntityManagers } from '../../common/entity/entity-managers.js';
-import { ActionCommand, AddEntity, EntityLoading, MovePlayerToMap, Ping, PlayEffect, PlayerList, RemoveEntity, RequestAccounts, ResponseFail, ResponseOk, SelectedEntities, SendChatMessage, SetPlayerColor, SignIn, SignOut, UpdateEntityProperties } from '../../common/messages.js';
+import { ActionCommand, AddEntity, EntityLoading, MovePlayerToMap, Ping, PlayEffect, PlayerList, RemoveEntity, RequestAccounts, ResponseFail, ResponseOk, SelectedEntities, SendChatMessage, SendNotification, SetPlayerColor, SignIn, SignOut, ToggleModule, UpdateEntityProperties } from '../../common/messages.js';
 import { Role } from '../../common/constants.js';
 import { GameService } from '../service/game-service.js';
 import { VERSION } from '../version.js';
 import { Events } from '../../common/events.js';
+import { ModuleService } from '../service/module-service.js';
 
 function _handleRequestAccounts(ws, message) {
     MessageService._send(new PlayerList(UserService.getAllProfiles()), ws);
@@ -146,6 +147,13 @@ function _handlePing(profile, message) {
     MessageService.send(message, profile);
 }
 
+function _handleToggleModule(profile, message) {
+    if(profile.getRole() == Role.GM) {
+        ModuleService.toggleModule(message.getIdentifier(), message.getDisabled());
+        MessageService.send(new SendNotification('Server Restart Required!', 10), profile);
+    }
+}
+
 export class MessageHandler {
     static handle(ws, message) {
         // get profile
@@ -192,6 +200,8 @@ export class MessageHandler {
             _handleSendChatMessage(profile, message);
         } else if(message instanceof Ping) {
             _handlePing(profile, message);
+        } else if(message instanceof ToggleModule) {
+            _handleToggleModule(profile, message);
         } else if(message instanceof EntityLoading) {
 			// discard client callbacks for now
         } else {

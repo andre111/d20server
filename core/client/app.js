@@ -37,6 +37,7 @@ import { StateMain } from './state/state-main.js';
 import { Settings } from './settings/settings.js';
 import { SettingsEntryNumberRange } from './settings/settings-entry-number-range.js';
 import { CanvasWindowText } from './canvas/window/canvas-window-text.js';
+import { ModuleSettings } from './settings/module-settings.js';
 
 // Initialize common code
 Common.init(new ClientIDProvider(), ClientEntityManager);
@@ -182,6 +183,9 @@ export const SETTING_PAGE_GENERAL = Settings.createPage('general', 'General');
 export const SETTING_PAGE_AUDIO = Settings.createPage('audio', 'Audio');
 SETTING_PAGE_AUDIO.addEntry('volume', SETTING_GLOBAL_VOLUME);
 SETTING_PAGE_AUDIO.addEntry('weather_volume', SETTING_WEATHER_VOLUME);
+Events.on('createMainHTML', event => {
+    if(ServerData.isGM()) ModuleSettings.init();
+});
 
 // initialize state
 Client.setState(new StateInit());

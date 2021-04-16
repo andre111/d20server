@@ -1,6 +1,6 @@
 {
     "name": "Pathfinder Character Sheet (German)",
-    "version": "0.0.9",
-    "description": "",
-    "disableable": true
+    "version": "0.0.1",
+    "description": "Adds properties, a character sheet and macros for Pathfinder Characters",
+    "disabled": false
 }

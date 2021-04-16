@@ -8,6 +8,7 @@ import { Entity } from '../../common/common.js';
 import { Role } from '../../common/constants.js';
 import { EntityManagers } from '../../common/entity/entity-managers.js';
 import { AddEntity, EnterGame, EnterMap, PlayerList } from '../../common/messages.js';
+import { ModuleService } from './module-service.js';
 
 export class GameService {
     static init() {
@@ -42,6 +43,7 @@ export class GameService {
         // send game state
         GameService.reloadMaps(profile);
         ChatService.sendHistory(profile, 100);
+        ModuleService.sendModuleDefinitions(profile);
     }
 
     static reloadMaps(profile) {

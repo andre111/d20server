@@ -1,5 +1,5 @@
 import { Connection } from '../connection.js';
-import { ActionCommand, AddEntity, ChatEntries, ClearEntities, EnterGame, EnterMap, EntityLoading, PlayEffect, PlayerList, RemoveEntity, ResponseFail, ResponseOk, SendNotification, ServerDefinitions, UpdateEntityProperties } from '../../common/messages.js';
+import { ActionCommand, AddEntity, ChatEntries, ClearEntities, EnterGame, EnterMap, EntityLoading, ModuleDefinitions, PlayEffect, PlayerList, RemoveEntity, ResponseFail, ResponseOk, SendNotification, ServerDefinitions, UpdateEntityProperties } from '../../common/messages.js';
 import { Events } from '../../common/events.js';
 import { ServerData } from '../server-data.js';
 import { StateLoading } from '../state/state-loading.js';
@@ -9,6 +9,7 @@ import { setDefinitions } from '../../common/definitions.js';
 import { StateMain } from '../state/state-main.js';
 import { CanvasWindowInfo } from '../canvas/window/canvas-window-info.js';
 import { EffectRenderer } from '../renderer/effect-renderer.js';
+import { ModuleSettings } from '../settings/module-settings.js';
 
 export const MessageService = {
     recieve: function(msg) {
@@ -71,6 +72,8 @@ export const MessageService = {
             if(Client.getState() instanceof StateMain) {
                 Client.getState().getNotificationManager().addNotification(msg.getContent(), msg.getTime() * Client.FPS);
             }
+        } else if(msg instanceof ModuleDefinitions) {
+            ModuleSettings.onModuleDefinitions(msg.getModuleDefinitions());
         } else {
             const event = Events.trigger('customMessage', { message: msg }, true);
             if(!event.canceled) {

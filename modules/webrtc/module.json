@@ -1,8 +1,8 @@
 {
-    "name": "Video and Audio Chat",
+    "name": "Video and Voice Chat",
     "version": "0.0.1",
-    "description": "",
-    "disableable": true,
+    "description": "Adds Video and Voice Chat",
+    "disabled": false,
     "libraries": [
         "/libs/adapter.js"
     ]

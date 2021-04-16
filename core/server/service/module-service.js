@@ -1,20 +1,30 @@
 import path from 'path';
 import fs from 'fs';
 
-import { readJsonFile } from '../util/fileutil.js';
+import { readJsonFile, saveJsonFile } from '../util/fileutil.js';
 import { Definitions } from '../../common/common.js';
 import { setDefinitions } from '../../common/definitions.js';
+import { MessageService } from './message-service.js';
+import { ModuleDefinitions } from '../../common/messages.js';
+import { UserService } from './user-service.js';
+import { Role } from '../../common/constants.js';
 
 class Module {
     identifier;
     directory;
     definition;
+    enabled;
 
     constructor(identifier, directory) {
         this.identifier = identifier;
         this.directory = directory;
 
         this.definition = readJsonFile(path.join(directory, 'module.json'));
+        this.enabled = !this.definition.disabled;
+    }
+
+    saveDefinition() {
+        saveJsonFile(path.join(this.directory, 'module.json'), this.definition, true);
     }
 
     getIdentifier() {
@@ -30,7 +40,7 @@ class Module {
     }
 
     isEnabled() {
-        return true; //TODO: implement (by used a disabled modules list in settings, once that exists)
+        return this.enabled;
     }
 }
 
@@ -125,5 +135,31 @@ export class ModuleService {
             fileScanner(dir);
         });
         return files;
+    }
+
+    static broadcastModuleDefinitions() {
+        UserService.forEach(profile => {
+            if(profile.getRole() == Role.GM) this.sendModuleDefinitions(profile);
+        });
+    }
+
+    static sendModuleDefinitions(profile) {
+        var moduleDefinitions = {};
+        for(const module of modules) {
+            moduleDefinitions[module.identifier] = module.definition;
+        }
+
+        MessageService.send(new ModuleDefinitions(moduleDefinitions), profile);
+    }
+
+    static toggleModule(identifier, disabled) {
+        for(const module of modules) {
+            if(module.identifier == identifier) {
+                module.definition.disabled = disabled;
+                module.saveDefinition();
+                this.broadcastModuleDefinitions();
+                return;
+            }
+        }
     }
 }

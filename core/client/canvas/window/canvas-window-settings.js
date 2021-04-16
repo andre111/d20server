@@ -6,6 +6,7 @@ export class CanvasWindowSettings extends CanvasWindow {
         super('Settings', false);
 
         this.initTabs();
+        this.setLocation({ position: { my: 'center', at: 'center' }, width: 640, height: 700 });
     }
 
     initTabs() {
@@ -38,10 +39,7 @@ export class CanvasWindowSettings extends CanvasWindow {
 
             // create entries
             for(const entry of page.entries) {
-                const nameP = document.createElement('p');
-                nameP.innerText = entry.displayName;
-                panel.appendChild(nameP);
-
+                panel.appendChild(entry.createName());
                 panel.appendChild(entry.createEditor());
             }
 

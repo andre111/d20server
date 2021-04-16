@@ -28,12 +28,22 @@ export class SettingsEntry {
         }
     }
 
+    get stored() {
+        return true;
+    }
+
     addListener(listener) {
         this.#listeners.push(listener);
     }
 
     resetValue() {
         this.value = this.#defaultValue;
+    }
+
+    createName() {
+        const nameP = document.createElement('p');
+        nameP.innerText = this.#displayName;
+        return nameP;
     }
 
     createEditor() { throw new Error('Cannot call abstract function'); }

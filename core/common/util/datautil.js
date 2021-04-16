@@ -82,10 +82,10 @@ function jsonReplacerTransfer(key, value) {
     else return value;
 }
 
-export function toJson(object, forTransfer) {
+export function toJson(object, forTransfer, pretty = false) {
     storeType(object);
-    if(forTransfer) return JSON.stringify(object, jsonReplacerTransfer);
-    else return JSON.stringify(object, jsonReplacer);
+    if(forTransfer) return JSON.stringify(object, jsonReplacerTransfer, pretty ? 4 : null);
+    else return JSON.stringify(object, jsonReplacer, pretty ? 4 : null);
 }
 
 export function fromJson(text) {

@@ -16,15 +16,15 @@ export function readJsonFile(file) {
     }
 }
 
-export function saveJson(name, object) {
-    saveJsonFile(nameToPath(name, '.json'), object);
+export function saveJson(name, object, pretty = false) {
+    saveJsonFile(nameToPath(name, '.json'), object, pretty);
 }
-export function saveJsonFile(file, object) {
-    const text = toJson(object);
+export function saveJsonFile(file, object, pretty = false) {
+    const text = toJson(object, false, pretty);
     fs.writeFileSync(file, text);
 }
-export async function saveJsonAsync(name, object) {
-    const text = toJson(object);
+export async function saveJsonAsync(name, object, pretty = false) {
+    const text = toJson(object, false, pretty);
     await fs.writeFile(nameToPath(name, '.json'), text);
 }
 

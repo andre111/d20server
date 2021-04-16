@@ -27,14 +27,14 @@ export class SettingsPage {
     toObject() {
         var obj = {};
         for(const [name, entry] of Object.entries(this.#entries)) {
-            obj[name] = entry.value;
+            if(entry.stored) obj[name] = entry.value;
         }
         return obj;
     }
 
     fromObject(obj) {
         for(const [name, entry] of Object.entries(this.#entries)) {
-            if(obj[name]) entry.value = obj[name];
+            if(entry.stored && obj[name]) entry.value = obj[name];
         }
     }
 }

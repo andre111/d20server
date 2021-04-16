@@ -23,7 +23,7 @@ export const Events = {
         const event = new Event(data, cancelable);
 
         const listeners = EventListeners[name];
-        if(!listeners) return;
+        if(!listeners) return event;
 
         for(const listener of listeners) {
             if(!event.isCanceled || listener.recieveCanceled) {

@@ -1,5 +1,4 @@
 //TODO: current plans:
-// module settings (enable/disable) for gms
 // webrtc settings (input devices)
 // allow interacting with doors in CanvasModeEntities as long as a controllable entity is near it (toggle isOpen or play locked sound)
 // add motd (and maybe more?) to login screen

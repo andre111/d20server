@@ -26,7 +26,9 @@ export { SendNotification } from './message/game/send-notification.js';
 export { SetPlayerColor } from './message/game/set-player-color.js';
 
 // Util Messages
+export { ModuleDefinitions } from './message/util/module-definitions.js';
 export { Ping } from './message/util/ping.js';
 export { ResponseFail } from './message/util/response-fail.js';
 export { ResponseOk } from './message/util/response-ok.js';
 export { ServerDefinitions } from './message/util/server-definitions.js';
+export { ToggleModule } from './message/util/toggle-module.js';

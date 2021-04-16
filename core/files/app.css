@@ -444,6 +444,12 @@ div.chat-box-content th, div.chat-box-content td {
 .settings-text {
     margin: auto;
 }
+.settings-module-name {
+    margin: 0;
+}
+.settings-module-description {
+    font-size: 14px;
+}
 
 /* 
 ---------------------------------------

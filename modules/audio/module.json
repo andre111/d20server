@@ -1,6 +1,6 @@
 {
     "name": "Audio Module",
     "version": "0.0.1",
-    "description": "",
-    "disableable": true
+    "description": "Enables usage of ambient audio and music player",
+    "disabled": false
 }
