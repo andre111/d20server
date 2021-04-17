@@ -90,14 +90,14 @@ export class ChatService {
             if(macroName.startsWith('!')) {
                 const predefMacros = token.getPredefinedMacros();
                 if(predefMacros[macroName.substring(1)]) {
-                    macro = predefMacros[macroName.substring(1)].commands.join('\n');
+                    macro = predefMacros[macroName.substring(1)].join('\n');
                 }
 
                 const actor = EntityManagers.get('actor').find(token.prop('actorID').getLong());
                 if(actor) {
                     const actorPredefMacros = actor.getPredefinedMacros();
                     if(actorPredefMacros[macroName.substring(1)]) {
-                        macro = actorPredefMacros[macroName.substring(1)].commands.join('\n');
+                        macro = actorPredefMacros[macroName.substring(1)].join('\n');
                     }
                 }
             } else {

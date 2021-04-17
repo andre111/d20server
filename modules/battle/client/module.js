@@ -45,7 +45,7 @@ Events.on('entityMenu', event => {
             MessageService.send(msg);
         });
     }
-});
+}, true, 300);
 
 // listen for any change that could cause the battle state to change
 Events.on('mapChange', event => ClientBattleManager.scanState());

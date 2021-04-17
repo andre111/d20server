@@ -1873,367 +1873,163 @@
         }
     ],
     "macros": {
-        "pf_roll_init": {
-            "displayName": "Initiative",
-            "category": "",
-            "commands": [
-                "/battle join",
-                "/set selected.property.battle_initiative DOUBLE 1d20cs>=100cf>=100+{selected.actor.property.pf_initMod}*1.01"
-            ]
-        },
-        "pf_roll_cmb": {
-            "displayName": "Kampfmanöver",
-            "category": "",
-            "commands": [
-                "/template attack1 Kampfmanöver Wurf;für {selected.actor.property.pf_characterName};Wurf;1d20+{selected.actor.property.pf_cmb};"
-            ]
-        },
-        "pf_roll_cmd": {
-            "displayName": "KM-Verteidigung",
-            "category": "",
-            "commands": [
-                "/template generic1 Kampfmanöver Verteidigung;für {selected.actor.property.pf_characterName};Wert;{selected.actor.property.pf_cmd};"
-            ]
-        },
+        "Initiative": [
+            "/battle join",
+            "/set selected.property.battle_initiative DOUBLE 1d20cs>=100cf>=100+{selected.actor.property.pf_initMod}*1.01"
+        ],
+        "Kampfmanöver": [
+            "/template attack1 Kampfmanöver Wurf;für {selected.actor.property.pf_characterName};Wurf;1d20+{selected.actor.property.pf_cmb};"
+        ],
+        "KM-Verteidigung": [
+            "/template generic1 Kampfmanöver Verteidigung;für {selected.actor.property.pf_characterName};Wert;{selected.actor.property.pf_cmd};"
+        ],
         
-        "pf_attribute_strength": {
-            "displayName": "Stärke",
-            "category": "Attributswürfe",
-            "commands": [
-                "/template generic1 Stärke Wurf;für {selected.actor.property.pf_characterName};Wurf;1d20+{selected.actor.property.pf_strMod};"
-            ]
-        },
-        "pf_attribute_dexterity": {
-            "displayName": "Geschicklichkeit",
-            "category": "Attributswürfe",
-            "commands": [
-                "/template generic1 Geschicklichkeits Wurf;für {selected.actor.property.pf_characterName};Wurf;1d20+{selected.actor.property.pf_dexMod};"
-            ]
-        },
-        "pf_attribute_constitution": {
-            "displayName": "Konstitution",
-            "category": "Attributswürfe",
-            "commands": [
-                "/template generic1 Konstitutions Wurf;für {selected.actor.property.pf_characterName};Wurf;1d20+{selected.actor.property.pf_conMod};"
-            ]
-        },
-        "pf_attribute_intelligence": {
-            "displayName": "Intelligenz",
-            "category": "Attributswürfe",
-            "commands": [
-                "/template generic1 Intelligenz Wurf;für {selected.actor.property.pf_characterName};Wurf;1d20+{selected.actor.property.pf_intMod};"
-            ]
-        },
-        "pf_attribute_wisdom": {
-            "displayName": "Weisheit",
-            "category": "Attributswürfe",
-            "commands": [
-                "/template generic1 Weisheits Wurf;für {selected.actor.property.pf_characterName};Wurf;1d20+{selected.actor.property.pf_wisMod};"
-            ]
-        },
-        "pf_attribute_charisma": {
-            "displayName": "Charisma",
-            "category": "Attributswürfe",
-            "commands": [
-                "/template generic1 Charisma Wurf;für {selected.actor.property.pf_characterName};Wurf;1d20+{selected.actor.property.pf_chaMod};"
-            ]
-        },
+        "Attributswürfe/Stärke": [
+            "/template generic1 Stärke Wurf;für {selected.actor.property.pf_characterName};Wurf;1d20+{selected.actor.property.pf_strMod};"
+        ],
+        "Attributswürfe/Geschicklichkeit": [
+            "/template generic1 Geschicklichkeits Wurf;für {selected.actor.property.pf_characterName};Wurf;1d20+{selected.actor.property.pf_dexMod};"
+        ],
+        "Attributswürfe/Konstitution": [
+            "/template generic1 Konstitutions Wurf;für {selected.actor.property.pf_characterName};Wurf;1d20+{selected.actor.property.pf_conMod};"
+        ],
+        "Attributswürfe/Intelligenz": [
+            "/template generic1 Intelligenz Wurf;für {selected.actor.property.pf_characterName};Wurf;1d20+{selected.actor.property.pf_intMod};"
+        ],
+        "Attributswürfe/Weisheit": [
+            "/template generic1 Weisheits Wurf;für {selected.actor.property.pf_characterName};Wurf;1d20+{selected.actor.property.pf_wisMod};"
+        ],
+        "Attributswürfe/Charisma": [
+            "/template generic1 Charisma Wurf;für {selected.actor.property.pf_characterName};Wurf;1d20+{selected.actor.property.pf_chaMod};"
+        ],
         
-        "pf_save_reflex": {
-            "displayName": "Reflex",
-            "category": "Rettungswürfe",
-            "commands": [
-                "/template generic1 Reflex Rettungswurf;für {selected.actor.property.pf_characterName};Wurf;1d20+{selected.actor.property.pf_saveReflex};"
-            ]
-        },
-        "pf_save_will": {
-            "displayName": "Willen",
-            "category": "Rettungswürfe",
-            "commands": [
-                "/template generic1 Willen Rettungswurf;für {selected.actor.property.pf_characterName};Wurf;1d20+{selected.actor.property.pf_saveWill};"
-            ]
-        },
-        "pf_save_fortitude": {
-            "displayName": "Zähigkeit",
-            "category": "Rettungswürfe",
-            "commands": [
-                "/template generic1 Zähigkeit Rettungswurf;für {selected.actor.property.pf_characterName};Wurf;1d20+{selected.actor.property.pf_saveFortitude};"
-            ]
-        },
+        "Rettungswürfe/Reflex": [
+            "/template generic1 Reflex Rettungswurf;für {selected.actor.property.pf_characterName};Wurf;1d20+{selected.actor.property.pf_saveReflex};"
+        ],
+        "Rettungswürfe/Willen": [
+            "/template generic1 Willen Rettungswurf;für {selected.actor.property.pf_characterName};Wurf;1d20+{selected.actor.property.pf_saveWill};"
+        ],
+        "Rettungswürfe/Zähigkeit": [
+            "/template generic1 Zähigkeit Rettungswurf;für {selected.actor.property.pf_characterName};Wurf;1d20+{selected.actor.property.pf_saveFortitude};"
+        ],
         
-        "pf_skill_acrobatics": {
-            "displayName": "Akrobatik",
-            "category": "Fertigkeiten",
-            "commands": [
-                "/template generic1 Akrobatik Wurf;für {selected.actor.property.pf_characterName};Wurf;1d20+{selected.actor.property.pf_skillAcrobatics};"
-            ]
-        },
-        "pf_skill_perform1": {
-            "displayName": "Auftreten 1",
-            "category": "Fertigkeiten",
-            "commands": [
-                "/template generic1 Auftreten ({selected.actor.property.pf_skillPerform1Text}) Wurf;für {selected.actor.property.pf_characterName};Wurf;1d20+{selected.actor.property.pf_skillPerform1};"
-            ]
-        },
-        "pf_skill_perform2": {
-            "displayName": "Auftreten 2",
-            "category": "Fertigkeiten",
-            "commands": [
-                "/template generic1 Auftreten ({selected.actor.property.pf_skillPerform2Text}) Wurf;für {selected.actor.property.pf_characterName};Wurf;1d20+{selected.actor.property.pf_skillPerform2};"
-            ]
-        },
-        "pf_skill_profession1": {
-            "displayName": "Beruf 1",
-            "category": "Fertigkeiten",
-            "commands": [
-                "/template generic1 Beruf ({selected.actor.property.pf_skillProfession1Text}) Wurf;für {selected.actor.property.pf_characterName};Wurf;1d20+{selected.actor.property.pf_skillProfession1};"
-            ]
-        },
-        "pf_skill_profession2": {
-            "displayName": "Beruf 2",
-            "category": "Fertigkeiten",
-            "commands": [
-                "/template generic1 Beruf ({selected.actor.property.pf_skillProfession2Text}) Wurf;für {selected.actor.property.pf_characterName};Wurf;1d20+{selected.actor.property.pf_skillProfession2};"
-            ]
-        },
-        "pf_skill_bluff": {
-            "displayName": "Bluffen",
-            "category": "Fertigkeiten",
-            "commands": [
-                "/template generic1 Bluffen Wurf;für {selected.actor.property.pf_characterName};Wurf;1d20+{selected.actor.property.pf_skillBluff};"
-            ]
-        },
-        "pf_skill_diplomacy": {
-            "displayName": "Diplomatie",
-            "category": "Fertigkeiten",
-            "commands": [
-                "/template generic1 Diplomatie Wurf;für {selected.actor.property.pf_characterName};Wurf;1d20+{selected.actor.property.pf_skillDiplomacy};"
-            ]
-        },
-        "pf_skill_intimidate": {
-            "displayName": "Einschüchtern",
-            "category": "Fertigkeiten",
-            "commands": [
-                "/template generic1 Einschüchtern Wurf;für {selected.actor.property.pf_characterName};Wurf;1d20+{selected.actor.property.pf_skillIntimidate};"
-            ]
-        },
-        "pf_skill_escape_artist": {
-            "displayName": "Entfesslungskunst",
-            "category": "Fertigkeiten",
-            "commands": [
-                "/template generic1 Entfesslungskunst Wurf;für {selected.actor.property.pf_characterName};Wurf;1d20+{selected.actor.property.pf_skillEscapeArtist};"
-            ]
-        },
-        "pf_skill_sleight_of_hand": {
-            "displayName": "Fingerfertigkeit",
-            "category": "Fertigkeiten",
-            "commands": [
-                "/template generic1 Fingerfertigkeit Wurf;für {selected.actor.property.pf_characterName};Wurf;1d20+{selected.actor.property.pf_skillSleightOfHand};"
-            ]
-        },
-        "pf_skill_fly": {
-            "displayName": "Fliegen",
-            "category": "Fertigkeiten",
-            "commands": [
-                "/template generic1 Fliegen Wurf;für {selected.actor.property.pf_characterName};Wurf;1d20+{selected.actor.property.pf_skillFly};"
-            ]
-        },
-        "pf_skill_craft1": {
-            "displayName": "Handwerk 1",
-            "category": "Fertigkeiten",
-            "commands": [
-                "/template generic1 Handwerk ({selected.actor.property.pf_skillCraft1Text}) Wurf;für {selected.actor.property.pf_characterName};Wurf;1d20+{selected.actor.property.pf_skillCraft1};"
-            ]
-        },
-        "pf_skill_craft2": {
-            "displayName": "Handwerk 2",
-            "category": "Fertigkeiten",
-            "commands": [
-                "/template generic1 Handwerk ({selected.actor.property.pf_skillCraft2Text}) Wurf;für {selected.actor.property.pf_characterName};Wurf;1d20+{selected.actor.property.pf_skillCraft2};"
-            ]
-        },
-        "pf_skill_craft3": {
-            "displayName": "Handwerk 3",
-            "category": "Fertigkeiten",
-            "commands": [
-                "/template generic1 Handwerk ({selected.actor.property.pf_skillCraft3Text}) Wurf;für {selected.actor.property.pf_characterName};Wurf;1d20+{selected.actor.property.pf_skillCraft3};"
-            ]
-        },
-        "pf_skill_heal": {
-            "displayName": "Heilkunde",
-            "category": "Fertigkeiten",
-            "commands": [
-                "/template generic1 Heilkunde ({selected.actor.property.pf_skillHealText}) Wurf;für {selected.actor.property.pf_characterName};Wurf;1d20+{selected.actor.property.pf_skillHeal};"
-            ]
-        },
-        "pf_skill_stealth": {
-            "displayName": "Heimlichkeit",
-            "category": "Fertigkeiten",
-            "commands": [
-                "/template generic1 Heimlichkeit Wurf;für {selected.actor.property.pf_characterName};Wurf;1d20+{selected.actor.property.pf_skillStealth};"
-            ]
-        },
-        "pf_skill_climb": {
-            "displayName": "Klettern",
-            "category": "Fertigkeiten",
-            "commands": [
-                "/template generic1 Klettern Wurf;für {selected.actor.property.pf_characterName};Wurf;1d20+{selected.actor.property.pf_skillClimb};"
-            ]
-        },
-        "pf_skill_use_magic_device": {
-            "displayName": "Magischen Gegenstand benutzen",
-            "category": "Fertigkeiten",
-            "commands": [
-                "/template generic1 Magischen Gegenstand benutzen Wurf;für {selected.actor.property.pf_characterName};Wurf;1d20+{selected.actor.property.pf_skillUseMagicDevice};"
-            ]
-        },
-        "pf_skill_disable_device": {
-            "displayName": "Mechanismus ausschalten",
-            "category": "Fertigkeiten",
-            "commands": [
-                "/template generic1 Mechanismus ausschalten Wurf;für {selected.actor.property.pf_characterName};Wurf;1d20+{selected.actor.property.pf_skillDisableDevice};"
-            ]
-        },
-        "pf_skill_handle_animal": {
-            "displayName": "Mit Tieren umgehen",
-            "category": "Fertigkeiten",
-            "commands": [
-                "/template generic1 Mit Tieren umgehen Wurf;für {selected.actor.property.pf_characterName};Wurf;1d20+{selected.actor.property.pf_skillHandleAnimal};"
-            ]
-        },
-        "pf_skill_sense_motive": {
-            "displayName": "Motiv erkennen",
-            "category": "Fertigkeiten",
-            "commands": [
-                "/template generic1 Motiv erkennen Wurf;für {selected.actor.property.pf_characterName};Wurf;1d20+{selected.actor.property.pf_skillSenseMotive};"
-            ]
-        },
-        "pf_skill_ride": {
-            "displayName": "Reiten",
-            "category": "Fertigkeiten",
-            "commands": [
-                "/template generic1 Reiten Wurf;für {selected.actor.property.pf_characterName};Wurf;1d20+{selected.actor.property.pf_skillRide};"
-            ]
-        },
-        "pf_skill_appraise": {
-            "displayName": "Schätzen",
-            "category": "Fertigkeiten",
-            "commands": [
-                "/template generic1 Schätzen Wurf;für {selected.actor.property.pf_characterName};Wurf;1d20+{selected.actor.property.pf_skillAppraise};"
-            ]
-        },
-        "pf_skill_swim": {
-            "displayName": "Schwimmen",
-            "category": "Fertigkeiten",
-            "commands": [
-                "/template generic1 Schwimmen Wurf;für {selected.actor.property.pf_characterName};Wurf;1d20+{selected.actor.property.pf_skillSwim};"
-            ]
-        },
-        "pf_skill_linguistics": {
-            "displayName": "Sprachkunde",
-            "category": "Fertigkeiten",
-            "commands": [
-                "/template generic1 Sprachkunde Wurf;für {selected.actor.property.pf_characterName};Wurf;1d20+{selected.actor.property.pf_skillLinguistics};"
-            ]
-        },
-        "pf_skill_survival": {
-            "displayName": "Überlebenskunst",
-            "category": "Fertigkeiten",
-            "commands": [
-                "/template generic1 Überlebenskunst Wurf;für {selected.actor.property.pf_characterName};Wurf;1d20+{selected.actor.property.pf_skillSurvival};"
-            ]
-        },
-        "pf_skill_disguise": {
-            "displayName": "Verkleiden",
-            "category": "Fertigkeiten",
-            "commands": [
-                "/template generic1 Verkleiden Wurf;für {selected.actor.property.pf_characterName};Wurf;1d20+{selected.actor.property.pf_skillDisguise};"
-            ]
-        },
-        "pf_skill_perception": {
-            "displayName": "Wahrnehmung",
-            "category": "Fertigkeiten",
-            "commands": [
-                "/template generic1 Wahrnehmung Wurf;für {selected.actor.property.pf_characterName};Wurf;1d20+{selected.actor.property.pf_skillPerception};"
-            ]
-        },
-        "pf_skill_knowledge_nobility": {
-            "displayName": "Wissen (Adel und Königshäuser)",
-            "category": "Fertigkeiten (Wissen)",
-            "commands": [
-                "/template generic1 Wissen (Adel und Königshäuser) Wurf;für {selected.actor.property.pf_characterName};Wurf;1d20+{selected.actor.property.pf_skillKnowledgeNobility};"
-            ]
-        },
-        "pf_skill_knowledge_arcana": {
-            "displayName": "Wissen (Arkanes)",
-            "category": "Fertigkeiten (Wissen)",
-            "commands": [
-                "/template generic1 Wissen (Arkanes) Wurf;für {selected.actor.property.pf_characterName};Wurf;1d20+{selected.actor.property.pf_skillKnowledgeArcana};"
-            ]
-        },
-        "pf_skill_knowledge_engineering": {
-            "displayName": "Wissen (Baukunst)",
-            "category": "Fertigkeiten (Wissen)",
-            "commands": [
-                "/template generic1 Wissen (Baukunst) Wurf;für {selected.actor.property.pf_characterName};Wurf;1d20+{selected.actor.property.pf_skillKnowledgeEngineering};"
-            ]
-        },
-        "pf_skill_knowledge_planes": {
-            "displayName": "Wissen (Die Ebenen)",
-            "category": "Fertigkeiten (Wissen)",
-            "commands": [
-                "/template generic1 Wissen (Die Ebenen) Wurf;für {selected.actor.property.pf_characterName};Wurf;1d20+{selected.actor.property.pf_skillKnowledgePlanes};"
-            ]
-        },
-        "pf_skill_knowledge_geography": {
-            "displayName": "Wissen (Geographie)",
-            "category": "Fertigkeiten (Wissen)",
-            "commands": [
-                "/template generic1 Wissen (Geographie) Wurf;für {selected.actor.property.pf_characterName};Wurf;1d20+{selected.actor.property.pf_skillKnowledgeGeography};"
-            ]
-        },
-        "pf_skill_knowledge_history": {
-            "displayName": "Wissen (Geschichte)",
-            "category": "Fertigkeiten (Wissen)",
-            "commands": [
-                "/template generic1 Wissen (Geschichte) Wurf;für {selected.actor.property.pf_characterName};Wurf;1d20+{selected.actor.property.pf_skillKnowledgeHistory};"
-            ]
-        },
-        "pf_skill_knowledge_dungeoneering": {
-            "displayName": "Wissen (Gewölbekunde)",
-            "category": "Fertigkeiten (Wissen)",
-            "commands": [
-                "/template generic1 Wissen (Gewölbekunde) Wurf;für {selected.actor.property.pf_characterName};Wurf;1d20+{selected.actor.property.pf_skillKnowledgeDungeoneering};"
-            ]
-        },
-        "pf_skill_knowledge_local": {
-            "displayName": "Wissen (Lokales)",
-            "category": "Fertigkeiten (Wissen)",
-            "commands": [
-                "/template generic1 Wissen (Lokales) Wurf;für {selected.actor.property.pf_characterName};Wurf;1d20+{selected.actor.property.pf_skillKnowledgeLocal};"
-            ]
-        },
-        "pf_skill_knowledge_nature": {
-            "displayName": "Wissen (Natur)",
-            "category": "Fertigkeiten (Wissen)",
-            "commands": [
-                "/template generic1 Wissen (Natur) Wurf;für {selected.actor.property.pf_characterName};Wurf;1d20+{selected.actor.property.pf_skillKnowledgeNature};"
-            ]
-        },
-        "pf_skill_knowledge_religion": {
-            "displayName": "Wissen (Religion)",
-            "category": "Fertigkeiten (Wissen)",
-            "commands": [
-                "/template generic1 Wissen (Religion) Wurf;für {selected.actor.property.pf_characterName};Wurf;1d20+{selected.actor.property.pf_skillKnowledgeReligion};"
-            ]
-        },
-        "pf_skill_spellcraft": {
-            "displayName": "Zauberkunde",
-            "category": "Fertigkeiten",
-            "commands": [
-                "/template generic1 Zauberkunde Wurf;für {selected.actor.property.pf_characterName};Wurf;1d20+{selected.actor.property.pf_skillSpellcraft};"
-            ]
-        }
+        "Fertigkeiten/Akrobatik": [
+            "/template generic1 Akrobatik Wurf;für {selected.actor.property.pf_characterName};Wurf;1d20+{selected.actor.property.pf_skillAcrobatics};"
+        ],
+        "Fertigkeiten/Auftreten 1": [
+            "/template generic1 Auftreten ({selected.actor.property.pf_skillPerform1Text}) Wurf;für {selected.actor.property.pf_characterName};Wurf;1d20+{selected.actor.property.pf_skillPerform1};"
+        ],
+        "Fertigkeiten/Auftreten 2": [
+            "/template generic1 Auftreten ({selected.actor.property.pf_skillPerform2Text}) Wurf;für {selected.actor.property.pf_characterName};Wurf;1d20+{selected.actor.property.pf_skillPerform2};"
+        ],
+        "Fertigkeiten/Beruf 1": [
+            "/template generic1 Beruf ({selected.actor.property.pf_skillProfession1Text}) Wurf;für {selected.actor.property.pf_characterName};Wurf;1d20+{selected.actor.property.pf_skillProfession1};"
+        ],
+        "Fertigkeiten/Beruf 2": [
+            "/template generic1 Beruf ({selected.actor.property.pf_skillProfession2Text}) Wurf;für {selected.actor.property.pf_characterName};Wurf;1d20+{selected.actor.property.pf_skillProfession2};"
+        ],
+        "Fertigkeiten/Bluffen": [
+            "/template generic1 Bluffen Wurf;für {selected.actor.property.pf_characterName};Wurf;1d20+{selected.actor.property.pf_skillBluff};"
+        ],
+        "Fertigkeiten/Diplomatie": [
+            "/template generic1 Diplomatie Wurf;für {selected.actor.property.pf_characterName};Wurf;1d20+{selected.actor.property.pf_skillDiplomacy};"
+        ],
+        "Fertigkeiten/Einschüchtern": [
+            "/template generic1 Einschüchtern Wurf;für {selected.actor.property.pf_characterName};Wurf;1d20+{selected.actor.property.pf_skillIntimidate};"
+        ],
+        "Fertigkeiten/Entfesslungskunst": [
+            "/template generic1 Entfesslungskunst Wurf;für {selected.actor.property.pf_characterName};Wurf;1d20+{selected.actor.property.pf_skillEscapeArtist};"
+        ],
+        "Fertigkeiten/Fingerfertigkeit": [
+            "/template generic1 Fingerfertigkeit Wurf;für {selected.actor.property.pf_characterName};Wurf;1d20+{selected.actor.property.pf_skillSleightOfHand};"
+        ],
+        "Fertigkeiten/Fliegen": [
+            "/template generic1 Fliegen Wurf;für {selected.actor.property.pf_characterName};Wurf;1d20+{selected.actor.property.pf_skillFly};"
+        ],
+        "Fertigkeiten/Handwerk 1": [
+            "/template generic1 Handwerk ({selected.actor.property.pf_skillCraft1Text}) Wurf;für {selected.actor.property.pf_characterName};Wurf;1d20+{selected.actor.property.pf_skillCraft1};"
+        ],
+        "Fertigkeiten/Handwerk 2": [
+            "/template generic1 Handwerk ({selected.actor.property.pf_skillCraft2Text}) Wurf;für {selected.actor.property.pf_characterName};Wurf;1d20+{selected.actor.property.pf_skillCraft2};"
+        ],
+        "Fertigkeiten/Handwerk 3": [
+            "/template generic1 Handwerk ({selected.actor.property.pf_skillCraft3Text}) Wurf;für {selected.actor.property.pf_characterName};Wurf;1d20+{selected.actor.property.pf_skillCraft3};"
+        ],
+        "Fertigkeiten/Heilkunde": [
+            "/template generic1 Heilkunde ({selected.actor.property.pf_skillHealText}) Wurf;für {selected.actor.property.pf_characterName};Wurf;1d20+{selected.actor.property.pf_skillHeal};"
+        ],
+        "Fertigkeiten/Heimlichkeit": [
+            "/template generic1 Heimlichkeit Wurf;für {selected.actor.property.pf_characterName};Wurf;1d20+{selected.actor.property.pf_skillStealth};"
+        ],
+        "Fertigkeiten/Klettern": [
+            "/template generic1 Klettern Wurf;für {selected.actor.property.pf_characterName};Wurf;1d20+{selected.actor.property.pf_skillClimb};"
+        ],
+        "Fertigkeiten/Magischen Gegenstand benutzen": [
+            "/template generic1 Magischen Gegenstand benutzen Wurf;für {selected.actor.property.pf_characterName};Wurf;1d20+{selected.actor.property.pf_skillUseMagicDevice};"
+        ],
+        "Fertigkeiten/Mechanismus ausschalten": [
+            "/template generic1 Mechanismus ausschalten Wurf;für {selected.actor.property.pf_characterName};Wurf;1d20+{selected.actor.property.pf_skillDisableDevice};"
+        ],
+        "Fertigkeiten/Mit Tieren umgehen": [
+            "/template generic1 Mit Tieren umgehen Wurf;für {selected.actor.property.pf_characterName};Wurf;1d20+{selected.actor.property.pf_skillHandleAnimal};"
+        ],
+        "Fertigkeiten/Motiv erkennen": [
+            "/template generic1 Motiv erkennen Wurf;für {selected.actor.property.pf_characterName};Wurf;1d20+{selected.actor.property.pf_skillSenseMotive};"
+        ],
+        "Fertigkeiten/Reiten": [
+            "/template generic1 Reiten Wurf;für {selected.actor.property.pf_characterName};Wurf;1d20+{selected.actor.property.pf_skillRide};"
+        ],
+        "Fertigkeiten/Schätzen": [
+            "/template generic1 Schätzen Wurf;für {selected.actor.property.pf_characterName};Wurf;1d20+{selected.actor.property.pf_skillAppraise};"
+        ],
+        "Fertigkeiten/Schwimmen": [
+            "/template generic1 Schwimmen Wurf;für {selected.actor.property.pf_characterName};Wurf;1d20+{selected.actor.property.pf_skillSwim};"
+        ],
+        "Fertigkeiten/Sprachkunde": [
+            "/template generic1 Sprachkunde Wurf;für {selected.actor.property.pf_characterName};Wurf;1d20+{selected.actor.property.pf_skillLinguistics};"
+        ],
+        "Fertigkeiten/Überlebenskunst": [
+            "/template generic1 Überlebenskunst Wurf;für {selected.actor.property.pf_characterName};Wurf;1d20+{selected.actor.property.pf_skillSurvival};"
+        ],
+        "Fertigkeiten/Verkleiden": [
+            "/template generic1 Verkleiden Wurf;für {selected.actor.property.pf_characterName};Wurf;1d20+{selected.actor.property.pf_skillDisguise};"
+        ],
+        "Fertigkeiten/Wahrnehmung": [
+            "/template generic1 Wahrnehmung Wurf;für {selected.actor.property.pf_characterName};Wurf;1d20+{selected.actor.property.pf_skillPerception};"
+        ],
+        "Fertigkeiten (Wissen)/Adel und Königshäuser": [
+            "/template generic1 Wissen (Adel und Königshäuser) Wurf;für {selected.actor.property.pf_characterName};Wurf;1d20+{selected.actor.property.pf_skillKnowledgeNobility};"
+        ],
+        "Fertigkeiten (Wissen)/Arkanes": [
+            "/template generic1 Wissen (Arkanes) Wurf;für {selected.actor.property.pf_characterName};Wurf;1d20+{selected.actor.property.pf_skillKnowledgeArcana};"
+        ],
+        "Fertigkeiten (Wissen)/Baukunst": [
+            "/template generic1 Wissen (Baukunst) Wurf;für {selected.actor.property.pf_characterName};Wurf;1d20+{selected.actor.property.pf_skillKnowledgeEngineering};"
+        ],
+        "Fertigkeiten (Wissen)/Die Ebenen": [
+            "/template generic1 Wissen (Die Ebenen) Wurf;für {selected.actor.property.pf_characterName};Wurf;1d20+{selected.actor.property.pf_skillKnowledgePlanes};"
+        ],
+        "Fertigkeiten (Wissen)/Geographie": [
+            "/template generic1 Wissen (Geographie) Wurf;für {selected.actor.property.pf_characterName};Wurf;1d20+{selected.actor.property.pf_skillKnowledgeGeography};"
+        ],
+        "Fertigkeiten (Wissen)/Geschichte": [
+            "/template generic1 Wissen (Geschichte) Wurf;für {selected.actor.property.pf_characterName};Wurf;1d20+{selected.actor.property.pf_skillKnowledgeHistory};"
+        ],
+        "Fertigkeiten (Wissen)/Gewölbekunde": [
+            "/template generic1 Wissen (Gewölbekunde) Wurf;für {selected.actor.property.pf_characterName};Wurf;1d20+{selected.actor.property.pf_skillKnowledgeDungeoneering};"
+        ],
+        "Fertigkeiten (Wissen)/Lokales": [
+            "/template generic1 Wissen (Lokales) Wurf;für {selected.actor.property.pf_characterName};Wurf;1d20+{selected.actor.property.pf_skillKnowledgeLocal};"
+        ],
+        "Fertigkeiten (Wissen)/Natur": [
+            "/template generic1 Wissen (Natur) Wurf;für {selected.actor.property.pf_characterName};Wurf;1d20+{selected.actor.property.pf_skillKnowledgeNature};"
+        ],
+        "Fertigkeiten (Wissen)/Religion": [
+            "/template generic1 Wissen (Religion) Wurf;für {selected.actor.property.pf_characterName};Wurf;1d20+{selected.actor.property.pf_skillKnowledgeReligion};"
+        ],
+        "Fertigkeiten/Zauberkunde": [
+            "/template generic1 Zauberkunde Wurf;für {selected.actor.property.pf_characterName};Wurf;1d20+{selected.actor.property.pf_skillSpellcraft};"
+        ]
     },
     "editorTabs": [
         {

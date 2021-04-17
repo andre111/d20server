@@ -362,7 +362,7 @@ ModuleService.init().then(() => {
                             }
                         }
 
-                        var macroName = type+'/';
+                        var macroName = type+' - ';
                         if(attack['Anzahl'] > 1) macroName += `${attack['Anzahl']} `;
                         macroName += attack['Name'];
 

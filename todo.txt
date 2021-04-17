@@ -1,5 +1,7 @@
 //TODO: current plans:
+// implement inline rolls in all kinds of chat messages (normal, whisper, template) format: "Here is a normal message with inline [[1d20 + 7]] and triggered [[!5d5[ice] + 5]] rolls"
 // webrtc settings (input devices)
+// rethink entity menu (it has become quite large)
 // allow players to end turns of their tokens in battle
 // allow interacting with doors in CanvasModeEntities as long as a controllable entity is near it (toggle isOpen or play locked sound)
 // add motd (and maybe more? - maybe allow customizing the backgrounds) to login screen

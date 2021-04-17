@@ -1,7 +1,7 @@
 import { WallAction } from './wall-action.js';
-import { WallMenu } from './wall-menu.js';
 import { MapUtils } from '../../util/maputil.js';
 import { ServerData } from '../../server-data.js'; 
+import { EntityMenu } from './entity-menu.js';
 
 import { Entity } from '../../../common/common.js';
 import { EntityManagers } from '../../../common/entity/entity-managers.js';
@@ -71,7 +71,7 @@ export class WallActionCreate extends WallAction {
                 
                 // open menu for selecting edit or delete
 				if(clickedWall != null) {
-                    this.menu = new WallMenu(this.mode, new EntityReference(clickedWall), ServerData.isGM(), e.clientX, e.clientY);
+                    this.menu = new EntityMenu(this.mode, new EntityReference(clickedWall), ServerData.isGM(), e.clientX, e.clientY);
 				}
             }
         } else {

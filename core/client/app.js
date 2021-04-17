@@ -1,6 +1,6 @@
 import { Common } from '../common/common.js';
 import { Events } from '../common/events.js';
-import { Layer } from '../common/constants.js';
+import { Access, Layer } from '../common/constants.js';
 import { FILE_TYPE_IMAGE } from '../common/util/datautil.js';
 
 import { ClientIDProvider } from './entity/id.js';
@@ -38,6 +38,13 @@ import { Settings } from './settings/settings.js';
 import { SettingsEntryNumberRange } from './settings/settings-entry-number-range.js';
 import { CanvasWindowText } from './canvas/window/canvas-window-text.js';
 import { ModuleSettings } from './settings/module-settings.js';
+import { CanvasWindowEditEntity } from './canvas/window/canvas-window-edit-entity.js';
+import { EntityManagers } from '../common/entity/entity-managers.js';
+import { MapUtils } from './util/maputil.js';
+import { EntityReference } from '../common/entity/entity-reference.js';
+import { MessageService } from './service/message-service.js';
+import { SendChatMessage } from '../common/messages.js';
+import { CanvasWindowFitToGrid } from './canvas/window/canvas-window-fit-to-grid.js';
 
 // Initialize common code
 Common.init(new ClientIDProvider(), ClientEntityManager);
@@ -85,6 +92,8 @@ InputService.registerAction('delete', 46 /*DELETE*/, false, false, false);
 
 ImageService.init();
 
+
+// Mode Buttons
 Events.on('addModeButtons', event => {
     // token mode
     event.data.addButton(new ModeButtonExtended(new ModeButton('/core/files/img/gui/cursor', 'Edit Tokens', () => Client.getState().getMode() instanceof CanvasModeEntities && Client.getState().getMode().entityType == 'token', () => Client.getState().setMode(new CanvasModeEntities('token'))), 0));
@@ -135,6 +144,8 @@ Events.on('addModeButtonsGM', event => {
     }), 8));
 });
 
+
+// RenderLayers + EntityRenderes + Sidepanel Tabs
 Events.on('addRenderLayers', event => {
     event.data.addRenderLayer(new CanvasRenderLayerTokens(-1000, Layer.BACKGROUND, false));
     event.data.addRenderLayer(new CanvasRenderLayerGrid(0));
@@ -160,6 +171,8 @@ Events.on('addSidepanelTabs', event => {
     event.data.addSidepanelTab(new SidepanelTabMaps());
 });
 
+
+// Callbacks
 Events.on('actionCommand', event => {
     if(!event.data.isGM()) return; // only accept commands from gm
     
@@ -177,6 +190,145 @@ Events.on('fileManagerSelect', event => {
     }
 });
 
+
+// Entity Menus
+//    Generic
+Events.on('entityMenu', event => {
+    const menu = event.data.menu;
+    menu.createItem(menu.container, 'Edit', () => new CanvasWindowEditEntity(event.data.reference));
+}, true, 1);
+
+Events.on('entityMenu', event => {
+    const menu = event.data.menu;
+    const reference = event.data.reference;
+
+    if(reference.prop('depth') && reference.prop('depth').canEdit(event.data.accessLevel)) {
+        const move = menu.createCategory(menu.container, 'Move');
+        menu.createItem(move, 'to front', () => {
+            const currentMinDepth = MapUtils.currentEntitiesInLayer(reference.getType(), Client.getState().getLayer()).map(e => e.prop('depth').getLong()).reduce((a, b) => Math.min(a, b), 0);
+            reference.prop('depth').setLong(currentMinDepth-1);
+            reference.performUpdate();
+        });
+        menu.createItem(move, 'to back', () => {
+            const currentMaxDepth = MapUtils.currentEntitiesInLayer(reference.getType(), Client.getState().getLayer()).map(e => e.prop('depth').getLong()).reduce((a, b) => Math.max(a, b), 0);
+            reference.prop('depth').setLong(currentMaxDepth+1);
+            reference.performUpdate();
+        });
+    }
+}, true, 200);
+
+Events.on('entityMenu', event => {
+    if(!event.data.isGM) return;
+
+    const menu = event.data.menu;
+    menu.createItem(menu.container, 'Delete', () => {
+        EntityManagers.get(event.data.reference.getType()).remove(event.data.reference.getID());
+        if(menu.mode.clearActiveEntities) menu.mode.clearActiveEntities();
+    });
+}, true, 1000);
+
+//    Tokens
+Events.on('entityMenu', event => {
+    if(event.data.entityType !== 'token') return;
+
+    const menu = event.data.menu;
+    const reference = event.data.reference;
+    const accessLevel = event.data.accessLevel;
+
+    const actor = EntityManagers.get('actor').find(reference.prop('actorID').getLong());
+
+    // edit actor
+    if(actor) {
+        menu.createItem(menu.container, 'Edit Actor', () => {
+            const iActor = EntityManagers.get('actor').find(reference.prop('actorID').getLong());
+            if(iActor) new CanvasWindowEditEntity(new EntityReference(iActor));
+        });
+    }
+
+    // sending macros
+    const sendMacro = name => MessageService.send(new SendChatMessage('!' + name));
+    const addMacros = (category, names, sort = true, prefix = '') => {
+        // sort macros before adding to menu
+        if(sort) names.sort();
+        
+        if(names.length > 0) {
+            const macroCategory = menu.createCategory(menu.container, category);
+            const subCategories = new Map();
+
+            for(var i=0; i<names.length; i++) {
+                var name = names[i];
+
+                // hide macros starting with _
+                if(name.startsWith('_')) continue;
+
+                // use / as a sepparator for sub categories
+                var parent = macroCategory;
+                if(name.includes('/')) {
+                    const category = name.substring(0, name.indexOf('/'));
+                    name = name.substring(name.indexOf('/')+1);
+
+                    if(!subCategories.has(category)) subCategories.set(category, menu.createCategory(macroCategory, category));
+                    parent = subCategories.get(category);
+                }
+                
+                const fullName = names[i];
+                menu.createItem(parent, name, () => sendMacro(prefix + fullName));
+            }
+        }
+    };
+
+    // token macros
+    if(Access.matches(reference.prop('macroUse').getAccessValue(), accessLevel)) {
+        addMacros('Token Macros', Object.keys(reference.prop('macros').getStringMap()));
+    }
+    
+    // actor macros
+    if(actor) {
+        const actorAccessLevel = actor.getAccessLevel(ServerData.localProfile);
+        if(Access.matches(actor.prop('macroUse').getAccessValue(), actorAccessLevel)) {
+            addMacros('Actor Macros', Object.keys(actor.prop('macros').getStringMap()));
+        }
+
+        addMacros('Inbuilt Macros', Object.keys(actor.getPredefinedMacros()), false, '!');
+    }
+
+    // gm actions
+    if(event.data.isGM) {
+        menu.createItem(menu.container, 'View Notes', () => new CanvasWindowText('GM Notes', reference.prop('gmNotes').getString()));
+        menu.createItem(menu.container, 'Fit to Grid', () => new CanvasWindowFitToGrid(reference));
+    }
+}, true, 100);
+
+//    Walls
+Events.on('entityMenu', event => {
+    if(event.data.entityType !== 'wall') return;
+
+    const menu = event.data.menu;
+    const reference = event.data.reference;
+
+    if(reference.prop('oneSided').getBoolean()) {
+        menu.createItem(menu.container, 'Flip', () => {
+            const x1 = reference.prop('x1').getLong();
+            const y1 = reference.prop('y1').getLong();
+            reference.prop('x1').setLong(reference.prop('x2').getLong());
+            reference.prop('y1').setLong(reference.prop('y2').getLong());
+            reference.prop('x2').setLong(x1);
+            reference.prop('y2').setLong(y1);
+            reference.performUpdate();
+        });
+    }
+    
+    if(reference.prop('door').getBoolean()) {
+        if(reference.prop('open').getBoolean()) menu.createItem(menu.container, 'Close Door', () => { reference.prop('open').setBoolean(false); reference.performUpdate(); });
+        else menu.createItem(menu.container, 'Open Door', () => { reference.prop('open').setBoolean(true); reference.performUpdate(); });
+        
+        if(reference.prop('locked').getBoolean()) menu.createItem(menu.container, 'Unlock Door', () => { reference.prop('locked').setBoolean(false); reference.performUpdate(); });
+        else menu.createItem(menu.container, 'Lock Door', () => { reference.prop('locked').setBoolean(true); reference.performUpdate(); });
+    }
+}, true, 100);
+
+
+// Settings
 export const SETTING_GLOBAL_VOLUME = new SettingsEntryNumberRange('Global Volume', 100, 0, 100);
 export const SETTING_WEATHER_VOLUME = new SettingsEntryNumberRange('Weather Volume', 100, 0, 100);
 export const SETTING_PAGE_GENERAL = Settings.createPage('general', 'General');
