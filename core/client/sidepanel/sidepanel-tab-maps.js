@@ -28,7 +28,7 @@ export class SidepanelTabMaps extends SidepanelTab {
         if(ServerData.isGM()) {
             const buttonPanel = document.createElement('div');
             this.tab.appendChild(buttonPanel);
-            GuiUtils.createButton(buttonPanel, 'New Map', () => this.doNewMap());
+            GuiUtils.createButton(buttonPanel, 'New Map', () => this.doNewMap()).className = 'sidepanel-button';
         }
     }
     

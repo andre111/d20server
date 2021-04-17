@@ -24,7 +24,7 @@ export class SidepanelTabPlayers extends SidepanelTab {
         
         const buttonPanel = document.createElement('div');
         this.tab.appendChild(buttonPanel);
-        GuiUtils.createButton(buttonPanel, 'Change Color', () => this.doChangeColor());
+        GuiUtils.createButton(buttonPanel, 'Change Color', () => this.doChangeColor()).className = 'sidepanel-button';
     }
     
     doChangeColor() {

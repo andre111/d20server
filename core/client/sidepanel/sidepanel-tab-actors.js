@@ -27,7 +27,7 @@ export class SidepanelTabActors extends SidepanelTab {
         if(ServerData.isGM()) {
             const buttonPanel = document.createElement('div');
             this.tab.appendChild(buttonPanel);
-            GuiUtils.createButton(buttonPanel, 'New Actor', () => this.doAdd());
+            GuiUtils.createButton(buttonPanel, 'New Actor', () => this.doAdd()).className = 'sidepanel-button';
         }
     }
     

@@ -176,6 +176,13 @@ button:active, input:focus {
     box-shadow: var(--shadow-active);
 }
 
+.sidepanel-button {
+    width: 100%;
+    border: 1px solid black;
+    background: var(--color-dark);
+    background: linear-gradient(0deg, var(--color-dark) 0%, var(--color-medium) 100%);
+}
+
 /* Property Editor */
 .property-editor {
     width: 150px;

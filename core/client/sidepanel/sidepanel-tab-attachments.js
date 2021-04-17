@@ -27,7 +27,7 @@ export class SidepanelTabAttachments extends SidepanelTab {
         if(ServerData.isGM()) {
             const buttonPanel = document.createElement('div');
             this.tab.appendChild(buttonPanel);
-            GuiUtils.createButton(buttonPanel, 'New Attachment', () => this.doAdd());
+            GuiUtils.createButton(buttonPanel, 'New Attachment', () => this.doAdd()).className = 'sidepanel-button';
         }
     }
     
