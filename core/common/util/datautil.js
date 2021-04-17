@@ -58,14 +58,16 @@ function assignTypeRecursion(object) {
         }
     }
 
-    var base = {};
-    if(nameToTypeMap.has(object.__type)) {
-        base = new (nameToTypeMap.get(object.__type))();
-    }
-    object = Object.assign(base, object);
+    if(!Array.isArray(object)) {
+        var base = {};
+        if(nameToTypeMap.has(object.__type)) {
+            base = new (nameToTypeMap.get(object.__type))();
+        }
+        object = Object.assign(base, object);
 
-    if(typeof(object.postLoad) === 'function') {
-        object.postLoad();
+        if(typeof(object.postLoad) === 'function') {
+            object.postLoad();
+        }
     }
 
     return object;
