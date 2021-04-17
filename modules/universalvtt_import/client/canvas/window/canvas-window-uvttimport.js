@@ -7,14 +7,14 @@ export class CanvasWindowUVTTImport extends CanvasWindow {
     #nameInput;
     #importLightsInput;
 
-    constructor(file) {
+    constructor(file, name) {
         super('Universal VTT Import', false);
 
         this.#file = file;
-        this.initContent();
+        this.initContent(name);
     }
 
-    initContent() {
+    initContent(name) {
         // create container
         const container = this.frame;
         
@@ -33,7 +33,7 @@ export class CanvasWindowUVTTImport extends CanvasWindow {
         panel.appendChild(nameP);
         panel.appendChild(this.#nameInput = document.createElement('input'));
         this.#nameInput.className = 'settings-text';
-        this.#nameInput.value = 'Imported Map';
+        this.#nameInput.value = name ?? 'Imported Map';
 
         const importLightsP = document.createElement('p');
         importLightsP.innerText = 'Import Lights: ';
