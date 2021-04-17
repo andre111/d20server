@@ -352,21 +352,23 @@ ModuleService.init().then(() => {
             for(var type of ['Nahkampf', 'Fernkampf']) {
                 const atEntry = entry['Angriff'][type];
                 if(atEntry) {
-                    for(const attack of atEntry) {
-                        var macro = '';
-                        for(var i=0; i<attack['Anzahl']; i++) {
-                            const critRange = attack['KritischWert'] < 20 ? `cs>=${attack['KritischWert']}` : '';
-                            const modCount = attack['Modifikatoren'].length;
-                            for(var m=0; m<modCount; m++) {
-                                macro += `/template attack21 ${attack['Name']};${(attack['Berührung'] ? 'Berührung' : '')+(modCount > 1 ? ` ${m+1}. Angriff ` : '')};Angriff;1d20${critRange}+${attack['Modifikatoren'][m]};Schaden;${attack['Formel']};${attack['SchadenUndEffekte']}\n`;
+                    for(const attackList of atEntry) {
+                        for(const attack of attackList) {
+                            var macro = '';
+                            for(var i=0; i<attack['Anzahl']; i++) {
+                                const critRange = attack['KritischWert'] < 20 ? `cs>=${attack['KritischWert']}` : '';
+                                const modCount = attack['Modifikatoren'].length;
+                                for(var m=0; m<modCount; m++) {
+                                    macro += `/template attack21 ${attack['Name']};${(attack['Berührung'] ? 'Berührung' : '')+(modCount > 1 ? ` ${m+1}. Angriff ` : '')};Angriff;1d20${critRange}+${attack['Modifikatoren'][m]}+{selected.property.modAttack};Schaden;${attack['Formel']}+{selected.property.modDamage};${attack['SchadenUndEffekte']}\n`;
+                                }
                             }
+
+                            var macroName = type+' - ';
+                            if(attack['Anzahl'] > 1) macroName += `${attack['Anzahl']} `;
+                            macroName += attack['Name'];
+
+                            macros[macroName] = macro;
                         }
-
-                        var macroName = type+' - ';
-                        if(attack['Anzahl'] > 1) macroName += `${attack['Anzahl']} `;
-                        macroName += attack['Name'];
-
-                        macros[macroName] = macro;
                     }
                 }
             }
@@ -659,8 +661,8 @@ function createDefenseSection(entry) {
 }
 
 // Bewegungsrate <annotatedValue>[, Fliegen <annotatedValue>][, Schwimmen <annotatedValue>][, Klettern <annotatedValue>][, Graben <annotatedValue>][; <movementAbilities>]
-// [Nahkampf <commaSepAttacks>]
-// [Fernkampf <commaSepAttacks>]
+// [Nahkampf <commaAndOrSepAttacks>]
+// [Fernkampf <commaAndOrSepAttacks>]
 // [Angriffsfläche <value>; Reichweite <annotatedValue>]
 // [Besondere Angriffe <commaSepAnnotatedValues>]
 // [Zauberähnliche Fähigkeiten/Bekannte Zauber/... (ZS <value>[; Konzentration <value>])]
@@ -685,27 +687,33 @@ function createAttackSection(entry) {
     if(entry['Bewegungsraten']['Fähigkeiten']) br += `; ${entry['Bewegungsraten']['Fähigkeiten']}`;
     sb += `<strong>Bewegungsrate</strong> ${br}<br>`;
 
-    // [Nahkampf <commaSepAttacks>]
-    // [Fernkampf <commaSepAttacks>]
+    // [Nahkampf <commaAndOrSepAttacks>]
+    // [Fernkampf <commaAndOrSepAttacks>]
     for(var type of ['Nahkampf', 'Fernkampf']) {
         const atEntry = entry['Angriff'][type];
         if(atEntry) {
-            var at = '';
-            for(const attack of atEntry) {
-                if(at) at += ', ';
+            var atl = '';
+            for(const attackList of atEntry) {
+                if(atl) atl += ' oder ';
 
-                if(attack['Anzahl'] > 1) at += `${attack['Anzahl']} `;
-                at += attack['Name'];
-                if(attack['Berührung']) at += ' Berührung';
-                
-                var mods = '';
-                for(var mod of attack['Modifikatoren']) {
-                    if(mods) mods += '/';
-                    mods += getSigned(mod);
+                var at = ''
+                for(const attack of attackList) {
+                    if(at) at += ', ';
+
+                    if(attack['Anzahl'] > 1) at += `${attack['Anzahl']} `;
+                    at += attack['Name'];
+                    if(attack['Berührung']) at += ' Berührung';
+                    
+                    var mods = '';
+                    for(var mod of attack['Modifikatoren']) {
+                        if(mods) mods += '/';
+                        mods += getSigned(mod);
+                    }
+                    at += ` ${mods} (${attack['SchadenUndEffekte']})`;
                 }
-                at += ` ${mods} (${attack['SchadenUndEffekte']})`;
+                atl += at;
             }
-            sb += `<strong>${type}</strong> ${at}<br>`;
+            sb += `<strong>${type}</strong> ${atl}<br>`;
         }
     }
 
