@@ -43,10 +43,12 @@ export class CanvasRenderLayerWallOcclusion extends CanvasRenderLayer {
                 ctx.strokeStyle = 'black';
                 ctx.beginPath();
                 MapUtils.currentEntities('wall').forEach(wall => {
-                    if(!wall.prop('seeThrough').getBoolean() && (!wall.prop('door').getBoolean() || !wall.prop('open').getBoolean())) {
-                        ctx.moveTo(wall.prop('x1').getLong(), wall.prop('y1').getLong());
-                        ctx.lineTo(wall.prop('x2').getLong(), wall.prop('y2').getLong());
-                    }
+                    if(wall.prop('seeThrough').getBoolean()) return;
+                    if(wall.prop('door').getBoolean() && wall.prop('open').getBoolean()) return;
+                    if(wall.prop('oneSided').getBoolean()) return;
+
+                    ctx.moveTo(wall.prop('x1').getLong(), wall.prop('y1').getLong());
+                    ctx.lineTo(wall.prop('x2').getLong(), wall.prop('y2').getLong());
                 });
                 ctx.stroke();
             }
