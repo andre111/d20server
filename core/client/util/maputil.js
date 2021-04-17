@@ -19,7 +19,7 @@ export const MapUtils =  {
     },
     
     currentEntitiesSorted: function(type, l) {
-        return MapUtils.currentEntitiesInLayer(type, l).sort(e => -e.getID()).sort(e => -e.prop('depth').getLong());
+        return MapUtils.currentEntitiesInLayer(type, l).sort((a, b) => b.getID() - a.getID()).sort((a, b) => b.prop('depth').getLong() - a.prop('depth').getLong());
     },
     
     findControllableTokens: function(profile) {
