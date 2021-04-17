@@ -336,11 +336,11 @@ span.chat-dice-fail {
 }
 span.chat-dice-inline {
     width: 32px;
-    height: 24px;
+    height: 20px;
     display: inline-flex;
     border: solid 1px black;
     place-content: center;
-    line-height: 24px;
+    line-height: 18px;
 }
 span.chat-button:hover {
     background-color: var(--color-light);
