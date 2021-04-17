@@ -20,14 +20,17 @@ export class WhisperCommand extends Command {
         const reciever = UserService.findByUsername(name, true);
         if(!reciever) throw new Error(`Unknown player: ${split[0]}`);
 
+        // parse message
+        const parsed = ChatService.parseInlineRolls(message, profile);
+
         // build message
-        var text = '<p class="chat-sender chat-sender-special">' + ChatService.escape(profile.getUsername()) + ' to ' + ChatService.escape(reciever.getUsername()) + ': </p>';
-        text = text + '<p class="chat-message">' + ChatService.escape(message) + '</p>';
+        var text = '<div class="chat-sender chat-sender-special">' + ChatService.escape(profile.getUsername()) + ' to ' + ChatService.escape(reciever.getUsername()) + ': </div>';
+        text = text + '<div class="chat-message">' + parsed.string + '</div>';
 
         // determine recipents
         const recipents = [ profile.getID(), reciever.getID() ];
 
         // append message
-        ChatService.append(true, new ChatEntry(text, profile.getID(), false, recipents));
+        ChatService.append(true, new ChatEntry(text, profile.getID(), false, recipents, parsed.diceRolls, parsed.triggeredContent));
     }
 }

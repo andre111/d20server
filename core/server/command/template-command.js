@@ -34,8 +34,8 @@ export class TemplateCommand extends Command {
         const parseResult = template.parse(profile, inputs);
 
         // build message
-        var text = '<p class="chat-sender">' + ChatService.escape(profile.getUsername()) + ': </p>';
-        text = text + '<p class="chat-message">'+parseResult.string+'</p>';
+        var text = '<div class="chat-sender">' + ChatService.escape(profile.getUsername()) + ': </div>';
+        text = text + '<div class="chat-message">'+parseResult.string+'</div>';
 
         // determine recipents
         const recipents = this.buildRecipents(profile, this.showPublic, this.showSelf);

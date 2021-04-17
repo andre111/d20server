@@ -2,8 +2,12 @@ import { Access, Role } from '../../common/constants.js';
 import { EntityManagers } from '../../common/entity/entity-managers.js';
 import { ChatEntry } from '../../common/message/chat/chat-entry.js';
 import { ChatEntries } from '../../common/messages.js';
+import { Context } from '../../common/scripting/context.js';
+import { Parser } from '../../common/scripting/expression/parser.js';
+import { parseVariable } from '../../common/scripting/variable/parser/variable-parsers.js';
 import { Commands } from '../command/commands.js';
 import { readJson, saveJson } from '../util/fileutil.js';
+import { RollFormatter } from '../util/roll-formatter.js';
 import { MessageService } from './message-service.js';
 import { UserService } from './user-service.js';
 
@@ -42,6 +46,8 @@ function canRecieve(profile, entry) {
 
     return entry.getRecipents().includes(profile.getID());
 }
+
+const parser = new Parser();
 
 export class ChatService {
     static onMessage(profile, message) {
@@ -124,14 +130,24 @@ export class ChatService {
             }
         } else {
             // handle simple message
-            var text = '<p class="chat-sender">';
-            text = text + ChatService.escape(profile.getUsername()) + ': ';
-            text = text + '</p>';
-            text = text + '<p class="chat-message">';
-            text = text + ChatService.escape(message);
-            text = text + '</p>';
+            try {
+                const parsed = ChatService.parseInlineRolls(message, profile);
 
-            ChatService.append(true, new ChatEntry(text, profile.getID()));
+                var text = '<div class="chat-sender">';
+                text = text + ChatService.escape(profile.getUsername()) + ': ';
+                text = text + '</div>';
+                text = text + '<div class="chat-message">';
+                text = text + parsed.string;
+                text = text + '</div>';
+
+                const entry = new ChatEntry(text, profile.getID());
+                entry.setRolls(parsed.diceRolls);
+                entry.setTriggeredContent(parsed.triggeredContent);
+
+                ChatService.append(true, entry);
+            } catch(error) {
+                ChatService.appendNote(profile, `Error:`, `${error}`);
+            }
         }
     }
 
@@ -150,11 +166,11 @@ export class ChatService {
     }
 
     static appendNote(recipent, ...lines) {
-        var text = '<p class="chat-info">';
+        var text = '<div class="chat-info">';
         for(const line of lines) {
             text = text + ChatService.escape(line) + '<br>';
         }
-        text = text + '</p>';
+        text = text + '</div>';
 
         ChatService.append(false, new ChatEntry(text, SYSTEM_SOURCE, false, recipent ? [recipent.getID()] : []));
     }
@@ -171,6 +187,87 @@ export class ChatService {
     
         // send chat entries to clients
         sendToClients(true, entries);
+    }
+
+    static parseInlineRolls(text, profile) {
+        var string = '';
+        const diceRolls = [];
+        const triggeredContent = [];
+
+        var startIndex = 0;
+        while(startIndex < text.length) {
+            const inlineStartIndex = text.indexOf('[[', startIndex);
+            const variableStartIndex = text.indexOf('{', startIndex);
+            const nextIsInlineRoll = inlineStartIndex != -1 && (variableStartIndex == -1 || inlineStartIndex < variableStartIndex);
+            const nextIsVariable = variableStartIndex != -1 && (inlineStartIndex == -1 || variableStartIndex < inlineStartIndex);
+
+            if(nextIsInlineRoll) {
+                // add remaing text
+                string += '<span class="chat-text">'+ChatService.escape(text.substring(startIndex, inlineStartIndex))+"</span>";
+                startIndex = inlineStartIndex;
+
+                // find end
+                var endIndex = text.indexOf(']]', startIndex);
+                if(endIndex == -1) throw new Error(`Unclosed inline roll at ${startIndex}`);
+
+                // extract expression string
+                var exprStr = text.substring(startIndex+2, endIndex);
+                var triggered = false;
+                if(exprStr.startsWith('!')) { triggered = true; exprStr = exprStr.substring(1); }
+                startIndex = endIndex + 2;
+                
+                // parse expression
+                var result = null;
+                var error = null;
+                try {
+                    const expr = parser.parse(exprStr);
+                    result = expr.eval(new Context(profile, EntityManagers.get('map').find(profile.getCurrentMap()), null));
+                } catch(e) {
+                    error = e;
+                }
+
+                // append rolls or trigger button
+                if(triggered) {
+                    const entry = new ChatEntry(RollFormatter.formatInlineDiceRoll(exprStr, result, error), profile.getID());
+                    if(result) entry.setRolls(result.getDiceRolls());
+                    triggeredContent.push({
+                        entry: entry,
+                        parent: null,
+                        triggerd: false
+                    });
+                    string += `<span id="${entry.getID()}" class="chat-dice-inline chat-button replaceable">Roll</span>`;
+                } else {
+                    if(result) {
+                        for(const diceRoll of result.getDiceRolls()) {
+                            diceRolls.push(diceRoll);
+                        }
+                    }
+                    string += RollFormatter.formatInlineDiceRoll(exprStr, result, error);
+                }
+            } else if(nextIsVariable) {
+                // add remaing text
+                string += '<span class="chat-text">'+ChatService.escape(text.substring(startIndex, variableStartIndex))+"</span>";
+                startIndex = variableStartIndex;
+
+                // find end
+                var endIndex = text.indexOf('}', startIndex);
+                if(endIndex == -1) throw new Error(`Unclosed variable at ${startIndex}`);
+
+                // extract variable name
+                const variableName = text.substring(startIndex+1, endIndex);
+                startIndex = endIndex + 1;
+                
+                // append variable value
+				const variable = parseVariable(variableName);
+				const value = variable.get(new Context(profile, EntityManagers.get('map').find(profile.getCurrentMap()), null));
+                string += ChatService.escape(value);
+            } else {
+                string += '<span class="chat-text">'+ChatService.escape(text.substring(startIndex, text.length))+"</span>";
+                startIndex = text.length;
+            }
+        }
+
+        return { string: string, diceRolls: diceRolls, triggeredContent: triggeredContent };
     }
     
     static triggerContent(profile, messageID, contentID) {

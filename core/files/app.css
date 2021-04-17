@@ -258,7 +258,7 @@ button:active, input:focus {
         4.2 Chat 
 ---------------------------------------
 */
-div.chat {
+.chat {
     background-color: var(--color-light);
     width: calc(100% - 4px);
     max-width: calc(100% - 4px);
@@ -268,31 +268,31 @@ div.chat {
     position: relative;
     box-shadow: var(--shadow-active); /* TODO: Is this really important/noticable? */
 }
-p.chat-sender {
+.chat-sender {
     font-weight: bold;
     font-size: 16px;
     margin: 0;
 }
-p.chat-sender-special {
+.chat-sender-special {
     font-style: italic;
 }
-p.chat-message {
+.chat-message {
     font-size: 16px;
     margin: 8px 0 0 8px;
 }
-p.chat-info {
+.chat-info {
     font-style: italic;
     font-size: 14px;
     margin: 0;
 }
-p.chat-timestamp {
+.chat-timestamp {
     position: absolute;
     top: 0;
     right: 0;
     margin: 0 5px 0 0;
     font-size: 12px;
 }
-p.chat-timestamp p {
+.chat-timestamp p {
     margin: 0;
 }
 
@@ -329,15 +329,14 @@ span.chat-dice-fail {
 }
 span.chat-dice-inline {
     width: 32px;
-    height: 32px;
+    height: 24px;
     display: inline-flex;
     border: solid 1px black;
     place-content: center;
-    line-height: 32px;
+    line-height: 24px;
 }
 span.chat-button:hover {
-    /*border-color: #e2cf9d;
-    background-color: #feeebd;*/
+    background-color: var(--color-light);
     box-shadow: var(--shadow-hover);
     cursor: pointer;
 }

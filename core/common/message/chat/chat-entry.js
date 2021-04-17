@@ -15,7 +15,7 @@ export class ChatEntry {
     rolls;
     triggeredContent;
 
-    constructor(text, source, includeGMs, recipents) {
+    constructor(text, source, includeGMs, recipents, rolls, triggeredContent) {
         if(text) {
             this.id = ID.next();
             this.text = text;
@@ -24,6 +24,9 @@ export class ChatEntry {
             this.recipents = recipents;
             this.includeGMs = includeGMs || false;
             this.source = source;
+
+            if(rolls) this.setRolls(rolls);
+            if(triggeredContent) this.setTriggeredContent(triggeredContent);
         }
     }
 

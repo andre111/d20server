@@ -3,30 +3,30 @@ import { ChatService } from '../service/chat-service.js';
 export class RollFormatter {
     static formatDiceRoll(profile, rollExpression, showPublic, result, error) {
         // build 'header'
-        var text = '<p class="chat-sender">';
+        var text = '<div class="chat-sender">';
         text = text + ChatService.escape(profile.getUsername());
         if(!showPublic) text = text + ' (to GM)';
         text = text + ': ';
-        text = text + '</p>';
+        text = text + '</div>';
 
         text = text + '<span class="hoverable">';
-        text = text + '<p class="chat-info">rolling...</p>';
+        text = text + '<div class="chat-info">rolling...</div>';
         text = text + '<div class="onhover">' + ChatService.escape(RollFormatter.normalizeExpression(rollExpression)) + '</div>';
         text = text + '</span>';
 
         // result
-        text = text + '<p class="chat-message">';
+        text = text + '<div class="chat-message">';
         if(result) {
             text = text + result.getString() + '<br>';
             text = text + ' = ' + RollFormatter.getResultValue(result);
         } else {
             text = text + ' = ?';
         }
-        text = text + '</p>';
+        text = text + '</div>';
 
         // potential error message
         if(error) {
-            text = text + `<p class="chat-info">( ${error} )</p>`;
+            text = text + `<div class="chat-info">( ${error} )</div>`;
         }
 
         return text;

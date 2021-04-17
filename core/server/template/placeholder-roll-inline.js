@@ -1,29 +1,13 @@
 import { Placeholder } from './placeholder.js';
 
-import { Parser } from '../../common/scripting/expression/parser.js';
-import { Context } from '../../common/scripting/context.js';
-import { EntityManagers } from '../../common/entity/entity-managers.js';
-import { RollFormatter } from '../util/roll-formatter.js';
+import { ChatService } from '../service/chat-service.js';
 
 export class PlaceholderRollInline extends Placeholder {
-    parser = new Parser();
-
     parse(profile, input, diceRolls, triggeredContent) {
-        // parse roll and execute
-        var result = null;
-        var error = null;
-        try {
-            const expr = this.parser.parse(input);
-            result = expr.eval(new Context(profile, EntityManagers.get('map').find(profile.getCurrentMap()), null));
-        } catch(e) {
-            error = e;
-        }
-        if(result) {
-            for(const diceRoll of result.getDiceRolls()) {
-                diceRolls.push(diceRoll);
-            }
-        }
+        const parsed = ChatService.parseInlineRolls('[['+input+']]', profile);
 
-        return RollFormatter.formatInlineDiceRoll(input, result, error);
+        for(const diceRoll of parsed.diceRolls) diceRolls.push(diceRoll);
+        for(const tC of parsed.triggeredContent) triggeredContent.push(tC);
+        return parsed.string;
     }
 }

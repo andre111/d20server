@@ -15,9 +15,12 @@ export class SayCommand extends Command {
         const variable = parseVariable('selected.property.name');
         const name = variable.get(new Context(profile, EntityManagers.get('map').find(profile.getCurrentMap()), null));
 
-        var text = '<p class="chat-sender">' + ChatService.escape(''+name) + ' (' + ChatService.escape(profile.getUsername()) + '): </p>';
-        text = text + '<p class="chat-message">' + ChatService.escape(args) + '</p>';
+        // parse message
+        const parsed = ChatService.parseInlineRolls(args);
 
-        ChatService.append(true, new ChatEntry(text, profile.getID()));
+        var text = '<div class="chat-sender">' + ChatService.escape(''+name) + ' (' + ChatService.escape(profile.getUsername()) + '): </div>';
+        text = text + '<div class="chat-message">' + parsed.string + '</div>';
+
+        ChatService.append(true, new ChatEntry(text, profile.getID(), true, null, parsed.diceRolls, parsed.triggeredContent));
     }
 }
