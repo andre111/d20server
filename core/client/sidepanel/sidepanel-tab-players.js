@@ -16,15 +16,15 @@ export class SidepanelTabPlayers extends SidepanelTab {
         this.tab.style.display = 'grid';
         this.tab.style.gridTemplateRows = 'auto max-content';
         
-        var treePanel = document.createElement('div');
+        const treePanel = document.createElement('div');
         treePanel.style.overflow = 'auto';
         this.tab.appendChild(treePanel);
         this.tree = new SearchableIDTree(treePanel, 'sidepanel-tab-players', getValueProvider('profile'));
         Events.on('profileListChange', event => this.tree.reload());
         
-        var buttonPanel1 = document.createElement('div');
-        this.tab.appendChild(buttonPanel1);
-        GuiUtils.createButton(buttonPanel1, 'Change Color', () => this.doChangeColor());
+        const buttonPanel = document.createElement('div');
+        this.tab.appendChild(buttonPanel);
+        GuiUtils.createButton(buttonPanel, 'Change Color', () => this.doChangeColor());
     }
     
     doChangeColor() {

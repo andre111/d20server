@@ -33,7 +33,6 @@ import { FileActionCreateToken } from './canvas/window/filemanager/action/file-a
 import { FileActionShowToPlayers } from './canvas/window/filemanager/action/file-action-show-to-players.js';
 
 import { StateInit } from './state/state-init.js';
-import { StateMain } from './state/state-main.js';
 import { Settings } from './settings/settings.js';
 import { SettingsEntryNumberRange } from './settings/settings-entry-number-range.js';
 import { CanvasWindowText } from './canvas/window/canvas-window-text.js';
@@ -43,8 +42,10 @@ import { EntityManagers } from '../common/entity/entity-managers.js';
 import { MapUtils } from './util/maputil.js';
 import { EntityReference } from '../common/entity/entity-reference.js';
 import { MessageService } from './service/message-service.js';
-import { SendChatMessage } from '../common/messages.js';
+import { ActionCommand, MovePlayerToMap, SendChatMessage } from '../common/messages.js';
 import { CanvasWindowFitToGrid } from './canvas/window/canvas-window-fit-to-grid.js';
+import { CanvasWindowConfirm } from './canvas/window/canvas-window-confirm.js';
+import { StateMain } from './state/state-main.js';
 
 // Initialize common code
 Common.init(new ClientIDProvider(), ClientEntityManager);
@@ -222,8 +223,10 @@ Events.on('entityMenu', event => {
 
     const menu = event.data.menu;
     menu.createItem(menu.container, 'Delete', () => {
-        EntityManagers.get(event.data.reference.getType()).remove(event.data.reference.getID());
-        if(menu.mode.clearActiveEntities) menu.mode.clearActiveEntities();
+        new CanvasWindowConfirm('Confirm removal', 'Are you sure you want to remove the '+event.data.entityType+': '+event.data.reference.getName()+'?', () => {
+            EntityManagers.get(event.data.reference.getType()).remove(event.data.reference.getID());
+            if(menu.mode && menu.mode.clearActiveEntities) menu.mode.clearActiveEntities();
+        });
     });
 }, true, 1000);
 
@@ -324,6 +327,57 @@ Events.on('entityMenu', event => {
         
         if(reference.prop('locked').getBoolean()) menu.createItem(menu.container, 'Unlock Door', () => { reference.prop('locked').setBoolean(false); reference.performUpdate(); });
         else menu.createItem(menu.container, 'Lock Door', () => { reference.prop('locked').setBoolean(true); reference.performUpdate(); });
+    }
+}, true, 100);
+
+//    Maps
+Events.on('entityMenu', event => {
+    if(event.data.entityType !== 'map') return;
+
+    const menu = event.data.menu;
+    const reference = event.data.reference;
+
+    if(event.data.isGM || reference.prop("playersCanEnter").getBoolean()) {
+        menu.createItem(menu.container, 'Open', () => MessageService.send(new MovePlayerToMap(reference, ServerData.localProfile)));
+    }
+    if(event.data.isGM) {
+        menu.createItem(menu.container, 'Move Players', () => MessageService.send(new MovePlayerToMap(reference)));
+    }
+}, true, 100);
+
+//    Actors
+Events.on('entityMenu', event => {
+    if(event.data.entityType !== 'actor') return;
+
+    const menu = event.data.menu;
+    const reference = event.data.reference;
+
+    if(event.data.isGM) {
+        menu.createItem(menu.container, 'Create Token', () => {
+            const token = reference.prop('token').getEntity();
+            if(token) {
+                Client.getState().setMode(new CanvasModeEntities('token'));
+                Client.getState().getMode().setAddEntityAction(token);
+                Events.trigger('updateModeState');
+            }
+        });
+        menu.createItem(menu.container, 'Set Default Token', () => {
+            if(Client.getState().getMode() instanceof CanvasModeEntities && Client.getState().getMode().entityType == 'token') {
+                if(Client.getState().getMode().activeEntities.length == 1) {
+                    const token = Client.getState().getMode().activeEntities[0].clone();
+
+                    reference.prop('token').setEntity(token);
+                    reference.performUpdate();
+                }
+            }
+        });
+        menu.createItem(menu.container, 'Show Image', () => {
+            const token = reference.prop('token').getEntity();
+            if(token) {
+                const imagePath = token.prop('imagePath').getString();
+                if(imagePath) MessageService.send(new ActionCommand('SHOW_IMAGE', 0, 0, 0, false, '/data/files'+imagePath));
+            }
+        });
     }
 }, true, 100);
 

@@ -131,6 +131,7 @@ class EntryNode {
         this.divContainer = document.createElement('div');
         this.divContainer.onclick = () => this.tree._onSelect(this);
         this.divContainer.ondblclick = () => this.tree._onSelect(this, true);
+        this.divContainer.oncontextmenu = (event) => this.tree._onRightClick(this, event.clientX, event.clientY);
         this.element.appendChild(this.divContainer);
 
         if(this.icon) {
@@ -202,6 +203,7 @@ export class SearchableIDTree {
 
     #valueProvider;
     #selectionCallback;
+    #rightclickCallback;
 
     #imageObserver;
     #parent;
@@ -209,7 +211,7 @@ export class SearchableIDTree {
     #filter;
     #container;
 
-    constructor(parent, identifier, valueProvider, selectionCallback) {
+    constructor(parent, identifier, valueProvider, selectionCallback, rightclickCallback) {
         this.#parent = parent;
         
         this.#searchPanel = document.createElement('div');
@@ -225,6 +227,7 @@ export class SearchableIDTree {
         
         this.#valueProvider = valueProvider;
         this.#selectionCallback = selectionCallback;
+        this.#rightclickCallback = rightclickCallback;
         
         // observer for lazy loading images (using loading=lazy does not work because chrome is too eager to load these list images for some reason)
         this.#imageObserver = new IntersectionObserver((entries, observer) => {
@@ -330,7 +333,13 @@ export class SearchableIDTree {
         if(this.#selectedEntry) this.#selectedEntry._onDeselect();
         this.#selectedEntry = entry;
         if(this.#selectedEntry) this.#selectedEntry._onSelect();
+
         if(this.#selectedEntry && confirm && this.#selectionCallback) this.#selectionCallback(this.#selectedEntry.id);
+    }
+
+    _onRightClick(entry, x, y) {
+        this._onSelect(entry, false);
+        if(this.#selectedEntry && this.#rightclickCallback) this.#rightclickCallback(this.#selectedEntry.id, x, y);
     }
 
     _getSelectedEntry() {
