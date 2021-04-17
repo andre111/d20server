@@ -6,6 +6,7 @@ import { WallRenderer } from './wall-renderer.js';
 import { Light, Infinite } from '../../common/constants.js';
 import { Rect } from '../../common/util/rect.js';
 import { IntMathUtils } from '../../common/util/mathutil.js';
+import { EntityManagers } from '../../common/entity/entity-managers.js';
 
 let {applyToPoint} = window.TransformationMatrix;
 
@@ -39,6 +40,8 @@ export const LightRenderer = {
         LightRenderer._mainCtx = LightRenderer._mainBuffer.getContext('2d');
         LightRenderer._lightCtx1 = LightRenderer._lightBuffer1.getContext('2d');
         LightRenderer._lightCtx2 = LightRenderer._lightBuffer2.getContext('2d');
+
+        EntityManagers.get('wall').addListener(() => LightRenderer.invalidateCache());
     },
     
     renderLight: function(ctx, screenWidth, screenHeight, transform, viewport, map, viewers) {
@@ -231,6 +234,11 @@ export const LightRenderer = {
             console.log('Updated light cache for '+token.id);
         }
         return cached;
+    },
+
+    invalidateCache: function() {
+        LightRenderer._cache.DIM.clear();
+        LightRenderer._cache.BRIGHT.clear();
     },
     
     getLight: function(token, light) {
