@@ -210,6 +210,13 @@ export class ChatService {
                 var endIndex = text.indexOf(']]', startIndex);
                 if(endIndex == -1) throw new Error(`Unclosed inline roll at ${startIndex}`);
 
+                // detect exceptional case in expression 
+                // when it ends with ']' (e.g. 4d6[fire] -> inline expression is [[4d6[fire]]])
+                // checking for index of ]] will get position that is off by one
+                // -> check for ]]] -> if present at the same position move endIndex by one
+                var exceptionalEndIndex = text.indexOf(']]]', startIndex);
+                if(endIndex == exceptionalEndIndex) endIndex += 1;
+
                 // extract expression string
                 var exprStr = text.substring(startIndex+2, endIndex);
                 var triggered = false;
@@ -260,7 +267,7 @@ export class ChatService {
                 // append variable value
 				const variable = parseVariable(variableName);
 				const value = variable.get(new Context(profile, EntityManagers.get('map').find(profile.getCurrentMap()), null));
-                string += ChatService.escape(value);
+                string += ChatService.escape(String(value));
             } else {
                 string += '<span class="chat-text">'+ChatService.escape(text.substring(startIndex, text.length))+"</span>";
                 startIndex = text.length;

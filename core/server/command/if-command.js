@@ -22,7 +22,7 @@ export class IfCommand extends Command {
         const firstExpression = split[0];
         const comparison = split[1];
         const secondExpression = split[2];
-        const message = split[3];
+        const message = split[3].trimStart();
 
         // create context, parse and evalute expressions
         const context = new Context(profile, EntityManagers.get('map').find(profile.getCurrentMap()), null);
