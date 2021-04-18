@@ -397,6 +397,15 @@ export const COLORSETS = {
 		edge: ['#FF5D0D','#FF7B00','#FFA20D','#FFBA0D'],
 		texture: [['bronze01','bronze02','bronze03','bronze03b','bronze03b','bronze04']],
 		material: 'metal'
+	},
+	'metal': {
+		name: 'metal',
+		foreground: '#FFFFFF',
+		background: '#B8B2B2',
+		outline: '#6B6B6B',
+		edge: '#FFFFFF',
+		texture: 'metal',
+		material: 'metal'
 	}
 };
 
