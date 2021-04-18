@@ -40,6 +40,7 @@ export class StateSignIn extends State {
         
         this.accessKeyField = GuiUtils.createInput(fieldset, 'password', 'Access-Key');
         this.accessKeyField.className = 'login-field';
+        this.accessKeyField.onkeydown = e => { if(e.keyCode == 13) this.doSignIn() };
         fieldset.appendChild(document.createElement('br'));
         
         const b = document.createElement('button');
