@@ -2,7 +2,7 @@ import { PropertyEditor } from './property-editor.js';
 import { Type, Access } from '../../../common/constants.js';
 
 export class AccessPropertyEditor extends PropertyEditor {
-    constructor(tab, name, label) {
+    constructor(name, label) {
         super(name, Type.ACCESS, label);
     }
     

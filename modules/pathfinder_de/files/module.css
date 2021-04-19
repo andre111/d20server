@@ -1,0 +1,297 @@
+.cs-container {
+    padding: 0;
+    width: 700px;
+    height: 800px;
+}
+.cs-container input,
+.cs-container select {
+    background: none;
+    border: none;
+    outline: none;
+}
+.cs-container input[type="number"] {
+    -moz-appearance: textfield;
+}
+.cs-container input[type="number"]::-webkit-outer-spin-button,
+.cs-container input[type="number"]::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+/* Header */
+.cs-header {
+    height: 142px;
+    display: flex;
+
+    border-bottom: var(--border-separator);
+}
+.cs-image {
+    width: 140px;
+    height: 140px;
+
+    border-right: var(--border-separator);
+}
+.cs-image img {
+    border: none;
+}
+.cs-header-side {
+    width: calc(100% - 140px);
+}
+.cs-name input {
+    margin: 4px;
+    width: calc(100% - 8px);
+    height: 40px;
+
+    font-size: 32px;
+}
+.cs-class-level {
+    flex: 0 0 40%;
+    align-items: center;
+}
+.cs-class-level input[type="text"] {
+    width: 220px;
+    height: 20px;
+}
+.cs-class-level input[type="number"] {
+    width: 32px;
+    height: 20px;
+    text-align: center;
+}
+.cs-header-row {
+    flex: 0 0 100%;
+    
+    padding: 0;
+    margin: 0;
+    list-style: none;
+}
+.cs-header-row:first-of-type {
+    border-top: var(--border-separator);
+    border-bottom: var(--border-separator);
+}
+.cs-header-row li {
+    padding: 4px;
+    border-right: var(--border-separator);
+
+    display: flex;
+}
+.cs-header-row li:last-child {
+    border-right: none;
+}
+
+.cs-header-row:nth-of-type(1) input {
+    width: 120px;
+}
+.cs-header-row:nth-of-type(1) input[type="number"] {
+    width: 32px;
+}
+.cs-header-row:nth-of-type(2) input {
+    width: 80px;
+}
+
+/* Tabs */
+.cs-tabs {
+    height: calc(100% - 142px);
+}
+.cs-tabs .tab-buttons {
+    padding-top: 10px;
+    padding-bottom: 5px;
+}
+
+/* General Purpose Components */
+.cs-area {
+    margin: 4px;
+    border: var(--border-separator);
+    border-radius: 4px;
+    
+    list-style: none;
+    padding: 0;
+
+    overflow: auto;
+}
+.cs-value-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    
+    border-bottom: var(--border-separator);
+}
+.cs-value-container p:first-of-type {
+    width: 100%;
+    margin: 0;
+    padding-top: 5px;
+
+    text-align: center;
+    font-variant: small-caps;
+    background: rgba(0, 0, 0, 0.05);
+    border-bottom: var(--border-separator);
+    
+    user-select: none;
+}
+.cs-value-container div {
+    display: inline;
+}
+.cs-value-container input,
+.cs-value-container select {
+    margin-top: 4px;
+    
+    text-align: center;
+}
+.cs-clickable {
+    font-variant: small-caps;
+
+    cursor: pointer;
+    user-select: none;
+}
+.cs-clickable:hover {
+    text-shadow: var(--text-shadow-hover);
+}
+
+
+/* Attributes Tab */
+.cs-attributes {
+    height: 596px;
+    width: 140px;
+    flex-wrap: nowrap;
+    overflow: hidden;
+}
+.cs-other-values {
+    height: 596px;
+    width: 220px;
+    flex-wrap: nowrap;
+    overflow: hidden;
+}
+.cs-skills {
+    height: 596px;
+    width: calc(100% - 360px - 20px - 4px);
+}
+
+.cs-attribute input {
+    width: 30px;
+    height: 30px;
+    
+    font-size: 18px;
+}
+.cs-attribute .cs-attribute-mod input {
+    width: 42px;
+    height: 34px;
+    
+    border: var(--border-separator);
+    border-bottom: none;
+    border-top-left-radius: 4px;
+    border-top-right-radius: 4px;
+    
+    font-size: 32px;
+}
+
+.cs-other-values input {
+    width: 24px;
+    height: 24px;
+}
+.cs-ac-calc input {
+    width: 16px;
+    height: 16px;
+    font-size: 12px;
+}
+.cs-save-calc {
+    font-size: 12px;
+}
+.cs-save-calc input {
+    height: 16px;
+}
+
+.cs-skills table {
+    width: 100%;
+    
+    border: none;
+}
+.cs-skills td,
+.cs-skills tr,
+.cs-skills th {
+    border: none;
+    padding: 0;
+}
+.cs-skills th {
+    padding: 2px;
+    
+    font-variant: small-caps;
+    font-size: 12px;
+}
+.cs-skill td {
+    font-size: 12px;
+    font-variant: small-caps;
+    white-space: nowrap;
+}
+.cs-skill span {
+    padding: 2px;
+    
+    font-size: 16px;
+    white-space: normal;
+}
+.cs-skill td:nth-child(4) {
+    color: gray;
+}
+.cs-skill div {
+    display: inline;
+}
+.cs-skill input {
+    width: 24px;
+    height: 16px;
+    
+    border: none;
+    background: none;
+    outline: none;
+    
+    text-align: center;
+    
+    -moz-appearance: textfield;
+}
+
+/* Biography Tab */
+.cs-biography {
+    width: calc(100% - 8px);
+    height: calc(100% - 8px);
+    
+    padding: 5px;
+}
+
+/* Attachments Tab */
+.cs-attachments {
+    width: calc(100% - 8px);
+    height: calc(100% - 8px);
+    
+    padding: 5px;
+}
+.cs-attachments button {
+    width: 33.33%;
+}
+
+/* Macros Tab */
+.cs-macros {
+    width: calc(100% - 8px);
+    height: calc(100% - 8px);
+    
+    padding: 5px;
+}
+.cs-macros select,
+.cs-macros textarea {
+    background: none;
+    border: var(--border-separator);
+}
+
+/* GM Tab */
+.cs-gm {
+    width: calc(100% - 8px);
+    height: calc(100% - 8px);
+    
+    display: flex;
+}
+.cs-gm-values {
+    width: 200px;
+    height: 100%;
+    
+    flex-wrap: nowrap;
+    border-right: var(--border-separator);
+}
+.cs-gm-values button {
+    width: 50%;
+}

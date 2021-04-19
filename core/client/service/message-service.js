@@ -7,7 +7,7 @@ import { Client } from '../app.js';
 import { EntityManagers } from '../../common/entity/entity-managers.js';
 import { setDefinitions } from '../../common/definitions.js';
 import { StateMain } from '../state/state-main.js';
-import { CanvasWindowInfo } from '../canvas/window/canvas-window-info.js';
+import { CanvasWindowText } from '../canvas/window/canvas-window-text.js';
 import { EffectRenderer } from '../renderer/effect-renderer.js';
 import { ModuleSettings } from '../settings/module-settings.js';
 
@@ -15,7 +15,7 @@ export const MessageService = {
     recieve: function(msg) {
         if(msg instanceof ResponseOk) {
         } else if(msg instanceof ResponseFail) {
-            new CanvasWindowInfo('Failed', msg.getDescription());
+            new CanvasWindowText('Failed', msg.getDescription());
         } else if(msg instanceof EntityLoading) {
             Client.setState(new StateLoading(msg.getCount()));
         } else if(msg instanceof EnterGame) {

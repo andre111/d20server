@@ -13,8 +13,8 @@ class MusicPlayerWindow extends CanvasWindow {
         super('Music Player', false);
 
         this.player = player;
-        this.frame.appendChild(this.player.audio);
-        this.setDimensions(340, 150);
+        this.content.appendChild(this.player.audio);
+        this.setDimensions(310, 90);
         this.storeAndRestoreLocation('music_player_window');
     }
 

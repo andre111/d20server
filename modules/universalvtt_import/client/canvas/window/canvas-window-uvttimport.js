@@ -12,11 +12,13 @@ export class CanvasWindowUVTTImport extends CanvasWindow {
 
         this.#file = file;
         this.initContent(name);
+        this.setDimensions(300, 300);
+        this.center();
     }
 
     initContent(name) {
         // create container
-        const container = this.frame;
+        const container = this.content;
         
         // create panel
         const panel = document.createElement('div');
@@ -43,21 +45,13 @@ export class CanvasWindowUVTTImport extends CanvasWindow {
         this.#importLightsInput.className = 'settings-toggle';
 
         // buttons
-        $(this.frame).dialog('option', 'buttons', [
-            {
-                text: 'Import',
-                click: () => {
-                   this.doImport();
-                    $(this.frame).dialog('close');
-                }
-            },
-            {
-                text: 'Cancel',
-                click: () => {
-                    $(this.frame).dialog('close');
-                }
-            }
-        ]);
+        this.addButton('Import', () => {
+            this.doImport();
+            this.close();
+        });
+        this.addButton('Cancel', () => {
+            this.close();
+        });
     }
 
     doImport() {

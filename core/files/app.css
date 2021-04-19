@@ -13,6 +13,8 @@ CONTENTS:
         4.5 Notifications
         4.6 Tree Lists
         4.7 File Manager
+        4.8 Tabs
+        4.9 Dialogs
     5. Library Overrides
 --------------------------------------------------------------
 */
@@ -23,16 +25,22 @@ CONTENTS:
 --------------------------------------------------------------
 */
 :root {
-    --color-bg: rgb(254, 238, 189);
-    --color-bg-transparent: rgba(254, 238, 189, 0.85);
     --color-selected: #faebd7;
 
     --color-light: #fff4d2;
     --color-medium: #f5deb3;
     --color-dark: #e2cf9d;
 
-    --shadow-hover: 0px 0px 4px 3px var(--color-dark); 
-    --shadow-active: 0px 0px 4px 3px var(--color-dark);
+    --color-highlight: #553300;
+    --shadow-hover: 0px 0px 3px 1px var(--color-highlight); 
+    --shadow-active: 0px 0px 3px 1px var(--color-highlight);
+    --text-shadow-hover: 0px 0px 5px var(--color-highlight);
+    --text-shadow-active: 0px 0px 5px var(--color-highlight);
+    
+    --bg: url(/core/files/img/paper_texture.png), var(--color-light);
+    --bg-transparent: rgba(254, 238, 189, 0.85);
+
+    --border-separator: 2px groove var(--color-dark);
 }
 
 /*
@@ -62,7 +70,7 @@ html, body {
     height: 100%;
     position: absolute;
     right: 0;
-    background: var(--color-bg-transparent);
+    background: var(--bg-transparent);
     border-radius: 8px 0 0 8px;
     box-shadow: 0px 0px 6px black;
     z-index: 10;
@@ -165,14 +173,43 @@ hr {
     border-color: var(--color-dark); 
 }
 
+/* General Layouts */
+.flexrow {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+}
+.flexcol {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+}
+.flexrow > *,
+.flexcol > * {
+    flex: 1;
+}
+
 /* General inputs */
-button, input {
+button {
+    border: 1px solid black;
+    background: var(--color-dark);
+    background: linear-gradient(0deg, var(--color-dark) 0%, var(--color-medium) 100%);
+}
+button:enabled:hover {
+    box-shadow: inset var(--shadow-hover);
+}
+button:active {
+    box-shadow: inset var(--shadow-active);
+}
+input {
     border-width: 1px;
 }
-button:enabled:hover, input:enabled:hover {
+input:enabled:hover {
     box-shadow: var(--shadow-hover);
 }
-button:active, input:focus {
+input:focus {
     box-shadow: var(--shadow-active);
 }
 
@@ -191,6 +228,22 @@ button:active, input:focus {
     padding: 2px;
     border: solid 1px black;
     /* border-radius: 4px; */ /* TODO: does this actually make it look better? */
+}
+
+.checkbox {
+    margin: 0;
+    padding: 0;
+    border: none;
+    display: inline-block;
+}
+.checkbox p {
+    width: 100%;
+    height: 100%;
+    background-size: contain;
+    background: url(/core/files/img/icon/box-unchecked.png);
+}
+.checkbox.checked p {
+    background: url(/core/files/img/icon/box-checked.png);
 }
 
 /* Used for bordered divs with overlaying legend on border -> see: GuiUtils.makeBordered */
@@ -266,10 +319,10 @@ button:active, input:focus {
 ---------------------------------------
 */
 .chat {
-    background-color: var(--color-light);
+    background: var(--bg);
     width: calc(100% - 4px);
     max-width: calc(100% - 4px);
-    margin: 2px;
+    margin: 5px 2px;
     border-radius: 6px;
     border: solid 1px var(--color-dark);
     position: relative;
@@ -369,7 +422,7 @@ div.chat-box-content {
     width: 80%;
     margin: 0 auto;
     border: solid 1px black;
-    background-color: white;
+    background-color: rgba(255, 255, 255, 0.5);;
     box-shadow: 0px 0px 3px black;
 }
 div.chat-box-content table {
@@ -665,6 +718,7 @@ div.chat-box-content th, div.chat-box-content td {
 }
 
 .fileman-button {
+    height: 20px;
     margin: 0 5px 5px 0;
     border: 1px solid var(--color-medium);
     border-radius: 3px;
@@ -722,6 +776,131 @@ div.chat-box-content th, div.chat-box-content td {
     opacity: 0.4;
 }
 
+/* 
+---------------------------------------
+    4.8 Tabs
+---------------------------------------
+*/
+.tab-buttons {
+    width: 100%;
+    height: 40px;
+    display: flex;
+    justify-content: space-around;
+    user-select: none;
+}
+.tab-buttons button {
+    height: 24px;
+    display: inline-block;
+    text-align: center;
+
+    padding: 0;
+
+    border: none;
+    outline: none;
+    background: none;
+
+    font-size: 18px;
+    font-variant: small-caps;
+    border-bottom: 3px solid rgba(0, 0, 0, 0.25);
+    
+    cursor: pointer;
+    transition: 0.3s;
+}
+.tab-buttons button:hover,
+.tab-buttons button.active {
+    border-bottom: 3px solid black;
+    text-shadow: var(--text-shadow-hover);
+    box-shadow: none;
+}
+
+.tab-content {
+    display: none;
+    animation: fadeEffect 0.5s;
+    
+    width: 100%;
+    height: calc(100% - 40px);
+}
+
+@keyframes fadeEffect {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+/* 
+---------------------------------------
+    4.9 Dialogs
+---------------------------------------
+*/
+.dialog {
+    position: absolute;
+
+    background: var(--bg-transparent);
+    border: 1px solid black;
+    border-radius: 8px;
+    box-shadow: 0 0 7px 0 black;
+
+    overflow: hidden;
+}
+.dialog.modal {
+    background: var(--bg);
+}
+.dialog-title {
+    position: relative;
+    height: 24px;
+
+    background: var(--color-dark);
+    border-bottom: 1px solid black;
+}
+.dialog-title p {
+    position: absolute;
+    left: 6px;
+    top: 2px;
+    height: 19px;
+
+    font-variant: small-caps;
+    text-shadow: var(--text-shadow-active);
+
+    user-select: none;
+}
+.dialog-title button {
+    position: absolute;
+    right: 2px;
+    top: 2px;
+    width: 24px;
+    height: 19px;
+
+    border-radius: 10px;
+}
+.dialog-content {
+    position: relative;
+    padding: 4px;
+}
+.dialog-buttons {
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    height: 24px;
+
+    border-top: 1px solid black;
+    
+    display: flex;
+    place-content: flex-end;
+}
+.dialog-buttons button {
+    height: 19px;
+    margin: 2px;
+
+    border-radius: 10px;
+}
+.dialog-modal-pane {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+
+    background: rgba(0, 0, 0, 0.25);
+}
+
 /*
 --------------------------------------------------------------
     5. Library Overrides
@@ -733,73 +912,12 @@ div.chat-box-content th, div.chat-box-content td {
 }
 
 /* jQueryUI overrides */
-.ui-state-default,
-.ui-widget-content .ui-state-default,
-.ui-widget-header .ui-state-default,
-.ui-button,
-html .ui-button.ui-state-disabled:hover,
-html .ui-button.ui-state-disabled:active {
-	border: 1px solid black !important;
-	background: var(--color-dark) !important;
-	background: linear-gradient(0deg, var(--color-dark) 0%, var(--color-medium) 100%) !important;
-}
-.ui-state-hover,
-.ui-widget-content .ui-state-hover,
-.ui-widget-header .ui-state-hover,
-.ui-state-focus,
-.ui-widget-content .ui-state-focus,
-.ui-widget-header .ui-state-focus,
-.ui-button:hover,
-.ui-button:focus {
-	border: 1px solid black !important;
-	background: var(--color-light) !important;
-}
-.ui-state-active, 
-.ui-widget-content .ui-state-active, 
-.ui-widget-header .ui-state-active, 
-a.ui-button:active, 
-.ui-button:active, 
-.ui-button.ui-state-active:hover {
-    background: #ffffff !important;
-}
-.ui-tabs .ui-tabs-nav li {
-    border-bottom-width: 0 !important;
-}
 .ui-menu.ui-widget-content,
 fieldset.ui-widget-content {
-    background: var(--color-bg-transparent) !important;
+    background: var(--bg-transparent) !important;
     border-color: black !important;
 }
 
 .ui-menu .ui-menu-item {
     font-size: 10px !important;
-}
-
-.ui-tabs .ui-tabs-nav {
-    padding: 0 !important;
-    border: none !important;
-    background: none !important;
-}
-.ui-tabs .ui-tabs-nav .ui-tabs-anchor {
-	padding: .2em .2em !important;
-}
-.ui-tabs .ui-tabs-panel {
-    padding: 5px !important;
-    border: 1px solid !important;
-}
-
-.ui-dialog {
-    background: var(--color-bg-transparent) !important;
-    box-shadow: 0px 0px 6px black !important;
-}
-.ui-dialog .ui-dialog-buttonpane {
-    background: none !important;
-}
-.ui-dialog, .ui-dialog-content {
-    box-sizing: content-box !important; /* jQueryUI is made with respect to content-box sizing, so override the reset style in this case */
-}
-
-/* make modal dialogs non transparent */
-.modal-dialog {
-    background: var(--color-bg) !important;
 }

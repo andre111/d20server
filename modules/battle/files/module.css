@@ -32,7 +32,7 @@
     overflow: hidden;
 }
 .battle-info {
-    background-color: var(--color-light);
+    background: var(--bg);
 
     text-shadow: 0px 0px 3px black, 0px 0px 3px black;
     font-weight: bold;
@@ -43,12 +43,12 @@
 .battle-entry {
     width: 80px;
     height: 120px;
-    background-color: var(--color-light);
+    background: var(--bg);
 }
 .battle-entry-active {
     width: 120px;
     height: 180px;
-    background-color: var(--color-light);
+    background: var(--bg);
 }
 .battle-entry img {
     width: 80px;

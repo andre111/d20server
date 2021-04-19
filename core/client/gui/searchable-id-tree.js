@@ -357,6 +357,10 @@ export class SearchableIDTree {
     getSearchPanel() {
         return this.#searchPanel;
     }
+
+    getContainer() {
+        return this.#container;
+    }
     
     getSelectedValue() {
         if(this.#selectedEntry) return this.#selectedEntry.id;

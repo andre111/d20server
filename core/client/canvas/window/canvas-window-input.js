@@ -5,28 +5,22 @@ export class CanvasWindowInput extends CanvasWindow {
         super(title, true);
         
         // create html elements
-        this.frame.appendChild(document.createTextNode(text));
+        this.content.appendChild(document.createTextNode(text));
         
-        var input = document.createElement('input');
+        const input = document.createElement('input');
         input.type = 'text';
         input.value = value;
-        this.frame.appendChild(input);
+        this.content.appendChild(input);
         
-        $(this.frame).dialog('option', 'buttons', [
-            {
-                text: 'Ok',
-                click: function() {
-                    callback(input.value);
-                    $(this).dialog('close');
-                }
-            },
-            {
-                text: 'Cancel',
-                click: function() {
-                    $(this).dialog('close');
-                }
-            }
-        ]);
+        this.addButton('Ok', () => {
+            callback(input.value);
+            this.close();
+        });
+        this.addButton('Cancel', () => {
+            this.close();
+        });
+        this.setDimensions(300, 100);
+        this.center();
         
         // make pressing enter in input confirm the dialog as well
         input.onkeydown = e => {

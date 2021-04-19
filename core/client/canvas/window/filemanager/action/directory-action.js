@@ -15,7 +15,7 @@ export class DirectoryAction {
         this.button.className = 'fileman-button';
         this.button.type = 'button';
         this.button.value = name;
-        this.button.style.backgroundPosition = '2px '+String(-this.icon*28 + 5)+'px';
+        this.button.style.backgroundPosition = '2px '+String(-this.icon*28 + 2)+'px';
     }
 
     getName() {

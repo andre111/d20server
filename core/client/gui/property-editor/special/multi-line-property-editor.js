@@ -4,7 +4,7 @@ import { GuiUtils } from '../../../util/guiutil.js';
 import { Type } from '../../../../common/constants.js';
 
 export class MultiLineStringPropertyEditor extends PropertyEditor {
-    constructor(tab, name, label) {
+    constructor(name, label) {
         super(name, Type.STRING, label);
     }
     

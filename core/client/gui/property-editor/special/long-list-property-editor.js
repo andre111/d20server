@@ -11,7 +11,7 @@ import { EntityReference } from '../../../../common/entity/entity-reference.js';
 
 
 export class LongListPropertyEditor extends PropertyEditor {
-    constructor(tab, name, label, referenceType, allowDuplicates) {
+    constructor(name, label, referenceType, allowDuplicates) {
         super(name, Type.LONG_LIST, label);
         
         this.referenceType = referenceType;
@@ -20,7 +20,7 @@ export class LongListPropertyEditor extends PropertyEditor {
         this.valueList = [];
         this.valueProvider = getValueProvider(this.referenceType);
         
-        GuiUtils.makeBordered(this.container, label);
+        if(label) GuiUtils.makeBordered(this.container, label);
         this.container.style.overflow = 'auto';
         
         this.tree = new SearchableIDTree(this.container, null, this.valueProvider, () => this.doOpen());

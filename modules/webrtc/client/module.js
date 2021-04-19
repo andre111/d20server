@@ -5,9 +5,15 @@ import { WebRTCMessage } from '../common/message/webrtc-message.js';
 import { WebRTCEntry } from './webrtc-entry.js';
 
 //TODO: config options (MOST IMPORTANT: choosing audio and video device)
+//TODO: Verify if the stun server is even usable with the current setup (of port forwarding but not setting the externalIps property in the server)
+//       seems like only IPv6 works, but not IPv4 (kind of as expected, there are no internal/external IPv6 addresses)
+//TODO: As far as I understood stun needs two sepparate servers for full functionality? -> using public stuntman server for now
+//TODO: Maybe replace with TURN server that can catch these cases as well
 const peerConnectionConfig = {
     'iceServers': [
-        { 'urls': 'stun:'+location.hostname+':3478' }
+        { 'url': 'stun:'+location.hostname+':3478' },
+        //{ 'url': 'turn:'+location.hostname+':3478' },
+        //{ 'urls': 'stun:stun.stunprotocol.org:3478' }
     ]
 };
 

@@ -11,18 +11,18 @@ export class CanvasWindowChoose extends CanvasWindow {
 
         this.#callback = callback;
        
-        this.#tree = new SearchableIDTree(this.frame, null, getValueProvider(type), () => this.onChoose());
-        
-        $(this.frame).dialog('option', 'buttons', [
-            {
-                text: 'Ok',
-                click: () => this.onChoose()
-            },
-            {
-                text: 'Cancel',
-                click: () => $(this.frame).dialog('close')
-            }
-        ]);
+        this.#tree = new SearchableIDTree(this.content, null, getValueProvider(type), () => this.onChoose());
+        this.#tree.getContainer().style.overflow = 'auto';
+        this.#tree.getContainer().style.height = 'calc(100% - 23px)';
+
+        this.addButton('Ok', () => {
+            this.onChoose();
+        });
+        this.addButton('Cancel', () => {
+            this.close();
+        });
+        this.setDimensions(300, 500);
+        this.center();
     }
 
     onChoose() {
@@ -32,6 +32,6 @@ export class CanvasWindowChoose extends CanvasWindow {
         } else {
             this.#callback(-1);
         }
-        $(this.frame).dialog('close');
+        this.close();
     }
 }

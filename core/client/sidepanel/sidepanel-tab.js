@@ -10,8 +10,9 @@ export class SidepanelTab {
         this.visible = visible;
 
         this.tab = document.createElement('div');
-        // TODO: make this dynamically match the correct size, instead of this hard coded hack job (maybe only once I implement my own tab system)
-        this.tab.style.height = 'calc(100% - '+String(32*1)+'px)'; 
+        // TODO: make this use a class and css
+        this.tab.style.height = '100%';
+        this.tab.style.padding = '4px'; 
         this.tab.style.overflow = 'auto';
     }
 

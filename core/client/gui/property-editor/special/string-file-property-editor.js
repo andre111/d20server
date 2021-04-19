@@ -3,7 +3,7 @@ import { Type } from '../../../../common/constants.js';
 import { createDefaultFileManager } from '../../../canvas/window/canvas-window-filemanager.js';
 
 export class StringFilePropertyEditor extends PropertyEditor {
-    constructor(tab, name, label, filetype) {
+    constructor(name, label, filetype) {
         super(name, Type.STRING, label);
         
         this.filetype = filetype;

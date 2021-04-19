@@ -18,6 +18,7 @@ import { Events } from '../../common/events.js';
 import { PlayEffect } from '../../common/messages.js';
 import { EntityManagers } from '../../common/entity/entity-managers.js';
 import { NotificationManager } from '../gui/notification-manager.js';
+import { Tabs } from '../gui/tabs.js';
 
 export class StateMain extends State {
     active;
@@ -55,10 +56,10 @@ export class StateMain extends State {
         document.body.appendChild(canvas);
 
         const sidepanel = document.createElement('div');
-        const sidepanelLinks = document.createElement('ul');
+        //const sidepanelLinks = document.createElement('ul');
         sidepanel.id = 'sidepanel';
         sidepanel.tabIndex = '2';
-        sidepanel.appendChild(sidepanelLinks);
+        //sidepanel.appendChild(sidepanelLinks);
         document.body.appendChild(sidepanel);
 
         this.notificationManager = new NotificationManager();
@@ -141,27 +142,14 @@ export class StateMain extends State {
         Events.trigger('addSidepanelTabs', data);
 
         // create tabs
-        var tabID = 0;
         for(const tab of this.sidepanelTabs) {
             if(tab.isVisible()) {
-                // create link
-                const li = document.createElement('li');
-                const a = document.createElement('a');
-                a.href = '#sptab-'+tabID;
-                a.innerHTML = tab.getName();
-                li.appendChild(a);
-                sidepanelLinks.appendChild(li);
-
                 // add panel tab
-                tab.getTab().id = 'sptab-'+tabID;
+                tab.getTab().name = tab.getName();
                 sidepanel.appendChild(tab.getTab());
-
-                tabID++;
             }
         }
-        $(sidepanel).tabs({
-            heightStyle: 'content'
-        });
+        Tabs.init(sidepanel);
     }
 
     exit() {

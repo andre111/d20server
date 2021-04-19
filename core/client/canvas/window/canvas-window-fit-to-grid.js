@@ -37,7 +37,7 @@ export class CanvasWindowFitToGrid extends CanvasWindow {
         this.canvas.style.width = '99%';
         this.canvas.style.height = '99%';
         this.canvas.style.margin = 'auto';
-        this.frame.appendChild(this.canvas);
+        this.content.appendChild(this.canvas);
         this.ctx = this.canvas.getContext('2d');
         
         // camera
@@ -63,22 +63,14 @@ export class CanvasWindowFitToGrid extends CanvasWindow {
         this.maximize();
         
         // 
-        var w = this;
-        $(this.frame).dialog('option', 'buttons', [
-            {
-                text: 'Ok',
-                click: function() {
-                    w.doUpdateEntity();
-                    $(this).dialog('close');
-                }
-            },
-            {
-                text: 'Cancel',
-                click: function() {
-                    $(this).dialog('close');
-                }
-            }
-        ]);
+        this.addButton('Ok', () => {
+            this.doUpdateEntity();
+            this.close();
+        });
+        this.addButton('Cancel', () => {
+            this.close();
+        });
+        this.maximize();
         
         // register rendering
         this.listener = Events.on('frameEnd', event => this.render());

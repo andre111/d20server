@@ -16,7 +16,7 @@
 
     margin-right: 7px;
 
-    background-color: var(--color-bg);
+    background: var(--bg);
     box-shadow: var(--shadow-active);
 
     display: flex;

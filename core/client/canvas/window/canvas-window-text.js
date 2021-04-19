@@ -7,14 +7,11 @@ export class CanvasWindowText extends CanvasWindow {
         // create html elements
         const p = document.createElement('p');
         p.innerText = text;
-        this.frame.appendChild(p);
+        this.content.appendChild(p);
         
-        this.frame.style.overflow = 'auto';
+        this.content.style.overflow = 'auto';
         
-        this.setLocation({
-            position: { my: 'center', at: 'center' },
-            width: 300,
-            height: 300
-        });
+        this.setDimensions(300, 300);
+        this.center();
     }
 }

@@ -5,14 +5,14 @@ export class CanvasWindowImage extends CanvasWindow {
         super('Image', false);
         
         // create html elements
-        var image = new Image();
+        const image = new Image();
         image.src = imagePath;
         image.style.width = '100%';
         image.style.height = '100%';
         image.style.objectFit = 'contain';
-        this.frame.appendChild(image);
+        this.content.appendChild(image);
         
-        this.frame.style.overflow = 'hidden';
+        this.content.style.overflow = 'hidden';
         
         this.maximize();
     }

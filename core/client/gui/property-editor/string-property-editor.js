@@ -2,8 +2,10 @@ import { PropertyEditor } from './property-editor.js';
 import { Type } from '../../../common/constants.js';
 
 export class StringPropertyEditor extends PropertyEditor {
-    constructor(tab, name, label) {
+    constructor(name, label, placeholder) {
         super(name, Type.STRING, label);
+
+        if(placeholder) this.textField.placeholder = placeholder;
     }
     
     initContent(label) {

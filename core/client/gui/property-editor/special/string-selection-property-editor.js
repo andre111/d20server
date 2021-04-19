@@ -2,7 +2,7 @@ import { PropertyEditor } from '../property-editor.js';
 import { Type } from '../../../../common/constants.js';
 
 export class StringSelectionPropertyEditor extends PropertyEditor {
-    constructor(tab, name, label, values) {
+    constructor(name, label, values) {
         super(name, Type.STRING, label);
         
         // load values

@@ -104,8 +104,8 @@
                     "editorType": "HTML_STRING",
                     "property": "descFull",
                     "text": "Full Description",
-                    "w": 980,
-                    "h": 370
+                    "w": 790,
+                    "h": 300
                 }
             ]
         }

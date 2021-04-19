@@ -1,9 +1,11 @@
 import { CanvasWindow } from '../canvas-window.js';
 import { CanvasWindowEditEntityTab } from './canvas-window-edit-entity-tab.js';
+import { Tabs } from '../../gui/tabs.js';
 import { ServerData } from '../../server-data.js';
 
 import { Access } from '../../../common/constants.js';
 import { EntityReference } from '../../../common/entity/entity-reference.js';
+import { Events } from '../../../common/events.js';
 
 export class CanvasWindowEditEntity extends CanvasWindow {
     constructor(reference) {
@@ -12,61 +14,51 @@ export class CanvasWindowEditEntity extends CanvasWindow {
         this.reference = new EntityReference(reference.getBackingEntity());
         this.tabs = [];
         
-        var w = this;
-        $(this.frame).dialog('option', 'buttons', [
-            {
-                text: 'Ok',
-                click: function() {
-                    w.doUpdateEntity();
-                    $(this).dialog('close');
-                }
-            },
-            {
-                text: 'Cancel',
-                click: function() {
-                    $(this).dialog('close');
-                }
-            }
-        ]);
-        //$(this.frame).dialog('option', 'resizable', false);
-        $(this.frame).dialog('option', 'width', 1000+5);
-        $(this.frame).dialog('option', 'height', 700+5);
+        this.addButton('Ok', () => {
+            this.doUpdateEntity();
+            this.close();
+        });
+        this.addButton('Cancel', () => {
+            this.close();
+        });
+
+        this.setDimensions(800, 500);
         
         this.initTabs();
         this.reloadValues();
+        this.center();
 
         // listen to entity updates and reload window on changes
         this.reference.addListener(this);
     }
     
     initTabs() {
-        // create container
-        var container = this.frame;
-        var links = document.createElement('ul');
-        container.appendChild(links);
-        container.style.padding = '0em 0em';
-        
-        // create tabs
-        this.tabs = [];
-        var id = 0;
-        const accessLevel = this.getAccessLevel();
-        for(const tabDefinition of this.reference.getDefinition().editorTabs) {
-            if(Access.matches(tabDefinition.access, accessLevel)) {
-                this.tabs.push(new CanvasWindowEditEntityTab(this, container, links, id++, tabDefinition));
-            }
-        }
-        for(const extDef of this.reference.getActiveExtensions()) {
-            for(const tabDefinition of extDef.editorTabs) {
+        const event = Events.trigger('editWindowCreateTabs', { window: this, reference: this.reference }, true);
+
+        // build default data driven tab layout
+        if(!event.canceled) {
+            // create container
+            const container = this.content;
+            container.style.paddingTop = '5px';
+            
+            // create tabs
+            this.tabs = [];
+            const accessLevel = this.getAccessLevel();
+            for(const tabDefinition of this.reference.getDefinition().editorTabs) {
                 if(Access.matches(tabDefinition.access, accessLevel)) {
-                    this.tabs.push(new CanvasWindowEditEntityTab(this, container, links, id++, tabDefinition));
+                    this.tabs.push(new CanvasWindowEditEntityTab(this, container, tabDefinition));
                 }
             }
+            for(const extDef of this.reference.getActiveExtensions()) {
+                for(const tabDefinition of extDef.editorTabs) {
+                    if(Access.matches(tabDefinition.access, accessLevel)) {
+                        this.tabs.push(new CanvasWindowEditEntityTab(this, container, tabDefinition));
+                    }
+                }
+            }
+            
+            if(this.tabs.length > 1) Tabs.init(container);
         }
-        
-        // convert to jquery-ui tabs
-        $(container).tabs({
-            heightStyle: 'content'
-        });
     }
     
     getReference() {
@@ -111,6 +103,6 @@ export class CanvasWindowEditEntity extends CanvasWindow {
     }
 
     entityRemoved(reference) {
-        $(this.frame).dialog('close');
+        this.close();
     }
 }

@@ -6,12 +6,12 @@ import { Type } from '../../../../common/constants.js';
 import { FILE_TYPE_IMAGE } from '../../../../common/util/datautil.js';
 
 export class HTMLStringPropertyEditor extends PropertyEditor {
-    constructor(tab, name, label) {
+    constructor(name, label) {
         super(name, Type.STRING, label);
     }
     
     initContent(label) {
-        GuiUtils.makeBordered(this.container, label);
+        if(label) GuiUtils.makeBordered(this.container, label);
         
         this.form = document.createElement('form');
         this.form.style.width = '100%';
@@ -86,7 +86,7 @@ export class HTMLStringPropertyEditor extends PropertyEditor {
             }
         });
         // force the manager over top of tinyMCE dialogs (TODO: is there a cleaner way?)
-        manager.frame.parentElement.style.zIndex = 1400;
+        manager.zIndex = 1400;
     }
     
     onDestroy() {

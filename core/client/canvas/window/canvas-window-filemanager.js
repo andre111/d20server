@@ -67,6 +67,7 @@ export class CanvasWindowFilemanager extends CanvasWindow {
             this.registerBasicActions();
         }
         this.setDimensions(1100, 800);
+        this.center();
     }
 
     init(selectionCallback) {
@@ -86,7 +87,7 @@ export class CanvasWindowFilemanager extends CanvasWindow {
         const table = document.createElement('table');
         table.style.width = '100%';
         table.style.height = '100%';
-        this.frame.appendChild(table);
+        this.content.appendChild(table);
 
         // action buttons
         const actionRow = document.createElement('tr');

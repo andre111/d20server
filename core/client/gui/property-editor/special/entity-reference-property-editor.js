@@ -4,7 +4,7 @@ import { CanvasWindowChoose } from '../../../canvas/window/canvas-window-choose.
 import { EntityManagers } from '../../../../common/entity/entity-managers.js';
 
 export class EntityReferencePropertyEditor extends PropertyEditor {
-    constructor(tab, name, label, referenceType) {
+    constructor(name, label, referenceType) {
         super(name, Type.LONG, label);
         
         this.referenceType = referenceType;

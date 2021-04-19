@@ -6,7 +6,7 @@ import { Type } from '../../../../common/constants.js';
 import { FILE_TYPE_IMAGE } from '../../../../common/util/datautil.js';
 
 export class ImagePropertyEditor extends PropertyEditor {
-    constructor(tab, name, label) {
+    constructor(name, label) {
         super(name, Type.STRING, label);
         
         this.imagePath = '';

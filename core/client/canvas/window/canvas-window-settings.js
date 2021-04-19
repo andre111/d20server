@@ -1,3 +1,4 @@
+import { Tabs } from '../../gui/tabs.js';
 import { Settings } from '../../settings/settings.js';
 import { CanvasWindow } from '../canvas-window.js';
 
@@ -6,30 +7,20 @@ export class CanvasWindowSettings extends CanvasWindow {
         super('Settings', false);
 
         this.initTabs();
-        this.setLocation({ position: { my: 'center', at: 'center' }, width: 640, height: 700 });
+        this.setDimensions(640, 700);
+        this.center();
     }
 
     initTabs() {
         // create container
-        const container = this.frame;
-        const links = document.createElement('ul');
-        container.appendChild(links);
-        container.style.padding = '0em 0em';
+        const container = this.content;
         
         // create tabs
         var id = 0;
         for(const page of Settings.pages) {
-            // create link
-            const li = document.createElement('li');
-            const a = document.createElement('a');
-            a.href = '#sptab-'+id;
-            a.innerHTML = page.displayName;
-            li.appendChild(a);
-            links.appendChild(li);
-            
             // create tab panel
             const panel = document.createElement('div');
-            panel.id = 'sptab-'+id;
+            panel.name = page.displayName;
             panel.style.width = 'auto';
             panel.style.height = 'auto';
             panel.style.display = 'grid';
@@ -45,10 +36,6 @@ export class CanvasWindowSettings extends CanvasWindow {
 
             id++;
         }
-        
-        // convert to jquery-ui tabs
-        $(container).tabs({
-            heightStyle: 'content'
-        });
+        Tabs.init(container);
     }
 }

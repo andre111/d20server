@@ -5,26 +5,20 @@ export class CanvasWindowColorInput extends CanvasWindow {
         super(title, true);
         
         // create html elements
-        var input = document.createElement('input');
+        const input = document.createElement('input');
         input.type = 'color';
         input.value = value;
-        this.frame.appendChild(input);
+        this.content.appendChild(input);
         
-        $(this.frame).dialog('option', 'buttons', [
-            {
-                text: 'Ok',
-                click: function() {
-                    callback(input.value);
-                    $(this).dialog('close');
-                }
-            },
-            {
-                text: 'Cancel',
-                click: function() {
-                    $(this).dialog('close');
-                }
-            }
-        ]);
+        this.addButton('Yes', () => {
+            callback(input.value);
+            this.close();
+        });
+        this.addButton('No', () => {
+            this.close();
+        });
+        this.setDimensions(300, 100);
+        this.center();
         
         // focus main input
         input.focus();

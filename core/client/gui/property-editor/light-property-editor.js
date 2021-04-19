@@ -2,7 +2,7 @@ import { PropertyEditor } from './property-editor.js';
 import { Type, Light } from '../../../common/constants.js';
 
 export class LightPropertyEditor extends PropertyEditor {
-    constructor(tab, name, label) {
+    constructor(name, label) {
         super(name, Type.LIGHT, label);
     }
     

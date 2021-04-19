@@ -2,7 +2,7 @@ import { PropertyEditor } from './property-editor.js';
 import { Type } from '../../../common/constants.js';
 
 export class LongPropertyEditor extends PropertyEditor {
-    constructor(tab, name, label) {
+    constructor(name, label) {
         super(name, Type.LONG, label);
     }
     

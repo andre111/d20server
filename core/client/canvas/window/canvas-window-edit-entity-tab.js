@@ -1,5 +1,6 @@
 import { CanvasWindowEditEntity } from './canvas-window-edit-entity.js';
 
+import { EditorList } from '../../gui/editor-list.js';
 import { createPropertyEditor } from '../../gui/property-editors.js';
 import { MultiLineStringPropertyEditor } from '../../gui/property-editor/special/multi-line-property-editor.js';
 import { HTMLStringPropertyEditor } from '../../gui/property-editor/special/html-string-property-editor.js';
@@ -15,26 +16,18 @@ import { EntityReference } from '../../../common/entity/entity-reference.js';
 import { DefinitionUtils } from '../../../common/util/definitionutil.js'
 import { StringFilePropertyEditor } from '../../gui/property-editor/special/string-file-property-editor.js';
 
-export class CanvasWindowEditEntityTab {
-    constructor(w, container, links, id, definition) {
-        // create tab structure elements
-        // create link
-        var li = document.createElement('li');
-        var a = document.createElement('a');
-        a.href = '#sptab-'+id;
-        a.innerHTML = definition.name;
-        li.appendChild(a);
-        links.appendChild(li);
+export class CanvasWindowEditEntityTab extends EditorList {
+    constructor(w, container, definition) {
+        super(w.getReference());
         
         // create tab panel
         var panel = document.createElement('div');
-        panel.id = 'sptab-'+id;
-        panel.style.width = 'auto';
-        panel.style.height = 'auto';
+        panel.style.width = '100%';
+        panel.style.height = '100%';
+        panel.name = definition.name;
         container.appendChild(panel);
         
         this.w = w;
-        this.editors = [];
         this.definition = definition;
         this.initContent(panel);
     }
@@ -86,30 +79,30 @@ export class CanvasWindowEditEntityTab {
                 
                 switch(editorType) {
                 case 'DEFAULT':
-                    editor = createPropertyEditor(this, type, property, compDefinition.text);
+                    editor = createPropertyEditor(type, property, compDefinition.text);
                     component = editor.getContainer();
                     break;
                 case 'MULTI_LINE_STRING':
                     if(type != 'STRING') throw new Error('Cannot use MULTI_LINE_STRING editor for property of type: '+type);
-					editor = new MultiLineStringPropertyEditor(this, property, compDefinition.text);
+					editor = new MultiLineStringPropertyEditor(property, compDefinition.text);
 					component = editor.getContainer();
                     break;
                 case 'HTML_STRING':
                     if(type != 'STRING') throw new Error('Cannot use HTML_STRING editor for property of type: '+type);
-					editor = new HTMLStringPropertyEditor(this, property, compDefinition.text);
+					editor = new HTMLStringPropertyEditor(property, compDefinition.text);
 					component = editor.getContainer();
                     break;
                 case 'FILE':
                     if(type != 'STRING') throw new Error('Cannot use FILE editor for property of type: '+type);
-                    editor = new StringFilePropertyEditor(this, property, compDefinition.text, compDefinition.filetype);
+                    editor = new StringFilePropertyEditor(property, compDefinition.text, compDefinition.filetype);
                     component = editor.getContainer();
                     break;
                 case 'REFERENCE_SINGLE':
-                    editor = new EntityReferencePropertyEditor(this, property, compDefinition.text, compDefinition.reference);
+                    editor = new EntityReferencePropertyEditor(property, compDefinition.text, compDefinition.reference);
 					component = editor.getContainer();
                     break;
                 case 'REFERENCE_MULTI':
-                    editor = new LongListPropertyEditor(this, property, compDefinition.text, compDefinition.reference, false);
+                    editor = new LongListPropertyEditor(property, compDefinition.text, compDefinition.reference, false);
                     component = editor.getContainer();
                     break;
                 case 'EXTENSION_SELECT':
@@ -120,17 +113,17 @@ export class CanvasWindowEditEntityTab {
                     for(const [key, value] of Object.entries(extensionPoint.extensionDefinitions)) {
                         extensions[key] = value.displayName;
                     }
-                    editor = new StringSelectionPropertyEditor(this, compDefinition.property, compDefinition.text, extensions);
+                    editor = new StringSelectionPropertyEditor(compDefinition.property, compDefinition.text, extensions);
                     component = editor.getContainer();
                     break;
                 case 'IMAGE':
-                    editor = new ImagePropertyEditor(this, compDefinition.property, 'Image');
+                    editor = new ImagePropertyEditor(compDefinition.property, 'Image');
                     component = editor.getContainer();
                     break;
                 default:
                     throw new Error('Editor Type not implemented: '+editorType);
                 }
-                this.editors.push(editor);
+                this.registerEditor(editor, compDefinition.update);
                 
                 // special cases: 
 				// free scroll -> make edit component the full size of the container
@@ -139,17 +132,10 @@ export class CanvasWindowEditEntityTab {
 					editor.getEditComponent().style.height = compDefinition.h+'px';
 				}
                 if(compDefinition.disabled) editor.setForceDisable(true);
-                // automatically apply changes (to local reference), so reloading when the entity is changed does not revert locally modified values
-                const editorRef = editor; // requried as the editor variable would point all listeners to the last created editor instead
-				editor.addChangeListener(() => {
-                    editorRef.apply(this.w.getReference(), this.w.getAccessLevel());
-                    // reload if this editor is configured to auto update (-> character sheets or similar)
-					if(compDefinition.update) this.reload(this.w.getReference(), this.w.getAccessLevel());
-				});
                 break;
             case 'ACCESS_EDITOR':
-                var accessEditor = new PropertyAccessEditor(this, compDefinition.property.split(','), compDefinition.text);
-                this.editors.push(accessEditor);
+                var accessEditor = new PropertyAccessEditor(compDefinition.property.split(','), compDefinition.text);
+                this.registerEditor(accessEditor);
                 component = accessEditor.getContainer();
                 break;
             case 'OPEN_REFERENCE':
@@ -170,8 +156,8 @@ export class CanvasWindowEditEntityTab {
                 };
                 break;
             case 'IMAGE_REFERENCE':
-                var imageEditor = new ReferencedImagePropertyEditor(this, compDefinition.property, 'Image', compDefinition.text);
-                this.editors.push(imageEditor);
+                var imageEditor = new ReferencedImagePropertyEditor(compDefinition.property, 'Image', compDefinition.text);
+                this.registerEditor(imageEditor);
                 component = imageEditor.getContainer();
                 break;
             case 'LABEL':
@@ -202,24 +188,6 @@ export class CanvasWindowEditEntityTab {
             }
             content.appendChild(component);
             index++;
-        }
-    }
-    
-    reload(reference, accessLevel) {
-        for(const editor of this.editors) {
-            editor.reload(reference, accessLevel);
-        }
-    }
-    
-    apply(reference, accessLevel) {
-        for(const editor of this.editors) {
-            editor.apply(reference, accessLevel);
-        }
-    }
-    
-    onClose() {
-        for(const editor of this.editors) {
-            editor.onDestroy();
         }
     }
 }

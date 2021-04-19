@@ -23,11 +23,12 @@ export class CanvasWindowFilemanagerUpload extends CanvasWindow {
         this.createForm();
         this.createButtons();
         this.setDimensions(400, 400);
+        this.center();
     }
 
     createForm() {
         this.form = document.createElement('form');
-        this.frame.appendChild(this.form);
+        this.content.appendChild(this.form);
 
         const div = document.createElement('div');
         this.form.appendChild(div);
@@ -44,17 +45,11 @@ export class CanvasWindowFilemanagerUpload extends CanvasWindow {
     }
 
     createButtons() {
-        $(this.frame).dialog({
-            buttons: [
-                {
-                    text: "Upload",
-                    click: () => this.doUpload()
-                },
-                {
-                    text: "Cancel",
-                    click: () => this.doCancel()
-                }
-            ]
+        this.addButton('Ok', () => {
+            this.doUpload();
+        });
+        this.addButton('Cancel', () => {
+            this.doCancel();
         });
     }
 

@@ -4,16 +4,19 @@ import { GuiUtils } from '../../../util/guiutil.js';
 import { Type } from '../../../../common/constants.js';
 
 export class ReferencedImagePropertyEditor extends PropertyEditor {
-    constructor(tab, name, label, referenceProperty) {
+    constructor(name, label, referenceProperty) {
         super(name, Type.STRING, label);
         
         this.referenceProperty = referenceProperty;
     }
     
     initContent(label) {
-        GuiUtils.makeBordered(this.container, label);
+        if(label) GuiUtils.makeBordered(this.container, label);
         
-        this.image = document.createElement('image');
+        this.image = new Image();
+        this.image.style.width = '100%';
+        this.image.style.height = '100%';
+        this.image.style.objectFit = 'contain';
         this.container.appendChild(this.image);
         
         return this.image;
