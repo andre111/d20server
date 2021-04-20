@@ -374,16 +374,20 @@ ModuleService.init().then(() => {
             }
             monsterActor.prop('macros').setStringMap(macros);
 
+            // image
+            var imagePath = 'tokens/unknown.png';
+            if(monsterIcons[name]) imagePath = monsterIcons[name];
+            if(monsterIcons[name] && !IGNORE_MISSING_IMAGES && !fs.existsSync('./generated/files/image/'+monsterIcons[name])) throw new Error(`Monster ${name} has broken image path: ${monsterIcons[name]}`);
+            if(imagePath != 'tokens/unknown.png') monsterWithIcon++;
+            if(imagePath) imagePath = '/image/'+imagePath;
+
+            if(imagePath) monsterActor.prop('imagePath').setString(imagePath);
+
             // create default token
             const monsterToken = new Entity('token');
             {
-                var imagePath = 'tokens/unknown.png';
-                if(monsterIcons[name]) imagePath = monsterIcons[name];
-                if(monsterIcons[name] && !IGNORE_MISSING_IMAGES && !fs.existsSync('./generated/files/image/'+monsterIcons[name])) throw new Error(`Monster ${name} has broken image path: ${monsterIcons[name]}`);
-                if(imagePath != 'tokens/unknown.png') monsterWithIcon++;
-
                 monsterToken.prop('name').setString(name);
-                if(imagePath) monsterToken.prop('imagePath').setString('/image/'+imagePath);
+                if(imagePath) monsterToken.prop('imagePath').setString(imagePath);
                 monsterToken.prop('bar1Current').setLong(entry['TP']['Wert']);
                 monsterToken.prop('bar1Max').setLong(entry['TP']['Wert']);
                 monsterToken.prop('actorID').setLong(monsterActor.getID());

@@ -248,9 +248,11 @@ export class SearchableIDTree {
         
         // sort keys by value names
         const sorted = Array.from(Object.keys(map));
+        const paths = {};
+        for(const k of sorted) paths[k] = this.#valueProvider.getName(map[k]).split('/');
         sorted.sort((o1, o2) => {
-            var p1 = this.#valueProvider.getName(map[o1]).split('/');
-            var p2 = this.#valueProvider.getName(map[o2]).split('/');
+            const p1 = paths[o1];
+            const p2 = paths[o2];
             
             // skip all equal parts
             var i1 = 0;

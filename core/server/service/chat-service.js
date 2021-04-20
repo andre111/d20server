@@ -70,6 +70,7 @@ export class ChatService {
                     command.execute(profile, commandArgs);
                 } catch(error) {
                     ChatService.appendNote(profile, `Error in /${commandName}:`, `${error}`);
+                    if(error instanceof Error) console.log(error.stack);
                 }
             } else {
                 ChatService.appendNote(profile, `Unknown command: ${commandName}`);

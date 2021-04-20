@@ -276,17 +276,12 @@ export class StateMain extends State {
         }
         
         //
-        ctx.fillStyle = 'white';
+        ctx.fillStyle = 'black';
         ctx.beginPath();
         ctx.rect(0, 0, this.width, this.height);
         ctx.fill();
         ctx.closePath();
         if(!map || !this.view || (viewers.length == 0 && map.prop('hideWithNoMainToken').getBoolean() && this.view.isPlayerView())) {
-            ctx.fillStyle = 'black';
-            ctx.beginPath();
-            ctx.rect(0, 0, this.width, this.height);
-            ctx.fill();
-            ctx.closePath();
             return;
         }
         this.view.setForceWallOcclusion(forceWallOcclusion);

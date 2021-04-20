@@ -49,6 +49,13 @@
             "value": "CONTROLLING_PLAYER"
         },
         {
+            "name": "imagePath",
+            "type": "STRING",
+            "editAccess": "GM",
+            "viewAccess": "CONTROLLING_PLAYER",
+            "value": ""
+        },
+        {
             "name": "token",
             "type": "ENTITY",
             "editAccess": "GM",

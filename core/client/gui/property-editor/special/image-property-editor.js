@@ -13,9 +13,13 @@ export class ImagePropertyEditor extends PropertyEditor {
     }
     
     initContent(label) {
-        GuiUtils.makeBordered(this.container, label);
-        
-        this.image = document.createElement('image');
+        if(label) GuiUtils.makeBordered(this.container, label);
+
+        this.image = new Image();
+        this.image.style.width = '100%';
+        this.image.style.height = '100%';
+        this.image.style.objectFit = 'contain';
+
         this.container.onclick = () => this.doEditImage();
         this.container.oncontextmenu = () => this.doClearImage();
         this.container.appendChild(this.image);

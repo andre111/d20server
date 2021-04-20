@@ -83,8 +83,7 @@ export class ClientEntityManager extends EntityManager {
         for(const [key, value] of Object.entries(map)) {
             var ownProperty = entity.properties[key];
             if(ownProperty == null || ownProperty == undefined) {
-                ownProperty = value.clone();
-                entity.addPropertyIfAbsentOrWrong(key, ownProperty);
+                ownProperty = entity.addPropertyIfAbsentOrWrong(key, value.getType(), value.getEditAcces(), value.getViewAcces(), value.getInternal());
             }
             
             // transfer value

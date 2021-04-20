@@ -21,12 +21,15 @@ export class CanvasRenderLayerWallOcclusion extends CanvasRenderLayer {
             // render
             if(viewers.length != 0) {
                 // extend viewport to avoid rounding errors
-                var extendedViewport = new Rect(viewport.x-4, viewport.y-4, viewport.width+8, viewport.height+8);
-                var pwr = WallRenderer.calculateWalls(MapUtils.currentEntities('wall'), extendedViewport, viewers);
+                // const extendedViewport = new Rect(viewport.x-4, viewport.y-4, viewport.width+8, viewport.height+8);
+                // override viewport to fill the whole map (should no longer be a big performance concern since WallRenderer employs caches)
+                const gridSize = map.prop('gridSize').getLong();
+                const extendedViewport = new Rect(-4, -4, map.prop('width').getLong()*gridSize+8, map.prop('height').getLong()*gridSize+8);
+                const pwr = WallRenderer.calculateWalls(MapUtils.currentEntities('wall'), extendedViewport, viewers);
                 WallRenderer.renderPrecalculatedWallRender(ctx, pwr);
                 
                 // draw fow background tokens
-                var fowClip = FOWRenderer.updateAndGetClip(pwr, viewport);
+                const fowClip = FOWRenderer.updateAndGetClip(pwr, viewport);
                 if(fowClip != null) {
                     ctx.save();
                     RenderUtils.addPaths(ctx, fowClip);

@@ -105,6 +105,11 @@ function removePeerConnection(profileID) {
     delete peerConnections[profileID];
 }
 
+//TODO: add a button to call this
+function reconnect() {
+    MessageService.send(new WebRTCMessage('joined', 'broadcast'));
+}
+
 // create event listeners (to startup local stream/messaging)
 if(location.protocol == 'https:') {
     Events.on('createMainHTML', event => {

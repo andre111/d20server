@@ -41,7 +41,7 @@ export class CanvasWindow {
         titleP.innerText = title;
         titleBar.appendChild(titleP);
         const closeButton = document.createElement('button');
-        closeButton.innerText = 'X';
+        closeButton.innerText = '✖';
         closeButton.onclick = () => this.close();
         titleBar.appendChild(closeButton);
 

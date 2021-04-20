@@ -64,9 +64,7 @@ export const MessageService = {
             if(Client.getState() instanceof StateMain) {
                 const tab = Client.getState().getTab('Chat');
                 if(!msg.doAppend()) tab.clear();
-                for(const entity of msg.getEntries()) {
-                    tab.onMessage(entity, msg.isHistorical());
-                }
+                tab.onMessages(msg.getEntries(), msg.isHistorical());
             }
         } else if(msg instanceof SendNotification) {
             if(Client.getState() instanceof StateMain) {

@@ -8,7 +8,7 @@ export class CanvasRenderLayerGrid extends CanvasRenderLayer {
     }
     
     render(ctx, state, view, viewers, camera, viewport, map) {
-        var gridSize = map.prop('gridSize').getLong();
+        const gridSize = map.prop('gridSize').getLong();
         
         ctx.lineWidth = 3;
         ctx.strokeStyle = 'rgba(0, 0, 0, 0.39)';

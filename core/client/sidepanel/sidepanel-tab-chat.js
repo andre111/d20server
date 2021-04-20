@@ -78,82 +78,94 @@ export class SidepanelTabChat extends SidepanelTab {
         this.chatPanel.innerHTML = '';
     }
     
-    add(entry) {
-        const sanitizedText = DOMPurify.sanitize(entry.getText(), {USE_PROFILES: {html: true}});
+    add(entries) {
+        for(const entry of entries) {
+            const sanitizedText = DOMPurify.sanitize(entry.getText(), {USE_PROFILES: {html: true}});
 
-        if(entry.getReplaceParent() && entry.getReplaceParent() > 0) {
-            // find replace parent
-            if(!this.entries.has(entry.getReplaceParent())) { console.log('Ignoring replace with unknown parent'); return; }
-            var container = this.entries.get(entry.getReplaceParent());
-            
-            // find replaceable object and replace content
-            $(container).find('#'+entry.getID()+'.replaceable').replaceWith(sanitizedText);
-            GuiUtils.makeHoverable(container);
-        } else {
-            // create container
-            var container = document.createElement('div');
-            container.className = 'chat';
-            
-            container.innerHTML = sanitizedText;
-            
-            // add replaceable trigger
-            for(const element of $(container).find('.replaceable')) {
-                element.onclick = () => {
-                    const msg = new SendChatMessage('/trigger '+entry.getID()+' '+element.id);
-                    MessageService.send(msg);
-                };
+            if(entry.getReplaceParent() && entry.getReplaceParent() > 0) {
+                // find replace parent
+                if(this.entries.has(entry.getReplaceParent())) {
+                    const container = this.entries.get(entry.getReplaceParent());
+                    
+                    // find replaceable object and replace content
+                    $(container).find('#'+entry.getID()+'.replaceable').replaceWith(sanitizedText);
+                    GuiUtils.makeHoverable(container);
+                } else {
+                    console.log('Ignoring replace with unknown parent');
+                }
+            } else {
+                // create container
+                const container = document.createElement('div');
+                container.className = 'chat';
+                
+                container.innerHTML = sanitizedText;
+                
+                // add replaceable trigger
+                for(const element of $(container).find('.replaceable')) {
+                    element.onclick = () => {
+                        const msg = new SendChatMessage('/trigger '+entry.getID()+' '+element.id);
+                        MessageService.send(msg);
+                    };
+                }
+                
+                // add timestamp (with hover and auto update)
+                const timestampP = document.createElement('p');
+                timestampP.className = 'chat-timestamp hoverable';
+                container.appendChild(timestampP);
+                const timestampText = document.createElement('p');
+                timestampP.appendChild(timestampText);
+                const timestampHover = document.createElement('p');
+                timestampHover.className = 'onhover';
+                timestampP.appendChild(timestampHover);
+                
+                const unix = dayjs.unix(entry.getTime());
+                timestampText.innerHTML = unix.fromNow();
+                timestampHover.innerHTML = unix.format('lll');
+                this.scheduleUpdate(timestampText, entry, unix);
+                
+                // make gui adjustments
+                GuiUtils.makeHoverable(container);
+                
+                // add to map
+                this.entries.set(entry.getID(), container);
+                
+                // append to gui
+                //TODO: maybe? find location (could be older message that was kept hidden for some time -> should now appear before other messages?)
+                this.chatPanel.appendChild(container);
             }
-            
-            // add timestamp (with hover and auto update)
-            var timestampP = document.createElement('p');
-            timestampP.className = 'chat-timestamp hoverable';
-            container.appendChild(timestampP);
-            var timestampText = document.createElement('p');
-            timestampP.appendChild(timestampText);
-            var timestampHover = document.createElement('p');
-            timestampHover.className = 'onhover';
-            timestampP.appendChild(timestampHover);
-            
-            timestampText.innerHTML = dayjs.unix(entry.getTime()).fromNow();
-            timestampHover.innerHTML = dayjs.unix(entry.getTime()).format('lll');
-            this.scheduleUpdate(timestampText, entry);
-            
-            // make gui adjustments
-            GuiUtils.makeHoverable(container);
-            
-            // add to map
-            this.entries.set(entry.getID(), container);
-            
-            // append to gui
-            //TODO: maybe? find location (could be older message that was kept hidden for some time -> should now appear before other messages?)
-            this.chatPanel.appendChild(container);
-            //container.scrollIntoView(); // this 'breaks' the website by offseting it up by a few pixels for some reason, using 'outdated' code below as an alternative
-            this.chatPanel.scrollTop = this.chatPanel.scrollHeight;
         }
+    
+        this.chatPanel.scrollTop = this.chatPanel.scrollHeight;
     }
     
-    scheduleUpdate(timestampText, entry) {
+    scheduleUpdate(timestampText, entry, unix) {
         // determine wait time (a second when below a minute ago, a minute when below one hour, one hour otherwise)
-        var ago = dayjs.duration(dayjs().diff(dayjs.unix(entry.getTime()))).as('seconds');
+        var ago = dayjs.duration(dayjs().diff(unix)).as('seconds');
         var time = (ago < 60 ? 1 : (ago < 60*60 ? 60 : 60 * 60)) * 1000;
         
         setTimeout(() => {
             // perform update
-            timestampText.innerHTML = dayjs.unix(entry.getTime()).fromNow();
+            timestampText.innerHTML = unix.fromNow();
             
             // schedule next update
-            this.scheduleUpdate(timestampText, entry);
+            this.scheduleUpdate(timestampText, entry, unix);
         }, time);
     }
     
-    onMessage(entry, historical) {
-        const event = Events.trigger('chatMessage', {
-            entry: entry,
-            historical: historical
-        }, true);
-        if(event.canceled) return;
-        
-        this.add(entry);
+    onMessages(entries, historical) {
+        var allowedEntries = [];
+        for(const entry of entries) {
+            const event = Events.trigger('chatMessage', {
+                entry: entry,
+                historical: historical
+            }, true);
+
+            if(!event.canceled) {
+                allowedEntries.push(entry);
+            }
+        }
+
+        this.add(allowedEntries);
     }
     
     doSend() {

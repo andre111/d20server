@@ -1,53 +1,33 @@
 import { RenderUtils } from '../util/renderutil.js';
 import { IntMathUtils } from '../../common/util/mathutil.js';
+import { EntityManagers } from '../../common/entity/entity-managers.js';
 
-export const WallRenderer = {
-    hasToRenderWalls: function(walls, viewport, viewer) {
-        const minX = viewport.x;
-        const maxX = viewport.x + viewport.width;
-        const minY = viewport.y;
-		const maxY = viewport.y + viewport.height;
-		
-		const viewerX = viewer.prop('x').getLong();
-		const viewerY = viewer.prop('y').getLong();
-        
-        for(const wall of walls) {
-			if(wall.prop('seeThrough').getBoolean()) continue;
-			if(wall.prop('door').getBoolean() && wall.prop('open').getBoolean()) continue;
-			if(wall.prop('oneSided').getBoolean() && !IntMathUtils.isPointLeftOfLine(wall.prop('x1').getLong(), wall.prop('y1').getLong(), wall.prop('x2').getLong(), wall.prop('y2').getLong(), viewerX, viewerY)) continue;
-
-            if(IntMathUtils.getClippedLine(wall.prop('x1').getLong(), wall.prop('y1').getLong(), wall.prop('x2').getLong(), wall.prop('y2').getLong(), minX, maxX, minY, maxY) != null) return true;
-		}
-        return false;
-    },
+class ViewerWallCache {
+    constructor(pwr, x, y, viewport) {
+        this.pwr = pwr;
+        this.x = x;
+		this.y = y;
+		this.viewport = viewport;
+    }
     
+    isCompatible(x, y, viewport) {
+        return this.x == x && this.y == y && this.viewport.contains(viewport);
+    }
+}
+
+const cpr = new ClipperLib.Clipper();
+export const WallRenderer = {
+	init() {
+		EntityManagers.get('wall').addListener(() => WallRenderer.invalidateCache());
+	},
+
     calculateWalls: function(walls, viewport, viewers) {
-        var cpr = new ClipperLib.Clipper();
-        
         var combined = null;
         for(const viewer of viewers) {
+            // get or calculate view for single viewer
 			const viewerX = viewer.prop('x').getLong();
 			const viewerY = viewer.prop('y').getLong();
-
-            // create view for single viewer
-            var localCombined = [];
-            for(var wall of walls) {
-				if(wall.prop('seeThrough').getBoolean()) continue;
-				if(wall.prop('door').getBoolean() && wall.prop('open').getBoolean()) continue;
-				if(wall.prop('oneSided').getBoolean() && !IntMathUtils.isPointLeftOfLine(wall.prop('x1').getLong(), wall.prop('y1').getLong(), wall.prop('x2').getLong(), wall.prop('y2').getLong(), viewerX, viewerY)) continue;
-
-				var poly = WallRenderer.calculateOccolusionPolygon(viewport, wall, viewerX, viewerY);
-				if(poly != null && poly != undefined) {
-					//localCombined = union(localCombined, poly);
-					var result = new ClipperLib.Paths();
-					cpr.Clear();
-					cpr.AddPaths(localCombined, ClipperLib.PolyType.ptSubject, true);
-					cpr.AddPath(poly, ClipperLib.PolyType.ptClip, true);
-					cpr.Execute(ClipperLib.ClipType.ctUnion, result);
-					result = ClipperLib.Clipper.CleanPolygons(result, 1.1); //TODO tweak this value
-					localCombined = result;
-				}
-            }
+			const localCombined = WallRenderer.getViewerWallCache(walls, viewer, viewerX, viewerY, viewport);
             
             // combine all viewers
             if(combined == null) {
@@ -69,10 +49,47 @@ export const WallRenderer = {
         
         ctx.fillStyle = 'black';
         RenderUtils.addPaths(ctx, pwr);
-        ctx.fill();
-    },
-    
-    calculateOccolusionPolygon: function(viewport, wall, viewerX, viewerY) {
+		ctx.fill();
+	},
+	
+	_cache: new Map(),
+	getViewerWallCache(walls, viewer, viewerX, viewerY, viewport) {
+		var cached = WallRenderer._cache.get(viewer.getID());
+        if(cached == null || cached == undefined || !cached.isCompatible(viewerX, viewerY, viewport)) {
+            var pwr =  WallRenderer.calculateCombinedOccolusion(walls, viewerX, viewerY, viewport);
+            cached = new ViewerWallCache(pwr, viewerX, viewerY, viewport);
+            WallRenderer._cache.set(viewer.getID(), cached);
+            console.log('Updated wall cache for '+viewer.getID());
+        }
+        return cached.pwr;
+	},
+    invalidateCache: function() {
+        WallRenderer._cache.clear();
+	},
+	
+	calculateCombinedOccolusion(walls, viewerX, viewerY, viewport) {
+		// create view for single viewer
+		var localCombined = [];
+		for(const wall of walls) {
+			if(wall.prop('seeThrough').getBoolean()) continue;
+			if(wall.prop('door').getBoolean() && wall.prop('open').getBoolean()) continue;
+			if(wall.prop('oneSided').getBoolean() && !IntMathUtils.isPointLeftOfLine(wall.prop('x1').getLong(), wall.prop('y1').getLong(), wall.prop('x2').getLong(), wall.prop('y2').getLong(), viewerX, viewerY)) continue;
+
+			const poly = WallRenderer.calculateOccolusionPolygon(viewport, wall, viewerX, viewerY);
+			if(poly != null && poly != undefined) {
+				//localCombined = union(localCombined, poly);
+				var result = new ClipperLib.Paths();
+				cpr.Clear();
+				cpr.AddPaths(localCombined, ClipperLib.PolyType.ptSubject, true);
+				cpr.AddPath(poly, ClipperLib.PolyType.ptClip, true);
+				cpr.Execute(ClipperLib.ClipType.ctUnion, result);
+				result = ClipperLib.Clipper.CleanPolygons(result, 1.1); //TODO tweak this value
+				localCombined = result;
+			}
+		}
+		return localCombined;
+	},
+    calculateOccolusionPolygon(viewport, wall, viewerX, viewerY) {
         var minX = Math.trunc(viewport.x);
 		var maxX = Math.trunc(viewport.x + viewport.width);
 		var minY = Math.trunc(viewport.y);

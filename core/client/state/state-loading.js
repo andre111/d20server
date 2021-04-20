@@ -3,7 +3,9 @@ import { GuiUtils } from '../util/guiutil.js';
 
 export class StateLoading extends State {
     current;
+    lastUpdate;
     amount;
+
     progressBar;
     progressLabel;
 
@@ -42,6 +44,7 @@ export class StateLoading extends State {
         labelContainer.appendChild(this.progressLabel);
         
         this.current = 0;
+        this.lastUpdate = 0;
         $(this.progressBar).progressbar({
             value: 0,
             change: () => {
@@ -57,6 +60,13 @@ export class StateLoading extends State {
 
     increaseCurrent() {
         this.current++;
-        $(this.progressBar).progressbar('value', this.current / this.amount * 100);
+
+        // jQuery progressbar update is expensive -> only update once a new percentage is reached
+        //TODO: replace with something cheaper
+        if((this.current - this.lastUpdate) / this.amount >= 0.01) {
+            this.lastUpdate = this.current;
+
+            $(this.progressBar).progressbar('value', this.current / this.amount * 100);
+        }
     }
 }

@@ -26,15 +26,15 @@ export class SetCommand extends Command {
     }
 
     execute(profile, args) {
-        const split = splitArguments(args, 3);
-        if(split.length < 3) throw new Error('Wrong argument count: <variable> <type> <expression>');
+        const split = splitArguments(args, 2);
+        if(split.length < 2) throw new Error('Wrong argument count: <variable> <expression>');
 
         const context = new Context(profile, EntityManagers.get('map').find(profile.getCurrentMap()), null);
 
         const variable = parseVariable(split[0]);
-        const type = split[1].toUpperCase();
-        const valueString = split[2];
+        const valueString = split[1];
 
+        const type = variable.getType(context);
         if(type == Type.LONG || type == Type.DOUBLE) {
             // evaluate as expression
             const expr = this.parser.parse(valueString);

@@ -850,6 +850,8 @@ div.chat-box-content th, div.chat-box-content td {
 
     background: var(--color-dark);
     border-bottom: 1px solid black;
+
+    cursor: move;
 }
 .dialog-title p {
     position: absolute;

@@ -1,12 +1,17 @@
+import { Type } from '../../constants.js';
 import { Variable } from "./variable.js";
 
 export class EntityIDVariable extends Variable {
-    entityFinder;
+    #entityFinder;
 
     constructor(fullName, entityFinder) {
         super(fullName);
 
-        this.entityFinder = entityFinder;
+        this.#entityFinder = entityFinder;
+    }
+
+    getType(context) {
+        return Type.LONG;
     }
 
     set(context, value) {
@@ -14,6 +19,6 @@ export class EntityIDVariable extends Variable {
     }
 
     get(context) {
-        return this.entityFinder.findEntity(context).getID();
+        return this.#entityFinder.findEntity(context).getID();
     }
 }

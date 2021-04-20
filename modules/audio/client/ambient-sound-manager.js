@@ -10,7 +10,7 @@ export class AmbientSoundManager {
         this.resetCooldown(token);
     }
     
-    update(token, listenerX, listenerY) {
+    update(token, listenerX, listenerY, walls) {
         // track cooldown
         this.cooldown--;
         if(this.cooldown <= 0) {
@@ -45,16 +45,17 @@ export class AmbientSoundManager {
         if(this.sound) {
             var muffle = false;
             if(token.prop('audioWallsMuffle').getBoolean()) {
-                var x1 = token.prop('x').getLong();
-                var y1 = token.prop('y').getLong();
-                var x2 = listenerX;
-                var y2 = listenerY;
+                const x1 = token.prop('x').getLong();
+                const y1 = token.prop('y').getLong();
+                const x2 = listenerX;
+                const y2 = listenerY;
                 
-                MapUtils.currentEntities('wall').forEach(wall => {
+                for(const wall of walls) {
                     if(!wall.prop('seeThrough').getBoolean() && (!wall.prop('door').getBoolean() || !wall.prop('open').getBoolean()) && IntMathUtils.doLineSegmentsIntersect(x1, y1, x2, y2, wall.prop('x1').getLong(), wall.prop('y1').getLong(), wall.prop('x2').getLong(), wall.prop('y2').getLong())) {
                         muffle = true;
+                        break;
                     }
-                });
+                }
             }
             // 
             if(muffle) {

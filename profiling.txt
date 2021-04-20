@@ -1,0 +1,38 @@
+//TODO: Profiled and improve performance issues
+// 1. Actor changes causes huge lag spikes (for gms)
+//     - issue: actor list parses all default tokens each reload to get the image
+//     - fix: add imagePath property to actors and use that
+//     - additional benefit: can have sepparate actor and (default) token images (and can change image in actor edit window)
+//
+//     Before: Noticable Lags/Freezes for multiple seconds
+//     After: Practically no freezing
+
+// 2. Loading times are long
+//     - issue: assignType takes a large percentage of loading time
+//     - fix: only assign Objects of known type (avoids many unneccessary assigns) + perform less (unneeded) checks
+//     - issue: progress bar updates take ~60% of loading time
+//     - fix: only update once an actual percentage step has been made
+//     - TODO: replace with custom (no jQueryUI) progressbar for better performance
+//     - issue: entity.addDefaultProperties now takes a large chunk of the time, because it creates many new Property Objects
+//     - fix: only create new properties if they are actually missing or of wrong type (-> should never occur during loading)
+//     - issue: gms need to load EVERYTHING on join
+//     - TODO: see if this can be improved (will need large rework of the whole entity system)
+//     
+//     Before: local loading time under profiler: 70 seconds
+//     After:  local loading time under profiler: 22 seconds
+//             -> ~68% reduction in loading time
+
+// 3. Startup after loading takes a long time (unresponsive blackscreen)
+//     - issue: scrolling chat panel to the bottom after every chat message causes many layout reflows during loading
+//     - fix: "batch" adding chat entries that are send with one message (so during loading) and only scroll to the bottom after all have been added
+
+// 4. Rendering a frame of the tavern test map with player view (and zoomed out) is laggy ("Task" in chrome profiler takes about 90ms)
+//     - issue 1: light renderer is very inefficient
+//     - fix 1: remove "hasToRenderWalls" check from light renderer, with the cache this is actually a big performance issue with basically no benefits
+//     - result 1: average "Task" time down to about 50-60ms
+//     - TODO: light renderer spends more than half of its time on drawing/blending the final buffers together, is there anything I can do to speed this up
+//     - issue 2: wall renderer is very inefficient
+//     - "fix 2": employ caching in wall renderer (and only update on token move or wall changes -> every frame where that does not happen can use cache)
+//     - result 2: average "Task" time down to about 30ms (with rare jumps to 40ms and of course about 50-60ms on cache updates)
+//     - issue 3: ambient audio system takes way longer than it needs to (about 2.3ms with only the few audio sources in the map)
+//     - fix 3: only get walls once and then iterate the same array (now takes about 1.4ms, almost independent of audio source count)

@@ -3,26 +3,28 @@ import { Type } from '../../constants.js';
 import { EntityManagers } from '../../entity/entity-managers.js';
 
 export class EntityPropertyVariable extends Variable {
-    propertyName;
-    entityFinder;
+    #propertyName;
+    #entityFinder;
 
     constructor(fullName, propertyName, entityFinder) {
         super(fullName);
 
-        this.propertyName = propertyName;
-        this.entityFinder = entityFinder;
+        this.#propertyName = propertyName;
+        this.#entityFinder = entityFinder;
+    }
+
+    getType(context) {
+        const property = this.getProperty(this.getEntity(context));
+        return property.getType();
     }
 
     set(context, value) {
         const entity = this.getEntity(context);
-
-        // get property
-        const property = entity.prop(this.propertyName);
-        if(!property) throw new Error(`No property ${this.propertyName}`);
+        const property = this.getProperty(entity);
 
         // check access
         const accessLevel = entity.getAccessLevel(context.profile);
-        if(!property.canEdit(accessLevel)) throw new Error(`No view access to ${this.getFullName()}`);
+        if(!property.canEdit(accessLevel)) throw new Error(`No edit access to ${this.getFullName()}`);
 
         // set value (by type)
         switch(property.getType()) {
@@ -62,16 +64,13 @@ export class EntityPropertyVariable extends Variable {
 
         // update
         var map = {};
-        map[this.propertyName] = property;
+        map[this.#propertyName] = property;
         EntityManagers.get(entity.getType()).updateProperties(entity.getID(), map, accessLevel);
     }
 
     get(context) {
         const entity = this.getEntity(context);
-
-        // get property
-        const property = entity.prop(this.propertyName);
-        if(!property) throw new Error(`No property ${this.propertyName}`);
+        const property = this.getProperty(entity);
 
         // check access
         const accessLevel = entity.getAccessLevel(context.profile);
@@ -105,6 +104,13 @@ export class EntityPropertyVariable extends Variable {
     }
 
     getEntity(context) {
-        return this.entityFinder.findEntity(context);
+        return this.#entityFinder.findEntity(context);
+    }
+
+    getProperty(entity) {
+        const property = entity.prop(this.#propertyName);
+        if(!property) throw new Error(`No property ${this.#propertyName}`);
+
+        return property;
     }
 }

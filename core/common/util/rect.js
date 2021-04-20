@@ -14,4 +14,12 @@ export class Rect {
         path.push({ X: this.x, Y: this.y+this.height });
         return path;
     }
+
+    contains(other) {
+        if(other.x < this.x) return false;
+        if(other.y < this.y) return false;
+        if(other.x + other.width > this.x + this.width) return false;
+        if(other.y + other.height > this.y + this.height) return false;
+        return true;
+    }
 }

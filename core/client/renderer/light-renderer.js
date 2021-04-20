@@ -45,10 +45,7 @@ export const LightRenderer = {
     },
     
     renderLight: function(ctx, screenWidth, screenHeight, transform, viewport, map, viewers) {
-        // (re)create buffers if needed
-        if(LightRenderer._mainBuffer == null) {
-            LightRenderer.init();
-        }
+        // adjust buffer sizes if needed
         if(LightRenderer._mainBuffer.width < screenWidth) LightRenderer._mainBuffer.width = screenWidth;
         if(LightRenderer._mainBuffer.height < screenHeight) LightRenderer._mainBuffer.height = screenHeight;
         if(LightRenderer._lightBuffer1.width < screenWidth) LightRenderer._lightBuffer1.width = screenWidth;
@@ -119,7 +116,7 @@ export const LightRenderer = {
 				if(lightRadius > 0 && IntMathUtils.doAABBCircleIntersect(viewport.x, viewport.y, viewport.x+viewport.width, viewport.y+viewport.height, centerX, centerY, lightRadius)) {
                     const lightViewport = new Rect(centerX-maxLightRadius-1, centerY-maxLightRadius-1, maxLightRadius*2+2, maxLightRadius*2+2);
 					
-					if(map.prop('wallsBlockLight').getBoolean() && WallRenderer.hasToRenderWalls(MapUtils.currentEntities('wall'), lightViewport, token)) {
+					if(map.prop('wallsBlockLight').getBoolean()) {
                         // get wall clip (with cached data whenever possible)
                         const cached = LightRenderer.getLightWallCache(token, light, centerX, centerY, maxLightRadius, lightViewport);
                         
@@ -225,17 +222,16 @@ export const LightRenderer = {
         BRIGHT: new Map()
     },
     getLightWallCache: function(token, light, centerX, centerY, maxLightRadius, lightViewport) {
-        var cached = LightRenderer._cache[light].get(token.id);
+        var cached = LightRenderer._cache[light].get(token.getID());
         if(cached == null || cached == undefined || !cached.isCompatible(centerX, centerY, maxLightRadius)) {
-            var pwr =  WallRenderer.calculateWalls(MapUtils.currentEntities('wall'), lightViewport, [token]);
+            var pwr =  WallRenderer.calculateCombinedOccolusion(MapUtils.currentEntities('wall'), token.prop('x').getLong(), token.prop('y').getLong(), lightViewport);
             var clip = FOWRenderer.calculateSeenArea(pwr, lightViewport);
             cached = new LightWallCache(clip, centerX, centerY, maxLightRadius);
-            LightRenderer._cache[light].set(token.id, cached);
-            console.log('Updated light cache for '+token.id);
+            LightRenderer._cache[light].set(token.getID(), cached);
+            console.log('Updated light cache for '+token.getID());
         }
         return cached;
     },
-
     invalidateCache: function() {
         LightRenderer._cache.DIM.clear();
         LightRenderer._cache.BRIGHT.clear();

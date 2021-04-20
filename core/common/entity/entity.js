@@ -101,18 +101,18 @@ export class Entity {
 
     addPropertiesFromDefs(propertyDefinitions) {
         for(const propDef of propertyDefinitions) {
-            const property = new Property(propDef.type, propDef.editAccess, propDef.viewAccess, propDef.value);
-            this.addPropertyIfAbsentOrWrong(propDef.name, property);
+            this.addPropertyIfAbsentOrWrong(propDef.name, propDef.type, propDef.editAccess, propDef.viewAccess, propDef.value);
         }
     }
 
-    addPropertyIfAbsentOrWrong(name, property) {
-        if(!this.properties[name] || this.properties[name].getType() != property.getType()) {
-            property = property.clone();
+    addPropertyIfAbsentOrWrong(name, type, editAccess, viewAccess, value) {
+        if(!this.properties[name] || this.properties[name].getType() != type) {
+            const property = new Property(type, editAccess, viewAccess, value);
             property.setHolder(this);
             property.setName(name);
             this.properties[name] = property;
         }
+        return this.properties[name];
     }
 
     clonePropertiesFrom(other) {
@@ -126,8 +126,9 @@ export class Entity {
 
     updatePropertyReferences() {
         for(const name in this.properties) {
-            this.properties[name].setHolder(this);
-            this.properties[name].setName(name);
+            const property = this.properties[name];
+            property.setHolder(this);
+            property.setName(name);
         }
     }
 

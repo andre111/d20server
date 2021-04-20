@@ -17,12 +17,12 @@ export class IfCommand extends Command {
     execute(profile, args) {
         // parse components
         const split = splitArguments(args, 4);
-        if(split.length < 4) throw new Error('Wrong arguments: "<expression>" <condition> "<expression>" ...');
+        if(split.length < 4) throw new Error('Wrong arguments: <expression> <condition> <expression> ...');
 
         const firstExpression = split[0];
         const comparison = split[1];
         const secondExpression = split[2];
-        const message = split[3].trimStart();
+        const message = split[3];
 
         // create context, parse and evalute expressions
         const context = new Context(profile, EntityManagers.get('map').find(profile.getCurrentMap()), null);

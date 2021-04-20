@@ -13,6 +13,7 @@ import { CanvasView } from './canvas/canvas-view.js';
 import { ModeButton, ModeButtonExtended } from './canvas/mode-panel.js';
 import { CanvasModeEntities } from './canvas/mode/canvas-mode-entities.js';
 import { CanvasModeWalls, WallActionCreateWall, WallActionCreateOneSidedWall, WallActionCreateWindow, WallActionCreateDoor } from './canvas/mode/canvas-mode-walls.js';
+import { CanvasRenderLayerBG } from './canvas/renderlayer/canvas-renderlayer-bg.js';
 import { CanvasRenderLayerEffects } from './canvas/renderlayer/canvas-renderlayer-effects.js';
 import { CanvasRenderLayerGrid } from './canvas/renderlayer/canvas-renderlayer-grid.js';
 import { CanvasRenderLayerLights } from './canvas/renderlayer/canvas-renderlayer-lights.js';
@@ -21,6 +22,8 @@ import { CanvasRenderLayerWallLines } from './canvas/renderlayer/canvas-renderla
 import { CanvasRenderLayerWallOcclusion } from './canvas/renderlayer/canvas-renderlayer-wallocclusion.js';
 import { CanvasRenderLayerWeather } from './canvas/renderlayer/canvas-renderlayer-weather.js';
 import { CanvasEntityRendererToken } from './canvas/entityrenderer/canvas-entityrenderer-token.js';
+import { WallRenderer } from './renderer/wall-renderer.js';
+import { LightRenderer } from './renderer/light-renderer.js';
 import { SidepanelTabChat } from './sidepanel/sidepanel-tab-chat.js';
 import { SidepanelTabPlayers } from './sidepanel/sidepanel-tab-players.js';
 import { SidepanelTabActors } from './sidepanel/sidepanel-tab-actors.js';
@@ -45,7 +48,6 @@ import { MessageService } from './service/message-service.js';
 import { ActionCommand, MovePlayerToMap, SendChatMessage } from '../common/messages.js';
 import { CanvasWindowFitToGrid } from './canvas/window/canvas-window-fit-to-grid.js';
 import { CanvasWindowConfirm } from './canvas/window/canvas-window-confirm.js';
-import { StateMain } from './state/state-main.js';
 
 // Initialize common code
 Common.init(new ClientIDProvider(), ClientEntityManager);
@@ -148,6 +150,7 @@ Events.on('addModeButtonsGM', event => {
 
 // RenderLayers + EntityRenderes + Sidepanel Tabs
 Events.on('addRenderLayers', event => {
+    event.data.addRenderLayer(new CanvasRenderLayerBG(-10000));
     event.data.addRenderLayer(new CanvasRenderLayerTokens(-1000, Layer.BACKGROUND, false));
     event.data.addRenderLayer(new CanvasRenderLayerGrid(0));
     event.data.addRenderLayer(new CanvasRenderLayerWallLines(500));
@@ -170,6 +173,11 @@ Events.on('addSidepanelTabs', event => {
     event.data.addSidepanelTab(new SidepanelTabActors());
     event.data.addSidepanelTab(new SidepanelTabAttachments());
     event.data.addSidepanelTab(new SidepanelTabMaps());
+});
+
+Events.on('createMainHTML', () => {
+    WallRenderer.init();
+    LightRenderer.init();
 });
 
 
@@ -372,11 +380,8 @@ Events.on('entityMenu', event => {
             }
         });
         menu.createItem(menu.container, 'Show Image', () => {
-            const token = reference.prop('token').getEntity();
-            if(token) {
-                const imagePath = token.prop('imagePath').getString();
-                if(imagePath) MessageService.send(new ActionCommand('SHOW_IMAGE', 0, 0, 0, false, '/data/files'+imagePath));
-            }
+            const imagePath = reference.prop('imagePath').getString();
+            if(imagePath) MessageService.send(new ActionCommand('SHOW_IMAGE', 0, 0, 0, false, '/data/files'+imagePath));
         });
     }
 }, true, 100);

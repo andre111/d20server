@@ -2,13 +2,15 @@ import { Expression } from '../expression.js';
 import { Result } from "../result.js";
 
 export class Variable extends Expression {
-    fullName;
+    #fullName;
 
     constructor(fullName) {
         super();
 
-        this.fullName = fullName;
+        this.#fullName = fullName;
     }
+
+    getType(context) { throw new Error('Cannot call abstract function'); }
 
     set(context, value) { throw new Error('Cannot call abstract function'); }
     get(context) { throw new Error('Cannot call abstract function'); }
@@ -30,6 +32,6 @@ export class Variable extends Expression {
     }
 
     getFullName() {
-        return this.fullName;
+        return this.#fullName;
     }
 }

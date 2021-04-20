@@ -14,25 +14,24 @@ function storeType(object) {
     }
 }
 function storeTypeRecursion(object) {
-    for(const key in object) {
-        if(object.hasOwnProperty(key) && !key.startsWith('_transient_')) {
-            var obj = object[key];
-            if(Array.isArray(obj)) {
-                for(var i=0; i<obj.length; i++) {
-                    storeType(obj[i]);
-                }
-            } else {
-                storeType(obj);
+    if(Array.isArray(object)) {
+        for(var i=0; i<object.length; i++) {
+            storeType(object[i]);
+        }
+    } else {
+        for(const key in object) {
+            if(object.hasOwnProperty(key) && !key.startsWith('_transient_')) {
+                storeType(object[key]);
             }
         }
-    }
 
-    if(object.constructor.name !== 'Object') {
-        object.__type = object.constructor.name;
-    }
+        if(object.constructor.name !== 'Object') {
+            object.__type = object.constructor.name;
+        }
 
-    if(typeof(object.preSave) === 'function') {
-        object.preSave();
+        if(typeof(object.preSave) === 'function') {
+            object.preSave();
+        }
     }
 }
 
@@ -45,25 +44,21 @@ function assignType(object) {
     return object;
 }
 function assignTypeRecursion(object) {
-    for(const key in object) {
-        if(object.hasOwnProperty(key) && !key.startsWith('_transient_')) {
-            var obj = object[key];
-            if(Array.isArray(obj)) {
-                for(var i=0; i<obj.length; i++) {
-                    obj[i] = assignType(obj[i]);
-                }
-            } else {
-                object[key] = assignType(obj);
+    if(Array.isArray(object)) {
+        for(var i=0; i<object.length; i++) {
+            object[i] = assignType(object[i]);
+        }
+    } else {
+        for(const key in object) {
+            if(object.hasOwnProperty(key)) {
+                object[key] = assignType(object[key]);
             }
         }
-    }
 
-    if(!Array.isArray(object)) {
-        var base = {};
         if(nameToTypeMap.has(object.__type)) {
-            base = new (nameToTypeMap.get(object.__type))();
+            var base = new (nameToTypeMap.get(object.__type))();
+            object = Object.assign(base, object);
         }
-        object = Object.assign(base, object);
 
         if(typeof(object.postLoad) === 'function') {
             object.postLoad();

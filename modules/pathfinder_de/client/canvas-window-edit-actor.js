@@ -8,7 +8,7 @@ import { BooleanPropertyEditor } from '../../../core/client/gui/property-editor/
 
 import { HTMLStringPropertyEditor } from '../../../core/client/gui/property-editor/special/html-string-property-editor.js';
 import { LongListPropertyEditor } from '../../../core/client/gui/property-editor/special/long-list-property-editor.js';
-import { ReferencedImagePropertyEditor } from '../../../core/client/gui/property-editor/special/referenced-image-property-editor.js';
+import { ImagePropertyEditor } from '../../../core/client/gui/property-editor/special/image-property-editor.js';
 import { StringSelectionPropertyEditor } from '../../../core/client/gui/property-editor/special/string-selection-property-editor.js';
 
 import { Tabs } from '../../../core/client/gui/tabs.js';
@@ -35,7 +35,7 @@ export class CanvasWindowEditActor {
         header.className = 'cs-header';
         container.appendChild(header);
         {
-            const imageEditor = new ReferencedImagePropertyEditor('token', '', 'imagePath');
+            const imageEditor = new ImagePropertyEditor('imagePath');
             imageEditor.getContainer().className = 'cs-image';
             header.appendChild(imageEditor.getContainer());
             this.#editorList.registerEditor(imageEditor);
