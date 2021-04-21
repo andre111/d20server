@@ -113,16 +113,11 @@ export const LightRenderer = {
 				if(lightRadius > 0 && IntMathUtils.doAABBCircleIntersect(viewport.x, viewport.y, viewport.x+viewport.width, viewport.y+viewport.height, centerX, centerY, lightRadius)) {
                     const lightViewport = new Rect(centerX-maxLightRadius-1, centerY-maxLightRadius-1, maxLightRadius*2+2, maxLightRadius*2+2);
 					
-					if(map.prop('wallsBlockLight').getBoolean()) {
-                        // get wall clip (with cached data whenever possible)
-                        const cached = LightRenderer.getLightWallCache(token, light, centerX, centerY, maxLightRadius, lightViewport);
-                        
-						// draw light (with clip)
-						LightRenderer.paintLight(ctx1, token, cached, true, centerX, centerY, lightRadius);
-					} else {
-						// draw light
-						LightRenderer.paintLight(ctx1, token, null, false, centerX, centerY, lightRadius);
-					}
+                    // get wall clip (with cached data whenever possible)
+                    const cached = LightRenderer.getLightWallCache(token, light, centerX, centerY, maxLightRadius, lightViewport);
+                    
+                    // draw light (with clip)
+                    LightRenderer.paintLight(ctx1, token, cached, true, centerX, centerY, lightRadius);
                 }
             }
         }

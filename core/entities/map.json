@@ -65,20 +65,6 @@
         },
         
         {
-            "name": "wallsBlockLight",
-            "type": "BOOLEAN",
-            "editAccess": "GM",
-            "viewAccess": "EVERYONE",
-            "value": "true"
-        },
-        {
-            "name": "hideWithNoMainToken",
-            "type": "BOOLEAN",
-            "editAccess": "GM",
-            "viewAccess": "EVERYONE",
-            "value": "true"
-        },
-        {
             "name": "playersCanEnter",
             "type": "BOOLEAN",
             "editAccess": "GM",
@@ -102,7 +88,7 @@
             "name": "Main",
             "access": "GM",
             "layout": "GRID",
-            "layoutParameters": [ "7", "3" ],
+            "layoutParameters": [ "6", "3" ],
             "layoutGlue": "true",
             "components": [
                 {
@@ -175,20 +161,6 @@
                 {
                     "type": "LABEL",
                     "text": "Toggles: "
-                },
-                {
-                    "type": "EDITOR",
-                    "property": "wallsBlockLight",
-                    "text": "Walls block light"
-                },
-                {
-                    "type": "EDITOR",
-                    "property": "hideWithNoMainToken",
-                    "text": "Hide without token"
-                },
-                
-                {
-                    "type": "EMPTY"
                 },
                 {
                     "type": "EDITOR",

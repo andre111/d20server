@@ -269,7 +269,7 @@ export class StateMain extends State {
         ctx.rect(0, 0, this.width, this.height);
         ctx.fill();
         ctx.closePath();
-        if(!map || !this.view || (viewers.length == 0 && map.prop('hideWithNoMainToken').getBoolean() && this.view.isPlayerView())) {
+        if(!map || !this.view || (viewers.length == 0 && this.view.isPlayerView())) {
             return;
         }
         this.view.setForceWallOcclusion(forceWallOcclusion);
