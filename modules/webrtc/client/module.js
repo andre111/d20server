@@ -105,8 +105,8 @@ function removePeerConnection(profileID) {
     delete peerConnections[profileID];
 }
 
-//TODO: add a button to call this
 function reconnect() {
+    // just sending a new joined message will begin a new connection process
     MessageService.send(new WebRTCMessage('joined', 'broadcast'));
 }
 
@@ -134,7 +134,7 @@ if(location.protocol == 'https:') {
             navigator.mediaDevices.getUserMedia({ video: videoConstraints, audio: audioConstraints }).then(stream => {
                 localStream = stream;
 
-                const localEntry = new WebRTCEntry(ServerData.localProfile.getID(), true, localStream);
+                const localEntry = new WebRTCEntry(ServerData.localProfile.getID(), true, localStream, () => reconnect());
                 localEntry.setStreams(stream);
                 videoContainer.appendChild(localEntry.getContainer());
         

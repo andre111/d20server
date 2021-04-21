@@ -16,8 +16,9 @@ export class WebRTCEntry {
     #icon;
     #toggleMic;
     #toggleCam;
+    #reconnect;
 
-    constructor(profileID, muted = false, localStream = null) {
+    constructor(profileID, muted = false, localStream = null, reconnectCallback = null) {
         this.#profileID = profileID;
         this.#listener = Events.on('profileListChange', event => this.updateIcons());
         this.#localStream = localStream;
@@ -44,13 +45,21 @@ export class WebRTCEntry {
             // controlls for local input
             this.#toggleMic = document.createElement('img');
             this.#toggleMic.src = '/modules/webrtc/files/img/mic-on.svg';
-            this.#toggleMic.onclick = event => this.toggleMic();
+            this.#toggleMic.title = 'Toggle Microphone';
+            this.#toggleMic.onclick = () => this.toggleMic();
             this.#textContainer.appendChild(this.#toggleMic);
             
             this.#toggleCam = document.createElement('img');
             this.#toggleCam.src = '/modules/webrtc/files/img/cam-on.svg';
-            this.#toggleCam.onclick = event => this.toggleCam();
+            this.#toggleCam.title = 'Toggle Camera';
+            this.#toggleCam.onclick = () => this.toggleCam();
             this.#textContainer.appendChild(this.#toggleCam);
+            
+            this.#reconnect = document.createElement('img');
+            this.#reconnect.src = '/modules/webrtc/files/img/reconnect.svg';
+            this.#reconnect.title = 'Reconnect';
+            this.#reconnect.onclick = reconnectCallback;
+            this.#textContainer.appendChild(this.#reconnect);
         } else {
             // controlls for remote stream
             const volumeDiv = document.createElement('div');
