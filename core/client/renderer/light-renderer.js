@@ -37,14 +37,14 @@ export const LightRenderer = {
         LightRenderer._lightBuffer1 = document.createElement('canvas');
         LightRenderer._lightBuffer2 = document.createElement('canvas');
         
-        LightRenderer._mainCtx = LightRenderer._mainBuffer.getContext('2d');
-        LightRenderer._lightCtx1 = LightRenderer._lightBuffer1.getContext('2d');
-        LightRenderer._lightCtx2 = LightRenderer._lightBuffer2.getContext('2d');
+        LightRenderer._mainCtx = LightRenderer._mainBuffer.getContext('2d', { alpha: false });
+        LightRenderer._lightCtx1 = LightRenderer._lightBuffer1.getContext('2d', { alpha: false });
+        LightRenderer._lightCtx2 = LightRenderer._lightBuffer2.getContext('2d', { alpha: false });
 
         EntityManagers.get('wall').addListener(() => LightRenderer.invalidateCache());
     },
     
-    renderLight: function(ctx, screenWidth, screenHeight, transform, viewport, map, viewers) {
+    renderLight: function(ctx, screenWidth, screenHeight, transform, viewport, map, viewers, tokens) {
         // adjust buffer sizes if needed
         if(LightRenderer._mainBuffer.width < screenWidth) LightRenderer._mainBuffer.width = screenWidth;
         if(LightRenderer._mainBuffer.height < screenHeight) LightRenderer._mainBuffer.height = screenHeight;
@@ -54,27 +54,24 @@ export const LightRenderer = {
         if(LightRenderer._lightBuffer2.height < screenHeight) LightRenderer._lightBuffer2.height = screenHeight;
         
 		// prepare buffer and render light levels
-        LightRenderer._mainCtx.save();
         LightRenderer._mainCtx.setTransform(1, 0, 0, 1, 0, 0); // identity
         LightRenderer._mainCtx.globalCompositeOperation = 'source-over';
         LightRenderer._mainCtx.fillStyle = 'black';
         LightRenderer._mainCtx.fillRect(0, 0, screenWidth, screenHeight);
         LightRenderer._mainCtx.globalCompositeOperation = 'lighter';
-        LightRenderer._renderLight(LightRenderer._mainCtx, screenWidth, screenHeight, transform, viewport, map, Light.BRIGHT, null, viewers);
-        LightRenderer._renderLight(LightRenderer._mainCtx, screenWidth, screenHeight, transform, viewport, map, Light.DIM, 'rgba(0, 0, 0, 0.59)', viewers);
-        LightRenderer._renderLight(LightRenderer._mainCtx, screenWidth, screenHeight, transform, viewport, map, Light.DARK, 'rgba(0, 0, 0, 0.78)', viewers);
-        LightRenderer._mainCtx.restore();
+        LightRenderer._renderLight(LightRenderer._mainCtx, screenWidth, screenHeight, transform, viewport, map, Light.BRIGHT, null, viewers, tokens);
+        LightRenderer._renderLight(LightRenderer._mainCtx, screenWidth, screenHeight, transform, viewport, map, Light.DIM, 'rgba(0, 0, 0, 0.59)', viewers, tokens);
+        LightRenderer._renderLight(LightRenderer._mainCtx, screenWidth, screenHeight, transform, viewport, map, Light.DARK, 'rgba(0, 0, 0, 0.78)', viewers, tokens);
         
         // render to screen
         ctx.save();
         ctx.setTransform(1, 0, 0, 1, 0, 0); // identity
         ctx.globalCompositeOperation = 'multiply'; // NOTE: comment this line out to view the current light buffer for debugging
         ctx.drawImage(LightRenderer._mainBuffer, 0, 0);
-        ctx.globalCompositeOperation = 'source-over';
         ctx.restore();
     },
     
-    _renderLight: function(ctx, screenWidth, screenHeight, transform, viewport, map, light, overlay, viewers) {
+    _renderLight: function(ctx, screenWidth, screenHeight, transform, viewport, map, light, overlay, viewers, tokens) {
         // shortcut for zero sight and multiplier detection
         // TODO: note that combining multiple viewers can have some parts visible that should not be
         // but I think the only way to solve this would be to render each viewers sight/light sepperately which is expensive
@@ -107,7 +104,7 @@ export const LightRenderer = {
             ctx1.globalCompositeOperation = 'lighter';
             ctx1.setTransform(transform);
             
-            MapUtils.currentEntities('token').forEach(token => {
+            for(const token of tokens) {
 				const centerX = token.prop('x').getLong();
 				const centerY = token.prop('y').getLong();
                 const maxLightRadius = Math.trunc(LightRenderer.getLight(token, light) * map.prop('gridSize').getLong()) * multiplier;
@@ -127,7 +124,7 @@ export const LightRenderer = {
 						LightRenderer.paintLight(ctx1, token, null, false, centerX, centerY, lightRadius);
 					}
                 }
-            });
+            }
         }
         
         // render sight (directly when a single viewer is present, with extra buffer otherwise)
@@ -163,7 +160,6 @@ export const LightRenderer = {
         }
         
         // render to buffer
-        ctx.globalCompositeOperation = 'lighter';
         ctx.drawImage(LightRenderer._lightBuffer1, 0, 0);
     },
     

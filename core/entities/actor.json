@@ -116,11 +116,12 @@
                 },
                 
                 {
-                    "type": "IMAGE_REFERENCE",
-                    "property": "token",
-                    "text": "imagePath",
-                    "w": 200,
-                    "h": 200
+                    "type": "EDITOR",
+                    "editorType": "IMAGE",
+                    "property": "imagePath",
+                    "text": "Icon",
+                    "w": 140,
+                    "h": 140
                 },
                 {
                     "type": "EDITOR",

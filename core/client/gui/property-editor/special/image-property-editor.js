@@ -15,7 +15,7 @@ export class ImagePropertyEditor extends PropertyEditor {
     initContent(label) {
         if(label) GuiUtils.makeBordered(this.container, label);
 
-        this.image = new Image();
+        this.image = document.createElement('img');
         this.image.style.width = '100%';
         this.image.style.height = '100%';
         this.image.style.objectFit = 'contain';
@@ -40,7 +40,7 @@ export class ImagePropertyEditor extends PropertyEditor {
     
     reloadImage() {
         // replace image (just changing the src is not enough)
-        if(this.image != null) this.container.removeChild(this.image);
+        /*if(this.image != null) this.container.removeChild(this.image);
         if(this.imagePath != '') {
             this.image = new Image();
             this.image.src = '/data/files'+this.imagePath;
@@ -50,6 +50,12 @@ export class ImagePropertyEditor extends PropertyEditor {
             this.container.appendChild(this.image);
         } else {
             this.image = null;
+        }*/
+        if(this.imagePath) {
+            this.image.src = '/data/files'+this.imagePath;
+            this.image.style.visibility = 'visible';
+        } else {
+            this.image.style.visibility = 'hidden';
         }
     }
     

@@ -27,8 +27,6 @@ export class StateMain extends State {
 
     canvas;
     ctx;
-    buffer;
-    bctx;
 
     width;
     height;
@@ -56,10 +54,8 @@ export class StateMain extends State {
         document.body.appendChild(canvas);
 
         const sidepanel = document.createElement('div');
-        //const sidepanelLinks = document.createElement('ul');
         sidepanel.id = 'sidepanel';
         sidepanel.tabIndex = '2';
-        //sidepanel.appendChild(sidepanelLinks);
         document.body.appendChild(sidepanel);
 
         this.notificationManager = new NotificationManager();
@@ -69,11 +65,7 @@ export class StateMain extends State {
         
         // get reference to main canvas
         this.canvas = document.getElementById('canvas');
-        this.ctx = this.canvas.getContext('2d');
-        
-        // create offscreen canvas as a render buffer
-        this.buffer = document.createElement('canvas');
-        this.bctx = this.buffer.getContext('2d');
+        this.ctx = this.canvas.getContext('2d', { alpha: false });
         
         // add mouse controller
         this.camera = new Camera();
@@ -166,7 +158,7 @@ export class StateMain extends State {
         requestAnimationFrame(() => this.onFrame());
         
         // adjust canvas sizes
-        this.resize(this.canvas, this.buffer);
+        this.resize(this.canvas);
         
         // calculate time
         var now = Date.now();
@@ -183,18 +175,14 @@ export class StateMain extends State {
         }
     }
 
-    resize(canvas, buffer) {
+    resize(canvas) {
         this.width = canvas.clientWidth;
         this.height = canvas.clientHeight;
         
-        // resize canvas and buffer to match display size
+        // resize canvas to match display size
         if(canvas.width != this.width || canvas.height != this.height) {
             canvas.width = this.width;
             canvas.height = this.height;
-        }
-        if(buffer.width != this.width || buffer.height != this.height) {
-            buffer.width = this.width;
-            buffer.height = this.height;
         }
     }
     

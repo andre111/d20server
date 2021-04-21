@@ -9,7 +9,6 @@ import { LongListPropertyEditor } from '../../gui/property-editor/special/long-l
 import { StringSelectionPropertyEditor } from '../../gui/property-editor/special/string-selection-property-editor.js';
 import { ImagePropertyEditor } from '../../gui/property-editor/special/image-property-editor.js';
 import { PropertyAccessEditor } from '../../gui/property-editor/special/property-access-editor.js';
-import { ReferencedImagePropertyEditor } from '../../gui/property-editor/special/referenced-image-property-editor.js';
 
 import { EntityManagers } from '../../../common/entity/entity-managers.js';
 import { EntityReference } from '../../../common/entity/entity-reference.js';
@@ -154,11 +153,6 @@ export class CanvasWindowEditEntityTab extends EditorList {
                         }
                     }
                 };
-                break;
-            case 'IMAGE_REFERENCE':
-                var imageEditor = new ReferencedImagePropertyEditor(compDefinition.property, 'Image', compDefinition.text);
-                this.registerEditor(imageEditor);
-                component = imageEditor.getContainer();
                 break;
             case 'LABEL':
                 component = document.createElement('div');

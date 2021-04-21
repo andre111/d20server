@@ -3,20 +3,21 @@ import { EntityUtils } from '../util/entityutil.js';
 import { ImageService } from '../service/image-service.js';
 
 export const TokenRenderer = {
-    renderTokens: function(ctx, tokens, viewer, highlightToken, grayscale) {
+    renderTokens: function(ctx, tokens, viewer, highlightToken, grayscale = false, renderInfo = true) {
         // render token
-        for(var token of tokens) {
-            var loc = TokenRenderer.getTokenLocation(token, true);
+        for(const token of tokens) {
+            const loc = TokenRenderer.getTokenLocation(token, true);
             TokenRenderer.renderToken(ctx, token, viewer, loc.x, loc.y, grayscale);
         }
         
         // render additional info
-        for(var token of tokens) {
-            var loc = TokenRenderer.getTokenLocation(token, false);
+        if(!renderInfo) return;
+        for(const token of tokens) {
+            const loc = TokenRenderer.getTokenLocation(token, false);
             TokenRenderer.renderTokenInfo(ctx, token, viewer, loc.x, loc.y);
             
             // highlight the token
-            if(token.id == highlightToken) {
+            if(token.getID() == highlightToken) {
                 var border = 6;
                 ctx.save();
                 ctx.strokeStyle = 'orange';
@@ -54,18 +55,20 @@ export const TokenRenderer = {
         
         // nameplate
         if(token.prop('displayNameplate').getBoolean()) {
-            var nameProp = token.prop('name');
+            const nameProp = token.prop('name');
             if(nameProp.canView(accessLevel) && nameProp.getString() != '') {
-                var name = nameProp.getString();
-                var nameW = ctx.measureText(name).width + 4;
-                var nameH = ctx.measureText(name).actualBoundingBoxAscent + ctx.measureText(name).actualBoundingBoxDescent + 4;
-                var nameX = -nameW/2;
-                var nameY = bounds.height/2 - 4;
+                const name = nameProp.getString();
+                const nameMeasure = ctx.measureText(name);
+
+                const nameW = nameMeasure.width + 4;
+                const nameH = nameMeasure.actualBoundingBoxAscent + nameMeasure.actualBoundingBoxDescent + 4;
+                const nameX = -nameW/2;
+                const nameY = bounds.height/2 - 4;
                 
                 ctx.fillStyle = 'rgba(255, 255, 255, 0.39)';
                 ctx.fillRect(nameX, nameY, nameW, nameH);
                 ctx.fillStyle = 'black';
-                ctx.fillText(name, nameX + 2, nameY + 2 + ctx.measureText(name).actualBoundingBoxAscent);
+                ctx.fillText(name, nameX + 2, nameY + 2 + nameMeasure.actualBoundingBoxAscent);
             }
         }
         
@@ -146,7 +149,7 @@ export const TokenRenderer = {
         TokenRenderer._lastTokenLocations.clear();
     },
     getTokenLocation: function(token, update) {
-        var lastLocation = TokenRenderer._lastTokenLocations.get(token.id);
+        var lastLocation = TokenRenderer._lastTokenLocations.get(token.getID());
         if(lastLocation == null || lastLocation == undefined) {
             lastLocation = { x: token.prop('x').getLong(), y: token.prop('y').getLong() };
         }
@@ -157,9 +160,9 @@ export const TokenRenderer = {
             x += (token.prop('x').getLong() - lastLocation.x) * 0.25;
             y += (token.prop('y').getLong() - lastLocation.y) * 0.25;
         }
-        var currentLocation = { x: x, y: y };
+        const currentLocation = { x: x, y: y };
         
-        TokenRenderer._lastTokenLocations.set(token.id, currentLocation);
+        TokenRenderer._lastTokenLocations.set(token.getID(), currentLocation);
         return currentLocation;
     }
 };

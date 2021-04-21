@@ -20,12 +20,14 @@ export class CanvasRenderLayerWallOcclusion extends CanvasRenderLayer {
         if(view.doRenderWallOcclusion()) {
             // render
             if(viewers.length != 0) {
+                const walls = MapUtils.currentEntities('wall');
+
                 // extend viewport to avoid rounding errors
                 // const extendedViewport = new Rect(viewport.x-4, viewport.y-4, viewport.width+8, viewport.height+8);
                 // override viewport to fill the whole map (should no longer be a big performance concern since WallRenderer employs caches)
                 const gridSize = map.prop('gridSize').getLong();
                 const extendedViewport = new Rect(-4, -4, map.prop('width').getLong()*gridSize+8, map.prop('height').getLong()*gridSize+8);
-                const pwr = WallRenderer.calculateWalls(MapUtils.currentEntities('wall'), extendedViewport, viewers);
+                const pwr = WallRenderer.calculateWalls(walls, extendedViewport, viewers);
                 WallRenderer.renderPrecalculatedWallRender(ctx, pwr);
                 
                 // draw fow background tokens
@@ -34,7 +36,7 @@ export class CanvasRenderLayerWallOcclusion extends CanvasRenderLayer {
                     ctx.save();
                     RenderUtils.addPaths(ctx, fowClip);
                     ctx.clip();
-                    TokenRenderer.renderTokens(ctx, MapUtils.currentEntitiesSorted('token', Layer.BACKGROUND), view.getProfile(), state.getHighlightToken(), true);
+                    TokenRenderer.renderTokens(ctx, MapUtils.currentEntitiesSorted('token', Layer.BACKGROUND), view.getProfile(), state.getHighlightToken(), true, false);
                     ctx.fillStyle = 'rgba(0, 0, 0, 0.7)';
                     ctx.fillRect(extendedViewport.x, extendedViewport.y, extendedViewport.width, extendedViewport.heigth);
                     ctx.restore();
@@ -45,14 +47,14 @@ export class CanvasRenderLayerWallOcclusion extends CanvasRenderLayer {
                 ctx.lineCap = 'round';
                 ctx.strokeStyle = 'black';
                 ctx.beginPath();
-                MapUtils.currentEntities('wall').forEach(wall => {
-                    if(wall.prop('seeThrough').getBoolean()) return;
-                    if(wall.prop('door').getBoolean() && wall.prop('open').getBoolean()) return;
-                    if(wall.prop('oneSided').getBoolean()) return;
+                for(const wall of walls) {
+                    if(wall.prop('seeThrough').getBoolean()) continue;
+                    if(wall.prop('door').getBoolean() && wall.prop('open').getBoolean()) continue;
+                    if(wall.prop('oneSided').getBoolean()) continue;
 
                     ctx.moveTo(wall.prop('x1').getLong(), wall.prop('y1').getLong());
                     ctx.lineTo(wall.prop('x2').getLong(), wall.prop('y2').getLong());
-                });
+                }
                 ctx.stroke();
             }
         }
