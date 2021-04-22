@@ -52,4 +52,5 @@ Events.on('mapChange', event => ClientBattleManager.scanState());
 Events.on('createMainHTML', event => {
     EntityManagers.get('map').addListener(() => ClientBattleManager.scanState());
     EntityManagers.get('token').addListener(() => ClientBattleManager.scanState());
+    EntityManagers.get('actor').addListener(() => ClientBattleManager.scanState());
 });

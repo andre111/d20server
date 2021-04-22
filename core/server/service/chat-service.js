@@ -5,6 +5,7 @@ import { ChatEntries } from '../../common/messages.js';
 import { Context } from '../../common/scripting/context.js';
 import { Parser } from '../../common/scripting/expression/parser.js';
 import { parseVariable } from '../../common/scripting/variable/parser/variable-parsers.js';
+import { TokenUtil } from '../../common/util/tokenutil.js';
 import { Commands } from '../command/commands.js';
 import { readJson, saveJson } from '../util/fileutil.js';
 import { RollFormatter } from '../util/roll-formatter.js';
@@ -86,36 +87,22 @@ export class ChatService {
                 ChatService.appendNote(profile, 'No (single) token selected');
                 return;
             }
-            const accessLevel = token.getAccessLevel(profile);
-            if(!Access.matches(token.prop('macroUse').getAccessValue(), accessLevel)) {
-                ChatService.appendNote(profile, 'No access to macros on this token');
+            const actor = TokenUtil.getActor(token);
+            if(!actor) {
+                ChatService.appendNote(profile, 'Token has no macros');
                 return;
             }
 
             // find macro (!<name> -> custom in token or actor, !!<name> -> predefined)
             var macro = null;
             if(macroName.startsWith('!')) {
-                const predefMacros = token.getPredefinedMacros();
-                if(predefMacros[macroName.substring(1)]) {
-                    macro = predefMacros[macroName.substring(1)].join('\n');
-                }
-
-                const actor = EntityManagers.get('actor').find(token.prop('actorID').getLong());
-                if(actor) {
-                    const actorPredefMacros = actor.getPredefinedMacros();
-                    if(actorPredefMacros[macroName.substring(1)]) {
-                        macro = actorPredefMacros[macroName.substring(1)].join('\n');
-                    }
+                const actorPredefMacros = actor.getPredefinedMacros();
+                if(actorPredefMacros[macroName.substring(1)]) {
+                    macro = actorPredefMacros[macroName.substring(1)].join('\n');
                 }
             } else {
-                const actor = EntityManagers.get('actor').find(token.prop('actorID').getLong());
-                if(actor) {
-                    const actorMacros = actor.prop('macros').getStringMap();
-                    macro = actorMacros[macroName];
-                }
-
-                const tokenMacros = token.prop('macros').getStringMap();
-                if(tokenMacros[macroName]) macro = tokenMacros[macroName];
+                const actorMacros = actor.prop('macros').getStringMap();
+                macro = actorMacros[macroName];
             }
             if(!macro) {
                 ChatService.appendNote(profile, `Could not find macro: ${macroName}`);

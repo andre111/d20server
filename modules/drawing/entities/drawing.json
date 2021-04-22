@@ -20,7 +20,8 @@
         "editAccess": {
             "mode": "SET",
             "value": "CONTROLLING_PLAYER"
-        }
+        },
+        "containedEntities": []
     },
     "properties": [
         {

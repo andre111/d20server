@@ -19,7 +19,7 @@ export class SidepanelTabPlayers extends SidepanelTab {
         const treePanel = document.createElement('div');
         treePanel.style.overflow = 'auto';
         this.tab.appendChild(treePanel);
-        this.tree = new SearchableIDTree(treePanel, 'sidepanel-tab-players', getValueProvider('profile'));
+        this.tree = new SearchableIDTree(treePanel, 'sidepanel-tab-players', getValueProvider('profile-with-status'));
         Events.on('profileListChange', event => this.tree.reload());
         
         const buttonPanel = document.createElement('div');

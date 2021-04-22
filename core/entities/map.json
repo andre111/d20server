@@ -16,7 +16,8 @@
         "editAccess": {
             "mode": "SET",
             "value": "GM"
-        }
+        },
+        "containedEntities": []
     },
     "properties": [
         {

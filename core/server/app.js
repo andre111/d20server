@@ -8,15 +8,14 @@ import { HttpHandler } from './handler/http-handler.js';
 import { CommandLineService } from './service/command-line-service.js';
 import { GameService } from './service/game-service.js';
 import { ModuleService } from './service/module-service.js';
-import { SaveService } from './service/save-service.js';
 
 Common.init(new ServerIDProvider(), ServerEntityManager);
 ModuleService.init().then(() => { // locate and load module definitions and dynamically load server sided module code
-    EntityManagers.createAll(); // create entity managers
-    setupCascadingDeletes(); // sets up cascading entity deletes TODO: this is currently hardcoded, remove this!
-    SaveService.init(); // startup saveservice
-    GameService.init(); // startup game service (only does optinal init stuff)
-    HttpHandler.init(); // startup http and websocket server
-    CommandLineService.init(); // startup command line service
-    Events.trigger('serverInit');
+    EntityManagers.createAll(() => { // create entity managers
+        setupCascadingDeletes(); // sets up cascading entity deletes TODO: this is currently hardcoded, remove this!
+        GameService.init(); // startup game service (only does optinal init stuff)
+        HttpHandler.init(); // startup http and websocket server
+        CommandLineService.init(); // startup command line service
+        Events.trigger('serverInit');
+    });
 });

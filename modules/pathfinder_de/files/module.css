@@ -73,6 +73,8 @@
     border-right: var(--border-separator);
 
     display: flex;
+    line-height: 32px;
+    font-variant: small-caps;
 }
 .cs-header-row li:last-child {
     border-right: none;
@@ -81,11 +83,9 @@
 .cs-header-row:nth-of-type(1) input {
     width: 120px;
 }
-.cs-header-row:nth-of-type(1) input[type="number"] {
+.cs-header-row input[type="number"] {
     width: 32px;
-}
-.cs-header-row:nth-of-type(2) input {
-    width: 80px;
+    text-align: center;
 }
 
 /* Tabs */
@@ -144,6 +144,15 @@
 }
 .cs-clickable:hover {
     text-shadow: var(--text-shadow-hover);
+}
+
+.cs-content-sidebar {
+    width: 200px;
+    height: 100%;
+    
+    flex: 0 0 200px;
+    flex-wrap: nowrap;
+    border-right: var(--border-separator);
 }
 
 
@@ -250,8 +259,7 @@
 .cs-biography {
     width: calc(100% - 8px);
     height: calc(100% - 8px);
-    
-    padding: 5px;
+    display: flex;
 }
 
 /* Attachments Tab */
@@ -270,7 +278,11 @@
     width: calc(100% - 8px);
     height: calc(100% - 8px);
     
-    padding: 5px;
+    display: flex;
+}
+.cs-macros-sidebar input {
+    width: 32px;
+    height: 32px;
 }
 .cs-macros select,
 .cs-macros textarea {
@@ -285,13 +297,38 @@
     
     display: flex;
 }
-.cs-gm-values {
-    width: 200px;
-    height: 100%;
-    
-    flex-wrap: nowrap;
-    border-right: var(--border-separator);
+.cs-gm-sidebar {
+    overflow: auto;
 }
-.cs-gm-values button {
+.cs-gm-sidebar button {
     width: 50%;
+}
+.cs-gm-token span {
+    display: flex;
+}
+.cs-gm-token input {
+    width: 32px;
+    height: 32px;
+}
+.cs-gm-token-image {
+    width: 70px;
+    height: 70px;
+
+    flex: 0 0 70px;
+    margin: 0 10px;
+}
+.cs-gm-token-image img {
+    border: none;
+}
+.cs-sight-editor {
+    width: 100%;
+    padding-left: 5px;
+
+    justify-content: start;
+    font-variant: small-caps;
+    line-height: 26px;
+}
+.cs-sight-editor input {
+    width: 48px;
+    height: 16px;
 }

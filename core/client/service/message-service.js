@@ -24,16 +24,18 @@ export const MessageService = {
             Client.setState(new StateMain());
         } else if(msg instanceof ServerDefinitions) {
             setDefinitions(msg.getDefinitions());
-            EntityManagers.createAll();
         } else if(msg instanceof ClearEntities) {
-            EntityManagers.get(msg.getType()).serverClearEntities();
+           const manager = EntityManagers.get(msg.getManager());
+           if(manager) manager.serverClearEntities();
         } else if(msg instanceof AddEntity) {
             if(Client.getState() instanceof StateLoading) Client.getState().increaseCurrent();
-            EntityManagers.get(msg.getType()).serverAddEntity(msg.getEntity());
+            EntityManagers.getOrCreate(msg.getEntity().getManager(), msg.getEntity().getType()).serverAddEntity(msg.getEntity());
         } else if(msg instanceof RemoveEntity) {
-            EntityManagers.get(msg.getType()).serverRemoveEntity(msg.getID());
+            const manager = EntityManagers.get(msg.getManager());
+            if(manager) manager.serverRemoveEntity(msg.getID());
         } else if(msg instanceof UpdateEntityProperties) {
-            EntityManagers.get(msg.getType()).serverUpdateProperties(msg.getID(), msg.getProperties());
+            const manager = EntityManagers.get(msg.getManager());
+            if(manager) manager.serverUpdateProperties(msg.getID(), msg.getProperties());
         } else if(msg instanceof EnterMap) {
             const data = {
                 oldMapID: ServerData.currentMap,

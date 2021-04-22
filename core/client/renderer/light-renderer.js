@@ -7,6 +7,7 @@ import { Light, Infinite } from '../../common/constants.js';
 import { Rect } from '../../common/util/rect.js';
 import { IntMathUtils } from '../../common/util/mathutil.js';
 import { EntityManagers } from '../../common/entity/entity-managers.js';
+import { TokenUtil } from '../../common/util/tokenutil.js';
 
 let {applyToPoint} = window.TransformationMatrix;
 
@@ -77,11 +78,12 @@ export const LightRenderer = {
         // but I think the only way to solve this would be to render each viewers sight/light sepperately which is expensive
         var hasSight = false;
         var multiplier = 0;
-		for(var viewer of viewers) {
-			if(LightRenderer.getSight(viewer, light) > 0) {
+		for(const viewer of viewers) {
+            const actor = TokenUtil.getActor(viewer);
+			if(LightRenderer.getSight(actor, light) > 0) {
 				hasSight = true;
             }
-            var viewerMultiplier = LightRenderer.getLightMultiplier(viewer, light);
+            const viewerMultiplier = LightRenderer.getLightMultiplier(actor, light);
             if(viewerMultiplier > multiplier) multiplier = viewerMultiplier;
 		}
 		if(!hasSight || multiplier <= 0) {
@@ -135,7 +137,7 @@ export const LightRenderer = {
             ctx2.fillRect(0, 0, screenWidth, screenHeight);
             ctx2.globalCompositeOperation = 'lighter';
             
-            for(var viewer of viewers) {
+            for(const viewer of viewers) {
                 if(!LightRenderer.paintSight(ctx2, screenWidth, screenHeight, transform, viewer, light, map)) {
                     ctx2.fillStyle = 'white';
                     ctx2.fillRect(0, 0, screenWidth, screenHeight);
@@ -190,12 +192,12 @@ export const LightRenderer = {
 
     // return true if sight was limited, false otherwise (infinite sight)
     paintSight: function(ctx, screenWidth, screenHeight, transform, viewer, light, map) {
-        const sight = LightRenderer.getSight(viewer, light);
-        if(sight != Infinite && !Number.isFinite(sight) && sight < 10000) {
+        const sight = LightRenderer.getSight(TokenUtil.getActor(viewer), light);
+        if(sight < 10000) {
             const sightRadius = sight * map.prop('gridSize').getLong();
             if(sightRadius > 0) {
                 const viewerPos = applyToPoint(transform, { x: viewer.prop('x').getLong(), y: viewer.prop('y').getLong() });
-                const grd = ctx2.createRadialGradient(viewerPos.x, viewerPos.y, 1, viewerPos.x, viewerPos.y, sightRadius * transform.a);
+                const grd = ctx.createRadialGradient(viewerPos.x, viewerPos.y, 1, viewerPos.x, viewerPos.y, sightRadius * transform.a);
                 grd.addColorStop(0, 'white');
                 grd.addColorStop(0.5, 'white');
                 grd.addColorStop(1, 'black');
@@ -237,22 +239,27 @@ export const LightRenderer = {
 			return 0;
 		}
     },
-    getLightMultiplier(token, light) {
+
+    getLightMultiplier(actor, light) {
+        if(!actor) return 0;
+
         if(light == Light.BRIGHT) {
-			return token.prop('lightBrightMult').getDouble();
+			return actor.prop('lightBrightMult').getDouble();
 		} else if(light == Light.DIM) {
-			return token.prop('lightDimMult').getDouble();
+			return actor.prop('lightDimMult').getDouble();
 		} else {
 			return 0;
 		}
     },
-    getSight: function(token, light) {
+    getSight: function(actor, light) {
+        if(!actor) return 0;
+
         if(light == Light.BRIGHT) {
-			return token.prop('sightBright').getDouble();
+			return actor.prop('sightBright').getDouble();
 		} else if(light == Light.DIM) {
-			return token.prop('sightDim').getDouble();
+			return actor.prop('sightDim').getDouble();
 		} else {
-			return token.prop('sightDark').getDouble();
+			return actor.prop('sightDark').getDouble();
 		}
     }
 }

@@ -2,6 +2,7 @@ import { token } from 'morgan';
 import { EntityManagers } from '../../../core/common/entity/entity-managers.js';
 import { EntityReference } from '../../../core/common/entity/entity-reference.js';
 import { SendNotification } from '../../../core/common/messages.js';
+import { TokenUtil } from '../../../core/common/util/tokenutil.js';
 import { MessageService } from '../../../core/server/service/message-service.js';
 import { UserService } from '../../../core/server/service/user-service.js';
 import { CommonBattleManager } from '../common/common-battle-manager.js';
@@ -114,10 +115,11 @@ export class ServerBattleManager {
         UserService.forEach(profile => {
             if(profile.getCurrentMap() == map.getID()) {
                 const accessLevel = tokenRef.getAccessLevel(profile);
+                const actor = TokenUtil.getActor(tokenRef);
                 
                 var content = `???s Turn`
-                if(tokenRef.prop('name').canView(accessLevel) && tokenRef.prop('name').getString() != '') {
-                    content = `${tokenRef.prop('name').getString()}s Turn`;
+                if(actor && actor.canView(accessLevel) && actor.prop('name').canView(accessLevel) && actor.prop('name').getString() != '') {
+                    content = `${actor.prop('name').getString()}s Turn`;
                 }
                 const msg = new SendNotification(content, 5);
                 MessageService.send(msg, profile);

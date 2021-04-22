@@ -24,6 +24,7 @@ export { PlayEffect } from './message/game/play-effect.js';
 export { SelectedEntities } from './message/game/selected-entities.js';
 export { SendNotification } from './message/game/send-notification.js';
 export { SetPlayerColor } from './message/game/set-player-color.js';
+export { MakeActorLocal } from './message/game/make-actor-local.js';
 
 // Util Messages
 export { ModuleDefinitions } from './message/util/module-definitions.js';

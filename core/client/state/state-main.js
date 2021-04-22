@@ -248,15 +248,15 @@ export class StateMain extends State {
         // find viewers
         var viewers = [];
         MapUtils.currentEntities('token').forEach(token => {
-            var accessLevel = token.getAccessLevel(this.view.getProfile());
-            if(Access.matches(token.prop('sharedVision').getAccessValue(), accessLevel)) {
+            const accessLevel = token.getAccessLevel(this.view.getProfile());
+            if(Access.matches(Access.CONTROLLING_PLAYER, accessLevel)) {
                 viewers.push(token);
             }
         });
         // ...which are potentially overridden
         var forceWallOcclusion = false;
         if(this.viewToken > 0) {
-            var forcedViewer = EntityManagers.get('token').find(this.viewToken);
+            const forcedViewer = EntityManagers.get('token').find(this.viewToken);
             if(forcedViewer && (ServerData.isGM() || viewers.includes(forcedViewer))) {
                 viewers = [forcedViewer];
                 forceWallOcclusion = true;

@@ -1,5 +1,4 @@
 import { CLICommand } from './cli-command.js';
-import { SaveService } from '../save-service.js';
 
 export class CLICommandStop extends CLICommand {
     constructor() {
@@ -16,10 +15,7 @@ export class CLICommandStop extends CLICommand {
 
     execute(args) { 
         //TODO: cleanly implement stopping
-        if(SaveService.isBusy()) {
-            console.log('Saving in progress, please wait a few seconds and try again...');
-        } else {
-            process.exit(0);
-        }
+        //TODO: very important: check if all "Datastores" are ready to shutdown
+        process.exit(0);
     }
 }

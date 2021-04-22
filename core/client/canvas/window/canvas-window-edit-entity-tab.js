@@ -4,7 +4,6 @@ import { EditorList } from '../../gui/editor-list.js';
 import { createPropertyEditor } from '../../gui/property-editors.js';
 import { MultiLineStringPropertyEditor } from '../../gui/property-editor/special/multi-line-property-editor.js';
 import { HTMLStringPropertyEditor } from '../../gui/property-editor/special/html-string-property-editor.js';
-import { EntityReferencePropertyEditor } from '../../gui/property-editor/special/entity-reference-property-editor.js';
 import { LongListPropertyEditor } from '../../gui/property-editor/special/long-list-property-editor.js';
 import { StringSelectionPropertyEditor } from '../../gui/property-editor/special/string-selection-property-editor.js';
 import { ImagePropertyEditor } from '../../gui/property-editor/special/image-property-editor.js';
@@ -96,10 +95,6 @@ export class CanvasWindowEditEntityTab extends EditorList {
                     editor = new StringFilePropertyEditor(property, compDefinition.text, compDefinition.filetype);
                     component = editor.getContainer();
                     break;
-                case 'REFERENCE_SINGLE':
-                    editor = new EntityReferencePropertyEditor(property, compDefinition.text, compDefinition.reference);
-					component = editor.getContainer();
-                    break;
                 case 'REFERENCE_MULTI':
                     editor = new LongListPropertyEditor(property, compDefinition.text, compDefinition.reference, false);
                     component = editor.getContainer();
@@ -136,23 +131,6 @@ export class CanvasWindowEditEntityTab extends EditorList {
                 var accessEditor = new PropertyAccessEditor(compDefinition.property.split(','), compDefinition.text);
                 this.registerEditor(accessEditor);
                 component = accessEditor.getContainer();
-                break;
-            case 'OPEN_REFERENCE':
-                var prop = compDefinition.property;
-                var ref = compDefinition.reference;
-                component = document.createElement('button');
-                component.innerHTML = 'Open';
-                component.style.width = '150px';
-                component.style.height = '32px';
-                component.onclick = () => {
-                    var refID = this.w.getReference().prop(prop).getLong();
-                    if(refID > 0) {
-                        var entity = EntityManagers.get(ref).find(refID);
-                        if(entity != null && entity != undefined) {
-                            new CanvasWindowEditEntity(new EntityReference(entity));
-                        }
-                    }
-                };
                 break;
             case 'LABEL':
                 component = document.createElement('div');

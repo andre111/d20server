@@ -1,4 +1,4 @@
-import { Common } from '../common/common.js';
+import { Common, Entity } from '../common/common.js';
 import { Events } from '../common/events.js';
 import { Access, Layer } from '../common/constants.js';
 import { FILE_TYPE_IMAGE } from '../common/util/datautil.js';
@@ -48,6 +48,9 @@ import { MessageService } from './service/message-service.js';
 import { ActionCommand, MovePlayerToMap, SendChatMessage } from '../common/messages.js';
 import { CanvasWindowFitToGrid } from './canvas/window/canvas-window-fit-to-grid.js';
 import { CanvasWindowConfirm } from './canvas/window/canvas-window-confirm.js';
+import { TokenUtil } from '../common/util/tokenutil.js';
+import { EditorList } from './gui/editor-list.js';
+import { ActorPropertyEditor } from './gui/property-editor/special/actor-property-editor.js';
 
 // Initialize common code
 Common.init(new ClientIDProvider(), ClientEntityManager);
@@ -232,7 +235,7 @@ Events.on('entityMenu', event => {
     const menu = event.data.menu;
     menu.createItem(menu.container, 'Delete', () => {
         new CanvasWindowConfirm('Confirm removal', 'Are you sure you want to remove the '+event.data.entityType+': '+event.data.reference.getName()+'?', () => {
-            EntityManagers.get(event.data.reference.getType()).remove(event.data.reference.getID());
+            EntityManagers.get(event.data.reference.getManager()).remove(event.data.reference.getID());
             if(menu.mode && menu.mode.clearActiveEntities) menu.mode.clearActiveEntities();
         });
     });
@@ -246,12 +249,12 @@ Events.on('entityMenu', event => {
     const reference = event.data.reference;
     const accessLevel = event.data.accessLevel;
 
-    const actor = EntityManagers.get('actor').find(reference.prop('actorID').getLong());
+    const actor = TokenUtil.getActor(reference);
 
     // edit actor
     if(actor) {
         menu.createItem(menu.container, 'Edit Actor', () => {
-            const iActor = EntityManagers.get('actor').find(reference.prop('actorID').getLong());
+            const iActor = TokenUtil.getActor(reference);
             if(iActor) new CanvasWindowEditEntity(new EntityReference(iActor));
         });
     }
@@ -287,20 +290,15 @@ Events.on('entityMenu', event => {
             }
         }
     };
-
-    // token macros
-    if(Access.matches(reference.prop('macroUse').getAccessValue(), accessLevel)) {
-        addMacros('Token Macros', Object.keys(reference.prop('macros').getStringMap()));
-    }
     
     // actor macros
     if(actor) {
         const actorAccessLevel = actor.getAccessLevel(ServerData.localProfile);
         if(Access.matches(actor.prop('macroUse').getAccessValue(), actorAccessLevel)) {
-            addMacros('Actor Macros', Object.keys(actor.prop('macros').getStringMap()));
-        }
+            addMacros('Macros', Object.keys(actor.prop('macros').getStringMap()));
 
-        addMacros('Inbuilt Macros', Object.keys(actor.getPredefinedMacros()), false, '!');
+            addMacros('Inbuilt Macros', Object.keys(actor.getPredefinedMacros()), false, '!');
+        }
     }
 
     // gm actions
@@ -362,10 +360,16 @@ Events.on('entityMenu', event => {
 
     if(event.data.isGM) {
         menu.createItem(menu.container, 'Create Token', () => {
-            const token = reference.prop('token').getEntity();
-            if(token) {
+            const token = new Entity('token');
+            token.prop('actorID').setLong(reference.getID());
+            token.prop('imagePath').setString(reference.prop('tokenImagePath').getString());
+            token.prop('width').setLong(reference.prop('tokenWidth').getLong());
+            token.prop('height').setLong(reference.prop('tokenHeight').getLong());
+
+            const event = Events.trigger('createTokenFromActor', { token: token, actor: reference }, true);
+            if(!event.canceled) {
                 Client.getState().setMode(new CanvasModeEntities('token'));
-                Client.getState().getMode().setAddEntityAction(token);
+                Client.getState().getMode().setAddEntityAction(event.data.token);
                 Events.trigger('updateModeState');
             }
         });
@@ -374,7 +378,9 @@ Events.on('entityMenu', event => {
                 if(Client.getState().getMode().activeEntities.length == 1) {
                     const token = Client.getState().getMode().activeEntities[0].clone();
 
-                    reference.prop('token').setEntity(token);
+                    reference.prop('tokenImagePath').setString(token.prop('imagePath').getString());
+                    reference.prop('tokenWidth').setLong(token.prop('width').getLong());
+                    reference.prop('tokenHeight').setLong(token.prop('height').getLong());
                     reference.performUpdate();
                 }
             }
@@ -385,6 +391,23 @@ Events.on('entityMenu', event => {
         });
     }
 }, true, 100);
+
+
+// Edit Windows
+//TODO: replace with truly custom implementation
+Events.on('editWindowCreateTabs', event => {
+    if(event.data.reference.getType() != 'token') return;
+
+    const actorEditorList = new EditorList(event.data.reference);
+    event.data.window.tabs.push(actorEditorList);
+
+    const actorTab = document.createElement('div');
+    actorTab.name = 'Actor';
+    const actorEditor = new ActorPropertyEditor(event.data.reference);
+    actorEditorList.registerEditor(actorEditor, true);
+    actorTab.appendChild(actorEditor.getContainer());
+    event.data.window.content.appendChild(actorTab);
+});
 
 
 // Settings

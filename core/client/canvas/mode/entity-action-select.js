@@ -14,6 +14,7 @@ import { Client } from '../../app.js';
 
 import { Access, Type } from '../../../common/constants.js';
 import { EntityReference } from '../../../common/entity/entity-reference.js';
+import { TokenUtil } from '../../../common/util/tokenutil.js';
 
 class EntityActionSelectGizmo {
     constructor(widthMult, heightMult, xOffset, yOffset, renderSquare, onPress, requiredProperties) {
@@ -110,49 +111,50 @@ export class EntityActionSelect extends EntityAction {
         this.mode.renderActiveEntities(ctx, false, true);
         
         if(this.mode.activeEntities.length == 1) {
-            var reference = this.mode.activeEntities[0];
+            const reference = this.mode.activeEntities[0];
             
             // render token info when a single one is selected -> moves bars above wall occulsion when selected
             if(this.mode.entityType == 'token') {
                 TokenRenderer.renderTokenInfo(ctx, reference, ServerData.localProfile, reference.prop('x').getLong(), reference.prop('y').getLong());
-            }
 
-            // draw property boxes
-            if(reference.prop('editBoxes') != null && reference.prop('editBoxes') != undefined) {
-                var bounds = EntityUtils.getAABB(reference);
+                // draw property boxes
+                const bounds = EntityUtils.getAABB(reference);
+                const actor = TokenUtil.getActor(reference);
                 
-                var propertiesForBoxes = reference.prop('editBoxes').getString().split(',');
-                var index = 0;
-                for(var propertyForBox of propertiesForBoxes) {
-                    var property = propertyForBox;
-                    var label = '';
-                    if(propertyForBox.includes(':')) {
-                        property = propertyForBox.substring(0, propertyForBox.indexOf(':'));
-                        label = propertyForBox.substring(propertyForBox.indexOf(':')+1);
-                    }
-                    
-                    if(index >= EntityActionSelectPropertyBoxes.length) break;
-                    if(reference.prop(property) != null && reference.prop(property) != undefined && reference.prop(property).getType() == Type.LONG) {
-                        var propertyBox = EntityActionSelectPropertyBoxes[index++];
+                if(actor) {
+                    const propertiesForBoxes = reference.prop('editBoxes').getString().split(',');
+                    var index = 0;
+                    for(const propertyForBox of propertiesForBoxes) {
+                        var property = propertyForBox;
+                        var label = '';
+                        if(propertyForBox.includes(':')) {
+                            property = propertyForBox.substring(0, propertyForBox.indexOf(':'));
+                            label = propertyForBox.substring(propertyForBox.indexOf(':')+1);
+                        }
                         
-                        var x = Math.trunc(bounds.x + bounds.width / 2 + bounds.width * propertyBox.widthMult + propertyBox.xOffset);
-						var y = Math.trunc(bounds.y + bounds.height / 2 + bounds.height * propertyBox.heightMult + propertyBox.yOffset);
-						var w = propertyBox.getWidth();
-						var h = propertyBox.getHeight();
-                        
-                        ctx.fillStyle = 'rgba(0, 0, 0, 0.59)';
-                        ctx.font = '12px arial';
-                        ctx.fillRect(x, y, w, h);
-                        ctx.fillStyle = 'white';
-                        
-                        //TODO: remove hardcoded icons and replace with user selectable symbol(s)
-						if(property == 'modAttack') { var img = ImageService.getInternalImage('/core/files/img/icon/attack.png'); if(img != null) ctx.drawImage(img, x+1, y+1, 14, 14); }
-                        if(property == 'modDamage') { var img = ImageService.getInternalImage('/core/files/img/icon/damage.png'); if(img != null) ctx.drawImage(img, x+1, y+1, 14, 14); }
-						ctx.fillText(label, x+4, y+12);
-						
-						var value = reference.prop(property).getLong();
-						var valueString = value >= 0 ? '+'+value : ''+value;
-						ctx.fillText(valueString, x+w-ctx.measureText(valueString).width-4, y+12);
+                        if(index >= EntityActionSelectPropertyBoxes.length) break;
+                        if(actor.prop(property) && actor.prop(property).getType() == Type.LONG) {
+                            const propertyBox = EntityActionSelectPropertyBoxes[index++];
+                            
+                            const x = Math.trunc(bounds.x + bounds.width / 2 + bounds.width * propertyBox.widthMult + propertyBox.xOffset);
+                            const y = Math.trunc(bounds.y + bounds.height / 2 + bounds.height * propertyBox.heightMult + propertyBox.yOffset);
+                            const w = propertyBox.getWidth();
+                            const h = propertyBox.getHeight();
+                            
+                            ctx.fillStyle = 'rgba(0, 0, 0, 0.59)';
+                            ctx.font = '12px arial';
+                            ctx.fillRect(x, y, w, h);
+                            ctx.fillStyle = 'white';
+                            
+                            //TODO: remove hardcoded icons and replace with user selectable symbol(s)
+                            if(property == 'modAttack') { var img = ImageService.getInternalImage('/core/files/img/icon/attack.png'); if(img != null) ctx.drawImage(img, x+1, y+1, 14, 14); }
+                            if(property == 'modDamage') { var img = ImageService.getInternalImage('/core/files/img/icon/damage.png'); if(img != null) ctx.drawImage(img, x+1, y+1, 14, 14); }
+                            ctx.fillText(label, x+4, y+12);
+                            
+                            const value = actor.prop(property).getLong();
+                            const valueString = value >= 0 ? '+'+value : ''+value;
+                            ctx.fillText(valueString, x+w-ctx.measureText(valueString).width-4, y+12);
+                        }
                     }
                 }
             }
@@ -214,29 +216,32 @@ export class EntityActionSelect extends EntityAction {
                     }
                     
                     // property boxes
-                    if(reference.prop('editBoxes') != null && reference.prop('editBoxes') != undefined) {
-                        var bounds = EntityUtils.getAABB(reference);
+                    if(this.mode.entityType == 'token') {
+                        const bounds = EntityUtils.getAABB(reference);
+                        const actor = TokenUtil.getActor(reference);
                         
-                        var propertiesForBoxes = reference.prop('editBoxes').getString().split(',');
-                        var index = 0;
-                        for(var propertyForBox of propertiesForBoxes) {
-                            var property = propertyForBox;
-                            if(propertyForBox.includes(':')) {
-                                property = propertyForBox.substring(0, propertyForBox.indexOf(':'));
-                            }
-                            
-                            if(index >= EntityActionSelectPropertyBoxes.length) break;
-                            if(reference.prop(property) != null && reference.prop(property) != undefined && reference.prop(property).getType() == Type.LONG) {
-                                var propertyBox = EntityActionSelectPropertyBoxes[index++];
+                        if(actor) {
+                            const propertiesForBoxes = reference.prop('editBoxes').getString().split(',');
+                            var index = 0;
+                            for(const propertyForBox of propertiesForBoxes) {
+                                var property = propertyForBox;
+                                if(propertyForBox.includes(':')) {
+                                    property = propertyForBox.substring(0, propertyForBox.indexOf(':'));
+                                }
                                 
-                                var x = Math.trunc(bounds.x + bounds.width / 2 + bounds.width * propertyBox.widthMult + propertyBox.xOffset);
-                                var y = Math.trunc(bounds.y + bounds.height / 2 + bounds.height * propertyBox.heightMult + propertyBox.yOffset);
-                                var w = propertyBox.getWidth();
-                                var h = propertyBox.getHeight();
-                                
-                                if(x <= e.xm && e.xm <= x + w && y <= e.ym && e.ym <= y + h) {
-                                    this.openLongPropertySetDialog(reference, property, false, 'Change '+property, 'Set '+property+':');
-                                    return;
+                                if(index >= EntityActionSelectPropertyBoxes.length) break;
+                                if(actor.prop(property) && actor.prop(property).getType() == Type.LONG) {
+                                    const propertyBox = EntityActionSelectPropertyBoxes[index++];
+                                    
+                                    const x = Math.trunc(bounds.x + bounds.width / 2 + bounds.width * propertyBox.widthMult + propertyBox.xOffset);
+                                    const y = Math.trunc(bounds.y + bounds.height / 2 + bounds.height * propertyBox.heightMult + propertyBox.yOffset);
+                                    const w = propertyBox.getWidth();
+                                    const h = propertyBox.getHeight();
+                                    
+                                    if(x <= e.xm && e.xm <= x + w && y <= e.ym && e.ym <= y + h) {
+                                        this.openLongPropertySetDialog(new EntityReference(actor), property, false, 'Change '+property, 'Set '+property+':');
+                                        return;
+                                    }
                                 }
                             }
                         }
@@ -297,13 +302,17 @@ export class EntityActionSelect extends EntityAction {
                             var ty = token.prop('y').getLong();
                             
                             for(var i=1; i<=3; i++) {
-                                if(token.prop('bar'+i+'Current').canEdit(accessLevel) && TokenRenderer.isBarVisible(token, viewer, i)) {
-                                    var bx = tx + TokenRenderer.getBarX(token, bounds, viewer, i);
-                                    var by = ty + TokenRenderer.getBarY(token, bounds, viewer, i);
-                                    
-                                    if(bx <= e.xm && e.xm <= bx + TokenRenderer.getBarWidth(token, bounds, viewer) && by <= e.ym && e.ym <= by + TokenRenderer.getBarHeight(token, bounds, viewer)) {
-                                        this.openLongPropertySetDialog(new EntityReference(token), 'bar'+i+'Current', true, 'Change Bar Value', 'Set Bar '+i+' value:');
-                                        return;
+                                if(TokenUtil.isBarVisible(token, viewer, i)) {
+                                    const prop = TokenUtil.getBarCurrentProp(token, i);
+
+                                    if(prop.canEdit(accessLevel)) {
+                                        var bx = tx + TokenRenderer.getBarX(token, bounds, viewer, i);
+                                        var by = ty + TokenRenderer.getBarY(token, bounds, viewer, i);
+                                        
+                                        if(bx <= e.xm && e.xm <= bx + TokenRenderer.getBarWidth(token, bounds, viewer) && by <= e.ym && e.ym <= by + TokenRenderer.getBarHeight(token, bounds, viewer)) {
+                                            this.openLongPropertySetDialog(new EntityReference(TokenUtil.getActor(token)), prop.getName(), true, 'Change Bar Value', 'Set Bar '+i+' value:');
+                                            return;
+                                        }
                                     }
                                 }
                             }

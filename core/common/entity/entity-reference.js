@@ -32,6 +32,10 @@ export class EntityReference extends Entity {
         return this.backingEntity.getType();
     }
 
+    getManager() {
+        return this.backingEntity.getManager();
+    }
+
     addDefaultProperties() {
     }
     updatePropertyReferences() {
@@ -94,8 +98,8 @@ export class EntityReference extends Entity {
     addListener(listener) {
         // register with entitymanager
         if(this.listeners.length == 0) {
-            EntityManagers.get(this.getType()).addEntityListener(this.entityListener);
-            EntityManagers.get(this.getType()).addRemovalListener(this.removalListener);
+            EntityManagers.get(this.getManager()).addEntityListener(this.entityListener);
+            EntityManagers.get(this.getManager()).addRemovalListener(this.removalListener);
         }
 
         this.listeners.push(listener);
@@ -107,8 +111,8 @@ export class EntityReference extends Entity {
 
         // unregister with entitymanager
         if(this.listeners.length == 0) {
-            EntityManagers.get(this.getType()).removeEntityListener(this.entityListener);
-            EntityManagers.get(this.getType()).removeRemovalListener(this.removalListener);
+            EntityManagers.get(this.getManager()).removeEntityListener(this.entityListener);
+            EntityManagers.get(this.getManager()).removeRemovalListener(this.removalListener);
         }
     }
 
@@ -128,7 +132,7 @@ export class EntityReference extends Entity {
 		// update properties (and clear changes)
         this.wrappedProperties = {};
         if(hasChanged) {
-            EntityManagers.get(this.getType()).updateProperties(this.getID(), changedProperties, Access.SYSTEM);
+            EntityManagers.get(this.getManager()).updateProperties(this.getID(), changedProperties, Access.SYSTEM);
         }
     }
 

@@ -10,7 +10,7 @@ export class DoublePropertyEditor extends PropertyEditor {
         this.spinner = document.createElement('input');
         this.spinner.type = 'number';
         this.container.appendChild(this.spinner);
-        this.addLabel(label);
+        if(label) this.addLabel(label);
         
         this.spinner.onchange = () => this.onChange();
         

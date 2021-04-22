@@ -2,6 +2,7 @@ import { Client } from '../../../core/client/app.js';
 import { TokenRenderer } from '../../../core/client/renderer/token-renderer.js';
 import { ServerData } from '../../../core/client/server-data.js';
 import { EntityManagers } from '../../../core/common/entity/entity-managers.js';
+import { TokenUtil } from '../../../core/common/util/tokenutil.js';
 
 export class BattleEntry {
     #tokenID = -1;
@@ -72,6 +73,7 @@ export class BattleEntry {
         }
         // get access level
         const accessLevel = token.getAccessLevel(ServerData.localProfile);
+        const actor = TokenUtil.getActor(token);
 
         // (re)load values
         this.changeValue('display', current && token.prop('battle_turnEnded').getBoolean() ? 'none' : 'flex', v => this.#containerEl.style.display = v);
@@ -85,9 +87,9 @@ export class BattleEntry {
 
         // bars
         for(var i=1; i<=3; i++) {
-            if(TokenRenderer.isBarVisible(token, ServerData.localProfile, i)) {
-                const current = token.prop('bar'+i+'Current').getLong();
-                const max = token.prop('bar'+i+'Max').getLong();
+            if(TokenUtil.isBarVisible(token, ServerData.localProfile, i)) {
+                const current = TokenUtil.getBarCurrentProp(token, i).getLong();
+                const max = TokenUtil.getBarMaxProp(token, i).getLong();
                 const percentage = Math.max(0, Math.min(current, max)) / max * 100;
 
                 this.changeValue('barWidth'+i, `${percentage}%`, v => this.#barFillers[i-1].style.width = v);
@@ -98,8 +100,8 @@ export class BattleEntry {
 
         // name
         var name = '???';
-        if(token.prop('name').canView(accessLevel)) {
-            name = token.prop('name').getString();
+        if(actor && actor.prop('name').canView(accessLevel)) {
+            name = actor.prop('name').getString();
         }
         this.changeValue('name', name, v => this.#nameEl.innerText = v);
     }

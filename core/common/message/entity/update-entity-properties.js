@@ -2,19 +2,19 @@ import { Message } from '../message.js';
 import { registerType } from '../../util/datautil.js';
 
 export class UpdateEntityProperties extends Message {
-    type;
+    manager;
     id;
     properties;
 
-    constructor(type, id, properties) {
+    constructor(manager, id, properties) {
         super();
-        this.type = type;
+        this.manager = manager;
         this.id = id;
         this.properties = properties;
     }
 
-    getType() {
-        return this.type;
+    getManager() {
+        return this.manager;
     }
 
     getID() {

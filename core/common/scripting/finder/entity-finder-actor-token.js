@@ -1,19 +1,18 @@
-import { EntityManagers } from '../../entity/entity-managers.js';
+import { TokenUtil } from '../../util/tokenutil.js';
 import { EntityFinder } from './entity-finder.js'
 
 export class EntityFinderActorToken extends EntityFinder {
-    tokenFinder;
+    #tokenFinder;
 
     constructor(tokenFinder) {
         super();
 
-        this.tokenFinder = tokenFinder;
+        this.#tokenFinder = tokenFinder;
     }
 
     findEntity(context) {
-        const actorID = this.tokenFinder.findEntity(context).prop('actorID').getLong();
-        const actor = EntityManagers.get('actor').find(actorID);
-        if(!actor) throw new Error('Token has no assigne actor');
+        const actor = TokenUtil.getActor(this.#tokenFinder.findEntity(context));
+        if(!actor) throw new Error('Token has no assigned actor');
         return actor;
     }
 }

@@ -31,17 +31,22 @@ function importEntities(directory, overwriteExisting, nameBased, type, modifier)
 
             const originalID = entityToImport.getID();
 
+            // check for existing entity
+            var existingEntity = entityMap[entityToImport.getName()];
+            if(!existingEntity && entityToImport.prop('path') && entityMap[entityToImport.prop('path').getString() + entityToImport.getName()]) {
+                existingEntity = entityMap[entityToImport.prop('path').getString() + entityToImport.getName()];
+            }
+
             // import entity
             var importedEntity = null;
-            if(nameBased && entityMap[entityToImport.getName()]) {
+            if(nameBased && existingEntity) {
                 if(overwriteExisting) {
-                    const oldEntity = entityMap[entityToImport.getName()];
-                    entityToImport.transferIDFrom(oldEntity);
+                    entityToImport.transferIDFrom(existingEntity);
                     modifier(originalID, entityToImport);
                     entityManager.add(entityToImport);
                     importedEntity = entityToImport;
                 } else {
-                    importedEntity = entityMap[entityToImport.getName()];
+                    importedEntity = existingEntity;
                 }
             } else {
                 entityToImport.resetID();
@@ -77,13 +82,6 @@ export function importData(directory, overwriteExisting) {
         var attachmentIDs = actor.prop('attachments').getLongList();
         for(var i=0; i<attachmentIDs.length; i++) attachmentIDs[i] = Number(attachmentIDMap[String(attachmentIDs[i])]);
         actor.prop('attachments').setLongList(attachmentIDs);
-
-        // adjust token
-        const token = actor.prop('token').getEntity();
-        if(token) {
-            token.prop('actorID').setLong(actor.getID());
-            actor.prop('token').setEntity(token);
-        }
     });
 
     console.log('Import done');

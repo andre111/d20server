@@ -6,10 +6,12 @@ import { Access, Type, Role } from '../constants.js';
 import { getDefinitions } from '../definitions.js';
 import { ParserInstance } from '../scripting/expression/parser.js';
 import { Context } from '../scripting/context.js';
+import { TokenUtil } from '../util/tokenutil.js';
 
 export class Entity {
     type;
     id;
+    manager;
     properties = {};
 
     _transient_updating = false;
@@ -31,6 +33,14 @@ export class Entity {
         this.updatePropertyReferences();
     }
 
+    onAdd() {
+        this.createContainedEntityManagers();
+    }
+
+    onRemove() {
+        this.removeContainedEntityManagers();
+    }
+
     getID() {
         if(this.id == null || this.id == undefined) this.id = ID.next();
         return this.id;
@@ -46,6 +56,11 @@ export class Entity {
 
     getType() {
         return this.type;
+    }
+
+    getManager() {
+        if(this.manager) return this.manager;
+        else return this.type;
     }
 
     // DEFINITIONS
@@ -129,6 +144,22 @@ export class Entity {
             const property = this.properties[name];
             property.setHolder(this);
             property.setName(name);
+        }
+    }
+
+    getContainedEntityManagerName(containedEntityType) {
+        return this.getType()+'/'+this.getID()+'-'+containedEntityType;
+    }
+
+    createContainedEntityManagers() {
+        for(const containedEntityType of this.getDefinition().settings.containedEntities) {
+            EntityManagers.getOrCreate(this.getContainedEntityManagerName(containedEntityType), containedEntityType);
+        }
+    }
+
+    removeContainedEntityManagers() {
+        for(const containedEntityType of this.getDefinition().settings.containedEntities) {
+            EntityManagers.delete(this.getContainedEntityManagerName(containedEntityType));
         }
     }
 
@@ -298,6 +329,9 @@ export class Entity {
             default:
                 return [];
             }
+        //TODO: remove this wierd stuff, maybe just move away from data driven again and just use code
+        case 'TOKEN':
+            return TokenUtil.getControllingPlayers(this);
         }
     }
 

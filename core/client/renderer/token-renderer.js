@@ -1,6 +1,7 @@
 import { Events } from '../../common/events.js';
 import { EntityUtils } from '../util/entityutil.js';
 import { ImageService } from '../service/image-service.js';
+import { TokenUtil } from '../../common/util/tokenutil.js';
 
 export const TokenRenderer = {
     renderTokens: function(ctx, tokens, viewer, highlightToken, grayscale = false, renderInfo = true) {
@@ -50,62 +51,54 @@ export const TokenRenderer = {
         ctx.translate(x, y);
         ctx.lineWidth = 1;
         
-        var accessLevel = token.getAccessLevel(viewer);
-        var bounds = EntityUtils.getAABB(token);
+        const accessLevel = token.getAccessLevel(viewer);
+        const bounds = EntityUtils.getAABB(token);
+        const actor = TokenUtil.getActor(token);
         
         // nameplate
-        if(token.prop('displayNameplate').getBoolean()) {
-            const nameProp = token.prop('name');
-            if(nameProp.canView(accessLevel) && nameProp.getString() != '') {
-                const name = nameProp.getString();
-                const nameMeasure = ctx.measureText(name);
+        const nameProp = actor ? actor.prop('name') : null;
+        if(nameProp && nameProp.canView(accessLevel) && nameProp.getString() != '') {
+            const name = nameProp.getString();
+            const nameMeasure = ctx.measureText(name);
 
-                const nameW = nameMeasure.width + 4;
-                const nameH = nameMeasure.actualBoundingBoxAscent + nameMeasure.actualBoundingBoxDescent + 4;
-                const nameX = -nameW/2;
-                const nameY = bounds.height/2 - 4;
-                
-                ctx.fillStyle = 'rgba(255, 255, 255, 0.39)';
-                ctx.fillRect(nameX, nameY, nameW, nameH);
-                ctx.fillStyle = 'black';
-                ctx.fillText(name, nameX + 2, nameY + 2 + nameMeasure.actualBoundingBoxAscent);
-            }
+            const nameW = nameMeasure.width + 4;
+            const nameH = nameMeasure.actualBoundingBoxAscent + nameMeasure.actualBoundingBoxDescent + 4;
+            const nameX = -nameW/2;
+            const nameY = bounds.height/2 - 4;
+            
+            ctx.fillStyle = 'rgba(255, 255, 255, 0.39)';
+            ctx.fillRect(nameX, nameY, nameW, nameH);
+            ctx.fillStyle = 'black';
+            ctx.fillText(name, nameX + 2, nameY + 2 + nameMeasure.actualBoundingBoxAscent);
         }
         
         // bars
-        var barW = TokenRenderer.getBarWidth(token, bounds, viewer);
-        var barH = TokenRenderer.getBarHeight(token, bounds, viewer);
+        const barW = TokenRenderer.getBarWidth(token, bounds, viewer);
+        const barH = TokenRenderer.getBarHeight(token, bounds, viewer);
         for(var i=1; i<=3; i++) {
-            if(TokenRenderer.isBarVisible(token, viewer, i)) {
-                var current = token.prop('bar'+i+'Current').getLong();
-                var max = token.prop('bar'+i+'Max').getLong();
+            if(TokenUtil.isBarVisible(token, viewer, i)) {
+                const current = TokenUtil.getBarCurrentProp(token, i).getLong();
+                const max = TokenUtil.getBarMaxProp(token, i).getLong();
                 
-                var barX = TokenRenderer.getBarX(token, bounds, viewer, i);
-                var barY = TokenRenderer.getBarY(token, bounds, viewer, i);
+                const barX = TokenRenderer.getBarX(token, bounds, viewer, i);
+                const barY = TokenRenderer.getBarY(token, bounds, viewer, i);
                 
-                var currentBarW = ((barW * Math.max(0, Math.min(current, max))) / max);
+                const currentBarW = ((barW * Math.max(0, Math.min(current, max))) / max);
                 
                 ctx.fillStyle = TokenRenderer.BAR_COLORS[i-1];
 				ctx.fillRect(barX, barY, currentBarW, barH);
 				ctx.strokeStyle = 'black';
 				ctx.strokeRect(barX, barY, barW, barH);
                 
-                var barStr = current + '/' + max;
-                var strX = -ctx.measureText(barStr).width/2;
-                var strY = barY + 11;
+                const barStr = current + '/' + max;
+                const strX = -ctx.measureText(barStr).width/2;
+                const strY = barY + 11;
                 ctx.fillStyle = 'black';
                 ctx.fillText(barStr, strX, strY);
             }
         }
         
         ctx.restore();
-    },
-    
-    isBarVisible: function(token, viewer, number) {
-        var accessLevel = token.getAccessLevel(viewer);
-        var currentProp = token.prop('bar'+number+'Current');
-        var maxProp = token.prop('bar'+number+'Max');
-        return currentProp.canView(accessLevel) && maxProp.canView(accessLevel) && maxProp.getLong() != 0;
     },
     
     getBarWidth: function(token, bounds, viewer) {
@@ -125,14 +118,14 @@ export const TokenRenderer = {
         // count visible bars
         var visibleBars = 0;
         for(var i=1; i<=3; i++) {
-            if(TokenRenderer.isBarVisible(token, viewer, i)) visibleBars++;
+            if(TokenUtil.isBarVisible(token, viewer, i)) visibleBars++;
         }
         
         // calculate (relative) var location
         var barH = TokenRenderer.getBarHeight(token, bounds, viewer);
         var barY = -bounds.height/2 - barH * (visibleBars+1) + 4;
         for(var i=1; i<=number; i++) {
-            if(TokenRenderer.isBarVisible(token, viewer, i)) barY += barH;
+            if(TokenUtil.isBarVisible(token, viewer, i)) barY += barH;
         }
         return barY;
     },

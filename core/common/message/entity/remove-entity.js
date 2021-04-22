@@ -2,17 +2,17 @@ import { Message } from '../message.js';
 import { registerType } from '../../util/datautil.js';
 
 export class RemoveEntity extends Message {
-    type;
+    manager;
     id;
 
-    constructor(type, id) {
+    constructor(manager, id) {
         super();
-        this.type = type;
+        this.manager = manager;
         this.id = id;
     }
 
-    getType() {
-        return this.type;
+    getManager() {
+        return this.manager;
     }
 
     getID() {

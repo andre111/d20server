@@ -189,10 +189,10 @@ ModuleService.init().then(() => {
 
             // create entity
             const monsterActor = new Entity('actor');
-            monsterActor.prop('name').setString(`Monster/HG ${hgString}/${name.replace(/\//g, '\\')}`);
 
             // apply properties
-            monsterActor.prop('pf_characterName').setString(name);
+            monsterActor.prop('name').setString(name);
+            monsterActor.prop('path').setString(`Monster/HG ${hgString}/`);
             monsterActor.prop('pf_alignment').setString(entry['Gesinnung']);
             monsterActor.prop('pf_class').setString(entry['Art']['Klasse']);
             monsterActor.prop('pf_race').setString(getStringWithNotes(entry['Art']['Art'], entry['Art']['Unterart'], true));
@@ -204,6 +204,9 @@ ModuleService.init().then(() => {
             monsterActor.prop('pf_wis').setLong(entry['Attribute']['Weisheit']);
             monsterActor.prop('pf_cha').setLong(entry['Attribute']['Charisma']);
             
+            monsterActor.prop('pf_hp').setLong(entry['TP']['Wert']);
+            monsterActor.prop('pf_hpMax').setLong(entry['TP']['Wert']);
+
             monsterActor.prop('pf_baseAttackBonus').setLong(entry['GAB']);
 
             const currentInit = monsterActor.prop('pf_initMod').getLong();
@@ -359,7 +362,7 @@ ModuleService.init().then(() => {
                                 const critRange = attack['KritischWert'] < 20 ? `cs>=${attack['KritischWert']}` : '';
                                 const modCount = attack['Modifikatoren'].length;
                                 for(var m=0; m<modCount; m++) {
-                                    macro += `/template attack21 ${attack['Name']};${(attack['Berührung'] ? 'Berührung' : '')+(modCount > 1 ? ` ${m+1}. Angriff ` : '')};Angriff;1d20${critRange}+${attack['Modifikatoren'][m]}+{selected.property.modAttack};Schaden;${attack['Formel']}+{selected.property.modDamage};${attack['SchadenUndEffekte']}\n`;
+                                    macro += `/template attack21 ${attack['Name']};${(attack['Berührung'] ? 'Berührung' : '')+(modCount > 1 ? ` ${m+1}. Angriff ` : '')};Angriff;1d20${critRange}+${attack['Modifikatoren'][m]}+{selected.actor.property.modAttack};Schaden;${attack['Formel']}+{selected.actor.property.modDamage};${attack['SchadenUndEffekte']}\n`;
                                 }
                             }
 
@@ -381,27 +384,20 @@ ModuleService.init().then(() => {
             if(imagePath != 'tokens/unknown.png') monsterWithIcon++;
             if(imagePath) imagePath = '/image/'+imagePath;
 
-            if(imagePath) monsterActor.prop('imagePath').setString(imagePath);
-
-            // create default token
-            const monsterToken = new Entity('token');
-            {
-                monsterToken.prop('name').setString(name);
-                if(imagePath) monsterToken.prop('imagePath').setString(imagePath);
-                monsterToken.prop('bar1Current').setLong(entry['TP']['Wert']);
-                monsterToken.prop('bar1Max').setLong(entry['TP']['Wert']);
-                monsterToken.prop('actorID').setLong(monsterActor.getID());
-
-                var sizeMult = 1;
-                if(acSizeMod>=1) sizeMult = 0.5;
-                if(acSizeMod<=-1) sizeMult = 2;
-                if(acSizeMod<=-2) sizeMult = 3;
-                if(acSizeMod<=-4) sizeMult = 4;
-                if(acSizeMod<=-8) sizeMult = 5;
-                monsterToken.prop('width').setLong(monsterToken.prop('width').getLong() * sizeMult);
-                monsterToken.prop('height').setLong(monsterToken.prop('height').getLong() * sizeMult);
+            if(imagePath) {
+                monsterActor.prop('imagePath').setString(imagePath);
+                monsterActor.prop('tokenImagePath').setString(imagePath);
             }
-            monsterActor.prop('token').setEntity(monsterToken);
+
+            // token size
+            var sizeMult = 1;
+            if(acSizeMod>=1) sizeMult = 0.5;
+            if(acSizeMod<=-1) sizeMult = 2;
+            if(acSizeMod<=-2) sizeMult = 3;
+            if(acSizeMod<=-4) sizeMult = 4;
+            if(acSizeMod<=-8) sizeMult = 5;
+            monsterActor.prop('tokenWidth').setLong(monsterActor.prop('tokenWidth').getLong() * sizeMult);
+            monsterActor.prop('tokenHeight').setLong(monsterActor.prop('tokenHeight').getLong() * sizeMult);
 
             //TODO: verify calculated values match expected results: ac, acTouch, acFlatFooted, cmb, cmd
             //TODO: specifically cmb and cmd seem like they cannot simply be calculated correctly in all cases

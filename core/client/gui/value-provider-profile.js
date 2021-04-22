@@ -3,8 +3,12 @@ import { ServerData } from '../server-data.js';
 import { RenderUtils } from '../util/renderutil.js';
 
 export class ValueProviderProfile extends ValueProvider {
-    constructor() {
+    #includeStatus;
+
+    constructor(includeStatus) {
         super();
+
+        this.#includeStatus = includeStatus;
     }
     
     getData() {
@@ -23,7 +27,11 @@ export class ValueProviderProfile extends ValueProvider {
     getName(value) {
         if(value == null || value == undefined) return '';
         
-        return value.isConnected() ? 'Online/'+value.getUsername() : 'Offline/'+value.getUsername();
+        if(this.#includeStatus) {
+            return value.isConnected() ? 'Online/'+value.getUsername() : 'Offline/'+value.getUsername();
+        } else {
+            return value.getUsername();
+        }
     }
     
     getIcon(value) {

@@ -4,14 +4,13 @@ import { AddEntity, RemoveEntity, UpdateEntityProperties } from '../../common/me
 import { MessageService } from '../service/message-service.js';
 
 export class ClientEntityManager extends EntityManager {
-    type;
     entities;
 
-    constructor(type, entityDefinition) {
-        super();
+    constructor(name, type, entityDefinition, cb) {
+        super(name, type);
 
-        this.type = type;
         this.entities = {};
+        if(cb) cb();
     }
 
     find(id) {
@@ -34,19 +33,19 @@ export class ClientEntityManager extends EntityManager {
     add(entity) { 
         if(!entity) return;
         if(!(entity instanceof Entity)) throw new Error('Object is no entity');
-        if(entity.getType() !== this.type) throw new Error('Entity is of wrong type');
+        if(entity.getType() !== this.getType()) throw new Error('Entity is of wrong type');
 
         const msg = new AddEntity(entity);
         MessageService.send(msg);
     }
 
     remove(id) { 
-        const msg = new RemoveEntity(this.type, id);
+        const msg = new RemoveEntity(this.getName(), id);
         MessageService.send(msg);
     }
 
     updateProperties(id, map, accessLevel) { 
-        const msg = new UpdateEntityProperties(this.type, id, map);
+        const msg = new UpdateEntityProperties(this.getName(), id, map);
         MessageService.send(msg);
     }
 

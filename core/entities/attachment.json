@@ -16,7 +16,8 @@
         "editAccess": {
             "mode": "SET",
             "value": "EVERYONE"
-        }
+        },
+        "containedEntities": []
     },
     "properties": [
         {
@@ -105,7 +106,7 @@
                     "property": "descFull",
                     "text": "Full Description",
                     "w": 790,
-                    "h": 300
+                    "h": 260
                 }
             ]
         }

@@ -2,15 +2,15 @@ import { Message } from '../message.js';
 import { registerType } from '../../util/datautil.js';
 
 export class ClearEntities extends Message {
-    type;
+    manager;
 
-    constructor(type) {
+    constructor(manager) {
         super();
-        this.type = type;
+        this.manager = manager;
     }
 
-    getType() {
-        return this.type;
+    getManager() {
+        return this.manager;
     }
 }
 registerType(ClearEntities);

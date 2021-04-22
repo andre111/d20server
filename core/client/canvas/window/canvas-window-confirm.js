@@ -14,7 +14,7 @@ export class CanvasWindowConfirm extends CanvasWindow {
         this.addButton('No', () => {
             this.close();
         });
-        this.setDimensions(300, 100);
+        this.setDimensions(300, 200);
         this.center();
     }
 }

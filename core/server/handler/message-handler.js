@@ -3,12 +3,13 @@ import { MessageService } from '../service/message-service.js';
 import { UserService } from '../service/user-service.js';
 
 import { EntityManagers } from '../../common/entity/entity-managers.js';
-import { ActionCommand, AddEntity, EntityLoading, MovePlayerToMap, Ping, PlayEffect, PlayerList, RemoveEntity, RequestAccounts, ResponseFail, ResponseOk, SelectedEntities, SendChatMessage, SendNotification, SetPlayerColor, SignIn, SignOut, ToggleModule, UpdateEntityProperties } from '../../common/messages.js';
+import { ActionCommand, AddEntity, EntityLoading, MakeActorLocal, MovePlayerToMap, Ping, PlayEffect, PlayerList, RemoveEntity, RequestAccounts, ResponseFail, ResponseOk, SelectedEntities, SendChatMessage, SendNotification, SetPlayerColor, SignIn, SignOut, ToggleModule, UpdateEntityProperties } from '../../common/messages.js';
 import { Role } from '../../common/constants.js';
 import { GameService } from '../service/game-service.js';
 import { VERSION } from '../version.js';
 import { Events } from '../../common/events.js';
 import { ModuleService } from '../service/module-service.js';
+import { EntityReference } from '../../common/entity/entity-reference.js';
 
 function _handleRequestAccounts(ws, message) {
     MessageService._send(new PlayerList(UserService.getAllProfiles()), ws);
@@ -107,7 +108,7 @@ function _handleSetPlayerColor(profile, message) {
 
 function _handleAddEntity(profile, message) {
     // search for manager, check access and reset id before adding if valid request
-    const manager = EntityManagers.get(message.getType());
+    const manager = EntityManagers.get(message.getEntity().getManager());
     if(manager) {
         const entity = message.getEntity();
         if(manager.canAddRemove(profile, entity)) {
@@ -119,7 +120,7 @@ function _handleAddEntity(profile, message) {
 
 function _handleRemoveEntity(profile, message) {
     // search for entity, check access and delete if valid request
-    const manager = EntityManagers.get(message.getType());
+    const manager = EntityManagers.get(message.getManager());
     if(manager) {
         const entity = manager.find(message.getID());
         if(entity && entity.canEdit(profile) && manager.canAddRemove(profile, entity)) {
@@ -130,12 +131,41 @@ function _handleRemoveEntity(profile, message) {
 
 function _handleUpdateEntityProperties(profile, message) {
     // search for entity, check access and update if valid request
-    const manager = EntityManagers.get(message.getType());
+    const manager = EntityManagers.get(message.getManager());
     if(manager) {
         const entity = manager.find(message.getID());
         if(entity && entity.canEdit(profile)) {
             manager.updateProperties(entity.getID(), message.getProperties(), entity.getAccessLevel(profile));
         }
+    }
+}
+
+function _handleMakeActorLocal(profile, message) {
+    // only allow gms
+    if(profile.getRole() != Role.GM) return;
+
+    // find token
+    const manager = EntityManagers.get(message.getManager());
+    if(manager) {
+        const token = manager.find(message.getTokenID());
+        if(token.getType() != 'token') return;
+
+        // find actor
+        if(token.prop('actorLocal').getBoolean()) return;
+        const actor = EntityManagers.get('actor').find(token.prop('actorID').getLong());
+        if(!actor) return;
+
+        // store actor locally
+        const localManager = EntityManagers.get(token.getContainedEntityManagerName('actor'));
+        const clonedActor = actor.clone();
+        clonedActor.id = 0;
+        localManager.add(clonedActor);
+
+        // update flag
+        const reference = new EntityReference(token);
+        reference.prop('actorID').setLong(0);
+        reference.prop('actorLocal').setBoolean(true);
+        reference.performUpdate();
     }
 }
 
@@ -196,6 +226,8 @@ export class MessageHandler {
             _handleRemoveEntity(profile, message);
         } else if(message instanceof UpdateEntityProperties) {
             _handleUpdateEntityProperties(profile, message);
+        } else if(message instanceof MakeActorLocal) {
+            _handleMakeActorLocal(profile, message);
         } else if(message instanceof SendChatMessage) {
             _handleSendChatMessage(profile, message);
         } else if(message instanceof Ping) {

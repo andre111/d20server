@@ -6,6 +6,7 @@ import { ServerData } from '../../server-data.js';
 import { Access } from '../../../common/constants.js';
 import { EntityReference } from '../../../common/entity/entity-reference.js';
 import { Events } from '../../../common/events.js';
+import { CanvasWindowEditEntityTabProperties } from './canvas-window-edit-entity-tab-properties.js';
 
 export class CanvasWindowEditEntity extends CanvasWindow {
     constructor(reference) {
@@ -33,6 +34,8 @@ export class CanvasWindowEditEntity extends CanvasWindow {
     }
     
     initTabs() {
+        this.tabs = [];
+        
         const event = Events.trigger('editWindowCreateTabs', { window: this, reference: this.reference }, true);
 
         // build default data driven tab layout
@@ -42,7 +45,6 @@ export class CanvasWindowEditEntity extends CanvasWindow {
             container.style.paddingTop = '5px';
             
             // create tabs
-            this.tabs = [];
             const accessLevel = this.getAccessLevel();
             for(const tabDefinition of this.reference.getDefinition().editorTabs) {
                 if(Access.matches(tabDefinition.access, accessLevel)) {
@@ -56,6 +58,12 @@ export class CanvasWindowEditEntity extends CanvasWindow {
                     }
                 }
             }
+
+            // cerate special tab for listing all properties
+            var propDefinitions = [];
+            for(const propDefinition of this.reference.getDefinition().properties) propDefinitions.push(propDefinition);
+            for(const extDef of this.reference.getActiveExtensions()) for(const propDefinition of extDef.properties) propDefinitions.push(propDefinition);
+            this.tabs.push(new CanvasWindowEditEntityTabProperties(this, container, propDefinitions));
             
             if(this.tabs.length > 1) Tabs.init(container);
         }
