@@ -39,9 +39,22 @@ export const rootParser = new VariableParserParent()
     );
 //TODO: in drawing module once server is on node: add a drawing variable parser parent (with id and property)
 
+export const shortcuts = [
+    ['sp', 'selected.property'],
+    ['sap', 'selected.actor.property']
+];
+
 export function parseVariable(name) {
     const context = new ParserContext();
     context.setEntityFinder('self', new EntityFinderSelf());
     context.setEntityFinder('map', new EntityFinderMap());
-    return rootParser.parse(context, name, name);
+
+    var replacedName = name;
+    for(const shortcut of shortcuts) {
+        if(replacedName.startsWith(shortcut[0])) {
+            replacedName = shortcut[1] + replacedName.substring(shortcut[0].length);
+        }
+    }
+
+    return rootParser.parse(context, name, replacedName);
 }
