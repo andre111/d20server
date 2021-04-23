@@ -3,20 +3,6 @@
     width: 700px;
     height: 800px;
 }
-.cs-container input,
-.cs-container select {
-    background: none;
-    border: none;
-    outline: none;
-}
-.cs-container input[type="number"] {
-    -moz-appearance: textfield;
-}
-.cs-container input[type="number"]::-webkit-outer-spin-button,
-.cs-container input[type="number"]::-webkit-inner-spin-button {
-    -webkit-appearance: none;
-    margin: 0;
-}
 
 /* Header */
 .cs-header {
@@ -57,33 +43,11 @@
     height: 20px;
     text-align: center;
 }
-.cs-header-row {
-    flex: 0 0 100%;
-    
-    padding: 0;
-    margin: 0;
-    list-style: none;
-}
-.cs-header-row:first-of-type {
-    border-top: var(--border-separator);
-    border-bottom: var(--border-separator);
-}
-.cs-header-row li {
-    padding: 4px;
-    border-right: var(--border-separator);
 
-    display: flex;
-    line-height: 32px;
-    font-variant: small-caps;
-}
-.cs-header-row li:last-child {
-    border-right: none;
-}
-
-.cs-header-row:nth-of-type(1) input {
+.cs-container .edit-window-header-row:nth-of-type(1) input {
     width: 120px;
 }
-.cs-header-row input[type="number"] {
+.cs-container .edit-window-header-row input[type="number"] {
     width: 32px;
     text-align: center;
 }
@@ -98,54 +62,6 @@
 }
 
 /* General Purpose Components */
-.cs-area {
-    margin: 4px;
-    border: var(--border-separator);
-    border-radius: 4px;
-    
-    list-style: none;
-    padding: 0;
-
-    overflow: auto;
-}
-.cs-value-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    
-    border-bottom: var(--border-separator);
-}
-.cs-value-container p:first-of-type {
-    width: 100%;
-    margin: 0;
-    padding-top: 5px;
-
-    text-align: center;
-    font-variant: small-caps;
-    background: rgba(0, 0, 0, 0.05);
-    border-bottom: var(--border-separator);
-    
-    user-select: none;
-}
-.cs-value-container div {
-    display: inline;
-}
-.cs-value-container input,
-.cs-value-container select {
-    margin-top: 4px;
-    
-    text-align: center;
-}
-.cs-clickable {
-    font-variant: small-caps;
-
-    cursor: pointer;
-    user-select: none;
-}
-.cs-clickable:hover {
-    text-shadow: var(--text-shadow-hover);
-}
-
 .cs-content-sidebar {
     width: 200px;
     height: 100%;
@@ -255,48 +171,13 @@
     -moz-appearance: textfield;
 }
 
-/* Biography Tab */
-.cs-biography {
-    width: calc(100% - 8px);
-    height: calc(100% - 8px);
-    display: flex;
-}
-
-/* Attachments Tab */
-.cs-attachments {
-    width: calc(100% - 8px);
-    height: calc(100% - 8px);
-    
-    padding: 5px;
-}
-.cs-attachments button {
-    width: 33.33%;
-}
-
 /* Macros Tab */
-.cs-macros {
-    width: calc(100% - 8px);
-    height: calc(100% - 8px);
-    
-    display: flex;
-}
 .cs-macros-sidebar input {
     width: 32px;
     height: 32px;
 }
-.cs-macros select,
-.cs-macros textarea {
-    background: none;
-    border: var(--border-separator);
-}
 
 /* GM Tab */
-.cs-gm {
-    width: calc(100% - 8px);
-    height: calc(100% - 8px);
-    
-    display: flex;
-}
 .cs-gm-sidebar {
     overflow: auto;
 }
@@ -325,7 +206,6 @@
     padding-left: 5px;
 
     justify-content: start;
-    font-variant: small-caps;
     line-height: 26px;
 }
 .cs-sight-editor input {

@@ -1,12 +1,13 @@
 import { PropertyEditor } from '../property-editor.js';
-import { Type } from '../../../../common/constants.js';
 import { CanvasWindowChoose } from '../../../canvas/window/canvas-window-choose.js';
-import { TokenUtil } from '../../../../common/util/tokenutil.js';
 import { ServerData } from '../../../server-data.js';
 import { CanvasWindowConfirm } from '../../../canvas/window/canvas-window-confirm.js';
 import { MessageService } from '../../../service/message-service.js';
-import { MakeActorLocal } from '../../../../common/messages.js';
 import { CanvasWindowEditEntity } from '../../../canvas/window/canvas-window-edit-entity.js';
+
+import { Type } from '../../../../common/constants.js';
+import { MakeActorLocal } from '../../../../common/messages.js';
+import { TokenUtil } from '../../../../common/util/tokenutil.js';
 import { EntityReference } from '../../../../common/entity/entity-reference.js';
 
 export class ActorPropertyEditor extends PropertyEditor {
@@ -21,7 +22,7 @@ export class ActorPropertyEditor extends PropertyEditor {
     }
     
     initContent(label) {
-        this.addLabel('representing ');
+        this.addLabel('represents ');
         this.button = document.createElement('button');
         this.button.onclick = () => this.doSelectActor();
         this.container.appendChild(this.button);

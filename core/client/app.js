@@ -51,6 +51,7 @@ import { CanvasWindowConfirm } from './canvas/window/canvas-window-confirm.js';
 import { TokenUtil } from '../common/util/tokenutil.js';
 import { EditorList } from './gui/editor-list.js';
 import { ActorPropertyEditor } from './gui/property-editor/special/actor-property-editor.js';
+import { CanvasWindowEditToken } from './canvas/window/canvas-window-edit-token.js';
 
 // Initialize common code
 Common.init(new ClientIDProvider(), ClientEntityManager);
@@ -394,20 +395,12 @@ Events.on('entityMenu', event => {
 
 
 // Edit Windows
-//TODO: replace with truly custom implementation
 Events.on('editWindowCreateTabs', event => {
-    if(event.data.reference.getType() != 'token') return;
-
-    const actorEditorList = new EditorList(event.data.reference);
-    event.data.window.tabs.push(actorEditorList);
-
-    const actorTab = document.createElement('div');
-    actorTab.name = 'Actor';
-    const actorEditor = new ActorPropertyEditor(event.data.reference);
-    actorEditorList.registerEditor(actorEditor, true);
-    actorTab.appendChild(actorEditor.getContainer());
-    event.data.window.content.appendChild(actorTab);
-});
+    if(event.data.reference.getType() !== 'token') return;
+    
+    new CanvasWindowEditToken(event.data.window, event.data.reference);
+    event.cancel();
+}, false);
 
 
 // Settings

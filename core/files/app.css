@@ -15,6 +15,7 @@ CONTENTS:
         4.7 File Manager
         4.8 Tabs
         4.9 Dialogs
+        4.10 Edit Window
     5. Library Overrides
 --------------------------------------------------------------
 */
@@ -548,6 +549,8 @@ div.chat-box-content th, div.chat-box-content td {
     
     list-style: none;
     user-select: none;
+
+    font-variant: initial;
 }
 .tree-list li {
     width: 100%;
@@ -902,6 +905,179 @@ div.chat-box-content th, div.chat-box-content td {
 
     background: rgba(0, 0, 0, 0.25);
 }
+
+
+/* 
+---------------------------------------
+    4.10 Edit Window
+---------------------------------------
+*/
+.edit-window-container {
+    font-variant: small-caps;
+    flex-wrap: nowrap;
+    user-select: none;
+}
+.edit-window-container input,
+.edit-window-container select {
+    background: none;
+    border: none;
+    outline: none;
+}
+.edit-window-container input[type="number"] {
+    -moz-appearance: textfield;
+}
+.edit-window-container input[type="number"]::-webkit-outer-spin-button,
+.edit-window-container input[type="number"]::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+.edit-window-container textarea {
+    background: none;
+    border: var(--border-separator);
+}
+
+/* Header */
+.edit-window-header {
+    flex-grow: 0;
+    flex-shrink: 0;
+    
+    border-bottom: var(--border-separator);
+}
+.edit-window-header-row {
+    flex: 0 0 100%;
+    
+    padding: 0;
+    margin: 0;
+    list-style: none;
+    
+    border-top: var(--border-separator);
+}
+.edit-window-header-row li {
+    padding: 4px;
+    border-right: var(--border-separator);
+
+    display: flex;
+    font-variant: small-caps;
+    align-items: center;
+}
+.edit-window-header-row li:last-child {
+    border-right: none;
+}
+
+/* Tabs */
+.edit-window-tabs .tab-buttons {
+    padding-top: 10px;
+    padding-bottom: 5px;
+}
+
+/* General Purpose Components */
+.edit-window-area {
+    margin: 4px;
+    border: var(--border-separator);
+    border-radius: 4px;
+    
+    list-style: none;
+    padding: 0;
+
+    overflow: auto;
+}
+.edit-window-full-area {
+    width: calc(100% - 8px);
+    height: calc(100% - 8px);
+}
+.edit-window-value-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    
+    border-bottom: var(--border-separator);
+}
+.edit-window-value-container > p:first-of-type {
+    width: 100%;
+    margin: 0;
+    padding-top: 5px;
+
+    text-align: center;
+    font-variant: small-caps;
+    background: rgba(0, 0, 0, 0.05);
+    border-bottom: var(--border-separator);
+    
+    user-select: none;
+}
+.edit-window-value-container div {
+    display: inline;
+}
+.edit-window-value-container input,
+.edit-window-value-container select {
+    margin-top: 4px;
+    
+    text-align: center;
+}
+.edit-window-clickable {
+    font-variant: small-caps;
+
+    cursor: pointer;
+    user-select: none;
+}
+.edit-window-clickable:hover {
+    text-shadow: var(--text-shadow-hover);
+}
+
+.edit-window-row {
+    align-items: center;
+    
+    width: 100%;
+    padding: 0 5px;
+}
+.edit-window-row input {
+    height: 20px;
+    width: 140px;
+}
+
+.edit-window-grid {
+    display: grid;
+    grid-template-columns: auto auto;
+    padding: 4px;
+}
+.edit-window-grid input,
+.edit-window-grid button {
+    height: 20px;
+}
+
+
+
+/* Token Edit Window */
+.edit-token-image {
+    width: 90px;
+    height: 90px;
+
+    flex: 0 0 90px;
+    border-right: var(--border-separator);
+}
+.edit-token-actor {
+    padding: 4px;
+}
+.edit-token-actor button {
+    height: 20px;
+    white-space: nowrap;
+}
+.edit-token-actor button:first-of-type {
+    flex: 0 0 110px;
+}
+.edit-token-container .edit-window-header-row input {
+    width: 45px;
+    height: 20px;
+    text-align: center;
+}
+.edit-token-container .edit-window-header-row select {
+    width: 110px;
+    height: 20px;
+}
+.edit-token-edit-boxes,
+.edit-token-edit-boxes input {
+    width: 100%;
+}
+
 
 /*
 --------------------------------------------------------------

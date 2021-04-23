@@ -10,7 +10,7 @@ export class ColorPropertyEditor extends PropertyEditor {
         this.input = document.createElement('input');
         this.input.type = 'color';
         this.container.appendChild(this.input);
-        this.addLabel(label);
+        if(label) this.addLabel(label);
         
         this.input.onchange = () => this.onChange();
         

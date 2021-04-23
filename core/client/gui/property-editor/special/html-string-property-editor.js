@@ -23,6 +23,7 @@ export class HTMLStringPropertyEditor extends PropertyEditor {
         this.textDiv.style.overflow = 'auto';
         this.textDiv.style.resize = 'none';
         this.textDiv.style.fontFamily = 'monospace';
+        this.textDiv.style.fontVariant = 'initial';
         this.form.appendChild(this.textDiv);
         this.container.appendChild(this.form);
         

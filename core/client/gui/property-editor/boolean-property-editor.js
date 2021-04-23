@@ -8,7 +8,7 @@ export class BooleanPropertyEditor extends PropertyEditor {
         super(name, Type.BOOLEAN, label);
         
         /* override default style size TODO: make this use css aswell */
-        this.checkBox.style.width = this.checkBox.style.height = '24px';
+        this.checkBox.style.width = this.checkBox.style.height = '20px';
     }
     
     initContent(label) {
@@ -18,7 +18,7 @@ export class BooleanPropertyEditor extends PropertyEditor {
         icon.style.backgroundSize = 'contain'; //TODO: why does this onlöy work when "inlined"/directly applied to the element but not with css
         this.checkBox.appendChild(icon);
         this.container.appendChild(this.checkBox);
-        this.addLabel(label);
+        if(label) this.addLabel(label);
         
         this.checkBox.onclick = () => {
             if(this.checkBox.disabled) return;

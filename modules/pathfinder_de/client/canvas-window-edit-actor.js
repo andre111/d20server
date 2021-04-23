@@ -1,5 +1,3 @@
-import { EditorList } from '../../../core/client/gui/editor-list.js';
-
 import { LongPropertyEditor } from '../../../core/client/gui/property-editor/long-property-editor.js';
 import { StringPropertyEditor } from '../../../core/client/gui/property-editor/string-property-editor.js';
 import { StringMapPropertyEditor } from '../../../core/client/gui/property-editor/string-map-property-editor.js';
@@ -18,17 +16,13 @@ import { SendChatMessage } from '../../../core/common/messages.js';
 
 import { ATTRIBUTES, SAVES, SKILL_LIST } from './character-values.js';
 import { DefinitionUtils } from '../../../core/common/util/definitionutil.js';
-import { DoublePropertyEditor } from '../../../core/client/gui/property-editor/double-property-editor.js';
+import { CanvasWindowEditCustom } from '../../../core/client/canvas/window/canvas-window-edit-custom.js';
 
-export class CanvasWindowEditActor {
-    #editorList; 
-
+export class CanvasWindowEditActor extends CanvasWindowEditCustom {
     constructor(w, reference) {
-        // create and register one "tab"/EditorList to manage the editors
-        this.#editorList = new EditorList(reference);
-        w.tabs = [this.#editorList];
+        super(w, reference);
         const container = w.content;
-        container.className = 'cs-container';
+        container.className = 'edit-window-container cs-container';
         
         // build content
         // Header
@@ -39,7 +33,7 @@ export class CanvasWindowEditActor {
             const imageEditor = new ImagePropertyEditor('imagePath');
             imageEditor.getContainer().className = 'cs-image';
             header.appendChild(imageEditor.getContainer());
-            this.#editorList.registerEditor(imageEditor);
+            this.registerEditor(imageEditor);
             
             const headerSide = document.createElement('div');
             headerSide.className = 'cs-header-side flexrow';
@@ -53,7 +47,7 @@ export class CanvasWindowEditActor {
             headerSide.appendChild(classLevelSpan);
 
             const headerRow1 = document.createElement('ul');
-            headerRow1.className = 'cs-header-row flexrow';
+            headerRow1.className = 'edit-window-header-row flexrow';
             const raceLI = document.createElement('li');
             raceLI.appendChild(this.createStringEditor('pf_race', '', 'Volk...'));
             headerRow1.appendChild(raceLI);
@@ -67,7 +61,7 @@ export class CanvasWindowEditActor {
             headerSide.appendChild(headerRow1);
             
             const headerRow2 = document.createElement('ul');
-            headerRow2.className = 'cs-header-row flexrow';
+            headerRow2.className = 'edit-window-header-row flexrow';
             const hpLI = document.createElement('li');
             hpLI.appendChild(document.createTextNode('TP: '));
             hpLI.appendChild(this.createLongEditor('pf_hp'));
@@ -107,7 +101,7 @@ export class CanvasWindowEditActor {
             const otherValuesUL = createCSListArea(tab, 'cs-other-values', true);
             
             // Ini
-            const valueIni = createCSValue('Initiative', () => this.sendMacro('Initiative'));
+            const valueIni = this.createValueContainer('Initiative', () => this.sendMacro('Initiative'));
             const iniSpan = document.createElement('span');
             iniSpan.appendChild(this.createLongEditor('pf_initMod'));
             iniSpan.appendChild(document.createTextNode(' = GE + '));
@@ -116,7 +110,7 @@ export class CanvasWindowEditActor {
             otherValuesUL.appendChild(valueIni);
 
             // AC
-            const valueAC = createCSValue('Rüstungsklasse');
+            const valueAC = this.createValueContainer('Rüstungsklasse');
             valueAC.appendChild(this.createCSNamedEditor('Wert', new LongPropertyEditor('pf_ac')));
 
             const acCalcSpan = document.createElement('span');
@@ -146,7 +140,7 @@ export class CanvasWindowEditActor {
             otherValuesUL.appendChild(valueAC);
 
             // Saves
-            const valueSaves = createCSValue('Rettungswürfe');
+            const valueSaves = this.createValueContainer('Rettungswürfe');
             for(const save of SAVES) {
                 valueSaves.appendChild(this.createCSNamedEditor(save.display, new LongPropertyEditor('pf_save'+save.name), () => this.sendMacro('Rettungswürfe/'+save.display)));
 
@@ -164,12 +158,12 @@ export class CanvasWindowEditActor {
             otherValuesUL.appendChild(valueSaves);
 
             // BAB
-            const valueBAB = createCSValue('Grundangriffsbonus');
+            const valueBAB = this.createValueContainer('Grundangriffsbonus');
             valueBAB.appendChild(this.createLongEditor('pf_baseAttackBonus'));
             otherValuesUL.appendChild(valueBAB);
 
             // CMB
-            const valueCMB = createCSValue('Kampfmanöver', () => this.sendMacro('Kampfmanöver'));
+            const valueCMB = this.createValueContainer('Kampfmanöver', () => this.sendMacro('Kampfmanöver'));
             const cmbSpan = document.createElement('span');
             cmbSpan.style.fontSize = '12px';
             cmbSpan.appendChild(this.createLongEditor('pf_cmb'));
@@ -178,7 +172,7 @@ export class CanvasWindowEditActor {
             otherValuesUL.appendChild(valueCMB);
             
             // CMD
-            const valueCMD = createCSValue('KM-Verteidigung', () => this.sendMacro('KM-Verteidigung'));
+            const valueCMD = this.createValueContainer('KM-Verteidigung', () => this.sendMacro('KM-Verteidigung'));
             const cmdSpan = document.createElement('span');
             cmdSpan.style.fontSize = '12px';
             cmdSpan.appendChild(this.createLongEditor('pf_cmd'));
@@ -187,7 +181,7 @@ export class CanvasWindowEditActor {
             otherValuesUL.appendChild(valueCMD);
 
             // SR
-            const valueSR = createCSValue('Zauberresistenz');
+            const valueSR = this.createValueContainer('Zauberresistenz');
             valueSR.appendChild(this.createLongEditor('pf_spellResistance'));
             otherValuesUL.appendChild(valueSR);
             
@@ -208,38 +202,38 @@ export class CanvasWindowEditActor {
         {
             const tab = document.createElement('div');
             tab.name = 'Biographie';
-            tab.className = 'cs-biography cs-area';
+            tab.className = 'edit-window-area edit-window-full-area flexrow';
             tabs.appendChild(tab);
 
             const valuesLI = document.createElement('li');
             valuesLI.className = 'cs-content-sidebar';
             tab.appendChild(valuesLI);
             {
-                const valueGender = createCSValue('Geschlecht');
+                const valueGender = this.createValueContainer('Geschlecht');
                 valueGender.appendChild(this.createStringEditor('pf_gender', '', '...'));
                 valuesLI.appendChild(valueGender);
                 
-                const valueAge = createCSValue('Alter');
+                const valueAge = this.createValueContainer('Alter');
                 valueAge.appendChild(this.createStringEditor('pf_age', '', '...'));
                 valuesLI.appendChild(valueAge);
                 
-                const valueSize = createCSValue('Größe');
+                const valueSize = this.createValueContainer('Größe');
                 valueSize.appendChild(this.createStringEditor('pf_size', '', '...'));
                 valuesLI.appendChild(valueSize);
                 
-                const valueWeight = createCSValue('Gewicht');
+                const valueWeight = this.createValueContainer('Gewicht');
                 valueWeight.appendChild(this.createStringEditor('pf_weight', '', '...'));
                 valuesLI.appendChild(valueWeight);
                 
-                const valueHairColor = createCSValue('Haarfarbe');
+                const valueHairColor = this.createValueContainer('Haarfarbe');
                 valueHairColor.appendChild(this.createStringEditor('pf_hairColor', '', '...'));
                 valuesLI.appendChild(valueHairColor);
                 
-                const valueEyeColor = createCSValue('Augenfarbe');
+                const valueEyeColor = this.createValueContainer('Augenfarbe');
                 valueEyeColor.appendChild(this.createStringEditor('pf_eyeColor', '', '...'));
                 valuesLI.appendChild(valueEyeColor);
                 
-                const valueDeity = createCSValue('Gottheit / Glauben');
+                const valueDeity = this.createValueContainer('Gottheit / Glauben');
                 valueDeity.appendChild(this.createStringEditor('pf_deity', '', '...'));
                 valuesLI.appendChild(valueDeity);
             }
@@ -249,31 +243,31 @@ export class CanvasWindowEditActor {
             editor.getContainer().style.height = 'calc(100% - 10px)';
             editor.getContainer().style.margin = '5px';
             tab.appendChild(editor.getContainer());
-            this.#editorList.registerEditor(editor);
+            this.registerEditor(editor);
         }
         //    Talente/Zauber
         {
             const tab = document.createElement('div');
             tab.name = 'Talente/Zauber';
-            tab.className = 'cs-attachments cs-area';
+            tab.className = 'edit-window-area edit-window-full-area flexrow';
             tabs.appendChild(tab);
             
             const editor = new LongListPropertyEditor('attachments', '', 'attachment', false);
             tab.appendChild(editor.getContainer());
-            this.#editorList.registerEditor(editor);
+            this.registerEditor(editor);
         }
-        //    macros
+        //    Macros
         {
             const tab = document.createElement('div');
             tab.name = 'Macros';
-            tab.className = 'cs-macros cs-area';
+            tab.className = 'edit-window-area edit-window-full-area flexrow';
             tabs.appendChild(tab);
 
             const valuesLI = document.createElement('li');
             valuesLI.className = 'cs-content-sidebar cs-macros-sidebar';
             tab.appendChild(valuesLI);
             {
-                const valueMods = createCSValue('Modifikatoren');
+                const valueMods = this.createValueContainer('Modifikatoren');
                 const mods = [
                     ['modAttack', 'Angriff'],
                     ['modDamage', 'Schaden'],
@@ -296,20 +290,20 @@ export class CanvasWindowEditActor {
             editor.getContainer().style.width = '100%';
             editor.getContainer().style.height = '100%';
             tab.appendChild(editor.getContainer());
-            this.#editorList.registerEditor(editor);
+            this.registerEditor(editor);
         }
         //    GM
         {
             const tab = document.createElement('div');
             tab.name = 'GM';
-            tab.className = 'cs-gm cs-area';
+            tab.className = 'edit-window-area edit-window-full-area flexrow';
             tabs.appendChild(tab);
             
             const valuesLI = document.createElement('li');
             valuesLI.className = 'cs-content-sidebar cs-gm-sidebar';
             tab.appendChild(valuesLI);
             {
-                const valueName = createCSValue('Listenpfad');
+                const valueName = this.createValueContainer('Listenpfad');
                 valueName.appendChild(this.createStringEditor('path'));
                 valuesLI.appendChild(valueName);
                 
@@ -319,40 +313,40 @@ export class CanvasWindowEditActor {
                     extensions[key] = value.displayName;
                 }
 
-                const valueType = createCSValue('Typ');
+                const valueType = this.createValueContainer('Typ');
                 const typeEditor = new StringSelectionPropertyEditor('type', '', extensions); 
                 valueType.appendChild(typeEditor.getContainer());
-                this.#editorList.registerEditor(typeEditor);
+                this.registerEditor(typeEditor);
                 valuesLI.appendChild(valueType);
 
-                const valueToken = createCSValue('Token');
+                const valueToken = this.createValueContainer('Token');
                 valueToken.className += ' cs-gm-token';
                 const tokenSpan = document.createElement('span');
                 const imageEditor = new ImagePropertyEditor('tokenImagePath');
                 imageEditor.getContainer().className = 'cs-gm-token-image';
                 tokenSpan.appendChild(imageEditor.getContainer());
-                this.#editorList.registerEditor(imageEditor);
+                this.registerEditor(imageEditor);
                 tokenSpan.appendChild(this.createLongEditor('tokenWidth', 'Breite'));
                 tokenSpan.appendChild(this.createLongEditor('tokenHeight', 'Höhe'));
                 valueToken.appendChild(tokenSpan);
                 valuesLI.appendChild(valueToken);
 
-                const valueSight = createCSValue('Sicht');
+                const valueSight = this.createValueContainer('Sicht');
                 valueSight.appendChild(this.createCSSightEditor('Bright', true, 'Hell'));
                 valueSight.appendChild(this.createCSSightEditor('Dim', true, 'Dämmer'));
                 valueSight.appendChild(this.createCSSightEditor('Dark', false, 'Dunkel'));
                 valuesLI.appendChild(valueSight);
                 
-                const valueAccess = createCSValue('Zugriff');
+                const valueAccess = this.createValueContainer('Zugriff');
                 const accessEditor = new AccessPropertyEditor('access', '');
                 valueAccess.appendChild(accessEditor.getContainer());
-                this.#editorList.registerEditor(accessEditor);
+                this.registerEditor(accessEditor);
                 valuesLI.appendChild(valueAccess);
                 
-                const valuePlayers = createCSValue('Controlling Players');
+                const valuePlayers = this.createValueContainer('Controlling Players');
                 const playerEditor = new LongListPropertyEditor('controllingPlayers', '', 'profile', false);
                 valuePlayers.appendChild(playerEditor.getContainer());
-                this.#editorList.registerEditor(playerEditor);
+                this.registerEditor(playerEditor);
                 valuesLI.appendChild(valuePlayers);
             }
             
@@ -361,7 +355,7 @@ export class CanvasWindowEditActor {
             editor.getContainer().style.height = 'calc(100% - 8px)';
             editor.getContainer().style.margin = '4px';
             tab.appendChild(editor.getContainer());
-            this.#editorList.registerEditor(editor);
+            this.registerEditor(editor);
         }
         
         Tabs.init(tabs);
@@ -372,39 +366,14 @@ export class CanvasWindowEditActor {
         MessageService.send(new SendChatMessage('!!'+name));
     }
 
-    // Basic Property Editors
-    createLongEditor(property, label, className = '') {
-        const editor = new LongPropertyEditor(property, label);
-        this.#editorList.registerEditor(editor, true);
-
-        if(className) editor.getContainer().className = className;
-        return editor.getContainer();
-    }
-
-    createDoubleEditor(property, label, className = '') {
-        const editor = new DoublePropertyEditor(property, label);
-        this.#editorList.registerEditor(editor, true);
-
-        if(className) editor.getContainer().className = className;
-        return editor.getContainer();
-    }
-    
-    createStringEditor(property, label, placeholder = '', className = '') {
-        const editor = new StringPropertyEditor(property, label, placeholder);
-        this.#editorList.registerEditor(editor);
-
-        if(className) editor.getContainer().className = className;
-        return editor.getContainer();
-    }
-
     // Complex Editor Structures
     createCSAttributeEditor(name, propertyAbreviation) {
         const li = document.createElement('li');
-        li.className = 'cs-attribute cs-value-container';
+        li.className = 'cs-attribute edit-window-value-container';
         
         const nameP = document.createElement('p');
         nameP.innerText = name;
-        nameP.className = 'cs-clickable';
+        nameP.className = 'edit-window-clickable';
         nameP.onclick = () => this.sendMacro('Attributswürfe/'+name);
         li.appendChild(nameP);
         
@@ -415,14 +384,14 @@ export class CanvasWindowEditActor {
             const valueEditor = new LongPropertyEditor('pf_'+propertyAbreviation, '');
             valueEditor.getEditComponent().style.marginRight = '16px';
             inputSpan.appendChild(valueEditor.getContainer());
-            this.#editorList.registerEditor(valueEditor, true);
+            this.registerEditor(valueEditor, true);
             
             inputSpan.appendChild(document.createTextNode('±'));
             
             const tempEditor = new LongPropertyEditor('pf_'+propertyAbreviation+'Temp', '');
             tempEditor.getEditComponent().style.color = 'gray';
             inputSpan.appendChild(tempEditor.getContainer());
-            this.#editorList.registerEditor(tempEditor, true);
+            this.registerEditor(tempEditor, true);
         }
         
         li.appendChild(this.createLongEditor('pf_'+propertyAbreviation+'Mod', '', 'cs-attribute-mod'));
@@ -442,13 +411,13 @@ export class CanvasWindowEditActor {
         classEditor.getEditComponent().style.height = '16px';
         classEditor.getEditComponent().style.margin = '2px';
         classEditorTD.appendChild(classEditor.getContainer());
-        this.#editorList.registerEditor(classEditor, true);
+        this.registerEditor(classEditor, true);
         tr.appendChild(classEditorTD);
         
         const nameTD = document.createElement('td');
         const nameP = document.createElement('span');
         nameP.innerText = skill.display;
-        nameP.className = 'cs-clickable';
+        nameP.className = 'edit-window-clickable';
         nameP.onclick = () => this.sendMacro(skill.macro);
         nameTD.appendChild(nameP);
         if(skill.hasText) {
@@ -457,7 +426,7 @@ export class CanvasWindowEditActor {
             textEditor.getEditComponent().style.width = '70px';
             textEditor.getEditComponent().style.marginLeft = '5px';
             nameTD.appendChild(textEditor.getContainer());
-            this.#editorList.registerEditor(textEditor)
+            this.registerEditor(textEditor)
         }
         tr.appendChild(nameTD);
         
@@ -488,13 +457,13 @@ export class CanvasWindowEditActor {
         const nameP = document.createElement('span');
         nameP.innerText = name;
         if(onclick) {
-            nameP.className = 'cs-clickable';
+            nameP.className = 'edit-window-clickable';
             nameP.onclick = onclick;
         }
         span.appendChild(nameP);
     
         span.appendChild(editor.getContainer());
-        this.#editorList.registerEditor(editor, true);
+        this.registerEditor(editor, true);
     
         return span;
     }
@@ -516,29 +485,14 @@ export class CanvasWindowEditActor {
 //TODO: convert these to classes?
 function createCSArea(tab, name) {
     const areaDiv = document.createElement('div');
-    areaDiv.className = name+' cs-area';
+    areaDiv.className = name+' edit-window-area';
     tab.appendChild(areaDiv);
     return areaDiv;
 }
 
 function createCSListArea(tab, name, column = true) {
     const areaUL = document.createElement('ul');
-    areaUL.className = name+' cs-area'+(column ? ' flexcol' : ' flexrow');
+    areaUL.className = name+' edit-window-area'+(column ? ' flexcol' : ' flexrow');
     tab.appendChild(areaUL);
     return areaUL;
-}
-
-function createCSValue(name, onclick) {
-    const li = document.createElement('li');
-    li.className = 'cs-value-container';
-    
-    const nameP = document.createElement('p');
-    nameP.innerText = name;
-    if(onclick) {
-        nameP.className = 'cs-clickable';
-        nameP.onclick = onclick;
-    }
-    li.appendChild(nameP);
-    
-    return li;
 }

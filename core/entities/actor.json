@@ -258,8 +258,8 @@
                     "editorType": "HTML_STRING",
                     "property": "bio",
                     "text": "Bio",
-                    "w": 785,
-                    "h": 200
+                    "w": 645,
+                    "h": 140
                 },
                 {
                     "type": "EMPTY"
@@ -270,8 +270,8 @@
                     "editorType": "HTML_STRING",
                     "property": "gmBio",
                     "text": "GM Bio",
-                    "w": 990,
-                    "h": 266
+                    "w": 790,
+                    "h": 210
                 }
             ]
         },

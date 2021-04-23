@@ -9,6 +9,31 @@ import { SETTING_PAGE_AUDIO } from '../../../core/client/app.js';
 import { SettingsEntryNumberRange } from '../../../core/client/settings/settings-entry-number-range.js';
 import { FILE_TYPE_AUDIO } from '../../../core/common/util/datautil.js';
 
+// token editing
+Events.on('editTokenWindowCreateTabs', event => {
+    const tab = document.createElement('div');
+    tab.name = 'Audio';
+    tab.className = 'edit-window-area edit-window-full-area edit-window-grid';
+    event.data.tabs.appendChild(tab);
+
+    
+    tab.appendChild(document.createTextNode('File:'));
+    tab.appendChild(event.data.w.createFileEditor('audioPath', 'audio'));
+
+    tab.appendChild(document.createTextNode('Volume:'));
+    tab.appendChild(event.data.w.createDoubleEditor('audioVolume'));
+    tab.appendChild(document.createTextNode('Distance (in cells):'));
+    tab.appendChild(event.data.w.createDoubleEditor('audioDistance'));
+    tab.appendChild(document.createTextNode('Muffled by walls:'));
+    tab.appendChild(event.data.w.createBooleanEditor('audioWallsMuffle'));
+    tab.appendChild(document.createTextNode('Reverb:'));
+    tab.appendChild(event.data.w.createBooleanEditor('audioReverb'));
+    tab.appendChild(document.createTextNode('Minimum Pause (in Seconds):'));
+    tab.appendChild(event.data.w.createLongEditor('audioMinPause'));
+    tab.appendChild(document.createTextNode('Maximum Pause (in Seconds):'));
+    tab.appendChild(event.data.w.createLongEditor('audioMaxPause'));
+});
+
 // ambient audio
 Events.on('addRenderLayers', event => {
     // use a render layer to get access to viewers and camera position

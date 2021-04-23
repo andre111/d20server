@@ -24,6 +24,8 @@ export class LongListPropertyEditor extends PropertyEditor {
         this.container.style.overflow = 'auto';
         
         this.tree = new SearchableIDTree(this.container, null, this.valueProvider, () => this.doOpen());
+
+        this.buttonCount = (referenceType != 'profile') ? 3 : 2;
         if(referenceType != 'profile') this.addButton('Open', false, () => this.doOpen());
         this.addButton('Add', false, () => this.doAdd());
         this.addButton('Remove', false, () => this.doRemove());
@@ -31,6 +33,7 @@ export class LongListPropertyEditor extends PropertyEditor {
     
     addButton(text, disableable, callback) {
         var button = document.createElement('button');
+        button.style.width = 100/this.buttonCount+'%';
         button.innerHTML = text;
         button.onclick = callback;
         this.tree.getSearchPanel().appendChild(button);

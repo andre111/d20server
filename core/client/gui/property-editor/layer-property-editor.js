@@ -16,7 +16,7 @@ export class LayerPropertyEditor extends PropertyEditor {
             this.select.appendChild(option);
         }
         this.container.appendChild(this.select);
-        this.addLabel(label);
+        if(label) this.addLabel(label);
         
         this.select.onchange = () => this.onChange();
         
