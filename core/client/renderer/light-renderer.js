@@ -248,7 +248,7 @@ export const LightRenderer = {
 		} else if(light == Light.DIM) {
 			return actor.prop('lightDimMult').getDouble();
 		} else {
-			return 0;
+			return 1;
 		}
     },
     getSight: function(actor, light) {
