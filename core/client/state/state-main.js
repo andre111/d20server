@@ -254,12 +254,12 @@ export class StateMain extends State {
             }
         });
         // ...which are potentially overridden
-        var forceWallOcclusion = false;
+        var forceNormalLimitedView = false;
         if(this.viewToken > 0) {
             const forcedViewer = EntityManagers.get('token').find(this.viewToken);
             if(forcedViewer && (ServerData.isGM() || viewers.includes(forcedViewer))) {
                 viewers = [forcedViewer];
-                forceWallOcclusion = true;
+                forceNormalLimitedView = true;
             }
         }
         
@@ -272,7 +272,8 @@ export class StateMain extends State {
         if(!map || !this.view || (viewers.length == 0 && this.view.isPlayerView())) {
             return;
         }
-        this.view.setForceWallOcclusion(forceWallOcclusion);
+        this.view.setForceWallOcclusion(forceNormalLimitedView);
+        this.view.setForceLights(forceNormalLimitedView);
         
         // update and apply camera
         this.camera.update(this.width, this.height);
