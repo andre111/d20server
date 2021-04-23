@@ -859,11 +859,14 @@ div.chat-box-content th, div.chat-box-content td {
     top: 40px;
     left: 0;
 }
-.tab-hidden {
+/*.tab-hidden {
     visibility: hidden;
 }
 .tab-hidden * {
     visibility: hidden !important;
+}*/
+.tab-hidden {
+    display: none;
 }
 
 /* 
@@ -880,6 +883,8 @@ div.chat-box-content th, div.chat-box-content td {
     box-shadow: 0 0 7px 0 black;
 
     overflow: hidden;
+
+    will-change: transform; /* notifies browser that this element can and will move -> in a sepparate composite layer -> no more lags during moves */
 }
 .dialog.modal {
     background: var(--bg);
