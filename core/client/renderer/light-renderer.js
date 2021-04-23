@@ -161,18 +161,9 @@ export const LightRenderer = {
     },
     
     paintLight: function(ctx1, token, cached, withClip, centerX, centerY, lightRadius) {
-        // calculate light angles (TODO: untested)
-        var lightAngle = token.prop('lightAngle').getLong();
-        var startAngle = 0;
-        var endAngle = Math.PI*2;
-        if(lightAngle < 360 && lightAngle > 0) {
-            startAngle = -(token.prop('rotation').getDouble()-lightAngle/2) * Math.PI / 180;
-            endAngle = -(token.prop('rotation').getDouble()+lightAngle/2) * Math.PI / 180;
-        }
-        
         // calculate gradient
-        var color = token.prop('lightColor').getColor();
-        var grd = ctx1.createRadialGradient(centerX, centerY, 1, centerX, centerY, lightRadius);
+        const color = token.prop('lightColor').getColor();
+        const grd = ctx1.createRadialGradient(centerX, centerY, 1, centerX, centerY, lightRadius);
         grd.addColorStop(0, color);
         grd.addColorStop(0.5, color);
         grd.addColorStop(1, color+'00');
@@ -184,8 +175,19 @@ export const LightRenderer = {
             RenderUtils.addPaths(ctx1, cached.clip);
             ctx1.clip();
         }
+
         ctx1.beginPath();
-        ctx1.ellipse(centerX, centerY, lightRadius, lightRadius, 0, startAngle, endAngle);
+        const lightAngle = token.prop('lightAngle').getLong();
+        if(lightAngle <= 0 || lightAngle >= 360) {
+            ctx1.ellipse(centerX, centerY, lightRadius, lightRadius, 0, 0, Math.PI*2);
+        } else {
+            // calculate light angles
+            const startAngle = (token.prop('rotation').getDouble()+90-lightAngle/2) * Math.PI / 180;
+            const endAngle = (token.prop('rotation').getDouble()+90+lightAngle/2) * Math.PI / 180;
+            
+            ctx1.arc(centerX, centerY, lightRadius, startAngle, endAngle);
+            ctx1.lineTo(centerX, centerY);
+        }
         ctx1.fill();
         ctx1.restore();
     },
