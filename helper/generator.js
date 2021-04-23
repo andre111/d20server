@@ -292,6 +292,17 @@ ModuleService.init().then(() => {
                 }
             }
 
+            // sight
+            for(const sense of entry['Sinne']) {
+                if(sense == 'Dämmersicht') {
+                    monsterActor.prop('lightDimMult').setDouble(2);
+                } else if(sense.startsWith('Dunkelsicht')) {
+                    const distM = sense.replace('Dunkelsicht', '').replace('m', '').trim();
+                    const dist = Number(distM) / 1.5;
+                    monsterActor.prop('sightDark').setDouble(dist);
+                }
+            }
+
             // bio //TODO: complete parsing and restoring of the remaining sections
             monsterActor.prop('bio').setString(entry['Beschreibung']);
 
