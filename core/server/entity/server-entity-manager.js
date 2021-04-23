@@ -17,6 +17,7 @@ export class ServerEntityManager extends EntityManager {
     db;
 
     saveEnabled = true;
+    saveOperations = 0;
 
     constructor(name, type, entityDefinition, cb) {
         super(name, type);
@@ -63,11 +64,15 @@ export class ServerEntityManager extends EntityManager {
         const id = String(entity.getID());
         this.entities[id] = entity;
         if(this.saveEnabled) {
+            this.saveOperations++;
             const doc =  {
                 _id: id,
                 json: toJson(entity, false, false)
             };
-            this.db.update({ _id: id }, doc, { upsert: true }, err => {}); //TODO: error handler
+            this.db.update({ _id: id }, doc, { upsert: true }, err => {
+                this.saveOperations--;
+                //TODO: error handler
+            }); 
         }
 
         UserService.forEach(profile => {
@@ -88,7 +93,11 @@ export class ServerEntityManager extends EntityManager {
 
         delete this.entities[String(id)];
         if(this.saveEnabled) {
-            this.db.remove({ _id: String(id)}, {}, err => {}); //TODO: error handler
+            this.saveOperations++;
+            this.db.remove({ _id: String(id)}, {}, err => {
+                this.saveOperations--;
+                //TODO: error handler
+            });
         }
 
         UserService.forEach(profile => {
@@ -149,11 +158,15 @@ export class ServerEntityManager extends EntityManager {
 
         // save
         if(this.saveEnabled) {
+            this.saveOperations++;
             const doc =  {
                 _id: String(id),
                 json: toJson(entity, false, false)
             };
-            this.db.update({ _id: String(id) }, doc, { upsert: true }, err => {}); //TODO: error handler
+            this.db.update({ _id: String(id) }, doc, { upsert: true }, err => {
+                this.saveOperations--;
+                //TODO: error handler
+            });
         }
         
         // transfer (depending on (changing) access: add, remove or only changed properties)
@@ -231,5 +244,9 @@ export class ServerEntityManager extends EntityManager {
         if(fs.existsSync('./data/entity/'+this.getName()+'.db')) {
             fs.remove('./data/entity/'+this.getName()+'.db');
         }
+    }
+
+    isSaving() {
+        return this.saveOperations > 0;
     }
 }
