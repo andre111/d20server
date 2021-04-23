@@ -307,13 +307,13 @@ ModuleService.init().then(() => {
             monsterActor.prop('bio').setString(entry['Beschreibung']);
 
             var gmBio = '';
-            gmBio += createBaseSection(entry) + '<p></p>';
-            gmBio += createDefenseSection(entry) + '<p></p>';
-            gmBio += createAttackSection(entry) + '<p></p>';
-            gmBio += createValuesSection(entry) + '<p></p>';
-            gmBio += createEcologySection(entry) + '<p></p>';
-            gmBio += createSpecialAbilitiesSection(entry) + '<p></p>';
-            gmBio += '<hr><strong>BESCHREIBUNG:</strong><hr>';
+            gmBio += createBaseSection(entry) + '<p>&nbsp;</p>';
+            gmBio += createDefenseSection(entry) + '<p>&nbsp;</p>';
+            gmBio += createAttackSection(entry) + '<p>&nbsp;</p>';
+            gmBio += createValuesSection(entry) + '<p>&nbsp;</p>';
+            gmBio += createEcologySection(entry) + '<p>&nbsp;</p>';
+            gmBio += createSpecialAbilitiesSection(entry) + '<p>&nbsp;</p>';
+            gmBio += '<hr><p><strong>BESCHREIBUNG:</strong></p><hr>';
             for(const descParagraph of entry['GMBeschreibung'].split('\n')) {
                 gmBio += '<p>';
                 gmBio += descParagraph;
@@ -608,7 +608,7 @@ function createBaseSection(entry) {
 
 function createDefenseSection(entry) {
     // build string
-    var sb = '<hr><strong>VERTEIDIGUNG:</strong><hr>';
+    var sb = '<hr><p><strong>VERTEIDIGUNG:</strong></p><hr>';
     sb += '<p>';
 
     // RK <value>, Berührung <value>, auf dem falschen Fuß <value> (<modifiers>; <notes>)
@@ -682,7 +682,7 @@ function createDefenseSection(entry) {
 // [...]
 function createAttackSection(entry) {
     // build string
-    var sb = '<hr><strong>ANGRIFF:</strong><hr>';
+    var sb = '<hr><p><strong>ANGRIFF:</strong></p><hr>';
     sb += '<p>';
 
     // Bewegungsrate <annotatedValue>[, Fliegen <annotatedValue>][, Schwimmen <annotatedValue>][, Klettern <annotatedValue>][, Graben <annotatedValue>][; <movementAbilities>]
@@ -777,7 +777,7 @@ function createAttackSection(entry) {
 
 function createValuesSection(entry) {
     // build string
-    var sb = '<hr><strong>SPIELWERTE:</strong><hr>';
+    var sb = '<hr><p><strong>SPIELWERTE:</strong></p><hr>';
     sb += '<p>';
 
     // ST <value>, GE <value>, KO <value>, IN <value>, WE <value>, CH <value>
@@ -832,7 +832,7 @@ function createEcologySection(entry) {
     if(!entry['Lebensweise']) return '';
 
     // build string
-    var sb = '<hr><strong>LEBENSWEISE:</strong><hr>';
+    var sb = '<hr><p><strong>LEBENSWEISE:</strong></p><hr>';
     sb += '<p>';
 
     // Umgebung <value>
@@ -852,7 +852,7 @@ function createSpecialAbilitiesSection(entry) {
     if(entry['BesondereFähigkeiten'].length == 0) return '';
 
     // build string
-    var sb = '<hr><strong>BESONDERE FÄHIGKEITEN:</strong><hr>';
+    var sb = '<hr><p><strong>BESONDERE FÄHIGKEITEN:</strong></p><hr>';
     sb += '<p>';
 
     for(const specialAbility of entry['BesondereFähigkeiten']) {

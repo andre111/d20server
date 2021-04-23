@@ -13,9 +13,8 @@ export class HTMLStringPropertyEditor extends PropertyEditor {
     initContent(label) {
         if(label) GuiUtils.makeBordered(this.container, label);
         
+        this.container.className = 'html-editor';
         this.form = document.createElement('form');
-        this.form.style.width = '100%';
-        this.form.style.height = '100%';
         this.form.onsubmit = () => this.doSubmit(tinymce.activeEditor);
         this.textDiv = document.createElement('div');
         this.textDiv.style.width = '100%';
@@ -26,34 +25,41 @@ export class HTMLStringPropertyEditor extends PropertyEditor {
         this.textDiv.style.fontVariant = 'initial';
         this.form.appendChild(this.textDiv);
         this.container.appendChild(this.form);
+
+        this.editButton = document.createElement('button');
+        this.editButton.innerText = 'Edit';
+        this.editButton.onclick = () => this.createEditor();
+        this.container.appendChild(this.editButton);
         
-        // editor creation needs to be delayed so the dom is fully initialized
-        setTimeout(() => {
-            if(!this.input.disabled) {
-                tinymce.init({
-                    target: this.textDiv,
-                    plugins: 'table,lists,hr,image,save',
-                    toolbar: 'undo redo styleselect bold italic | alignleft aligncenter alignright | bullist numlist table hr image | save',
-                    menubar: false,
-                    statusbar: false,
-                    inline: true,
-                    table_style_by_css: true,
-                    table_default_styles: {
-                        'border': 'solid 1px gray',
-                        'border-collapse': 'collapse', 
-                        'padding': '5px',
-                        'margin-left': 'auto',
-                        'margin-right': 'auto'
-                    },
-                    file_picker_types: 'image',
-                    file_picker_callback: (callback, value, meta) => this.doOpenFilePicker(callback, value, meta),
-                    onchange_callback: inst => this.doSubmit(inst)
-                }).then(result => this.editor = result[0]);
-            }
-        }, 1);
-        
-        this.input = document.createElement('input');
-        return this.input;
+        return this.editButton;
+    }
+
+    createEditor() {
+        if(this.editor) return;
+        this.editButton.style.display = 'none';
+
+        tinymce.init({
+            target: this.textDiv,
+            plugins: 'table,lists,hr,image',
+            toolbar: 'undo redo | bold italic | alignleft aligncenter alignright | bullist numlist table hr image',
+            menubar: false,
+            statusbar: false,
+            inline: true,
+            table_style_by_css: true,
+            table_default_styles: {
+                'border': 'solid 1px gray',
+                'border-collapse': 'collapse', 
+                'padding': '5px',
+                'margin-left': 'auto',
+                'margin-right': 'auto'
+            },
+            file_picker_types: 'image',
+            file_picker_callback: (callback, value, meta) => this.doOpenFilePicker(callback, value, meta)
+        }).then(result => {
+            this.editor = result[0];
+            this.editor.focus();
+            this.editor.on('blur', () => this.doSubmit());
+        });
     }
     
     reloadValue(property) {
@@ -72,8 +78,13 @@ export class HTMLStringPropertyEditor extends PropertyEditor {
         this.textDiv.innerHTML = DOMPurify.sanitize(this.value, {USE_PROFILES: {html: true}}); 
     }
     
-    doSubmit(editor) {
-        this.value = editor.getContent();
+    doSubmit() {
+        this.value = this.editor.getContent();
+
+        this.editor.destroy();
+        this.editor = null;
+        this.editButton.style.display = '';
+
         this.onChange();
     }
 

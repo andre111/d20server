@@ -6,7 +6,7 @@ CONTENTS:
     2. Global Layout
     3. Generic Element Definitions
     4. Component Definitions
-        4.1 ModePanel/Window styles
+        4.1 ModePanel styles
         4.2 Chat
         4.3 List Window
         4.4 Settings
@@ -175,9 +175,13 @@ p {
     margin-block-end: 1em;
 }
 hr {
-    margin-block-start: -1em;
+    margin-block-start: 0;
     margin-block-end: 0;
     border-color: var(--color-dark); 
+}
+p + hr {
+    margin-block-start: -1em;
+    margin-block-end: 0;
 }
 
 /* General Layouts */
@@ -253,6 +257,28 @@ input:focus {
     background: url(/core/files/img/icon/box-checked.png);
 }
 
+.html-editor {
+    position: relative;
+}
+.html-editor form {
+    width: 100%;
+    height: 100%;
+    user-select: text;
+}
+.html-editor > button {
+    position: absolute;
+    right: 0;
+    top: 0;
+
+    width: 32px;
+    height: 20px;
+
+    display: none;
+}
+.html-editor:hover > button {
+    display: block;
+}
+
 /* Used for bordered divs with overlaying legend on border -> see: GuiUtils.makeBordered */
 .bordered {
     padding: 5px 5px 5px 5px;
@@ -290,7 +316,7 @@ input:focus {
 */
 /* 
 ---------------------------------------
-        4.1 ModePanel/Window styles 
+        4.1 ModePanel styles 
 ---------------------------------------
 */
 .mode-panel {

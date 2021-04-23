@@ -239,7 +239,7 @@ export class CanvasWindowEditActor extends CanvasWindowEditCustom {
             }
             
             const editor = new HTMLStringPropertyEditor('bio', '');
-            editor.getContainer().style.width = '100%';
+            editor.getContainer().style.width = 'calc(100% - 200px - 10px)';
             editor.getContainer().style.height = 'calc(100% - 10px)';
             editor.getContainer().style.margin = '5px';
             tab.appendChild(editor.getContainer());
@@ -351,9 +351,9 @@ export class CanvasWindowEditActor extends CanvasWindowEditCustom {
             }
             
             const editor = new HTMLStringPropertyEditor('gmBio', '');
-            editor.getContainer().style.width = 'calc(100% - 200px - 2px - 8px)';
-            editor.getContainer().style.height = 'calc(100% - 8px)';
-            editor.getContainer().style.margin = '4px';
+            editor.getContainer().style.width = 'calc(100% - 200px - 10px)';
+            editor.getContainer().style.height = 'calc(100% - 10px)';
+            editor.getContainer().style.margin = '5px';
             tab.appendChild(editor.getContainer());
             this.registerEditor(editor);
         }
