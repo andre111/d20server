@@ -163,22 +163,6 @@ export class Property {
         this.setInternal(String(parseInt(value.substring(1), 16)));
     }
 
-    getEntity() {
-        this.checkType(Type.ENTITY);
-        const v = this.getInternal();
-        if(!v || v == '') return null;
-        
-        const e = fromJson(v);
-        if(!(e instanceof Entity)) return null;
-        return e;
-    }
-    setEntity(value) {
-        this.checkType(Type.ENTITY);
-        if(value == null) { this.setInternal(''); return; }
-        if(!(value instanceof Entity)) throw new Error('Invalid value, expected instance of Entity');
-        this.setInternal(toJson(value, false));
-    }
-
     getAccessValue() {
         this.checkType(Type.ACCESS);
         return this.getInternal();
