@@ -176,8 +176,8 @@ export class StateMain extends State {
     }
 
     resize(canvas) {
-        this.width = canvas.clientWidth;
-        this.height = canvas.clientHeight;
+        this.width = window.innerWidth;
+        this.height = window.innerHeight;
         
         // resize canvas to match display size
         if(canvas.width != this.width || canvas.height != this.height) {

@@ -15,6 +15,7 @@ export class Tabs {
             tab.appendChild(c);
             tabs.push(tab);
         }
+        container.classList.add('tabs');
         
         // create a div to contain the "buttons"
         const buttonDiv = document.createElement('div');
@@ -41,11 +42,11 @@ export class Tabs {
         const buttons = container.getElementsByClassName('tab-buttons')[0].childNodes;
         
         // hide all tabs / reset all buttons
-        for(const tab of tabs) tab.style.display = 'none';
+        for(const tab of tabs) tab.classList.add('tab-hidden'); //tab.style.display = 'none';
         for(const button of buttons) button.classList.remove('active');
         
         // show selected tab
-        tabs[index].style.display = 'block';
+        tabs[index].classList.remove('tab-hidden'); //tabs[index].style.display = 'block';
         buttons[index].classList.add('active');
     }
 }
