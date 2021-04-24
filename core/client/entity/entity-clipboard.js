@@ -14,6 +14,9 @@ export const EntityClipboard = {
             const newReference = new EntityReference(entity);
             newReference.setMouseOffsetX(reference.getMouseOffsetX());
             newReference.setMouseOffsetY(reference.getMouseOffsetY());
+
+            //TODO: remove harcoded hack (find a better way of how to handle copying tokens with local actos)
+            if(type == 'token') newReference.prop('actorLocal').setBoolean(false);
             
             _typedClipboard.get(type).push(newReference);
         }

@@ -163,7 +163,6 @@ function _handleMakeActorLocal(profile, message) {
 
         // update flag
         const reference = new EntityReference(token);
-        reference.prop('actorID').setLong(0);
         reference.prop('actorLocal').setBoolean(true);
         reference.performUpdate();
     }
