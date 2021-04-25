@@ -104,10 +104,12 @@ export class CanvasWindowEditToken extends CanvasWindowEditCustom {
             tab.className = 'edit-window-area edit-window-full-area edit-window-grid';
             tabs.appendChild(tab);
 
-            tab.appendChild(document.createTextNode('Radius Bright (in cells):'));
+            tab.appendChild(document.createTextNode('Bright Light Radius (in cells):'));
             tab.appendChild(this.createDoubleEditor('lightBright'));
-            tab.appendChild(document.createTextNode('Radius Dim (in cells):'));
+            tab.appendChild(document.createTextNode('Dim Light Radius (in cells):'));
             tab.appendChild(this.createDoubleEditor('lightDim'));
+            tab.appendChild(document.createTextNode('Darkness Radius (in cells):'));
+            tab.appendChild(this.createDoubleEditor('lightDark'));
             tab.appendChild(document.createTextNode('Angle:'));
             tab.appendChild(this.createLongEditor('lightAngle'));
             tab.appendChild(document.createTextNode('Flickering:'));

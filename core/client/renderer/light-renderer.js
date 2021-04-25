@@ -53,6 +53,12 @@ export const LightRenderer = {
         if(LightRenderer._lightBuffer1.height < screenHeight) LightRenderer._lightBuffer1.height = screenHeight;
         if(LightRenderer._lightBuffer2.width < screenWidth) LightRenderer._lightBuffer2.width = screenWidth;
         if(LightRenderer._lightBuffer2.height < screenHeight) LightRenderer._lightBuffer2.height = screenHeight;
+
+        // collect darkness tokens
+        const darknessTokens = [];
+        for(const token of tokens) {
+            if(LightRenderer.getLight(token, Light.DARK) > 0) darknessTokens.push(token);
+        }
         
 		// prepare buffer and render light levels
         LightRenderer._mainCtx.setTransform(1, 0, 0, 1, 0, 0); // identity
@@ -60,9 +66,9 @@ export const LightRenderer = {
         LightRenderer._mainCtx.fillStyle = 'black';
         LightRenderer._mainCtx.fillRect(0, 0, screenWidth, screenHeight);
         LightRenderer._mainCtx.globalCompositeOperation = 'lighter';
-        LightRenderer._renderLight(LightRenderer._mainCtx, screenWidth, screenHeight, transform, viewport, map, Light.BRIGHT, null, viewers, tokens);
-        LightRenderer._renderLight(LightRenderer._mainCtx, screenWidth, screenHeight, transform, viewport, map, Light.DIM, 'rgba(0, 0, 0, 0.59)', viewers, tokens);
-        LightRenderer._renderLight(LightRenderer._mainCtx, screenWidth, screenHeight, transform, viewport, map, Light.DARK, 'rgba(0, 0, 0, 0.78)', viewers, tokens);
+        LightRenderer._renderLight(LightRenderer._mainCtx, screenWidth, screenHeight, transform, viewport, map, Light.BRIGHT, null, viewers, tokens, darknessTokens);
+        LightRenderer._renderLight(LightRenderer._mainCtx, screenWidth, screenHeight, transform, viewport, map, Light.DIM, 'rgba(0, 0, 0, 0.59)', viewers, tokens, darknessTokens);
+        LightRenderer._renderLight(LightRenderer._mainCtx, screenWidth, screenHeight, transform, viewport, map, Light.DARK, 'rgba(0, 0, 0, 0.78)', viewers, tokens, darknessTokens);
         
         // render to screen
         ctx.save();
@@ -72,7 +78,7 @@ export const LightRenderer = {
         ctx.restore();
     },
     
-    _renderLight: function(ctx, screenWidth, screenHeight, transform, viewport, map, light, overlay, viewers, tokens) {
+    _renderLight: function(ctx, screenWidth, screenHeight, transform, viewport, map, light, overlay, viewers, tokens, darknessTokens) {
         // shortcut for zero sight and multiplier detection
         // TODO: note that combining multiple viewers can have some parts visible that should not be
         // but I think the only way to solve this would be to render each viewers sight/light sepperately which is expensive
@@ -92,7 +98,7 @@ export const LightRenderer = {
         
         // prepare buffer
         var ctx1 = LightRenderer._lightCtx1;
-        if(Light.isLess(light, map.prop('light').getLight())) {
+        if(light != map.prop('light').getLight()) {
             ctx1.fillStyle = 'black';
         } else {
             ctx1.fillStyle = 'white';
@@ -100,28 +106,20 @@ export const LightRenderer = {
         ctx1.globalCompositeOperation = 'source-over';
         ctx1.setTransform(1, 0, 0, 1, 0, 0); // identity
         ctx1.fillRect(0, 0, screenWidth, screenHeight);
+        ctx1.globalCompositeOperation = 'lighter';
+        ctx1.setTransform(transform);
         
         // render lights
-        if(Light.isLess(light, map.prop('light').getLight())) {
-            ctx1.globalCompositeOperation = 'lighter';
-            ctx1.setTransform(transform);
-            
-            for(const token of tokens) {
-				const centerX = token.prop('x').getLong();
-				const centerY = token.prop('y').getLong();
-                const maxLightRadius = Math.trunc(LightRenderer.getLight(token, light) * map.prop('gridSize').getLong()) * multiplier;
-				const lightRadius = Math.trunc(maxLightRadius * (1 - (token.prop('lightFlicker').getBoolean() ? 0.025*Math.random() : 0)));
-                // only render lights that are inside of the viewport
-				if(lightRadius > 0 && IntMathUtils.doAABBCircleIntersect(viewport.x, viewport.y, viewport.x+viewport.width, viewport.y+viewport.height, centerX, centerY, lightRadius)) {
-                    const lightViewport = new Rect(centerX-maxLightRadius-1, centerY-maxLightRadius-1, maxLightRadius*2+2, maxLightRadius*2+2);
-					
-                    // get wall clip (with cached data whenever possible)
-                    const cached = LightRenderer.getLightWallCache(token, light, centerX, centerY, maxLightRadius, lightViewport);
-                    
-                    // draw light (with clip)
-                    LightRenderer.paintLight(ctx1, token, cached, true, centerX, centerY, lightRadius);
-                }
-            }
+        if(Light.isLess(light, map.prop('light').getLight()) && light != Light.DARK) {
+            LightRenderer.paintLights(ctx1, light, tokens, viewport, map.prop('gridSize').getLong(), multiplier);
+        }
+
+        // render darkness
+        if(darknessTokens.length > 0) {
+            ctx1.globalCompositeOperation = light == Light.DARK ? 'lighter' : 'source-over';
+            const darknessColor = light == Light.DARK ? '#ffffff' : '#000000';
+
+            LightRenderer.paintLights(ctx1, Light.DARK, darknessTokens, viewport, map.prop('gridSize').getLong(), multiplier, 0.95, darknessColor);
         }
         
         // render sight (directly when a single viewer is present, with extra buffer otherwise)
@@ -160,12 +158,31 @@ export const LightRenderer = {
         ctx.drawImage(LightRenderer._lightBuffer1, 0, 0);
     },
     
-    paintLight: function(ctx1, token, cached, withClip, centerX, centerY, lightRadius) {
+    paintLights: function(ctx1, light, tokens, viewport, gridSize, multiplier, fadeStart = 0.5, overrideColor = null) {
+        for(const token of tokens) {
+            const centerX = token.prop('x').getLong();
+            const centerY = token.prop('y').getLong();
+            const maxLightRadius = Math.trunc(LightRenderer.getLight(token, light) * gridSize) * multiplier;
+            const lightRadius = Math.trunc(maxLightRadius * (1 - (token.prop('lightFlicker').getBoolean() ? 0.025*Math.random() : 0)));
+            // only render lights that are inside of the viewport
+            if(lightRadius > 0 && IntMathUtils.doAABBCircleIntersect(viewport.x, viewport.y, viewport.x+viewport.width, viewport.y+viewport.height, centerX, centerY, lightRadius)) {
+                const lightViewport = new Rect(centerX-maxLightRadius-1, centerY-maxLightRadius-1, maxLightRadius*2+2, maxLightRadius*2+2);
+                
+                // get wall clip (with cached data whenever possible)
+                const cached = LightRenderer.getLightWallCache(token, light, centerX, centerY, maxLightRadius, lightViewport);
+                
+                // draw light (with clip)
+                LightRenderer.paintLight(ctx1, token, cached, true, centerX, centerY, lightRadius, fadeStart, overrideColor);
+            }
+        }
+    },
+
+    paintLight: function(ctx1, token, cached, withClip, centerX, centerY, lightRadius, fadeStart = 0.5, overrideColor = null) {
         // calculate gradient
-        const color = token.prop('lightColor').getColor();
+        const color = overrideColor ?? token.prop('lightColor').getColor();
         const grd = ctx1.createRadialGradient(centerX, centerY, 1, centerX, centerY, lightRadius);
         grd.addColorStop(0, color);
-        grd.addColorStop(0.5, color);
+        grd.addColorStop(fadeStart, color);
         grd.addColorStop(1, color+'00');
         
         // paint
@@ -213,8 +230,9 @@ export const LightRenderer = {
     },
     
     _cache: {
+        BRIGHT: new Map(),
         DIM: new Map(),
-        BRIGHT: new Map()
+        DARK: new Map()
     },
     getLightWallCache: function(token, light, centerX, centerY, maxLightRadius, lightViewport) {
         var cached = LightRenderer._cache[light].get(token.getID());
@@ -228,8 +246,9 @@ export const LightRenderer = {
         return cached;
     },
     invalidateCache: function() {
-        LightRenderer._cache.DIM.clear();
         LightRenderer._cache.BRIGHT.clear();
+        LightRenderer._cache.DIM.clear();
+        LightRenderer._cache.DARK.clear();
     },
     
     getLight: function(token, light) {
@@ -238,7 +257,7 @@ export const LightRenderer = {
 		} else if(light == Light.DIM) {
 			return token.prop('lightDim').getDouble();
 		} else {
-			return 0;
+			return token.prop('lightDark').getDouble();
 		}
     },
 
