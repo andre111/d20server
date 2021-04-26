@@ -8,29 +8,30 @@ import { Events } from '../../../core/common/events.js';
 import { SETTING_PAGE_AUDIO } from '../../../core/client/app.js';
 import { SettingsEntryNumberRange } from '../../../core/client/settings/settings-entry-number-range.js';
 import { FILE_TYPE_AUDIO } from '../../../core/common/util/datautil.js';
+import { I18N } from '../../../core/common/util/i18n.js';
 
 // token editing
 Events.on('editTokenWindowCreateTabs', event => {
     const tab = document.createElement('div');
-    tab.name = 'Audio';
+    tab.name = I18N.get('token.edit.tabs.audio', 'Audio');
     tab.className = 'edit-window-area edit-window-full-area edit-window-grid';
     event.data.tabs.appendChild(tab);
 
     
-    tab.appendChild(document.createTextNode('File:'));
+    tab.appendChild(document.createTextNode(I18N.get('token.edit.audio.path', 'File:')));
     tab.appendChild(event.data.w.createFileEditor('audioPath', 'audio'));
 
-    tab.appendChild(document.createTextNode('Volume:'));
+    tab.appendChild(document.createTextNode(I18N.get('token.edit.audio.volume', 'Volume:')));
     tab.appendChild(event.data.w.createDoubleEditor('audioVolume'));
-    tab.appendChild(document.createTextNode('Distance (in cells):'));
+    tab.appendChild(document.createTextNode(I18N.get('token.edit.audio.distance', 'Distance (in cells):')));
     tab.appendChild(event.data.w.createDoubleEditor('audioDistance'));
-    tab.appendChild(document.createTextNode('Muffled by walls:'));
+    tab.appendChild(document.createTextNode(I18N.get('token.edit.audio.wallsmuffle', 'Muffled by walls:')));
     tab.appendChild(event.data.w.createBooleanEditor('audioWallsMuffle'));
-    tab.appendChild(document.createTextNode('Reverb:'));
+    tab.appendChild(document.createTextNode(I18N.get('token.edit.audio.reverb', 'Reverb:')));
     tab.appendChild(event.data.w.createBooleanEditor('audioReverb'));
-    tab.appendChild(document.createTextNode('Minimum Pause (in Seconds):'));
+    tab.appendChild(document.createTextNode(I18N.get('token.edit.audio.minpause', 'Minimum Pause (in Seconds):')));
     tab.appendChild(event.data.w.createLongEditor('audioMinPause'));
-    tab.appendChild(document.createTextNode('Maximum Pause (in Seconds):'));
+    tab.appendChild(document.createTextNode(I18N.get('token.edit.audio.maxpause', 'Maximum Pause (in Seconds):')));
     tab.appendChild(event.data.w.createLongEditor('audioMaxPause'));
 });
 
@@ -46,12 +47,12 @@ Events.on('mapChange', event => {
 });
 
 // music player
-Events.on('createMainHTML', event => {
+Events.on('enterMainState', event => {
     getMusicPlayer(); // force load of music player
 });
 
 Events.on('addModeButtonsGM', event => {
-    event.data.addButton(new ModeButtonExtended(new ModeButton('/modules/audio/files/img/gui/player', 'Open Music Player', () => false, () => getMusicPlayer().show()), 0));
+    event.data.addButton(new ModeButtonExtended(new ModeButton('/modules/audio/files/img/gui/player', I18N.get('modules.audio.openplayer', 'Open Music Player'), () => false, () => getMusicPlayer().show()), 0));
 });
 
 Events.on('fileManagerSelect', event => {
@@ -63,7 +64,7 @@ Events.on('fileManagerSelect', event => {
 });
 
 
-export const SETTING_AMBIENT_VOLUME = new SettingsEntryNumberRange('Ambient Volume', 100, 0, 100);
-export const SETTING_MUSIC_VOLUME = new SettingsEntryNumberRange('Music Volume', 25, 0, 100);
+export const SETTING_AMBIENT_VOLUME = new SettingsEntryNumberRange('settings.volume.ambient', 'Ambient Volume', 100, 0, 100);
+export const SETTING_MUSIC_VOLUME = new SettingsEntryNumberRange('settings.volume.music', 'Music Volume', 25, 0, 100);
 SETTING_PAGE_AUDIO.addEntry('ambient_volume', SETTING_AMBIENT_VOLUME);
 SETTING_PAGE_AUDIO.addEntry('music_volume', SETTING_MUSIC_VOLUME);

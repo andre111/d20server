@@ -49,7 +49,7 @@ Events.on('entityMenu', event => {
 
 // listen for any change that could cause the battle state to change
 Events.on('mapChange', event => ClientBattleManager.scanState());
-Events.on('createMainHTML', event => {
+Events.on('enterMainState', event => {
     EntityManagers.get('map').addListener(() => ClientBattleManager.scanState());
     EntityManagers.get('token').addListener(() => ClientBattleManager.scanState());
     EntityManagers.get('actor').addListener(() => ClientBattleManager.scanState());

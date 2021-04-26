@@ -1,0 +1,50 @@
+{
+    "token": {
+        "edit": {
+            "position": "Position: ",
+            "size": "Größe: ",
+            "rotation": "Rotation: ",
+            "layer": "Ebene: ",
+            
+            "represents": "repräsentiert ",
+            
+            "tabs": {
+                "gui": "Gui",
+                "gmnotes": "GM-Notizen",
+                "light": "Licht"
+            },
+            "gui": {
+                "bars": {
+                    "1": "Leiste 1",
+                    "2": "Leiste 2",
+                    "3": "Leiste 3",
+                    "value": "Wert:",
+                    "max": "Maximum:"
+                },
+                "editboxes": {
+                    "title": "Schnellzugriff Boxen",
+                    "explanation": "(Liste an [property]:[Beschriftung],...)"
+                }
+            },
+            "light": {
+                "bright": "Licht Radius (in Zellen):",
+                "dim": "Dämmerlicht Radius (in Zellen):",
+                "dark": "Dunkelheits Radius (in Zellen):",
+                "angle": "Öffnungswinkel:",
+                "flicker": "Flackern:",
+                "color": "Farbe:"
+            }
+        }
+    },
+    "settings": {
+        "title": "Einstellungen",
+        "page": {
+            "audio": "Audio",
+            "modules": "Module"
+        },
+        "volume": {
+            "global": "Gesammt Lautstärke",
+            "weather": "Wetter Lautstärke"
+        }
+    }
+}

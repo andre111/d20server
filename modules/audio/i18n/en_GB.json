@@ -1,0 +1,29 @@
+{
+    "token": {
+        "edit": {
+            "tabs": {
+                "audio": "Audio"
+            },
+            "audio": {
+                "path": "File:",
+                "volume": "Volume:",
+                "distance": "Distance (in cells):",
+                "wallsmuffle": "Muffled by walls:",
+                "reverb": "Reverb:",
+                "minpause": "Minimum Pause (in Seconds):",
+                "maxpause": "Maximum Pause (in Seconds):"
+            }
+        }
+    },
+    "settings": {
+        "volume": {
+            "ambient": "Ambient Volume",
+            "music": "Music Volume"
+        }
+    },
+    "modules": {
+        "audio": {
+            "openplayer": "Open Music Player"
+        }
+    }
+}

@@ -5,6 +5,7 @@ import { StateDisconnected } from './state-disconnected.js';
 import { Connection } from '../connection.js';
 import { Client } from '../app.js';
 import { Settings } from '../settings/settings.js';
+import { I18N } from '../../common/util/i18n.js';
 
 export class StateInit extends State {
     constructor() {
@@ -17,6 +18,9 @@ export class StateInit extends State {
         dayjs.extend(window.dayjs_plugin_relativeTime);
         dayjs.extend(window.dayjs_plugin_duration);
         dayjs.extend(window.dayjs_plugin_localizedFormat);
+
+        // load language file
+        fetch('/lang.json').then(res => res.json()).then(data => I18N.mergeObject(data));
 
         // initialize connection
         document.body.innerHTML = 'Connecting to server...';

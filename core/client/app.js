@@ -49,9 +49,9 @@ import { ActionCommand, MovePlayerToMap, SendChatMessage } from '../common/messa
 import { CanvasWindowFitToGrid } from './canvas/window/canvas-window-fit-to-grid.js';
 import { CanvasWindowConfirm } from './canvas/window/canvas-window-confirm.js';
 import { TokenUtil } from '../common/util/tokenutil.js';
-import { EditorList } from './gui/editor-list.js';
-import { ActorPropertyEditor } from './gui/property-editor/special/actor-property-editor.js';
 import { CanvasWindowEditToken } from './canvas/window/canvas-window-edit-token.js';
+import { I18N } from '../common/util/i18n.js';
+import { StateMain } from './state/state-main.js';
 
 // Initialize common code
 Common.init(new ClientIDProvider(), ClientEntityManager);
@@ -73,8 +73,13 @@ export const Client = {
         if(_state) _state.exit();
         _state = state;
         state.init();
+
+        Events.trigger('enterState');
     }
 }
+Events.on('enterState', () => {
+    if(Client.getState() instanceof StateMain) Events.trigger('enterMainState');
+});
 
 // register some default stuff
 InputService.registerAction('move_left', 37 /*LEFT*/, false, false, false);
@@ -89,9 +94,6 @@ InputService.registerAction('center_camera', 67 /*C*/, false, false, false);
 InputService.registerAction('set_view', 86 /*V*/, false, false, false);
 InputService.registerAction('ping_location', 80 /*P*/, false, false, false);
 InputService.registerAction('ping_location_focus', 80 /*P*/, true, false, false);
-
-InputService.registerAction('toggle_mode_window', 77 /*M*/, false, false, false);
-InputService.registerAction('toggle_sidepane', 84 /*T*/, false, false, false);
 
 InputService.registerAction('copy', 67 /*C*/, false, true, false);
 InputService.registerAction('paste', 86 /*V*/, false, true, false);
@@ -179,7 +181,7 @@ Events.on('addSidepanelTabs', event => {
     event.data.addSidepanelTab(new SidepanelTabMaps());
 });
 
-Events.on('createMainHTML', () => {
+Events.on('enterMainState', () => {
     WallRenderer.init();
     LightRenderer.init();
 });
@@ -404,13 +406,12 @@ Events.on('editWindowCreateTabs', event => {
 
 
 // Settings
-export const SETTING_GLOBAL_VOLUME = new SettingsEntryNumberRange('Global Volume', 100, 0, 100);
-export const SETTING_WEATHER_VOLUME = new SettingsEntryNumberRange('Weather Volume', 100, 0, 100);
-export const SETTING_PAGE_GENERAL = Settings.createPage('general', 'General');
+export const SETTING_GLOBAL_VOLUME = new SettingsEntryNumberRange('settings.volume.global', 'Global Volume', 100, 0, 100);
+export const SETTING_WEATHER_VOLUME = new SettingsEntryNumberRange('settings.volume.weather', 'Weather Volume', 100, 0, 100);
 export const SETTING_PAGE_AUDIO = Settings.createPage('audio', 'Audio');
 SETTING_PAGE_AUDIO.addEntry('volume', SETTING_GLOBAL_VOLUME);
 SETTING_PAGE_AUDIO.addEntry('weather_volume', SETTING_WEATHER_VOLUME);
-Events.on('createMainHTML', event => {
+Events.on('enterMainState', event => {
     if(ServerData.isGM()) ModuleSettings.init();
 });
 

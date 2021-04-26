@@ -14,7 +14,7 @@ export class Settings {
 
     static createPage(internalName, displayName) {
         if(Settings.#pages[internalName]) throw new Error(`Duplicated settings page name: ${internalName}`);
-        return Settings.#pages[internalName] = new SettingsPage(displayName);
+        return Settings.#pages[internalName] = new SettingsPage(internalName, displayName);
     }
 
     static save() {

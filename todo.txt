@@ -11,6 +11,7 @@
 // create real "import" command line functionality on server (+ other commands?)
 
 //TODO: Long term technical todos
+// document classes and functions (very similar to javadoc, see datautil.js deepMerge for an example)
 // remove data driven entity stuff and go back to code based definitions?
 // Use Mocha (https://mochajs.org/#getting-started) for writing unit tests
 // Maybe: Switch to TypeScript (would be nice to have typed variables/... but might come with multiple complications)
@@ -51,7 +52,7 @@
 // a "map" function for an actual map somehow?
 
 //TODO: Get rid of rarely used libraries:
-// jquery (including jquery ui): still needs writing my own context menu system, search for "$.ajax(" and "$(" to find remaining usages
+// jquery (including jquery ui): still needs writing my own context menu system, search for "$.ajax(" (replace with fetch api usage) and "$(" to find remaining usages
 
 //TODO: Technical:
 // improve access management: Currently all tokens and walls are synched even for inaccessible maps, And maps require a forced sync for players (that may be a good thing?)

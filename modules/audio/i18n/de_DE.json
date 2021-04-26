@@ -1,0 +1,29 @@
+{
+    "token": {
+        "edit": {
+            "tabs": {
+                "audio": "Audio"
+            },
+            "audio": {
+                "path": "Datei:",
+                "volume": "Lautstärke:",
+                "distance": "Distanz (in Zellen):",
+                "wallsmuffle": "Gedämpft durch Wände:",
+                "reverb": "Hall:",
+                "minpause": "Minimale Pause (in Sekunden):",
+                "maxpause": "Maximale Pause (in Sekunden):"
+            }
+        }
+    },
+    "settings": {
+        "volume": {
+            "ambient": "Ambiente Lautstärke",
+            "music": "Musik Lautstärke"
+        }
+    },
+    "modules": {
+        "audio": {
+            "openplayer": "Öffne Musikspieler"
+        }
+    }
+}

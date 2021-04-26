@@ -1,10 +1,12 @@
 import { SettingsEntry } from './settings-entry.js';
 
 export class SettingsPage {
+    #internalName;
     #displayName;
     #entries;
 
-    constructor(displayName) {
+    constructor(internalName, displayName) {
+        this.#internalName = internalName;
         this.#displayName = displayName;
         this.#entries = {};
     }
@@ -14,6 +16,10 @@ export class SettingsPage {
         if(!(entry instanceof SettingsEntry)) throw new Error('Can only add instances of SettingsEntry');
 
         this.#entries[internalName] = entry;
+    }
+
+    get internalName() {
+        return this.#internalName;
     }
 
     get displayName() {

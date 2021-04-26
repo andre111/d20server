@@ -1,0 +1,11 @@
+{
+    "settings": {
+        "page": {
+            "3ddice": "3D Würfel"
+        },
+        "3ddice": {
+            "enabled": "Aktiviert",
+            "volume": "Lautstärke"
+        }
+    }
+}

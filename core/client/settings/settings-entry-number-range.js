@@ -4,8 +4,8 @@ export class SettingsEntryNumberRange extends SettingsEntry {
     #minValue;
     #maxValue;
 
-    constructor(displayName, defaultValue, minValue, maxValue) {
-        super(displayName, defaultValue);
+    constructor(i18nKey, displayName, defaultValue, minValue, maxValue) {
+        super(i18nKey, displayName, defaultValue);
 
         this.#minValue = minValue;
         this.#maxValue = maxValue;

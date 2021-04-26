@@ -61,8 +61,6 @@ export class StateMain extends State {
         this.notificationManager = new NotificationManager();
         document.body.appendChild(this.notificationManager.getContainer());
         
-        Events.trigger('createMainHTML', {state: this});
-        
         // get reference to main canvas
         this.canvas = document.getElementById('canvas');
         this.ctx = this.canvas.getContext('2d', { alpha: false });

@@ -112,7 +112,7 @@ function reconnect() {
 
 // create event listeners (to startup local stream/messaging)
 if(location.protocol == 'https:') {
-    Events.on('createMainHTML', event => {
+    Events.on('enterMainState', event => {
         videoContainer = document.createElement('div');
         videoContainer.className = 'webrtc-container';
         document.body.appendChild(videoContainer);

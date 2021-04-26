@@ -9,6 +9,7 @@ import { ModuleDefinitions } from '../../common/messages.js';
 import { UserService } from './user-service.js';
 import { Role } from '../../common/constants.js';
 import { CONFIG } from '../config.js';
+import { I18N } from '../../common/util/i18n.js';
 
 class Module {
     identifier;
@@ -46,6 +47,7 @@ export class ModuleService {
     static async init() {
         // "init" config
         CONFIG.get().disabledModules = CONFIG.get().disabledModules ?? [];
+        CONFIG.get().language = CONFIG.get().language ?? 'de_DE';
 
         // scan for modules
         fs.readdirSync(path.join(path.resolve(), '/modules/')).forEach(file => {
@@ -57,6 +59,9 @@ export class ModuleService {
                 }
             }
         });
+
+        // load i18n files
+        ModuleService.loadI18N();
 
         // load definitions
         ModuleService.loadDefinitions();
@@ -75,6 +80,14 @@ export class ModuleService {
                 }
             }
         }
+    }
+
+    static loadI18N() {
+        const loadLangFile = file => { if(fs.existsSync(file)) I18N.mergeObject(readJsonFile(file)); };
+        const lang = CONFIG.get().language;
+
+        loadLangFile('./core/i18n/'+lang+'.json');
+        ModuleService.forEnabledModules(module => loadLangFile(path.join(module.getDirectory(), 'i18n/'+lang+'.json')));
     }
 
     static loadDefinitions() {

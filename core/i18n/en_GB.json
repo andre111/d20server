@@ -1,0 +1,50 @@
+{
+    "token": {
+        "edit": {
+            "position": "Position: ",
+            "size": "Size: ",
+            "rotation": "Rotation: ",
+            "layer": "Layer: ",
+            
+            "represents": "represents ",
+            
+            "tabs": {
+                "gui": "Gui",
+                "gmnotes": "GM-Notes",
+                "light": "Light"
+            },
+            "gui": {
+                "bars": {
+                    "1": "Bar 1",
+                    "2": "Bar 2",
+                    "3": "Bar 3",
+                    "value": "Value:",
+                    "max": "Maximum:"
+                },
+                "editboxes": {
+                    "title": "Quick Edit Boxes",
+                    "explanation": "(list of [property]:[label],...)"
+                }
+            },
+            "light": {
+                "bright": "Bright Light Radius (in cells):",
+                "dim": "Dim Light Radius (in cells):",
+                "dark": "Darkness Radius (in cells):",
+                "angle": "Angle:",
+                "flicker": "Flickering:",
+                "color": "Colour:"
+            }
+        }
+    },
+    "settings": {
+        "title": "Settings",
+        "page": {
+            "audio": "Audio",
+            "modules": "Modules"
+        },
+        "volume": {
+            "global": "Global Volume",
+            "weather": "Weather Volume"
+        }
+    }
+}

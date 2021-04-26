@@ -1073,7 +1073,7 @@ div.chat-box-content th, div.chat-box-content td {
 }
 .edit-window-row input {
     height: 20px;
-    width: 140px;
+    width: 100%;
 }
 
 .edit-window-grid {
@@ -1101,13 +1101,14 @@ div.chat-box-content th, div.chat-box-content td {
 }
 .edit-token-actor button {
     height: 20px;
+    flex: 0 1;
     white-space: nowrap;
 }
 .edit-token-actor button:first-of-type {
-    flex: 0 0 110px;
+    flex: 1 0;
 }
 .edit-token-container .edit-window-header-row input {
-    width: 45px;
+    width: 40px;
     height: 20px;
     text-align: center;
 }

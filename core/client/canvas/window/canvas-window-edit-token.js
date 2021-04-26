@@ -4,6 +4,7 @@ import { ImagePropertyEditor } from '../../gui/property-editor/special/image-pro
 import { Tabs } from '../../gui/tabs.js';
 import { MultiLineStringPropertyEditor } from '../../gui/property-editor/special/multi-line-property-editor.js';
 import { Events } from '../../../common/events.js';
+import { I18N } from '../../../common/util/i18n.js';
 
 export class CanvasWindowEditToken extends CanvasWindowEditCustom {
 
@@ -34,13 +35,13 @@ export class CanvasWindowEditToken extends CanvasWindowEditCustom {
             const headerRow1 = document.createElement('ul');
             headerRow1.className = 'edit-window-header-row flexrow';
             const posLI = document.createElement('li');
-            posLI.appendChild(document.createTextNode('Position: '));
+            posLI.appendChild(document.createTextNode(I18N.get('token.edit.position', 'Position: ')));
             posLI.appendChild(this.createLongEditor('x'));
             posLI.appendChild(document.createTextNode(' x '));
             posLI.appendChild(this.createLongEditor('y'));
             headerRow1.appendChild(posLI);
             const sizeLI = document.createElement('li');
-            sizeLI.appendChild(document.createTextNode('Size: '));
+            sizeLI.appendChild(document.createTextNode(I18N.get('token.edit.size', 'Size: ')));
             sizeLI.appendChild(this.createLongEditor('width'));
             sizeLI.appendChild(document.createTextNode(' x '));
             sizeLI.appendChild(this.createLongEditor('height'));
@@ -50,11 +51,11 @@ export class CanvasWindowEditToken extends CanvasWindowEditCustom {
             const headerRow2 = document.createElement('ul');
             headerRow2.className = 'edit-window-header-row flexrow';
             const rotationLI = document.createElement('li');
-            rotationLI.appendChild(document.createTextNode('Rotation: '));
+            rotationLI.appendChild(document.createTextNode(I18N.get('token.edit.rotation', 'Rotation: ')));
             rotationLI.appendChild(this.createDoubleEditor('rotation'));
             headerRow2.appendChild(rotationLI);
             const layerLI = document.createElement('li');
-            layerLI.appendChild(document.createTextNode('Layer: '));
+            layerLI.appendChild(document.createTextNode(I18N.get('token.edit.layer', 'Layer: ')));
             layerLI.appendChild(this.createLayerEditor('layer'));
             layerLI.appendChild(this.createLongEditor('depth'));
             headerRow2.appendChild(layerLI);
@@ -70,7 +71,7 @@ export class CanvasWindowEditToken extends CanvasWindowEditCustom {
         //    Gui
         {
             const tab = document.createElement('div');
-            tab.name = 'Gui';
+            tab.name = I18N.get('token.edit.tabs.gui', 'Gui');
             tab.className = 'edit-window-area edit-window-full-area';
             tabs.appendChild(tab);
 
@@ -78,15 +79,15 @@ export class CanvasWindowEditToken extends CanvasWindowEditCustom {
             tab.appendChild(this.createBarSettingsEditor(2));
             tab.appendChild(this.createBarSettingsEditor(3));
 
-            const editBoxesValue = this.createValueContainer('Quick Edit Boxes');
+            const editBoxesValue = this.createValueContainer(I18N.get('token.edit.gui.editboxes.title', 'Quick Edit Boxes'));
             editBoxesValue.appendChild(this.createStringEditor('editBoxes', '', '', 'edit-token-edit-boxes'));
-            editBoxesValue.appendChild(document.createTextNode('(list of [property]:[label],...)'));
+            editBoxesValue.appendChild(document.createTextNode(I18N.get('token.edit.gui.editboxes.explanation', '(list of [property]:[label],...)')));
             tab.appendChild(editBoxesValue);
         }
         //    GM-Notes
         {
             const tab = document.createElement('div');
-            tab.name = 'GM-Notes';
+            tab.name = I18N.get('token.edit.tabs.gmnotes', 'GM-Notes');
             tab.style.height = '100%';
             tabs.appendChild(tab);
             
@@ -100,21 +101,21 @@ export class CanvasWindowEditToken extends CanvasWindowEditCustom {
         //    Light
         {
             const tab = document.createElement('div');
-            tab.name = 'Light';
+            tab.name = I18N.get('token.edit.tabs.light', 'Light');
             tab.className = 'edit-window-area edit-window-full-area edit-window-grid';
             tabs.appendChild(tab);
 
-            tab.appendChild(document.createTextNode('Bright Light Radius (in cells):'));
+            tab.appendChild(document.createTextNode(I18N.get('token.edit.light.bright', 'Bright Light Radius (in cells):')));
             tab.appendChild(this.createDoubleEditor('lightBright'));
-            tab.appendChild(document.createTextNode('Dim Light Radius (in cells):'));
+            tab.appendChild(document.createTextNode(I18N.get('token.edit.light.dim', 'Dim Light Radius (in cells):')));
             tab.appendChild(this.createDoubleEditor('lightDim'));
-            tab.appendChild(document.createTextNode('Darkness Radius (in cells):'));
+            tab.appendChild(document.createTextNode(I18N.get('token.edit.light.dark', 'Darkness Radius (in cells):')));
             tab.appendChild(this.createDoubleEditor('lightDark'));
-            tab.appendChild(document.createTextNode('Angle:'));
+            tab.appendChild(document.createTextNode(I18N.get('token.edit.light.angle', 'Angle:')));
             tab.appendChild(this.createLongEditor('lightAngle'));
-            tab.appendChild(document.createTextNode('Flickering:'));
+            tab.appendChild(document.createTextNode(I18N.get('token.edit.light.flicker', 'Flickering:')));
             tab.appendChild(this.createBooleanEditor('lightFlicker'));
-            tab.appendChild(document.createTextNode('Color:'));
+            tab.appendChild(document.createTextNode(I18N.get('token.edit.light.color', 'Colour:')));
             tab.appendChild(this.createColorEditor('lightColor'));
         } 
         //TODO: replace with something a little less hacky
@@ -125,12 +126,12 @@ export class CanvasWindowEditToken extends CanvasWindowEditCustom {
     }
 
     createBarSettingsEditor(number) {
-        const barValue = this.createValueContainer('Bar '+number);
+        const barValue = this.createValueContainer(I18N.get('token.edit.gui.bars.'+number, 'Bar '+number));
         const span = document.createElement('span');
         span.className = 'edit-window-row flexrow';
-        span.appendChild(document.createTextNode('Value:'));
+        span.appendChild(document.createTextNode(I18N.get('token.edit.gui.bars.value', 'Value:')));
         span.appendChild(this.createStringEditor('bar'+number+'Current'));
-        span.appendChild(document.createTextNode('Maximum:'));
+        span.appendChild(document.createTextNode(I18N.get('token.edit.gui.bars.max', 'Maximum:')));
         span.appendChild(this.createStringEditor('bar'+number+'Max'));
         barValue.appendChild(span);
         return barValue;

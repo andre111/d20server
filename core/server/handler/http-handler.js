@@ -10,6 +10,7 @@ import { router as filemanRouter } from './filemanager.js';
 import { ModuleService } from '../service/module-service.js';
 import { buildIndexPage, getIndexPage } from './index-page.js';
 import { WebsocketHandler } from './websocket-handler.js';
+import { buildLangJson, getLangJson } from './lang-json.js';
 
 const port = 8082;
 const server = express();
@@ -55,6 +56,10 @@ export class HttpHandler {
             server.use('/modules/'+module.getIdentifier()+'/client', express.static(path.join(module.getDirectory(), '/client')));
             server.use('/modules/'+module.getIdentifier()+'/files', express.static(path.join(module.getDirectory(), '/files')));
         });
+
+        // language json
+        buildLangJson();
+        server.get('/lang.json', getLangJson);
 
         // index page
         buildIndexPage();

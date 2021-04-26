@@ -9,6 +9,7 @@ import { Type } from '../../../../common/constants.js';
 import { MakeActorLocal } from '../../../../common/messages.js';
 import { TokenUtil } from '../../../../common/util/tokenutil.js';
 import { EntityReference } from '../../../../common/entity/entity-reference.js';
+import { I18N } from '../../../../common/util/i18n.js';
 
 export class ActorPropertyEditor extends PropertyEditor {
     #reference;
@@ -22,7 +23,7 @@ export class ActorPropertyEditor extends PropertyEditor {
     }
     
     initContent(label) {
-        this.addLabel('represents ');
+        this.addLabel(I18N.get('token.edit.represents', 'represents '));
         this.button = document.createElement('button');
         this.button.onclick = () => this.doSelectActor();
         this.container.appendChild(this.button);

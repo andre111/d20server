@@ -12,7 +12,7 @@ export class SettingsEntryModuleToggle extends SettingsEntry {
     #editor;
 
     constructor(identifier, name, version, description) {
-        super(name, true);
+        super(name, name, true);
 
         this.#identifier = identifier;
         this.#name = name;

@@ -1,8 +1,8 @@
 import { SettingsEntry } from './settings-entry.js';
 
 export class SettingsEntryToggle extends SettingsEntry {
-    constructor(displayName, defaultValue) {
-        super(displayName, defaultValue);
+    constructor(i18nKey, displayName, defaultValue) {
+        super(i18nKey, displayName, defaultValue);
     }
 
     createEditor() {
