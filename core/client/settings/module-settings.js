@@ -10,7 +10,7 @@ export class ModuleSettings {
         ModuleSettings.#MODULE_ENTRIES = {};
     }
 
-    static onModuleDefinitions(moduleDefinitions) {
+    static onModuleDefinitions(moduleDefinitions, disabledModules) {
         if(ModuleSettings.#PAGE) {
             for(const [identifier, definition] of Object.entries(moduleDefinitions)) {
                 if(!ModuleSettings.#MODULE_ENTRIES[identifier]) {
@@ -18,7 +18,7 @@ export class ModuleSettings {
                     ModuleSettings.#PAGE.addEntry(identifier, ModuleSettings.#MODULE_ENTRIES[identifier]);
                 }
 
-                ModuleSettings.#MODULE_ENTRIES[identifier].update(definition.disabled);
+                ModuleSettings.#MODULE_ENTRIES[identifier].update(disabledModules.includes(identifier));
             }
         }
     }

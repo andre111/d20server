@@ -1,13 +1,14 @@
 import path from 'path';
 import fs from 'fs';
 
-import { readJsonFile, saveJsonFile } from '../util/fileutil.js';
+import { readJsonFile } from '../util/fileutil.js';
 import { Definitions } from '../../common/common.js';
 import { setDefinitions } from '../../common/definitions.js';
 import { MessageService } from './message-service.js';
 import { ModuleDefinitions } from '../../common/messages.js';
 import { UserService } from './user-service.js';
 import { Role } from '../../common/constants.js';
+import { CONFIG } from '../config.js';
 
 class Module {
     identifier;
@@ -20,11 +21,7 @@ class Module {
         this.directory = directory;
 
         this.definition = readJsonFile(path.join(directory, 'module.json'));
-        this.enabled = !this.definition.disabled;
-    }
-
-    saveDefinition() {
-        saveJsonFile(path.join(this.directory, 'module.json'), this.definition, true);
+        this.enabled = !CONFIG.get().disabledModules.includes(identifier);
     }
 
     getIdentifier() {
@@ -47,6 +44,9 @@ class Module {
 var modules = [];
 export class ModuleService {
     static async init() {
+        // "init" config
+        CONFIG.get().disabledModules = CONFIG.get().disabledModules ?? [];
+
         // scan for modules
         fs.readdirSync(path.join(path.resolve(), '/modules/')).forEach(file => {
             const directory = path.join(path.resolve(), '/modules/'+file+'/');
@@ -149,17 +149,17 @@ export class ModuleService {
             moduleDefinitions[module.identifier] = module.definition;
         }
 
-        MessageService.send(new ModuleDefinitions(moduleDefinitions), profile);
+        MessageService.send(new ModuleDefinitions(moduleDefinitions, CONFIG.get().disabledModules), profile);
     }
 
     static toggleModule(identifier, disabled) {
-        for(const module of modules) {
-            if(module.identifier == identifier) {
-                module.definition.disabled = disabled;
-                module.saveDefinition();
-                this.broadcastModuleDefinitions();
-                return;
-            }
+        const index = CONFIG.get().disabledModules.indexOf(identifier);
+        if(disabled) {
+            if(index == -1) CONFIG.get().disabledModules.push(identifier);
+        } else {
+            if(index >= 0) CONFIG.get().disabledModules.splice(index, 1);
         }
+        CONFIG.save();
+        ModuleService.broadcastModuleDefinitions();
     }
 }

@@ -1,6 +1,5 @@
 {
     "name": "Pathfinder Measurement System",
     "version": "0.0.1",
-    "description": "Allows for measuring lines and circle and cone areas",
-    "disabled": false
+    "description": "Allows for measuring lines and circle and cone areas"
 }

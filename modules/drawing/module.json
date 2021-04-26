@@ -1,6 +1,5 @@
 {
     "name": "Drawing Module",
     "version": "0.0.1",
-    "description": "Adds the ability to draw basic shapes",
-    "disabled": false
+    "description": "Adds the ability to draw basic shapes"
 }

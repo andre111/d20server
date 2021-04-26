@@ -1,6 +1,5 @@
 {
     "name": "Import Universal VTT Files",
     "version": "0.0.1",
-    "description": "Allows importing of dd2vtt format map files from file manager",
-    "disabled": false
+    "description": "Allows importing of dd2vtt format map files from file manager"
 }

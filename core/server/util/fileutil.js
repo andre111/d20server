@@ -20,6 +20,9 @@ export function saveJson(name, object, pretty = false) {
     saveJsonFile(nameToPath(name, '.json'), object, pretty);
 }
 export function saveJsonFile(file, object, pretty = false) {
+    const dir = path.dirname(file);
+    if(!fs.existsSync(dir)) fs.mkdirsSync(dir);
+
     const text = toJson(object, false, pretty);
     fs.writeFileSync(file, text);
 }

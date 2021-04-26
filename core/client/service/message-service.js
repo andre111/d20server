@@ -73,7 +73,7 @@ export const MessageService = {
                 Client.getState().getNotificationManager().addNotification(msg.getContent(), msg.getTime());
             }
         } else if(msg instanceof ModuleDefinitions) {
-            ModuleSettings.onModuleDefinitions(msg.getModuleDefinitions());
+            ModuleSettings.onModuleDefinitions(msg.getModuleDefinitions(), msg.getDisabledModules());
         } else {
             const event = Events.trigger('customMessage', { message: msg }, true);
             if(!event.canceled) {

@@ -2,7 +2,6 @@
     "name": "3D Dice",
     "version": "0.0.1",
     "description": "Displays dice rolls as a 3D Animation",
-    "disabled": false,
     "libraries": [
         "/libs/cannon.min.js",
         "/libs/three/three.js",

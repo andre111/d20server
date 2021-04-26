@@ -1,6 +1,5 @@
 {
     "name": "Battle Module",
     "version": "0.0.1",
-    "description": "Allows tracking of initiative, battle turns/rounds and more",
-    "disabled": false
+    "description": "Allows tracking of initiative, battle turns/rounds and more"
 }
