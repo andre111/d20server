@@ -420,6 +420,10 @@ span.chat-dice-crit {
 span.chat-dice-fail {
     color: #FF0000;
 }
+span.chat-dice-uncounted {
+    text-decoration: line-through;
+    text-decoration-color: red;
+}
 span.chat-dice-inline {
     width: 32px;
     height: 20px;

@@ -13,7 +13,7 @@ export class HTMLStringPropertyEditor extends PropertyEditor {
     initContent(label) {
         if(label) GuiUtils.makeBordered(this.container, label);
         
-        this.container.className = 'html-editor';
+        this.container.classList.add('html-editor');
         this.form = document.createElement('form');
         this.form.onsubmit = () => this.doSubmit(tinymce.activeEditor);
         this.textDiv = document.createElement('div');

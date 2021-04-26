@@ -225,6 +225,9 @@ export class Dice extends Expression {
         } else if(result.criticalSuccess) {
             cl = (cl === '' ? 'chat-dice-crit' : cl + ' chat-dice-crit')
         }
+        if(!result.shouldBeIncluded()) {
+            cl = (cl === '' ? 'chat-dice-uncounted' : cl + ' chat-dice-uncounted');
+        }
 
         // build string
         var string = prefix;
