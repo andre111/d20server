@@ -62,16 +62,16 @@ export class HTMLStringPropertyEditor extends PropertyEditor {
         });
     }
     
-    reloadValue(property) {
-        const newValue = property.getString();
+    reloadValue(reference, name) {
+        const newValue = reference.getString(name);
         if(newValue != this.value) {
-            this.value = property.getString();
+            this.value = newValue;
             this.setHTMLValue();
         }
     }
     
-    applyValue(property) {
-        property.setString(this.value);
+    applyValue(reference, name) {
+        reference.setString(name, this.value);
     }
     
     setHTMLValue() {

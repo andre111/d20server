@@ -87,18 +87,18 @@ export class CanvasModeDrawings extends CanvasMode {
     newDrawing(creator, map, x, y, width, height, rotation, shape, color) {
         var drawing = new Entity('drawing');
         
-        drawing.prop('creator').setLong(creator.id);
-		drawing.prop('map').setLong(map.id);
+        drawing.setLong('creator', creator.id);
+		drawing.setLong('map', map.id);
 		
-		drawing.prop('x').setLong(x);
-		drawing.prop('y').setLong(y);
-		drawing.prop('width').setLong(width);
-		drawing.prop('height').setLong(height);
-		drawing.prop('rotation').setDouble(rotation);
-		drawing.prop('layer').setLayer(Client.getState().getLayer());
+		drawing.setLong('x', x);
+		drawing.setLong('y', y);
+		drawing.setLong('width', width);
+		drawing.setLong('height', height);
+		drawing.setDouble('rotation', rotation);
+		drawing.setLayer('layer', Client.getState().getLayer());
 		
-		drawing.prop('shape').setString(shape);
-		drawing.prop('color').setColor(color);
+		drawing.setString('shape', shape);
+		drawing.setColor('color', color);
 		
 		return drawing;
     }
@@ -137,7 +137,7 @@ export class CanvasModeDrawings extends CanvasMode {
 				y = (this.yStart + yCurrent) / 2;
 				width = Math.abs(xDiff);
 				height = Math.abs(yDiff);
-				this.currentDrawing.prop('shape').setString(modified ? 'rectOutline' : 'rect');
+				this.currentDrawing.setString('shape', modified ? 'rectOutline' : 'rect');
                 break;
             case 'DRAW_OVAL':
                 xDiff = Math.abs(xDiff);
@@ -149,16 +149,16 @@ export class CanvasModeDrawings extends CanvasMode {
 				y = this.yStart;
 				width = xDiff*2;
 				height = yDiff*2;
-				this.currentDrawing.prop('shape').setString(modified ? 'ovalOutline' : 'oval');
+				this.currentDrawing.setString('shape', modified ? 'ovalOutline' : 'oval');
                 break;
             default:
                 return;
             }
             
-			this.currentDrawing.prop('x').setLong(x);
-			this.currentDrawing.prop('y').setLong(y);
-			this.currentDrawing.prop('width').setLong(width);
-			this.currentDrawing.prop('height').setLong(height);
+			this.currentDrawing.setLong('x', x);
+			this.currentDrawing.setLong('y', y);
+			this.currentDrawing.setLong('width', width);
+			this.currentDrawing.setLong('height', height);
         }
     }
     

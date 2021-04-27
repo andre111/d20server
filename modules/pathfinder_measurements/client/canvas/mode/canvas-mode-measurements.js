@@ -51,8 +51,8 @@ export class CanvasModeMeasurements extends CanvasMode {
 			// snap to grid (and corners) (set snap to true when control is NOT down)
             var map = MapUtils.currentMap();
             if(map != null && map != undefined) {
-                x = Math.round(x / (map.prop('gridSize').getLong()/2)) * (map.prop('gridSize').getLong()/2);
-                y = Math.round(y / (map.prop('gridSize').getLong()/2)) * (map.prop('gridSize').getLong()/2);
+                x = Math.round(x / (map.getLong('gridSize')/2)) * (map.getLong('gridSize')/2);
+                y = Math.round(y / (map.getLong('gridSize')/2)) * (map.getLong('gridSize')/2);
             }
         }
         

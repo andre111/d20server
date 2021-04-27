@@ -6,10 +6,10 @@ export class TokenUtil {
     static getActor(token) {
         if(!token || !(token instanceof Entity) || token.getType() !== 'token') throw new Error('Provided object is not a token');
 
-        if(token.prop('actorLocal').getBoolean()) {
+        if(token.getBoolean('actorLocal')) {
             return EntityManagers.get('token/'+token.getID()+'-actor').find(0);
         } else {
-            const actorID = token.prop('actorID').getLong();
+            const actorID = token.getLong('actorID');
             return EntityManagers.get('actor').find(actorID);
         }
     }
@@ -21,35 +21,44 @@ export class TokenUtil {
         else return [];
     }
 
+    // TODO: this has many duplicated lines
     static isBarVisible(token, viewer, number) {
         const actor = TokenUtil.getActor(token);
         if(!actor || !actor.canView(viewer)) return false;
 
         const accessLevel = token.getAccessLevel(viewer);
-        const currentProp = TokenUtil.getBarCurrentProp(token, number);
-        const maxProp = TokenUtil.getBarMaxProp(token, number);
-        return currentProp && maxProp && currentProp.canView(accessLevel) && maxProp.canView(accessLevel) && maxProp.getLong() != 0;
+        if(!actor.canViewProperty(token.getString('bar'+number+'Current'), accessLevel)) return false;
+        if(!actor.canViewProperty(token.getString('bar'+number+'Max'), accessLevel)) return false;
+
+        const max = TokenUtil.getBarMax(token, number);
+        return max != 0;
     }
 
-    static getBarCurrentProp(token, number) {
+    static getBarCurrent(token, number) {
         const actor = TokenUtil.getActor(token);
-        if(!actor) return null;
+        if(!actor) return 0;
 
-        const propName = token.prop('bar'+number+'Current').getString();
-        const prop = actor.prop(propName);
-        if(!prop || prop.getType() != Type.LONG) return null;
+        const propName = token.getString('bar'+number+'Current');
+        if(!actor.has(propName) || actor.getPropertyType(propName) != Type.LONG) return 0;
 
-        return prop;
+        return actor.getLong(propName);
     }
 
-    static getBarMaxProp(token, number) {
+    static getBarMax(token, number) {
         const actor = TokenUtil.getActor(token);
-        if(!actor) return null;
+        if(!actor) return 0;
 
-        const propName = token.prop('bar'+number+'Max').getString();
-        const prop = actor.prop(propName);
-        if(!prop || prop.getType() != Type.LONG) return null;
+        const propName = token.getString('bar'+number+'Max');
+        if(!actor.has(propName) || actor.getPropertyType(propName) != Type.LONG) return 0;
 
-        return prop;
+        return actor.getLong(propName);
+    }
+
+    static canEditBarCurrent(token, viewer, number) {
+        const actor = TokenUtil.getActor(token);
+        if(!actor || !actor.canView(viewer)) return false;
+
+        const accessLevel = token.getAccessLevel(viewer);
+        return actor.canEditProperty(token.getString('bar'+number+'Current'), accessLevel);
     }
 }

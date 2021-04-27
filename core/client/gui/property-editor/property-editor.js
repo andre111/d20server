@@ -48,20 +48,19 @@ export class PropertyEditor {
     
     reload(reference, accessLevel) {
         // determine property
-        const property = reference.prop(this.name);
-        if(property == null || property == undefined) {
+        if(!reference.has(this.name)) {
             this.container.style.visibility = 'hidden';
             return;
         }
         
         // update state
-        this.container.style.visibility = property.canView(accessLevel) ? 'visible' : 'hidden';
-        this.editComponent.style.visibility = property.canView(accessLevel) ? 'visible' : 'hidden';
-        this.editComponent.disabled = !property.canEdit(accessLevel) || this.forceDisable;
+        this.container.style.visibility = reference.canViewProperty(this.name, accessLevel) ? 'visible' : 'hidden';
+        this.editComponent.style.visibility = reference.canViewProperty(this.name, accessLevel) ? 'visible' : 'hidden';
+        this.editComponent.disabled = !reference.canEditProperty(this.name, accessLevel) || this.forceDisable;
         
         // update value
         this.reloading = true;
-        this.reloadValue(property);
+        this.reloadValue(reference, this.name);
         this.reloading = false;
         this.changed = false;
     }
@@ -72,14 +71,13 @@ export class PropertyEditor {
         this.changed = false;
 
         // determine property
-        const property = reference.prop(this.name);
-        if(property == null || property == undefined) return;
-        if(!property.canEdit(accessLevel)) return;
+        if(!reference.has(this.name)) return;
+        if(!reference.canEditProperty(this.name, accessLevel)) return;
         if(this.editComponent.disabled) return;
         if(this.forceDisable) return;
         
         // apply value
-        this.applyValue(property);
+        this.applyValue(reference, this.name);
     }
     
     addLabel(text, fixedWidth) {
@@ -94,7 +92,7 @@ export class PropertyEditor {
     }
     
     initContent(label) { throw new Error('Cannot call abstract function'); }
-    reloadValue(property) { throw new Error('Cannot call abstract function'); }
-    applyValue(property) { throw new Error('Cannot call abstract function'); }
+    reloadValue(reference, name) { throw new Error('Cannot call abstract function'); }
+    applyValue(reference, name) { throw new Error('Cannot call abstract function'); }
     onDestroy() {}
 }

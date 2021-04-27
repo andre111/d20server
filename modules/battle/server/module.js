@@ -8,11 +8,11 @@ import { EntityManagers } from '../../../core/common/entity/entity-managers.js';
 Events.on('serverInit', event => {
     // listen to any token changes (including deletion) and update battle state
     EntityManagers.get('token').addEntityListener(e => {
-        const map = EntityManagers.get('map').find(e.prop('map').getLong());
+        const map = EntityManagers.get('map').find(e.getLong('map'));
         ServerBattleManager.updateState(map);
     });
     EntityManagers.get('token').addRemovalListener((id, e) => {
-        const map = EntityManagers.get('map').find(e.prop('map').getLong());
+        const map = EntityManagers.get('map').find(e.getLong('map'));
         ServerBattleManager.updateState(map);
     });
 

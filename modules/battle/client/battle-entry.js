@@ -76,20 +76,20 @@ export class BattleEntry {
         const actor = TokenUtil.getActor(token);
 
         // (re)load values
-        this.changeValue('display', current && token.prop('battle_turnEnded').getBoolean() ? 'none' : 'flex', v => this.#containerEl.style.display = v);
+        this.changeValue('display', current && token.getBoolean('battle_turnEnded') ? 'none' : 'flex', v => this.#containerEl.style.display = v);
         this.changeValue('className', active ? 'battle-entry-active' : 'battle-entry', v => this.#containerEl.className = v);
 
-        this.changeValue('imgSrc', '/data/files/'+token.prop('imagePath').getString(), v => this.#imageEl.src = v);
+        this.changeValue('imgSrc', '/data/files/'+token.getString('imagePath'), v => this.#imageEl.src = v);
 
-        const ini = token.prop('battle_initiative').getDouble();
+        const ini = token.getDouble('battle_initiative');
         this.changeValue('initiative', Math.trunc(ini).toFixed(0), v => this.#iniEl.innerText = v);
         this.changeValue('initiativeSub', Math.abs(ini % 1).toFixed(2).substring(1), v => this.#iniSubEl.innerText = v);
 
         // bars
         for(var i=1; i<=3; i++) {
             if(TokenUtil.isBarVisible(token, ServerData.localProfile, i)) {
-                const current = TokenUtil.getBarCurrentProp(token, i).getLong();
-                const max = TokenUtil.getBarMaxProp(token, i).getLong();
+                const current = TokenUtil.getBarCurrent(token, i);
+                const max = TokenUtil.getBarMax(token, i);
                 const percentage = Math.max(0, Math.min(current, max)) / max * 100;
 
                 this.changeValue('barWidth'+i, `${percentage}%`, v => this.#barFillers[i-1].style.width = v);
@@ -100,8 +100,8 @@ export class BattleEntry {
 
         // name
         var name = '???';
-        if(actor && actor.prop('name').canView(accessLevel)) {
-            name = actor.prop('name').getString();
+        if(actor && actor.canViewProperty('name', accessLevel)) {
+            name = actor.getString('name');
         }
         this.changeValue('name', name, v => this.#nameEl.innerText = v);
     }

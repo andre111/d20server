@@ -29,13 +29,13 @@ export class ImagePropertyEditor extends PropertyEditor {
         return this.input;
     }
     
-    reloadValue(property) {
-        this.imagePath = property.getString();
+    reloadValue(reference, name) {
+        this.imagePath = reference.getString(name);
         this.reloadImage();
     }
     
-    applyValue(property) {
-        property.setString(this.imagePath);
+    applyValue(reference, name) {
+        reference.setString(name, this.imagePath);
     }
     
     reloadImage() {

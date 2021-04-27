@@ -24,11 +24,11 @@ export class MultiLineStringPropertyEditor extends PropertyEditor {
         return this.textArea;
     }
     
-    reloadValue(property) {
-        this.textArea.value = property.getString();
+    reloadValue(reference, name) {
+        this.textArea.value = reference.getString(name);
     }
     
-    applyValue(property) {
-        property.setString(this.textArea.value);
+    applyValue(reference, name) {
+        reference.setString(name, this.textArea.value);
     }
 }

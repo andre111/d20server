@@ -45,13 +45,13 @@ export class LongListPropertyEditor extends PropertyEditor {
     
     //TODO disable edit access if not allowed
     
-    reloadValue(property) {
-        this.valueList = property.getLongList();
+    reloadValue(reference, name) {
+        this.valueList = reference.getLongList(name);
         this.reloadTree();
     }
     
-    applyValue(property) {
-        property.setLongList(this.valueList);
+    applyValue(reference, name) {
+        reference.setLongList(name, this.valueList);
     }
     
     reloadTree() {

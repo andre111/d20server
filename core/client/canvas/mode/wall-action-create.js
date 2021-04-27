@@ -64,7 +64,7 @@ export class WallActionCreate extends WallAction {
                 
                 // find nearest (limited to 10 pixels of) clicked wall
                 var clickedWall = MapUtils.currentEntities('wall')
-                    .map(wall => { return { w: wall, dist: IntMathUtils.getDistanceSQTo(wall.prop('x1').getLong(), wall.prop('y1').getLong(), wall.prop('x2').getLong(), wall.prop('y2').getLong(), this.currentX, this.currentY) } })
+                    .map(wall => { return { w: wall, dist: IntMathUtils.getDistanceSQTo(wall.getLong('x1'), wall.getLong('y1'), wall.getLong('x2'), wall.getLong('y2'), this.currentX, this.currentY) } })
                     .filter(wwd => wwd.dist <= 10*10)
                     .sort((a, b) => a.dist - b.dist)
                     .map(wwd => wwd.w)[0];
@@ -77,14 +77,14 @@ export class WallActionCreate extends WallAction {
         } else {
             if(e.which == 1 && MapUtils.currentMap() != null) {
                 var newWall = new Entity('wall');
-                newWall.prop('map').setLong(MapUtils.currentMap().id);
-				newWall.prop('x1').setLong(this.startX);
-				newWall.prop('y1').setLong(this.startY);
-				newWall.prop('x2').setLong(this.currentX);
-				newWall.prop('y2').setLong(this.currentY);
-				newWall.prop('seeThrough').setBoolean(this.seeThrough);
-                newWall.prop('door').setBoolean(this.door);
-                newWall.prop('oneSided').setBoolean(this.oneSided);
+                newWall.setLong('map', MapUtils.currentMap().id);
+				newWall.setLong('x1', this.startX);
+				newWall.setLong('y1', this.startY);
+				newWall.setLong('x2', this.currentX);
+				newWall.setLong('y2', this.currentY);
+				newWall.setBoolean('seeThrough', this.seeThrough);
+                newWall.setBoolean('door', this.door);
+                newWall.setBoolean('oneSided', this.oneSided);
                 EntityManagers.get('wall').add(newWall);
                 
                 this.startX = this.currentX;
@@ -106,8 +106,8 @@ export class WallActionCreate extends WallAction {
 			// snap to grid (set snap to true when control is NOT down)
             var map = MapUtils.currentMap();
             if(map != null && map != undefined) {
-                x = Math.round(x / map.prop('gridSize').getLong()) * map.prop('gridSize').getLong();
-                y = Math.round(y / map.prop('gridSize').getLong()) * map.prop('gridSize').getLong();
+                x = Math.round(x / map.getLong('gridSize')) * map.getLong('gridSize');
+                y = Math.round(y / map.getLong('gridSize')) * map.getLong('gridSize');
             }
         } else {
             // just snap to nearby wall end points
@@ -115,17 +115,17 @@ export class WallActionCreate extends WallAction {
             if(map != null && map != undefined) {
                 var wallSnapDist = 4;
                 for(var wall of MapUtils.currentEntities('wall')) {
-                    var dist1 = Math.abs(wall.prop('x1').getLong() - x) + Math.abs(wall.prop('y1').getLong() - y);
+                    var dist1 = Math.abs(wall.getLong('x1') - x) + Math.abs(wall.getLong('y1') - y);
 					if(dist1 <= wallSnapDist+wallSnapDist) {
-						x = wall.prop('x1').getLong();
-						y = wall.prop('y1').getLong();
+						x = wall.getLong('x1');
+						y = wall.getLong('y1');
 						break;
 					}
 
-					var dist2 = Math.abs(wall.prop('x2').getLong() - x) + Math.abs(wall.prop('y2').getLong() - y);
+					var dist2 = Math.abs(wall.getLong('x2') - x) + Math.abs(wall.getLong('y2') - y);
 					if(dist2 <= wallSnapDist+wallSnapDist) {
-						x = wall.prop('x2').getLong();
-						y = wall.prop('y2').getLong();
+						x = wall.getLong('x2');
+						y = wall.getLong('y2');
 						break;
 					}
                 }

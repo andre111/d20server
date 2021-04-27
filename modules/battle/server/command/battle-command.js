@@ -38,10 +38,10 @@ const ACTIONS = [
         const accessLevel = token.getAccessLevel(profile);
         if(Access.matches(Access.CONTROLLING_PLAYER, accessLevel)) {
             const tokenRef = new EntityReference(token);
-            tokenRef.prop('battle_active').setBoolean(true);
+            tokenRef.setBoolean('battle_active', true);
             if(CommonBattleManager.getBattleRound(map) == 0) {
-                tokenRef.prop('battle_turnStarted').setBoolean(true);
-                tokenRef.prop('battle_turnEnded').setBoolean(true);
+                tokenRef.setBoolean('battle_turnStarted', true);
+                tokenRef.setBoolean('battle_turnEnded', true);
             }
             tokenRef.performUpdate();
         }
@@ -52,7 +52,7 @@ const ACTIONS = [
         const accessLevel = token.getAccessLevel(profile);
         if(Access.matches(Access.CONTROLLING_PLAYER, accessLevel)) {
             const tokenRef = new EntityReference(token);
-            tokenRef.prop('battle_active').setBoolean(false);
+            tokenRef.setBoolean('battle_active', false);
             tokenRef.performUpdate();
         }
     })

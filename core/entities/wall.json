@@ -19,78 +19,68 @@
         },
         "containedEntities": []
     },
-    "properties": [
-        {
-            "name": "map",
+    "properties": {
+        "map": {
             "type": "LONG",
             "editAccess": "SYSTEM",
             "viewAccess": "EVERYONE",
             "value": "-1"
         },
-        {
-            "name": "x1",
+        "x1": {
             "type": "LONG",
             "editAccess": "GM",
             "viewAccess": "EVERYONE",
             "value": "0"
         },
-        {
-            "name": "y1",
+        "y1": {
             "type": "LONG",
             "editAccess": "GM",
             "viewAccess": "EVERYONE",
             "value": "0"
         },
-        {
-            "name": "x2",
+        "x2": {
             "type": "LONG",
             "editAccess": "GM",
             "viewAccess": "EVERYONE",
             "value": "0"
         },
-        {
-            "name": "y2",
+        "y2": {
             "type": "LONG",
             "editAccess": "GM",
             "viewAccess": "EVERYONE",
             "value": "0"
         },
-        {
-            "name": "seeThrough",
+        "seeThrough": {
             "type": "BOOLEAN",
             "editAccess": "GM",
             "viewAccess": "EVERYONE",
             "value": "false"
         },
-        {
-            "name": "door",
+        "door": {
             "type": "BOOLEAN",
             "editAccess": "GM",
             "viewAccess": "EVERYONE",
             "value": "false"
         },
-        {
-            "name": "open",
+        "open": {
             "type": "BOOLEAN",
             "editAccess": "GM",
             "viewAccess": "EVERYONE",
             "value": "false"
         },
-        {
-            "name": "locked",
+        "locked": {
             "type": "BOOLEAN",
             "editAccess": "GM",
             "viewAccess": "EVERYONE",
             "value": "false"
         },
-        {
-            "name": "oneSided",
+        "oneSided": {
             "type": "BOOLEAN",
             "editAccess": "GM",
             "viewAccess": "EVERYONE",
             "value": "false"
         }
-    ],
+    },
     "updateRules": [
     ],
     "macros": {

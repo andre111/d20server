@@ -14,25 +14,25 @@ export class CanvasRenderLayerWallLines extends CanvasRenderLayer {
         if(view.doRenderWallLines()) {
             ctx.lineWidth = 5;
             MapUtils.currentEntities('wall').forEach(wall => {
-                if(!wall.prop('door').getBoolean() || !wall.prop('open').getBoolean()) {
+                if(!wall.getBoolean('door') || !wall.getBoolean('open')) {
                     // draw basic line
-                    ctx.strokeStyle = wall.prop('seeThrough').getBoolean() ? 'lightgray' : 'blue';
+                    ctx.strokeStyle = wall.getBoolean('seeThrough') ? 'lightgray' : 'blue';
                     ctx.beginPath();
-                    ctx.moveTo(wall.prop('x1').getLong(), wall.prop('y1').getLong());
-                    ctx.lineTo(wall.prop('x2').getLong(), wall.prop('y2').getLong());
+                    ctx.moveTo(wall.getLong('x1'), wall.getLong('y1'));
+                    ctx.lineTo(wall.getLong('x2'), wall.getLong('y2'));
                     ctx.stroke();
 
                     // draw second line for one sided walls
-                    if(wall.prop('oneSided').getBoolean()) {
-                        const angle = Math.atan2(wall.prop('y2').getLong()-wall.prop('y1').getLong(), wall.prop('x2').getLong()-wall.prop('x1').getLong());
+                    if(wall.getBoolean('oneSided')) {
+                        const angle = Math.atan2(wall.getLong('y2')-wall.getLong('y1'), wall.getLong('x2')-wall.getLong('x1'));
                         const xOffset = Math.cos(angle + Math.PI/2) * 1;
                         const yOffset = Math.sin(angle + Math.PI/2) * 1;
 
                         ctx.strokeStyle = 'lightgray';
                         ctx.lineWidth = 3;
                         ctx.beginPath();
-                        ctx.moveTo(wall.prop('x1').getLong()+xOffset, wall.prop('y1').getLong()+yOffset);
-                        ctx.lineTo(wall.prop('x2').getLong()+xOffset, wall.prop('y2').getLong()+yOffset);
+                        ctx.moveTo(wall.getLong('x1')+xOffset, wall.getLong('y1')+yOffset);
+                        ctx.lineTo(wall.getLong('x2')+xOffset, wall.getLong('y2')+yOffset);
                         ctx.stroke();
                         ctx.lineWidth = 5;
                     }
@@ -41,16 +41,16 @@ export class CanvasRenderLayerWallLines extends CanvasRenderLayer {
             ctx.fillStyle = 'rgb(100, 100, 255)';
             MapUtils.currentEntities('wall').forEach(wall => {
                 // draw end points
-                ctx.fillRect(wall.prop('x1').getLong()-5, wall.prop('y1').getLong()-5, 10, 10);
-                ctx.fillRect(wall.prop('x2').getLong()-5, wall.prop('y2').getLong()-5, 10, 10);
+                ctx.fillRect(wall.getLong('x1')-5, wall.getLong('y1')-5, 10, 10);
+                ctx.fillRect(wall.getLong('x2')-5, wall.getLong('y2')-5, 10, 10);
                 
                 // draw door lock icon
-                if(wall.prop('door').getBoolean()) {
-                    var icon = ImageService.getInternalImage('/core/files/img/'+(wall.prop('locked').getBoolean() ? 'locked.png' : 'unlocked.png'));
+                if(wall.getBoolean('door')) {
+                    var icon = ImageService.getInternalImage('/core/files/img/'+(wall.getBoolean('locked') ? 'locked.png' : 'unlocked.png'));
                     if(icon != null) {
-                        var x = (wall.prop('x1').getLong() + wall.prop('x2').getLong()) / 2;
-                        var y = (wall.prop('y1').getLong() + wall.prop('y2').getLong()) / 2;
-                        var offset = (wall.prop('locked').getBoolean() ? 0 : 4);
+                        var x = (wall.getLong('x1') + wall.getLong('x2')) / 2;
+                        var y = (wall.getLong('y1') + wall.getLong('y2')) / 2;
+                        var offset = (wall.getBoolean('locked') ? 0 : 4);
                         
                         ctx.drawImage(icon, x+offset-24/2, y-24/2, 24, 24);
                     }

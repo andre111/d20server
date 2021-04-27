@@ -8,14 +8,14 @@ export const DrawingRenderer = {
     },
     
     renderDrawing: function(ctx, drawing) {
-        var shape = drawing.prop('shape').getString().split(':', 2);
+        var shape = drawing.getString('shape').split(':', 2);
         
-        var x = drawing.prop('x').getLong();
-        var y = drawing.prop('y').getLong();
-        var width = drawing.prop('width').getLong();
-        var height = drawing.prop('height').getLong();
-        var rotation = drawing.prop('rotation').getDouble();
-        var color = drawing.prop('color').getColor();
+        var x = drawing.getLong('x');
+        var y = drawing.getLong('y');
+        var width = drawing.getLong('width');
+        var height = drawing.getLong('height');
+        var rotation = drawing.getDouble('rotation');
+        var color = drawing.getColor('color');
         ctx.fillStyle = color;
         ctx.strokeStyle = color;
         ctx.lineWidth = 3;

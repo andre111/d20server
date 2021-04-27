@@ -43,7 +43,7 @@ export class BattleList {
             
             // find first token that has not ended its turn
             const token = EntityManagers.get('token').find(tokenID);
-            if(token && !token.prop('battle_turnEnded').getBoolean()) {
+            if(token && !token.getBoolean('battle_turnEnded')) {
                 first = false;
             }
         }

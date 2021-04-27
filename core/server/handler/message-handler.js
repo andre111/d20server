@@ -61,7 +61,7 @@ function _handleMovePlayerToMap(profile, message) {
             // (re)load maps for clients
             GameService.reloadMaps();
         } else {
-            if(profile.getRole() == Role.GM || (profileID == profile.getID() && EntityManagers.get('map').find(mapID).prop('playersCanEnter').getBoolean())) {
+            if(profile.getRole() == Role.GM || (profileID == profile.getID() && EntityManagers.get('map').find(mapID).getBoolean('playersCanEnter'))) {
                 // set player override map id and (re)load map
                 const otherProfile = UserService.getProfile(profileID);
                 if(otherProfile) {
@@ -151,8 +151,8 @@ function _handleMakeActorLocal(profile, message) {
         if(token.getType() != 'token') return;
 
         // find actor
-        if(token.prop('actorLocal').getBoolean()) return;
-        const actor = EntityManagers.get('actor').find(token.prop('actorID').getLong());
+        if(token.getBoolean('actorLocal')) return;
+        const actor = EntityManagers.get('actor').find(token.getLong('actorID'));
         if(!actor) return;
 
         // store actor locally
@@ -163,7 +163,7 @@ function _handleMakeActorLocal(profile, message) {
 
         // update flag
         const reference = new EntityReference(token);
-        reference.prop('actorLocal').setBoolean(true);
+        reference.setBoolean('actorLocal', true);
         reference.performUpdate();
     }
 }

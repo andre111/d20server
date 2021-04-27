@@ -8,6 +8,6 @@ export class ValueProviderActor extends ValueProviderDefault {
     getName(value) {
         if(value == null || value == undefined) return '';
         
-        return value.prop('path').getString() + value.getName();
+        return value.getString('path') + value.getName();
     }
 }

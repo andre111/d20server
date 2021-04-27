@@ -1,11 +1,11 @@
 import { Access } from '../constants.js';
 import { Entity } from './entity.js';
 import { EntityManagers } from './entity-managers.js';
-import { WrappedProperty } from './wrapped-property.js';
+import { deepMerge } from '../util/datautil.js';
 
 export class EntityReference extends Entity {
     backingEntity;
-    wrappedProperties = {};
+    changedProperties = {};
 
     mouseOffsetX = 0;
     mouseOffsetY = 0;
@@ -38,25 +38,26 @@ export class EntityReference extends Entity {
 
     addDefaultProperties() {
     }
-    updatePropertyReferences() {
-    }
-
-    prop(name) {
-        if(!this.wrappedProperties[name]) {
-            const backingProperty = this.backingEntity.prop(name);
-            if(backingProperty) this.wrappedProperties[name] = new WrappedProperty(this, backingProperty);
-        }
-
-        return this.wrappedProperties[name];
-    }
 
     getProperties() {
-        // make sure all properties are wrapped
-        for(const propertyName in this.backingEntity.getProperties()) {
-            this.prop(propertyName);
-        }
+        // create new combined property map
+        const props = deepMerge(this.getBackingEntity().getProperties(), this.changedProperties);
+        return props;
+    }
 
-        return this.wrappedProperties;
+    has(name) {
+        if(!this.backingEntity) return false;
+        return this.getBackingEntity().has(name);
+    }
+
+    getInternal(name) {
+        if(this.changedProperties[name]) return this.changedProperties[name];
+        return this.getBackingEntity().getInternal(name);
+    }
+    setInternal(name, value) {
+        if(value === this.getBackingEntity().getInternal(name)) delete this.changedProperties[name];
+        else this.changedProperties[name] = value;
+        this.onPropertyChange(name);
     }
 
     getViewAccess() {
@@ -118,21 +119,11 @@ export class EntityReference extends Entity {
 
     performUpdate() {
         if(!this.backingEntity) return;
-
-        // find all changed properties
-        var changedProperties = {};
-        var hasChanged = false;
-        for(const [key, value] of Object.entries(this.wrappedProperties)) {
-            if(value.isChanged()) {
-                changedProperties[key] = value.clone();
-                hasChanged = true;
-            }
-        }
         
 		// update properties (and clear changes)
-        this.wrappedProperties = {};
-        if(hasChanged) {
-            EntityManagers.get(this.getManager()).updateProperties(this.getID(), changedProperties, Access.SYSTEM);
+        if(this.changedProperties != {}) {
+            EntityManagers.get(this.getManager()).updateProperties(this.getID(), this.changedProperties, Access.SYSTEM);
+            this.changedProperties = {};
         }
     }
 
@@ -149,9 +140,9 @@ export class EntityReference extends Entity {
 
     entityChanged(entity) {
         // update mouse offset
-        if(entity.prop('x') && entity.prop('y')) {
-            const xdiff = entity.prop('x').getLong() - this.getBackingEntity().prop('x').getLong();
-            const ydiff = entity.prop('y').getLong() - this.getBackingEntity().prop('y').getLong();
+        if(entity.has('x') && entity.has('y')) {
+            const xdiff = entity.getLong('x') - this.getBackingEntity().getLong('x');
+            const ydiff = entity.getLong('y') - this.getBackingEntity().getLong('y');
             this.mouseOffsetX += xdiff;
             this.mouseOffsetY += ydiff;
         }

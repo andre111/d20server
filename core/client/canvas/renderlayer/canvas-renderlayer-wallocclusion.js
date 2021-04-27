@@ -25,8 +25,8 @@ export class CanvasRenderLayerWallOcclusion extends CanvasRenderLayer {
                 // extend viewport to avoid rounding errors
                 // const extendedViewport = new Rect(viewport.x-4, viewport.y-4, viewport.width+8, viewport.height+8);
                 // override viewport to fill the whole map (should no longer be a big performance concern since WallRenderer employs caches)
-                const gridSize = map.prop('gridSize').getLong();
-                const extendedViewport = new Rect(-4, -4, map.prop('width').getLong()*gridSize+8, map.prop('height').getLong()*gridSize+8);
+                const gridSize = map.getLong('gridSize');
+                const extendedViewport = new Rect(-4, -4, map.getLong('width')*gridSize+8, map.getLong('height')*gridSize+8);
                 const pwr = WallRenderer.calculateWalls(walls, extendedViewport, viewers);
                 WallRenderer.renderPrecalculatedWallRender(ctx, pwr);
                 
@@ -48,12 +48,12 @@ export class CanvasRenderLayerWallOcclusion extends CanvasRenderLayer {
                 ctx.strokeStyle = 'black';
                 ctx.beginPath();
                 for(const wall of walls) {
-                    if(wall.prop('seeThrough').getBoolean()) continue;
-                    if(wall.prop('door').getBoolean() && wall.prop('open').getBoolean()) continue;
-                    if(wall.prop('oneSided').getBoolean()) continue;
+                    if(wall.getBoolean('seeThrough')) continue;
+                    if(wall.getBoolean('door') && wall.getBoolean('open')) continue;
+                    if(wall.getBoolean('oneSided')) continue;
 
-                    ctx.moveTo(wall.prop('x1').getLong(), wall.prop('y1').getLong());
-                    ctx.lineTo(wall.prop('x2').getLong(), wall.prop('y2').getLong());
+                    ctx.moveTo(wall.getLong('x1'), wall.getLong('y1'));
+                    ctx.lineTo(wall.getLong('x2'), wall.getLong('y2'));
                 }
                 ctx.stroke();
             }

@@ -4,14 +4,14 @@ let {translate, rotate, compose, inverse, applyToPoint} = window.TransformationM
 
 export const EntityUtils = {
     applyTransform: function(ctx, entity) {
-        ctx.translate(entity.prop('x').getLong(), entity.prop('y').getLong());
-        ctx.rotate(entity.prop('rotation').getDouble() * Math.PI / 180);
+        ctx.translate(entity.getLong('x'), entity.getLong('y'));
+        ctx.rotate(entity.getDouble('rotation') * Math.PI / 180);
     },
     
     getTransform: function(entity) {
         return compose(
-            translate(entity.prop('x').getLong(), entity.prop('y').getLong()),
-            rotate(entity.prop('rotation').getDouble() * Math.PI / 180)
+            translate(entity.getLong('x'), entity.getLong('y')),
+            rotate(entity.getDouble('rotation') * Math.PI / 180)
         );
     },
     
@@ -22,20 +22,20 @@ export const EntityUtils = {
     isPointInside: function(entity, x, y) {
         var point = EntityUtils.toLocalCoordinates(entity, x, y);
         
-		if(point.x < -entity.prop('width').getLong()/2) return false;
-		if(point.x > +entity.prop('width').getLong()/2) return false;
-		if(point.y < -entity.prop('height').getLong()/2) return false;
-		if(point.y > +entity.prop('height').getLong()/2) return false;
+		if(point.x < -entity.getLong('width')/2) return false;
+		if(point.x > +entity.getLong('width')/2) return false;
+		if(point.y < -entity.getLong('height')/2) return false;
+		if(point.y > +entity.getLong('height')/2) return false;
 		
 		return true;
     },
     
     getAABB: function(entity) {
         var transform = EntityUtils.getTransform(entity);
-        var p1 = { x: -entity.prop('width').getLong()/2, y: -entity.prop('height').getLong()/2 };
-        var p2 = { x: -entity.prop('width').getLong()/2, y: entity.prop('height').getLong()/2 };
-        var p3 = { x: entity.prop('width').getLong()/2, y: -entity.prop('height').getLong()/2 };
-        var p4 = { x: entity.prop('width').getLong()/2, y: entity.prop('height').getLong()/2 };
+        var p1 = { x: -entity.getLong('width')/2, y: -entity.getLong('height')/2 };
+        var p2 = { x: -entity.getLong('width')/2, y: entity.getLong('height')/2 };
+        var p3 = { x: entity.getLong('width')/2, y: -entity.getLong('height')/2 };
+        var p4 = { x: entity.getLong('width')/2, y: entity.getLong('height')/2 };
         
         p1 = applyToPoint(transform, p1);
         p2 = applyToPoint(transform, p2);

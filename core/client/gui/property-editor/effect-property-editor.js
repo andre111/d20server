@@ -23,11 +23,11 @@ export class EffectPropertyEditor extends PropertyEditor {
         return this.select;
     }
     
-    reloadValue(property) {
-        this.select.value = property.getEffect();
+    reloadValue(reference, name) {
+        this.select.value = reference.getEffect(name);
     }
     
-    applyValue(property) {
-        property.setEffect(this.select.value);
+    applyValue(reference, name) {
+        reference.setEffect(name, this.select.value);
     }
 }

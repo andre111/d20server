@@ -25,14 +25,9 @@ export class ValueProviderDefault extends ValueProvider {
     getIcon(value) {
         if(value == null || value == undefined) return null;
         
-        var property = this.getIconProperty(value);
-        if(property && property.getString() != '') {
-            return '/data/files'+property.getString();
+        if(value.has('imagePath') && value.getString('imagePath') != '') {
+            return '/data/files'+value.getString('imagePath');
         }
         return null;
-    }
-    
-    getIconProperty(value) {
-        return value.prop('imagePath');
     }
 }

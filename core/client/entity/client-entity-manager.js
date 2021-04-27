@@ -80,16 +80,10 @@ export class ClientEntityManager extends EntityManager {
         if(!entity) return;
 
         for(const [key, value] of Object.entries(map)) {
-            var ownProperty = entity.properties[key];
-            if(ownProperty == null || ownProperty == undefined) {
-                ownProperty = entity.addPropertyIfAbsentOrWrong(key, value.getType(), value.getInternal());
-            }
+            entity.addPropertyIfAbsentOrWrong(key, value);
             
             // transfer value
-            //TODO: actual property methods
-            if(ownProperty.type == value.type) {
-                ownProperty.value = value.value;
-            }
+            entity.setInternal(key, value);
         }
         
         this.notifyListeners();

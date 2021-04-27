@@ -19,11 +19,11 @@ export class StringPropertyEditor extends PropertyEditor {
         return this.textField;
     }
     
-    reloadValue(property) {
-        this.textField.value = property.getString();
+    reloadValue(reference, name) {
+        this.textField.value = reference.getString(name);
     }
     
-    applyValue(property) {
-        property.setString(this.textField.value);
+    applyValue(reference, name) {
+        reference.setString(name, this.textField.value);
     }
 }

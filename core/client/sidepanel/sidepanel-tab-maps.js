@@ -46,7 +46,7 @@ export class SidepanelTabMaps extends SidepanelTab {
         new CanvasWindowInput('New Map', 'Enter Map Name:', '', name => {
             if(name) {
                 const map = new Entity('map');
-                map.prop('name').setString(name);
+                map.setString('name', name);
                 EntityManagers.get('map').add(map);
             }
         });

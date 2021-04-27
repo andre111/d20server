@@ -43,13 +43,13 @@ export class ActorPropertyEditor extends PropertyEditor {
         return this.button;
     }
     
-    reloadValue(property) {
-        this.#currentActorID = property.getLong();
+    reloadValue(reference, name) {
+        this.#currentActorID = reference.getLong(name);
         this.updateButtons();
     }
     
-    applyValue(property) {
-        property.setLong(this.#currentActorID);
+    applyValue(reference, name) {
+        reference.setLong(name, this.#currentActorID);
     }
     
     updateButtons() {
@@ -57,12 +57,12 @@ export class ActorPropertyEditor extends PropertyEditor {
         this.button.innerText = actor ? actor.getName() : '<none>';
 
         if(this.makeLocalButton) {
-            this.makeLocalButton.disabled = this.#reference.prop('actorLocal').getBoolean();
+            this.makeLocalButton.disabled = this.#reference.getBoolean('actorLocal');
         }
     }
     
     doSelectActor() {
-        if(this.#reference.prop('actorLocal').getBoolean()) return;
+        if(this.#reference.getBoolean('actorLocal')) return;
 
         new CanvasWindowChoose('actor', id => {
             this.#currentActorID = id;
@@ -78,7 +78,7 @@ export class ActorPropertyEditor extends PropertyEditor {
     }
 
     doMakeLocal() {
-        if(this.#reference.prop('actorLocal').getBoolean()) return;
+        if(this.#reference.getBoolean('actorLocal')) return;
 
         new CanvasWindowConfirm('Make Actor Local', 'Do you want to make the actor local to this token? Changes to the global actor will no longer be reflected in this tokens actor and vice versa. This cannot be undone.', () => {
             MessageService.send(new MakeActorLocal(this.#reference));

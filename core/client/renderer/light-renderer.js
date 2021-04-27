@@ -98,7 +98,7 @@ export const LightRenderer = {
         
         // prepare buffer
         var ctx1 = LightRenderer._lightCtx1;
-        if(light != map.prop('light').getLight()) {
+        if(light != map.getLight('light')) {
             ctx1.fillStyle = 'black';
         } else {
             ctx1.fillStyle = 'white';
@@ -110,8 +110,8 @@ export const LightRenderer = {
         ctx1.setTransform(transform);
         
         // render lights
-        if(Light.isLess(light, map.prop('light').getLight()) && light != Light.DARK) {
-            LightRenderer.paintLights(ctx1, light, tokens, viewport, map.prop('gridSize').getLong(), multiplier);
+        if(Light.isLess(light, map.getLight('light')) && light != Light.DARK) {
+            LightRenderer.paintLights(ctx1, light, tokens, viewport, map.getLong('gridSize'), multiplier);
         }
 
         // render darkness
@@ -119,7 +119,7 @@ export const LightRenderer = {
             ctx1.globalCompositeOperation = light == Light.DARK ? 'lighter' : 'source-over';
             const darknessColor = light == Light.DARK ? '#ffffff' : '#000000';
 
-            LightRenderer.paintLights(ctx1, Light.DARK, darknessTokens, viewport, map.prop('gridSize').getLong(), multiplier, 0.95, darknessColor);
+            LightRenderer.paintLights(ctx1, Light.DARK, darknessTokens, viewport, map.getLong('gridSize'), multiplier, 0.95, darknessColor);
         }
         
         // render sight (directly when a single viewer is present, with extra buffer otherwise)
@@ -160,10 +160,10 @@ export const LightRenderer = {
     
     paintLights: function(ctx1, light, tokens, viewport, gridSize, multiplier, fadeStart = 0.5, overrideColor = null) {
         for(const token of tokens) {
-            const centerX = token.prop('x').getLong();
-            const centerY = token.prop('y').getLong();
+            const centerX = token.getLong('x');
+            const centerY = token.getLong('y');
             const maxLightRadius = Math.trunc(LightRenderer.getLight(token, light) * gridSize) * multiplier;
-            const lightRadius = Math.trunc(maxLightRadius * (1 - (token.prop('lightFlicker').getBoolean() ? 0.025*Math.random() : 0)));
+            const lightRadius = Math.trunc(maxLightRadius * (1 - (token.getBoolean('lightFlicker') ? 0.025*Math.random() : 0)));
             // only render lights that are inside of the viewport
             if(lightRadius > 0 && IntMathUtils.doAABBCircleIntersect(viewport.x, viewport.y, viewport.x+viewport.width, viewport.y+viewport.height, centerX, centerY, lightRadius)) {
                 const lightViewport = new Rect(centerX-maxLightRadius-1, centerY-maxLightRadius-1, maxLightRadius*2+2, maxLightRadius*2+2);
@@ -179,7 +179,7 @@ export const LightRenderer = {
 
     paintLight: function(ctx1, token, cached, withClip, centerX, centerY, lightRadius, fadeStart = 0.5, overrideColor = null) {
         // calculate gradient
-        const color = overrideColor ?? token.prop('lightColor').getColor();
+        const color = overrideColor ?? token.getColor('lightColor');
         const grd = ctx1.createRadialGradient(centerX, centerY, 1, centerX, centerY, lightRadius);
         grd.addColorStop(0, color);
         grd.addColorStop(fadeStart, color);
@@ -194,13 +194,13 @@ export const LightRenderer = {
         }
 
         ctx1.beginPath();
-        const lightAngle = token.prop('lightAngle').getLong();
+        const lightAngle = token.getLong('lightAngle');
         if(lightAngle <= 0 || lightAngle >= 360) {
             ctx1.ellipse(centerX, centerY, lightRadius, lightRadius, 0, 0, Math.PI*2);
         } else {
             // calculate light angles
-            const startAngle = (token.prop('rotation').getDouble()+90-lightAngle/2) * Math.PI / 180;
-            const endAngle = (token.prop('rotation').getDouble()+90+lightAngle/2) * Math.PI / 180;
+            const startAngle = (token.getDouble('rotation')+90-lightAngle/2) * Math.PI / 180;
+            const endAngle = (token.getDouble('rotation')+90+lightAngle/2) * Math.PI / 180;
             
             ctx1.arc(centerX, centerY, lightRadius, startAngle, endAngle);
             ctx1.lineTo(centerX, centerY);
@@ -213,9 +213,9 @@ export const LightRenderer = {
     paintSight: function(ctx, screenWidth, screenHeight, transform, viewer, light, map) {
         const sight = LightRenderer.getSight(TokenUtil.getActor(viewer), light);
         if(sight < 10000) {
-            const sightRadius = sight * map.prop('gridSize').getLong();
+            const sightRadius = sight * map.getLong('gridSize');
             if(sightRadius > 0) {
-                const viewerPos = applyToPoint(transform, { x: viewer.prop('x').getLong(), y: viewer.prop('y').getLong() });
+                const viewerPos = applyToPoint(transform, { x: viewer.getLong('x'), y: viewer.getLong('y') });
                 const grd = ctx.createRadialGradient(viewerPos.x, viewerPos.y, 1, viewerPos.x, viewerPos.y, sightRadius * transform.a);
                 grd.addColorStop(0, 'white');
                 grd.addColorStop(0.5, 'white');
@@ -237,7 +237,7 @@ export const LightRenderer = {
     getLightWallCache: function(token, light, centerX, centerY, maxLightRadius, lightViewport) {
         var cached = LightRenderer._cache[light].get(token.getID());
         if(cached == null || cached == undefined || !cached.isCompatible(centerX, centerY, maxLightRadius)) {
-            var pwr =  WallRenderer.calculateCombinedOccolusion(MapUtils.currentEntities('wall'), token.prop('x').getLong(), token.prop('y').getLong(), lightViewport);
+            var pwr =  WallRenderer.calculateCombinedOccolusion(MapUtils.currentEntities('wall'), token.getLong('x'), token.getLong('y'), lightViewport);
             var clip = FOWRenderer.calculateSeenArea(pwr, lightViewport);
             cached = new LightWallCache(clip, centerX, centerY, maxLightRadius);
             LightRenderer._cache[light].set(token.getID(), cached);
@@ -253,11 +253,11 @@ export const LightRenderer = {
     
     getLight: function(token, light) {
         if(light == Light.BRIGHT) {
-			return token.prop('lightBright').getDouble();
+			return token.getDouble('lightBright');
 		} else if(light == Light.DIM) {
-			return token.prop('lightDim').getDouble();
+			return token.getDouble('lightDim');
 		} else {
-			return token.prop('lightDark').getDouble();
+			return token.getDouble('lightDark');
 		}
     },
 
@@ -265,9 +265,9 @@ export const LightRenderer = {
         if(!actor) return 0;
 
         if(light == Light.BRIGHT) {
-			return actor.prop('lightBrightMult').getDouble();
+			return actor.getDouble('lightBrightMult');
 		} else if(light == Light.DIM) {
-			return actor.prop('lightDimMult').getDouble();
+			return actor.getDouble('lightDimMult');
 		} else {
 			return 1;
 		}
@@ -276,11 +276,11 @@ export const LightRenderer = {
         if(!actor) return 0;
 
         if(light == Light.BRIGHT) {
-			return actor.prop('sightBright').getDouble();
+			return actor.getDouble('sightBright');
 		} else if(light == Light.DIM) {
-			return actor.prop('sightDim').getDouble();
+			return actor.getDouble('sightDim');
 		} else {
-			return actor.prop('sightDark').getDouble();
+			return actor.getDouble('sightDark');
 		}
     }
 }

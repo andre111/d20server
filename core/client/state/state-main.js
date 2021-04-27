@@ -214,8 +214,8 @@ export class StateMain extends State {
         const map = MapUtils.currentMap();
         if(!map) return;
         
-        var camTargetX = map.prop('width').getLong() * map.prop('gridSize').getLong() / 2;
-		var camTargetY = map.prop('height').getLong() * map.prop('gridSize').getLong() / 2;
+        var camTargetX = map.getLong('width') * map.getLong('gridSize') / 2;
+		var camTargetY = map.getLong('height') * map.getLong('gridSize') / 2;
 		
 		// find a controlled token to center on
 		const controllableTokens = MapUtils.findControllableTokens(this.view.getProfile());
@@ -230,8 +230,8 @@ export class StateMain extends State {
 			
 			// focus on the next one
 			var index = (lastIndex + 1) % controllableTokens.length;
-			camTargetX = controllableTokens[index].prop('x').getLong();
-			camTargetY = controllableTokens[index].prop('y').getLong();
+			camTargetX = controllableTokens[index].getLong('x');
+			camTargetY = controllableTokens[index].getLong('y');
 			this.lastCenteredTokenID = controllableTokens[index].id;
 		}
 		

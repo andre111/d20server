@@ -19,15 +19,14 @@
         },
         "containedEntities": []
     },
-    "properties": [
-        {
-            "name": "name",
+    "properties": {
+        "name": {
             "type": "STRING",
             "editAccess": "CONTROLLING_PLAYER",
             "viewAccess": "CONTROLLING_PLAYER",
             "value": ""
         }
-    ],
+    },
     "updateRules": [
     ],
     "macros": {

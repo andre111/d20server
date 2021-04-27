@@ -33,8 +33,8 @@ function importEntities(directory, overwriteExisting, nameBased, type, modifier)
 
             // check for existing entity
             var existingEntity = entityMap[entityToImport.getName()];
-            if(!existingEntity && entityToImport.prop('path') && entityMap[entityToImport.prop('path').getString() + entityToImport.getName()]) {
-                existingEntity = entityMap[entityToImport.prop('path').getString() + entityToImport.getName()];
+            if(!existingEntity && entityToImport.has('path') && entityMap[entityToImport.getString('path') + entityToImport.getName()]) {
+                existingEntity = entityMap[entityToImport.getString('path') + entityToImport.getName()];
             }
 
             // import entity
@@ -79,9 +79,9 @@ export function importData(directory, overwriteExisting) {
     // import actors
     importEntities(directory, overwriteExisting, true, 'actor', (originalID, actor) => {
         // adjust attachments
-        var attachmentIDs = actor.prop('attachments').getLongList();
+        var attachmentIDs = actor.getLongList('attachments');
         for(var i=0; i<attachmentIDs.length; i++) attachmentIDs[i] = Number(attachmentIDMap[String(attachmentIDs[i])]);
-        actor.prop('attachments').setLongList(attachmentIDs);
+        actor.setLongList('attachments', attachmentIDs);
     });
 
     console.log('Import done');

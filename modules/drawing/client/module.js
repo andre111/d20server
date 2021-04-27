@@ -36,7 +36,7 @@ Events.on('addModeButtons', event => {
 Events.on('updateModeState', event => {
     var allowDrawing = false;
     var map = MapUtils.currentMap();
-    if(map && (ServerData.isGM() || map.prop('playersCanDraw').getBoolean())) allowDrawing = true;
+    if(map && (ServerData.isGM() || map.getBoolean('playersCanDraw'))) allowDrawing = true;
     if(!allowDrawing && (Client.getState().getMode() instanceof CanvasModeDrawings || (Client.getState().getMode() instanceof CanvasModeEntities && Client.getState().getMode().entityType == 'drawing'))) {
         Client.getState().setMode(new CanvasModeEntities('token'));
     }

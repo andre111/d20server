@@ -45,7 +45,7 @@ export class SidepanelTabAttachments extends SidepanelTab {
         new CanvasWindowInput('New Attachment', 'Enter Attachment Name:', '', name => {
             if(name) {
                 const attachment = new Entity('attachment');
-                attachment.prop('name').setString(name);
+                attachment.setString('name', name);
                 EntityManagers.get('attachment').add(attachment);
             }
         });

@@ -18,7 +18,7 @@ export class FileActionCreateToken extends FileAction {
     applyTo(file) {
         if(Client.getState() instanceof StateMain && Client.getState().getMode() instanceof CanvasModeEntities && Client.getState().getMode().entityType == 'token') {
             const token = new Entity('token');
-            token.prop('imagePath').setString(file.getPath());
+            token.setString('imagePath', file.getPath());
             Client.getState().getMode().setAddEntityAction(token);
             this.window.close();
         }

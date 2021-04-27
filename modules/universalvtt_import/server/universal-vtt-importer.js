@@ -22,21 +22,21 @@ export class UniversalVTTImporter {
 
         // create base map
         const map = new Entity('map');
-        map.prop('name').setString(name);
-        map.prop('width').setLong(w);
-        map.prop('height').setLong(h);
-        map.prop('gridSize').setLong(s);
+        map.setString('name', name);
+        map.setLong('width', w);
+        map.setLong('height', h);
+        map.setLong('gridSize', s);
         EntityManagers.get('map').add(map);
 
         // add background image token
         const bgToken = new Entity('token');
-        bgToken.prop('map').setLong(map.getID());
-        bgToken.prop('imagePath').setString('/image/imported/'+name+'.png');
-        bgToken.prop('layer').setLayer(Layer.BACKGROUND);
-        bgToken.prop('width').setLong(w * s);
-        bgToken.prop('height').setLong(h * s);
-        bgToken.prop('x').setLong(w * s / 2);
-        bgToken.prop('y').setLong(h * s / 2);
+        bgToken.setLong('map', map.getID());
+        bgToken.setString('imagePath', '/image/imported/'+name+'.png');
+        bgToken.setLayer('layer', Layer.BACKGROUND);
+        bgToken.setLong('width', w * s);
+        bgToken.setLong('height', h * s);
+        bgToken.setLong('x', w * s / 2);
+        bgToken.setLong('y', h * s / 2);
         EntityManagers.get('token').add(bgToken);
 
         // add walls
@@ -68,16 +68,16 @@ export class UniversalVTTImporter {
             }
             for(const light of data.lights) {
                 const lightToken = new Entity('token');
-                lightToken.prop('map').setLong(map.getID());
-                lightToken.prop('imagePath').setString('/image/imported/light.png');
-                lightToken.prop('layer').setLayer(Layer.GMOVERLAY);
-                lightToken.prop('width').setLong(s);
-                lightToken.prop('height').setLong(s);
-                lightToken.prop('x').setLong(light.position.x * s);
-                lightToken.prop('y').setLong(light.position.y * s);
-                lightToken.prop('lightBright').setDouble(light.range);
-                lightToken.prop('lightDim').setDouble(light.range * 2);
-                lightToken.prop('lightColor').setColor('#'+light.color.substring(2));
+                lightToken.setLong('map', map.getID());
+                lightToken.setString('imagePath', '/image/imported/light.png');
+                lightToken.setLayer('layer', Layer.GMOVERLAY);
+                lightToken.setLong('width', s);
+                lightToken.setLong('height', s);
+                lightToken.setLong('x', light.position.x * s);
+                lightToken.setLong('y', light.position.y * s);
+                lightToken.setDouble('lightBright', light.range);
+                lightToken.setDouble('lightDim', light.range * 2);
+                lightToken.setColor('lightColor', '#'+light.color.substring(2));
                 //TODO: light intensity?
                 EntityManagers.get('token').add(lightToken);
             }
@@ -86,13 +86,13 @@ export class UniversalVTTImporter {
 
     static createWall(map, x1, y1, x2, y2, seeThrough, door) {
         const wall = new Entity('wall');
-        wall.prop('map').setLong(map.getID());
-        wall.prop('x1').setLong(x1);
-        wall.prop('y1').setLong(y1);
-        wall.prop('x2').setLong(x2);
-        wall.prop('y2').setLong(y2);
-        wall.prop('seeThrough').setBoolean(seeThrough);
-        wall.prop('door').setBoolean(door);
+        wall.setLong('map', map.getID());
+        wall.setLong('x1', x1);
+        wall.setLong('y1', y1);
+        wall.setLong('x2', x2);
+        wall.setLong('y2', y2);
+        wall.setBoolean('seeThrough', seeThrough);
+        wall.setBoolean('door', door);
         EntityManagers.get('wall').add(wall);
     }
 }

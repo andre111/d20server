@@ -1,21 +1,19 @@
 {
     "displayName": "Battle System",
-    "properties": [
-        {
-            "name": "battle_active",
+    "properties": {
+        "battle_active": {
             "type": "BOOLEAN",
             "editAccess": "SYSTEM",
             "viewAccess": "EVERYONE",
             "value": "false"
         },
-        {
-            "name": "battle_round",
+        "battle_round": {
             "type": "LONG",
             "editAccess": "SYSTEM",
             "viewAccess": "EVERYONE",
             "value": "0"
         }
-    ],
+    },
     "updateRules": [],
     "macros": {},
     "editorTabs": []

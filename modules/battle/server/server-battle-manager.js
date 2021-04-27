@@ -15,8 +15,8 @@ export class ServerBattleManager {
         // activate battle
         ServerBattleManager.resetTokens(map);
         const mapRef = new EntityReference(map);
-        mapRef.prop('battle_active').setBoolean(true);
-        mapRef.prop('battle_round').setLong(0);
+        mapRef.setBoolean('battle_active', true);
+        mapRef.setLong('battle_round', 0);
         mapRef.performUpdate();
 
         // send notification
@@ -30,8 +30,8 @@ export class ServerBattleManager {
 
         // end battle
         const mapRef = new EntityReference(map);
-        mapRef.prop('battle_active').setBoolean(false);
-        mapRef.prop('battle_round').setLong(0);
+        mapRef.setBoolean('battle_active', false);
+        mapRef.setLong('battle_round', 0);
         mapRef.performUpdate();
         ServerBattleManager.resetTokens(map);
 
@@ -56,7 +56,7 @@ export class ServerBattleManager {
                 const ref = new EntityReference(token);
                 references.push(ref);
 
-                if(!ref.prop('battle_turnEnded').getBoolean()) {
+                if(!ref.getBoolean('battle_turnEnded')) {
                     if(current == null) {
                         current = ref;
                     } else if(next == null) {
@@ -68,15 +68,15 @@ export class ServerBattleManager {
 
         // end the turn of current token
         if(current) {
-            current.prop('battle_turnEnded').setBoolean(true);
+            current.setBoolean('battle_turnEnded', true);
             ServerBattleManager.onTurnEnd(map, current);
         }
 
         if(!next) {
             // if no next one exists -> start a new round
             const mapRef = new EntityReference(map);
-            const round = mapRef.prop('battle_round').getLong()+1;
-            mapRef.prop('battle_round').setLong(round);
+            const round = mapRef.getLong('battle_round')+1;
+            mapRef.setLong('battle_round', round);
             mapRef.performUpdate();
 
             // send notification
@@ -85,8 +85,8 @@ export class ServerBattleManager {
 
             // reset token state
             for(const ref of references) {
-                ref.prop('battle_turnStarted').setBoolean(false);
-                ref.prop('battle_turnEnded').setBoolean(false);
+                ref.setBoolean('battle_turnStarted', false);
+                ref.setBoolean('battle_turnEnded', false);
             }
         }
 
@@ -100,11 +100,11 @@ export class ServerBattleManager {
         if(!map) return;
 
         for(const token of EntityManagers.get('token').all()) {
-            if(token.prop('map').getLong() == map.getID()) {
+            if(token.getLong('map') == map.getID()) {
                 const tokenRef = new EntityReference(token);
-                tokenRef.prop('battle_active').setBoolean(false);
-                tokenRef.prop('battle_turnStarted').setBoolean(false);
-                tokenRef.prop('battle_turnEnded').setBoolean(false);
+                tokenRef.setBoolean('battle_active', false);
+                tokenRef.setBoolean('battle_turnStarted', false);
+                tokenRef.setBoolean('battle_turnEnded', false);
                 tokenRef.performUpdate();
             }
         }
@@ -114,12 +114,14 @@ export class ServerBattleManager {
         // send out notification of turn (important: to everybody on the map BUT respect name visibility)
         UserService.forEach(profile => {
             if(profile.getCurrentMap() == map.getID()) {
-                const accessLevel = tokenRef.getAccessLevel(profile);
                 const actor = TokenUtil.getActor(tokenRef);
                 
                 var content = `???s Turn`
-                if(actor && actor.canView(accessLevel) && actor.prop('name').canView(accessLevel) && actor.prop('name').getString() != '') {
-                    content = `${actor.prop('name').getString()}s Turn`;
+                if(actor) {
+                    const accessLevel = actor.getAccessLevel(profile);
+                    if(actor.canViewWithAccess(accessLevel) && actor.canViewProperty('name', accessLevel) && actor.getString('name')) {
+                        content = `${actor.getString('name')}s Turn`;
+                    }
                 }
                 const msg = new SendNotification(content, 5);
                 MessageService.send(msg, profile);
@@ -141,9 +143,9 @@ export class ServerBattleManager {
         const activeToken = CommonBattleManager.getActiveToken(map);
         if(activeToken) {
             // check if its turn was started -> start it if not
-            if(!activeToken.prop('battle_turnStarted').getBoolean()) {
+            if(!activeToken.getBoolean('battle_turnStarted')) {
                 const tokenRef = new EntityReference(activeToken);
-                tokenRef.prop('battle_turnStarted').setBoolean(true);
+                tokenRef.setBoolean('battle_turnStarted', true);
                 tokenRef.performUpdate();
 
                 ServerBattleManager.onTurnStart(map, tokenRef);

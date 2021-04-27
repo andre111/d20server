@@ -15,7 +15,7 @@ export class GameService {
 		// add atleast one map
         if(EntityManagers.get('map').all().length == 0) {
             const map = new Entity('map');
-            map.prop('name').setString('New Map');
+            map.setString('name', 'New Map');
             EntityManagers.get('map').add(map);
         }
     }

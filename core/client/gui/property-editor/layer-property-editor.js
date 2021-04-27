@@ -23,11 +23,11 @@ export class LayerPropertyEditor extends PropertyEditor {
         return this.select;
     }
     
-    reloadValue(property) {
-        this.select.value = property.getLayer();
+    reloadValue(reference, name) {
+        this.select.value = reference.getLayer(name);
     }
     
-    applyValue(property) {
-        property.setLayer(this.select.value);
+    applyValue(reference, name) {
+        reference.setLayer(name, this.select.value);
     }
 }

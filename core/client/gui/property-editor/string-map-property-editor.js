@@ -72,24 +72,24 @@ export class StringMapPropertyEditor extends PropertyEditor {
         super.reload(reference, accessLevel);
         
         // determine property
-		var property = reference.prop(this.name);
-		if(property == null) return;
+		if(!reference.has(this.name)) return;
+        const canEdit = reference.canEditProperty(this.name, accessLevel);
 
 		// update state
-		this.list.disabled = !property.canEdit(accessLevel);
-		this.editor.disabled = !property.canEdit(accessLevel);
-		this.addEntry.disabled = !property.canEdit(accessLevel);
-		this.renameEntry.disabled = !property.canEdit(accessLevel);
-		this.removeEntry.disabled = !property.canEdit(accessLevel);
+		this.list.disabled = !canEdit;
+		this.editor.disabled = !canEdit;
+		this.addEntry.disabled = !canEdit;
+		this.renameEntry.disabled = !canEdit;
+		this.removeEntry.disabled = !canEdit;
     }
     
-    reloadValue(property) {
-        this.valueMap = property.getStringMap();
+    reloadValue(reference, name) {
+        this.valueMap = reference.getStringMap(name);
         this.reloadFromMap();
     }
     
-    applyValue(property) {
-        property.setStringMap(this.valueMap);
+    applyValue(reference, name) {
+        reference.setStringMap(name, this.valueMap);
     }
     
     reloadFromMap() {

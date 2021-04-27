@@ -23,11 +23,11 @@ export class LightPropertyEditor extends PropertyEditor {
         return this.select;
     }
     
-    reloadValue(property) {
-        this.select.value = property.getLight();
+    reloadValue(reference, name) {
+        this.select.value = reference.getLight(name);
     }
     
-    applyValue(property) {
-        property.setLight(this.select.value);
+    applyValue(reference, name) {
+        reference.setLight(name, this.select.value);
     }
 }

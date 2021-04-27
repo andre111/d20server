@@ -15,7 +15,7 @@ export class BooleanPropertyEditor extends PropertyEditor {
         this.checkBox = document.createElement('a');
         this.checkBox.className = 'checkbox';
         const icon = document.createElement('p');
-        icon.style.backgroundSize = 'contain'; //TODO: why does this onlöy work when "inlined"/directly applied to the element but not with css
+        icon.style.backgroundSize = 'contain'; //TODO: why does this only work when "inlined"/directly applied to the element but not with css
         this.checkBox.appendChild(icon);
         this.container.appendChild(this.checkBox);
         if(label) this.addLabel(label);
@@ -30,12 +30,12 @@ export class BooleanPropertyEditor extends PropertyEditor {
         return this.checkBox;
     }
     
-    reloadValue(property) {
-        this.checked = property.getBoolean();
+    reloadValue(reference, name) {
+        this.checked = reference.getBoolean(name);
     }
     
-    applyValue(property) {
-        property.setBoolean(this.checked);
+    applyValue(reference, name) {
+        reference.setBoolean(name, this.checked);
     }
 
     get checked() {

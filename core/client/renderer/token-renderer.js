@@ -24,22 +24,22 @@ export const TokenRenderer = {
                 ctx.strokeStyle = 'orange';
                 ctx.lineWidth = border/2;
                 EntityUtils.applyTransform(ctx, token);
-                ctx.strokeRect(-token.prop('width').getLong()/2-border, -token.prop('height').getLong()/2-border, token.prop('width').getLong()+border*2, token.prop('height').getLong()+border*2);
+                ctx.strokeRect(-token.getLong('width')/2-border, -token.getLong('height')/2-border, token.getLong('width')+border*2, token.getLong('height')+border*2);
                 ctx.restore();
             }
         }
     },
     
     renderToken: function(ctx, token, viewer, x, y, grayscale) {
-        var img = ImageService.getImage(token.prop('imagePath').getString(), grayscale);
+        var img = ImageService.getImage(token.getString('imagePath'), grayscale);
         if(img == null) img = ImageService.MISSING;
         
         if(img != null) {
             ctx.save();
             ctx.translate(x, y);
-            ctx.rotate(token.prop('rotation').getDouble() * Math.PI / 180);
+            ctx.rotate(token.getDouble('rotation') * Math.PI / 180);
             
-            ctx.drawImage(img, -token.prop('width').getLong()/2, -token.prop('height').getLong()/2, token.prop('width').getLong(), token.prop('height').getLong());
+            ctx.drawImage(img, -token.getLong('width')/2, -token.getLong('height')/2, token.getLong('width'), token.getLong('height'));
             
             ctx.restore();
         }
@@ -56,9 +56,8 @@ export const TokenRenderer = {
         const actor = TokenUtil.getActor(token);
         
         // nameplate
-        const nameProp = actor ? actor.prop('name') : null;
-        if(nameProp && nameProp.canView(accessLevel) && nameProp.getString() != '') {
-            const name = nameProp.getString();
+        if(actor && actor.canViewProperty('name', accessLevel) && actor.getString('name')) {
+            const name = actor.getString('name');
             const nameMeasure = ctx.measureText(name);
 
             const nameW = nameMeasure.width + 4;
@@ -77,8 +76,8 @@ export const TokenRenderer = {
         const barH = TokenRenderer.getBarHeight(token, bounds, viewer);
         for(var i=1; i<=3; i++) {
             if(TokenUtil.isBarVisible(token, viewer, i)) {
-                const current = TokenUtil.getBarCurrentProp(token, i).getLong();
-                const max = TokenUtil.getBarMaxProp(token, i).getLong();
+                const current = TokenUtil.getBarCurrent(token, i);
+                const max = TokenUtil.getBarMax(token, i);
                 
                 const barX = TokenRenderer.getBarX(token, bounds, viewer, i);
                 const barY = TokenRenderer.getBarY(token, bounds, viewer, i);
@@ -144,14 +143,14 @@ export const TokenRenderer = {
     getTokenLocation: function(token, update) {
         var lastLocation = TokenRenderer._lastTokenLocations.get(token.getID());
         if(lastLocation == null || lastLocation == undefined) {
-            lastLocation = { x: token.prop('x').getLong(), y: token.prop('y').getLong() };
+            lastLocation = { x: token.getLong('x'), y: token.getLong('y') };
         }
         
         var x = lastLocation.x;
         var y = lastLocation.y;
         if(update) {
-            x += (token.prop('x').getLong() - lastLocation.x) * 0.25;
-            y += (token.prop('y').getLong() - lastLocation.y) * 0.25;
+            x += (token.getLong('x') - lastLocation.x) * 0.25;
+            y += (token.getLong('y') - lastLocation.y) * 0.25;
         }
         const currentLocation = { x: x, y: y };
         

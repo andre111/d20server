@@ -8,12 +8,12 @@ export class ValueProviderAttachment extends ValueProviderDefault {
     getSubText(value) {
         if(value == null || value == undefined) return null;
         
-        return value.prop('descShort').getString();
+        return value.getString('descShort');
     }
     
     getTags(value) {
         if(value == null || value == undefined) return [];
         
-        return value.prop('tags').getString().split('\n');
+        return value.getString('tags').split('\n');
     }
 }

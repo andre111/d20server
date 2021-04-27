@@ -24,11 +24,11 @@ export class StringSelectionPropertyEditor extends PropertyEditor {
         return this.select;
     }
     
-    reloadValue(property) {
-        this.select.value = property.getString();
+    reloadValue(reference, name) {
+        this.select.value = reference.getString(name);
     }
     
-    applyValue(property) {
-        property.setString(this.select.value);
+    applyValue(reference, name) {
+        reference.setString(name, this.select.value);
     }
 }

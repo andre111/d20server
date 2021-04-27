@@ -11,15 +11,15 @@ export const MapUtils =  {
     
     currentEntities: function(type) {
         const currentMap = ServerData.currentMap;
-        return EntityManagers.get(type).all().filter(e => e.prop('map').getLong() == currentMap); 
+        return EntityManagers.get(type).all().filter(e => e.getLong('map') == currentMap); 
     },
     
     currentEntitiesInLayer: function(type, l) {
-        return MapUtils.currentEntities(type).filter(e => e.prop('layer').getLayer() == l);
+        return MapUtils.currentEntities(type).filter(e => e.getLayer('layer') == l);
     },
     
     currentEntitiesSorted: function(type, l) {
-        return MapUtils.currentEntitiesInLayer(type, l).sort((a, b) => b.getID() - a.getID()).sort((a, b) => b.prop('depth').getLong() - a.prop('depth').getLong());
+        return MapUtils.currentEntitiesInLayer(type, l).sort((a, b) => b.getID() - a.getID()).sort((a, b) => b.getLong('depth') - a.getLong('depth'));
     },
     
     findControllableTokens: function(profile) {

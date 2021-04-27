@@ -1,7 +1,6 @@
 import { ID } from './id.js';
 import { EntityManagers } from './entity-managers.js';
 import { registerType } from '../util/datautil.js';
-import { Property } from './property.js';
 import { Access, Type, Role } from '../constants.js';
 import { getDefinitions } from '../definitions.js';
 import { ParserInstance } from '../scripting/expression/parser.js';
@@ -24,13 +23,11 @@ export class Entity {
 
         if(type) {
             this.addDefaultProperties();
-            this.updatePropertyReferences();
         }
     }
 
     postLoad() {
         this.addDefaultProperties();
-        this.updatePropertyReferences();
     }
 
     onAdd() {
@@ -82,7 +79,7 @@ export class Entity {
                 }
                 break;
             case 'SELECT_SINGLE':
-                const selected = this.prop(extensionPoint.property).getString();
+                const selected = this.getString(extensionPoint.property);
                 const extensionDefinition = extensionPoint.extensionDefinitions[selected];
                 if(extensionDefinition) {
                     activeExtensions.push(extensionDefinition);
@@ -95,14 +92,9 @@ export class Entity {
     }
 
     getPropertyDefinition(name) {
-        //TODO: this is terribly inefficient, move to map based property definitions
-        for(const propertyDefinition of this.getDefinition().properties) {
-            if(propertyDefinition.name == name) return propertyDefinition;
-        }
+        if(this.getDefinition().properties[name]) return this.getDefinition().properties[name];
         for(const extDef of this.getActiveExtensions()) {
-            for(const propertyDefinition of extDef.properties) {
-                if(propertyDefinition.name == name) return propertyDefinition;
-            }
+            if(extDef.properties[name]) return extDef.properties[name];
         }
         return null;
     }
@@ -116,35 +108,22 @@ export class Entity {
     }
 
     addPropertiesFromDefs(propertyDefinitions) {
-        for(const propDef of propertyDefinitions) {
-            this.addPropertyIfAbsentOrWrong(propDef.name, propDef.type, propDef.value);
+        for(const [name, def] of Object.entries(propertyDefinitions)) {
+            this.addPropertyIfAbsentOrWrong(name, def.value);
         }
     }
 
-    addPropertyIfAbsentOrWrong(name, type, value) {
-        if(!this.properties[name] || this.properties[name].getType() != type) {
-            const property = new Property(type, value);
-            property.setHolder(this);
-            property.setName(name);
-            this.properties[name] = property;
+    addPropertyIfAbsentOrWrong(name, value) {
+        if(!this.properties[name]) {
+            this.properties[name] = value;
         }
-        return this.properties[name];
     }
 
     clonePropertiesFrom(other) {
         this.properties = {};
         const otherProperties = other.getProperties();
         for(const name in otherProperties) {
-            this.properties[name] = otherProperties[name].clone();
-        }
-        this.updatePropertyReferences();
-    }
-
-    updatePropertyReferences() {
-        for(const name in this.properties) {
-            const property = this.properties[name];
-            property.setHolder(this);
-            property.setName(name);
+            this.properties[name] = otherProperties[name];
         }
     }
 
@@ -164,15 +143,11 @@ export class Entity {
         }
     }
 
-    prop(name) {
-        return this.properties[name];
-    }
-
     getProperties() {
         return this.properties;
     }
 
-    onPropertyChange(name, property) {
+    onPropertyChange(name) {
         if(!this._transient_updating) {
             this._transient_updating = true;
             this.addDefaultProperties();
@@ -192,8 +167,7 @@ export class Entity {
 
     applyUpdateRules(updateRules, changedProperties) {
         for(const ruleDef of updateRules) {
-            const property = this.prop(ruleDef.property);
-            if(!property) throw new Error(`Error in UpdateRule: Property ${ruleDef.property} does not exist`);
+            if(!this.has(ruleDef.property)) throw new Error(`Error in UpdateRule: Property ${ruleDef.property} does not exist`);
 
             try {
                 // use cached expression or parse from definition (because parsing is an expensive operation that can lock up the browser for a noticeable time)
@@ -203,22 +177,22 @@ export class Entity {
                 const result = expression.eval(new Context(null, null, this));
             
                 const value = result.getValue();
-                switch(property.getType()) {
+                switch(this.getPropertyType(ruleDef.property)) {
                 case Type.DOUBLE:
-                    property.setDouble(value);
+                    this.setDouble(ruleDef.property, value);
                     break;
                 case Type.LONG:
-                    property.setLong(Math.trunc(value));
+                    this.setLong(ruleDef.property, Math.trunc(value));
                     break;
                 case Type.STRING:
                     var stringValue = '?';
                     if(ruleDef.stringMap && ruleDef.stringMap[Math.trunc(value)]) stringValue = ruleDef.stringMap[Math.trunc(value)];
-                    property.setString(stringValue);
+                    this.setString(ruleDef.property, stringValue);
                     break;
                 default:
-                    throw new Error(`Error in UpdateRule: Cannot modify property of type ${property.getType()}`);
+                    throw new Error(`Error in UpdateRule: Cannot modify property of type ${this.getPropertyType(ruleDef.property)}`);
                 }
-                changedProperties[ruleDef.property] = property;
+                changedProperties[ruleDef.property] = this.getInternal(ruleDef.property);
             } catch (error) {
                 //TODO: how can I report where the old error happended?
                 //throw new Error(`Error in UpdateRule: ${error.message}`);
@@ -243,6 +217,15 @@ export class Entity {
         }
     }
 
+    // ---------------------- PROPERTIES
+    has(name) {
+        return this.properties.hasOwnProperty(name);
+    }
+
+    getPropertyType(name) {
+        return this.getPropertyDefinition(name).type;
+    }
+
     getPropertyViewAccess(name) {
         return this.getPropertyDefinition(name).viewAccess;
     }
@@ -251,9 +234,155 @@ export class Entity {
         return this.getPropertyDefinition(name).editAccess;
     }
 
+    canViewProperty(name, accessLevel) {
+        return this.has(name) && Access.matches(this.getPropertyViewAccess(name), accessLevel);
+    }
+    canEditProperty(name, accessLevel) {
+        return this.has(name) && Access.matches(this.getPropertyEditAccess(name), accessLevel);
+    }
+
+    //TODO: checkValue(value) (called hasValidValue in old code)
+    isValidValue(name, value) {
+        //TODO: actual implementation
+        return true;
+    }
+
+    hasValidValue(name) {
+        return this.isValidValue(name, this.properties[name]);
+    }
+
+    checkType(name, requiredType) {
+        if(this.getPropertyType(name) != requiredType) throw new Error(`Property is of wrong type, required ${requiredType} but is ${this.getPropertyType(name)}`);
+    }
+
+    // --
+    getInternal(name) {
+        return this.properties[name];
+    }
+    setInternal(name, value) {
+        if(this.properties[name] === value) return;
+
+        this.properties[name] = value;
+        this.onPropertyChange(name);
+    }
+
+    getString(name) {
+        this.checkType(name, Type.STRING);
+        return this.getInternal(name);
+    }
+    setString(name, value) {
+        this.checkType(name, Type.STRING);
+        this.setInternal(name, value);
+    }
+
+    getLong(name) {
+        this.checkType(name, Type.LONG);
+        return Number(this.getInternal(name));
+    }
+    setLong(name, value) {
+        this.checkType(name, Type.LONG);
+        this.setInternal(name, String(Math.trunc(value)));
+    }
+
+    getBoolean(name) {
+        this.checkType(name, Type.BOOLEAN);
+        return this.getInternal(name) == 'true';
+    }
+    setBoolean(name, value) {
+        this.checkType(name, Type.BOOLEAN);
+        this.setInternal(name, String(value));
+    }
+
+    getDouble(name) {
+        this.checkType(name, Type.DOUBLE);
+        return Number(this.getInternal(name));
+    }
+    setDouble(name, value) {
+        this.checkType(name, Type.DOUBLE);
+        this.setInternal(name, String(value));
+    }
+
+    getLongList(name) {
+        this.checkType(name, Type.LONG_LIST);
+        const value = this.getInternal(name);
+        if(!value || value == '') return [];
+        return value.split(';').map(s => Number(s));
+    }
+    setLongList(name, value) {
+        this.checkType(name, Type.LONG_LIST);
+        this.setInternal(name, value.join(';')); //TODO: cast/round to long
+    }
+
+    getStringMap(name) {
+        this.checkType(name, Type.STRING_MAP);
+        const value = this.getInternal(name);
+        if(!value || value == '') return {};
+
+        var map = {};
+        var split = value.split('§');
+        for(var i=0; i<split.length-1; i+=2) {
+            map[split[i]] = split[i+1];
+        }
+        return map;
+    }
+    setStringMap(name, value) {
+        this.checkType(name, Type.STRING_MAP);
+        
+        var string = '';
+        for(const [key, entry] of Object.entries(value)) {
+            string = string + key.replace('§', '') + '§' + entry.replace('§', '') + '§';
+        }
+        this.setInternal(name, string);
+    }
+
+    getLayer(name) {
+        this.checkType(name, Type.LAYER);
+        return this.getInternal(name);
+    }
+    setLayer(name, value) {
+        this.checkType(name, Type.LAYER);
+        this.setInternal(name, value);
+    }
+
+    getLight(name) {
+        this.checkType(name, Type.LIGHT);
+        return this.getInternal(name);
+    }
+    setLight(name, value) {
+        this.checkType(name, Type.LIGHT);
+        this.setInternal(name, value);
+    }
+
+    getEffect(name) {
+        this.checkType(name, Type.EFFECT);
+        return this.getInternal(name);
+    }
+    setEffect(name, value) {
+        this.checkType(name, Type.EFFECT);
+        this.setInternal(name, value);
+    }
+
+    getColor(name) {
+        this.checkType(name, Type.COLOR);
+        return '#' + (Number(this.getInternal(name)) & 0x00FFFFFF).toString(16).padStart(6, '0');
+    }
+    setColor(name, value) {
+        this.checkType(name, Type.COLOR);
+        this.setInternal(name, String(parseInt(value.substring(1), 16)));
+    }
+
+    getAccessValue(name) {
+        this.checkType(name, Type.ACCESS);
+        return this.getInternal(name);
+    }
+    setAccessValue(name, value) {
+        this.checkType(name, Type.ACCESS);
+        this.setInternal(name, value);
+    }
+
     // ----------------------
     getName() {
-        return this.prop('name') ? this.prop('name').getString() : '';
+        return this.has('name') ? this.getString('name') : '';
     }
 
     getViewAccess() {
@@ -262,9 +391,9 @@ export class Entity {
         case 'SET':
             return as.value;
         case 'PROPERTY':
-            return this.prop(as.property).getAccessValue();
+            return this.getAccessValue(as.property);
         case 'PROPERTY_TOGGLE':
-            return this.prop(as.property).getBoolean() ? Access.EVERYONE : Access.CONTROLLING_PLAYER;
+            return this.getBoolean(as.property) ? Access.EVERYONE : Access.CONTROLLING_PLAYER;
         }
         console.log(`WARNING: Entity Access Mode not implemented: ${as.mode}`);
         return Access.SYSTEM;
@@ -276,9 +405,9 @@ export class Entity {
         case 'SET':
             return as.value;
         case 'PROPERTY':
-            return this.prop(as.property).getAccessValue();
+            return this.getAccessValue(as.property);
         case 'PROPERTY_TOGGLE':
-            return this.prop(as.property).getBoolean() ? Access.EVERYONE : Access.CONTROLLING_PLAYER;
+            return this.getBoolean(as.property) ? Access.EVERYONE : Access.CONTROLLING_PLAYER;
         }
         console.log(`WARNING: Entity Access Mode not implemented: ${as.mode}`);
         return Access.SYSTEM;
@@ -298,8 +427,8 @@ export class Entity {
             return (accessLevel == Access.EVERYONE && profile.currentMap == this.id) ? Access.CONTROLLING_PLAYER : accessLevel;
         case 'REFERENCED_ENTITY_PROPERTY_TOGGLE':
             if(!Access.matches(Access.GM, accessLevel)) {
-                const entity = EntityManagers.get(als.referenceType).find(this.prop(als.referenceProperty).getLong());
-                if(!entity || !entity.prop(als.property).getBoolean()) return Access.EVERYONE;
+                const entity = EntityManagers.get(als.referenceType).find(this.getLong(als.referenceProperty));
+                if(!entity || !entity.getBoolean(als.property)) return Access.EVERYONE;
             }
             return accessLevel;
         }
@@ -328,13 +457,12 @@ export class Entity {
         default:
             return [];
         case 'PROPERTY':
-            const property = this.prop(cdef.property);
-            if(!property) return [];
-            switch(property.getType()) {
+            if(!this.has(cdef.property)) return [];
+            switch(this.getPropertyType(cdef.property)) {
             case Type.LONG:
-                return [property.getLong()];
+                return [this.getLong(cdef.property)];
             case Type.LONG_LIST:
-                return property.getLongList();
+                return this.getLongList(cdef.property);
             default:
                 return [];
             }

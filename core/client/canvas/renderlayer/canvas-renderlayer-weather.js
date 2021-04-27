@@ -9,7 +9,7 @@ export class CanvasRenderLayerWeather extends CanvasRenderLayer {
     }
     
     render(ctx, state, view, viewers, camera, viewport, map) {
-        WeatherRenderer.updateAndDraw(ctx, viewport, map.prop('effect').getEffect());
+        WeatherRenderer.updateAndDraw(ctx, viewport, map.getEffect('effect'));
     }
     
     getLevel() {

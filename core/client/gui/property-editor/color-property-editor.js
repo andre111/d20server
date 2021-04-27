@@ -17,11 +17,11 @@ export class ColorPropertyEditor extends PropertyEditor {
         return this.input;
     }
     
-    reloadValue(property) {
-        this.input.value = property.getColor();
+    reloadValue(reference, name) {
+        this.input.value = reference.getColor(name);
     }
     
-    applyValue(property) {
-        property.setColor(this.input.value);
+    applyValue(reference, name) {
+        reference.setColor(name, this.input.value);
     }
 }

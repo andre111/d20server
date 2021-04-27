@@ -135,7 +135,7 @@ export class CanvasWindowFitToGrid extends CanvasWindow {
     }
     
     getImage() {
-        var imagePath = this.reference.prop('imagePath').getString();
+        var imagePath = this.reference.getString('imagePath');
         if(imagePath && imagePath != '') {
             return ImageService.getImage(imagePath);
         }
@@ -161,9 +161,9 @@ export class CanvasWindowFitToGrid extends CanvasWindow {
         var img = this.getImage();
         if(img == null) return;
         
-		var gridSize = map.prop('gridSize').getLong();
-		var gridCenterX = Math.trunc(map.prop('width').getLong() * gridSize / 2);
-		var gridCenterY = Math.trunc(map.prop('height').getLong() * gridSize / 2);
+		var gridSize = map.getLong('gridSize');
+		var gridCenterX = Math.trunc(map.getLong('width') * gridSize / 2);
+		var gridCenterY = Math.trunc(map.getLong('height') * gridSize / 2);
 		
         // calculate image size
 		var cellWidth = ((this.x2-this.x1) / 7);
@@ -183,10 +183,10 @@ export class CanvasWindowFitToGrid extends CanvasWindow {
 		var imageTargetX = (Math.trunc(gridCenterX / gridSize) * gridSize) + imageXOffset;
 		var imageTargetY = (Math.trunc(gridCenterY / gridSize) * gridSize) + imageYOffset;
 		
-		this.reference.prop('x').setLong(imageTargetX);
-		this.reference.prop('y').setLong(imageTargetY);
-		this.reference.prop('width').setLong(imageTargetWidth);
-		this.reference.prop('height').setLong(imageTargetHeight);
+		this.reference.setLong('x', imageTargetX);
+		this.reference.setLong('y', imageTargetY);
+		this.reference.setLong('width', imageTargetWidth);
+		this.reference.setLong('height', imageTargetHeight);
 		this.reference.performUpdate();
     }
 }

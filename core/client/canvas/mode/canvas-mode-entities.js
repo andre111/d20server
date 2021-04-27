@@ -89,7 +89,7 @@ export class CanvasModeEntities extends CanvasMode {
         if(map == null || map == undefined) return;
         this.validateActiveEntities();
         
-        var gridSize = map.prop('gridSize').getLong();
+        var gridSize = map.getLong('gridSize');
         
         // moving entities
         if(a == 'move_left') {
@@ -112,17 +112,17 @@ export class CanvasModeEntities extends CanvasMode {
         } else if(a == 'rotate_left') {
             if(this.activeEntities.length == 1) {
                 var reference = this.activeEntities[0];
-                var rotation = reference.prop('rotation').getDouble();
+                var rotation = reference.getDouble('rotation');
                 rotation = (rotation - 45) % 360;
-				reference.prop('rotation').setDouble(rotation);
+				reference.setDouble('rotation', rotation);
 				reference.performUpdate();
             }
         } else if(a == 'rotate_right') {
             if(this.activeEntities.length == 1) {
                 var reference = this.activeEntities[0];
-                var rotation = reference.prop('rotation').getDouble();
+                var rotation = reference.getDouble('rotation');
                 rotation = (rotation + 45) % 360;
-				reference.prop('rotation').setDouble(rotation);
+				reference.setDouble('rotation', rotation);
 				reference.performUpdate();
             }
         // deleting entities
@@ -195,7 +195,7 @@ export class CanvasModeEntities extends CanvasMode {
                 
                 ctx.strokeStyle = 'lime';
                 ctx.lineWidth = 3;
-                ctx.strokeRect(-entity.prop('width').getLong()/2, -entity.prop('height').getLong()/2, entity.prop('width').getLong(), entity.prop('height').getLong());
+                ctx.strokeRect(-entity.getLong('width')/2, -entity.getLong('height')/2, entity.getLong('width'), entity.getLong('height'));
                 
                 ctx.restore();
             }
@@ -205,8 +205,8 @@ export class CanvasModeEntities extends CanvasMode {
     storeMouseOffsets(xm, ym) {
 		// remember offset from mouse
         for(const reference of this.activeEntities) {
-            reference.mouseOffsetX = reference.prop('x').getLong() - xm;
-            reference.mouseOffsetY = reference.prop('y').getLong() - ym;
+            reference.mouseOffsetX = reference.getLong('x') - xm;
+            reference.mouseOffsetY = reference.getLong('y') - ym;
         }
     }
     
@@ -214,7 +214,7 @@ export class CanvasModeEntities extends CanvasMode {
         var map = MapUtils.currentMap();
         if(map == null || map == undefined) return;
         
-		var gridSize = map.prop('gridSize').getLong();
+		var gridSize = map.getLong('gridSize');
         
         for(const reference of this.activeEntities) {
             // determine new position
@@ -243,9 +243,9 @@ export class CanvasModeEntities extends CanvasMode {
 			var doMove = true;
 			if(collideWithWalls) {
                 MapUtils.currentEntities('wall').forEach(wall => {
-                    if(!wall.prop('door').getBoolean() || !wall.prop('open').getBoolean()) {
-                        if(IntMathUtils.doLineSegmentsIntersect(reference.prop('x').getLong(), reference.prop('y').getLong(), xp, yp, 
-                            wall.prop('x1').getLong(), wall.prop('y1').getLong(), wall.prop('x2').getLong(), wall.prop('y2').getLong())) {
+                    if(!wall.getBoolean('door') || !wall.getBoolean('open')) {
+                        if(IntMathUtils.doLineSegmentsIntersect(reference.getLong('x'), reference.getLong('y'), xp, yp, 
+                            wall.getLong('x1'), wall.getLong('y1'), wall.getLong('x2'), wall.getLong('y2'))) {
                             doMove = false;
                         }
                     }
@@ -254,8 +254,8 @@ export class CanvasModeEntities extends CanvasMode {
 			
 			// move temp token
 			if(doMove) {
-				reference.prop('x').setLong(xp);
-				reference.prop('y').setLong(yp);
+				reference.setLong('x', xp);
+				reference.setLong('y', yp);
 			}
         }
     }
@@ -280,8 +280,8 @@ export class CanvasModeEntities extends CanvasMode {
         
         entity = entity.clone();
         entity.id = 0;
-        entity.prop('map').setLong(map.id);
-        entity.prop('layer').setLayer(Client.getState().getLayer());
+        entity.setLong('map', map.id);
+        entity.setLayer('layer', Client.getState().getLayer());
         
         this.clearActiveEntities();
         this.sendSelectedEntities();
@@ -298,8 +298,8 @@ export class CanvasModeEntities extends CanvasMode {
         
         for(const reference of references) {
             if(reference.getType() == this.entityType) {
-                reference.prop('map').setLong(map.id);
-                reference.prop('layer').setLayer(Client.getState().getLayer());
+                reference.setLong('map', map.id);
+                reference.setLayer('layer', Client.getState().getLayer());
                 this.addActiveEntity(reference);
             }
         }

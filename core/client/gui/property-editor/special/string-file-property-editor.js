@@ -18,13 +18,13 @@ export class StringFilePropertyEditor extends PropertyEditor {
         return this.button;
     }
     
-    reloadValue(property) {
-        this.currentPath = property.getString();
+    reloadValue(reference, name) {
+        this.currentPath = reference.getString(name);
         this.updateButtonText();
     }
     
-    applyValue(property) {
-        property.setString(this.currentPath);
+    applyValue(reference, name) {
+        reference.setString(name, this.currentPath);
     }
     
     updateButtonText() {

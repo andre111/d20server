@@ -123,17 +123,16 @@ export class ServerEntityManager extends EntityManager {
         // transfer properties respecting access settings and keeping track of which changed
         var changedProperties = {};
         for(const [key, value] of Object.entries(map)) {
-            const ownProperty = entity.properties[key];
-            if(!ownProperty) continue; // server discards new/unknown properties from client
-            if(!value.hasValidValue()) continue; // server discards properties with invalid value
+            if(!entity.has(key)) continue; // server discards new/unknown properties from client
+            if(!entity.isValidValue(key, value)) continue; // server discards properties with invalid value
 
             // transfer value
-            if(Access.matches(ownProperty.getEditAccess(), accessLevel)) {
+            if(entity.canEditProperty(key, accessLevel)) {
                 try {
-                    value.transferTo(ownProperty);
-                    changedProperties[key] = ownProperty;
+                    entity.setInternal(key, value);
+                    changedProperties[key] = value;
 
-                    const updated = entity.onPropertyChange(key, ownProperty);
+                    const updated = entity.onPropertyChange(key);
                     for(const [ukey, uvalue] of Object.entries(updated)) {
                         changedProperties[ukey] = uvalue;
                     }

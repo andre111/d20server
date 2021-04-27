@@ -1,43 +1,38 @@
 {
     "displayName": "Battle System",
-    "properties": [
-        {
-            "name": "battle_active",
+    "properties": {
+        "battle_active": {
             "type": "BOOLEAN",
             "editAccess": "SYSTEM",
             "viewAccess": "EVERYONE",
             "value": "false"
         },
-        {
-            "name": "battle_initiative",
+        "battle_initiative": {
             "type": "DOUBLE",
             "editAccess": "CONTROLLING_PLAYER",
             "viewAccess": "EVERYONE",
             "value": "0"
         },
-        {
-            "name": "battle_infoHidden",
+        "battle_infoHidden": {
             "type": "BOOLEAN",
             "editAccess": "SYSTEM",
             "viewAccess": "EVERYONE",
             "value": "false"
         },
         
-        {
-            "name": "battle_turnStarted",
+        "battle_turnStarted": {
             "type": "BOOLEAN",
             "editAccess": "SYSTEM",
             "viewAccess": "EVERYONE",
             "value": "false"
         },
-        {
-            "name": "battle_turnEnded",
+        "battle_turnEnded": {
             "type": "BOOLEAN",
             "editAccess": "SYSTEM",
             "viewAccess": "EVERYONE",
             "value": "false"
         }
-    ],
+    },
     "updateRules": [],
     "macros": {},
     "editorTabs": []

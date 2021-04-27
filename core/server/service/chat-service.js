@@ -101,7 +101,7 @@ export class ChatService {
                     macro = actorPredefMacros[macroName.substring(1)].join('\n');
                 }
             } else {
-                const actorMacros = actor.prop('macros').getStringMap();
+                const actorMacros = actor.getStringMap('macros');
                 macro = actorMacros[macroName];
             }
             if(!macro) {

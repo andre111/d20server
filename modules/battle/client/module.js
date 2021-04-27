@@ -23,14 +23,14 @@ Events.on('entityMenu', event => {
 
     const category = event.data.menu.createCategory(null, 'Battle');
 
-    if(event.data.reference.prop('battle_active').getBoolean()) {
+    if(event.data.reference.getBoolean('battle_active')) {
         event.data.menu.createItem(category, 'Set Initiative', () => {
-            new CanvasWindowInput('Set Initiative', 'Enter initiative for selected token: ', event.data.reference.prop('battle_initiative').getDouble(), value => {
+            new CanvasWindowInput('Set Initiative', 'Enter initiative for selected token: ', event.data.reference.getDouble('battle_initiative'), value => {
                 if(value == null || value == undefined || value == '') return;
             
                 const newValue = Number(value);
                 if(newValue != NaN) {
-                    event.data.reference.prop('battle_initiative').setDouble(newValue);
+                    event.data.reference.setDouble('battle_initiative', newValue);
                     event.data.reference.performUpdate();
                 }
             });

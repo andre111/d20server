@@ -1,56 +1,49 @@
 {
     "displayName": "Ambient Audio",
-    "properties": [
-        {
-            "name": "audioPath",
+    "properties": {
+        "audioPath": {
             "type": "STRING",
             "editAccess": "GM",
             "viewAccess": "GM",
             "value": ""
         },
-        {
-            "name": "audioVolume",
+        "audioVolume": {
             "type": "DOUBLE",
             "editAccess": "GM",
             "viewAccess": "GM",
             "value": "1"
         },
-        {
-            "name": "audioDistance",
+        "audioDistance": {
             "type": "DOUBLE",
             "editAccess": "GM",
             "viewAccess": "GM",
             "value": "10"
         },
-        {
-            "name": "audioWallsMuffle",
+        "audioWallsMuffle": {
             "type": "BOOLEAN",
             "editAccess": "GM",
             "viewAccess": "GM",
             "value": "true"
         },
-        {
-            "name": "audioReverb",
+        "audioReverb": {
             "type": "BOOLEAN",
             "editAccess": "GM",
             "viewAccess": "GM",
             "value": "false"
         },
-        {
-            "name": "audioMinPause",
+        "audioMinPause": {
             "type": "LONG",
             "editAccess": "GM",
             "viewAccess": "GM",
             "value": "60"
         },
-        {
-            "name": "audioMaxPause",
+        "audioMaxPause": {
             "type": "LONG",
             "editAccess": "GM",
             "viewAccess": "GM",
             "value": "60"
         }
-    ],
+    },
     "updateRules": [],
     "macros": {},
     "editorTabs": []

@@ -11,7 +11,7 @@ export class EntityActionRotate extends EntityAction {
         var rotation = 0;
         
         // calculate angle between mouse and upwards
-		var angle = Math.atan2(xm-reference.prop('x').getLong(), ym-reference.prop('y').getLong());
+		var angle = Math.atan2(xm-reference.getLong('x'), ym-reference.getLong('y'));
 		angle -= Math.PI;
 		rotation -= angle;
         
@@ -25,7 +25,7 @@ export class EntityActionRotate extends EntityAction {
         
         rotation = rotation % 360;
 		
-		reference.prop('rotation').setDouble(rotation);
+		reference.setDouble('rotation', rotation);
     }
     
     finishRotation() {

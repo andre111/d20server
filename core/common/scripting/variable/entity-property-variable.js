@@ -14,103 +14,97 @@ export class EntityPropertyVariable extends Variable {
     }
 
     getType(context) {
-        const property = this.getProperty(this.getEntity(context));
-        return property.getType();
+        const entity = this.getEntity(context);
+        if(!entity.has(this.#propertyName)) throw new Error(`No property ${this.#propertyName}`);
+        return entity.getPropertyType(this.#propertyName);
     }
 
     set(context, value) {
         const entity = this.getEntity(context);
-        const property = this.getProperty(entity);
+        if(!entity.has(this.#propertyName)) throw new Error(`No property ${this.#propertyName}`);
 
         // check access
         const accessLevel = entity.getAccessLevel(context.profile);
-        if(!property.canEdit(accessLevel)) throw new Error(`No edit access to ${this.getFullName()}`);
+        if(!entity.canEditProperty(this.#propertyName, accessLevel)) throw new Error(`No edit access to ${this.getFullName()}`);
 
         // set value (by type)
-        switch(property.getType()) {
+        switch(entity.getPropertyType(this.#propertyName)) {
         case Type.BOOLEAN:
-            property.setBoolean(value);
+            entity.setBoolean(this.#propertyName, value);
             break;
         case Type.DOUBLE:
-            property.setDouble(value);
+            entity.setDouble(this.#propertyName, value);
             break;
         case Type.LAYER:
-            property.setLayer(value);
+            entity.setLayer(this.#propertyName, value);
             break;
         case Type.LIGHT:
-            property.setLight(value);
+            entity.setLight(this.#propertyName, value);
             break;
         case Type.LONG:
-            property.setLong(value);
+            entity.setLong(this.#propertyName, value);
             break;
         case Type.LONG_LIST:
-            property.setLongList(value);
+            entity.setLongList(this.#propertyName, value);
             break;
         case Type.STRING:
-            property.setString(value);
+            entity.setString(this.#propertyName, value);
             break;
         case Type.EFFECT:
-            property.setEffect(value);
+            entity.setEffect(this.#propertyName, value);
             break;
         case Type.COLOR:
-            property.setColor(value);
+            entity.setColor(this.#propertyName, value);
             break;
         case Type.ACCESS:
-            property.setAccessValue(value);
+            entity.setAccessValue(this.#propertyName, value);
             break;
         default:
-            throw new Error(`Missing implementation for type ${property.getType()}`);
+            throw new Error(`Missing implementation for type ${entity.getPropertyType(this.#propertyName)}`);
         }
 
         // update
         var map = {};
-        map[this.#propertyName] = property;
+        map[this.#propertyName] = entity.getInternal(this.#propertyName);
         EntityManagers.get(entity.getType()).updateProperties(entity.getID(), map, accessLevel);
     }
 
     get(context) {
         const entity = this.getEntity(context);
-        const property = this.getProperty(entity);
+        if(!entity.has(this.#propertyName)) throw new Error(`No property ${this.#propertyName}`);
 
         // check access
         const accessLevel = entity.getAccessLevel(context.profile);
-        if(!property.canView(accessLevel)) throw new Error(`No view access to ${this.getFullName()}`);
+        if(!entity.canViewProperty(this.#propertyName, accessLevel)) throw new Error(`No edit access to ${this.getFullName()}`);
 
         // get value (by type)
-        switch(property.getType()) {
+        switch(entity.getPropertyType(this.#propertyName)) {
         case Type.BOOLEAN:
-            return property.getBoolean();
+            return entity.getBoolean(this.#propertyName);
         case Type.DOUBLE:
-            return property.getDouble();
+            return entity.getDouble(this.#propertyName);
         case Type.LAYER:
-            return property.getLayer();
+            return entity.getLayer(this.#propertyName);
         case Type.LIGHT:
-            return property.getLight();
+            return entity.getLight(this.#propertyName);
         case Type.LONG:
-            return property.getLong();
+            return entity.getLong(this.#propertyName);
         case Type.LONG_LIST:
-            return property.getLongList();
+            return entity.getLongList(this.#propertyName);
         case Type.STRING:
-            return property.getString();
+            return entity.getString(this.#propertyName);
         case Type.EFFECT:
-            return property.getEffect();
+            return entity.getEffect(this.#propertyName);
         case Type.COLOR:
-            return property.getColor();
+            return entity.getColor(this.#propertyName);
         case Type.ACCESS:
-            return property.getAccessValue();
+            return entity.getAccessValue(this.#propertyName);
         default:
-            throw new Error(`Missing implementation for type ${property.getType()}`);
+            throw new Error(`Missing implementation for type ${entity.getPropertyType(this.#propertyName)}`);
         }
     }
 
     getEntity(context) {
         return this.#entityFinder.findEntity(context);
-    }
-
-    getProperty(entity) {
-        const property = entity.prop(this.#propertyName);
-        if(!property) throw new Error(`No property ${this.#propertyName}`);
-
-        return property;
     }
 }

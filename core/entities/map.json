@@ -19,67 +19,59 @@
         },
         "containedEntities": []
     },
-    "properties": [
-        {
-            "name": "name",
+    "properties": {
+        "name": {
             "type": "STRING",
             "editAccess": "GM",
             "viewAccess": "CONTROLLING_PLAYER",
             "value": ""
         },
         
-        {
-            "name": "gridSize",
+        "gridSize": {
             "type": "LONG",
             "editAccess": "GM",
             "viewAccess": "EVERYONE",
             "value": "70"
         },
-        {
-            "name": "width",
+        "width": {
             "type": "LONG",
             "editAccess": "GM",
             "viewAccess": "EVERYONE",
             "value": "100"
         },
-        {
-            "name": "height",
+        "height": {
             "type": "LONG",
             "editAccess": "GM",
             "viewAccess": "EVERYONE",
             "value": "100"
         },
         
-        {
-            "name": "light",
+        "light": {
             "type": "LIGHT",
             "editAccess": "GM",
             "viewAccess": "EVERYONE",
             "value": "BRIGHT"
         },
-        {
-            "name": "effect",
+        "effect": {
             "type": "EFFECT",
             "editAccess": "GM",
             "viewAccess": "EVERYONE",
             "value": "NONE"
         },
         
-        {
-            "name": "playersCanEnter",
+        "playersCanEnter": {
             "type": "BOOLEAN",
             "editAccess": "GM",
             "viewAccess": "EVERYONE",
             "value": "false"
         },
-        {
-            "name": "playersCanDraw",
+        "playersCanDraw": {
             "type": "BOOLEAN",
             "editAccess": "GM",
             "viewAccess": "EVERYONE",
             "value": "false"
         }
-    ],
+    },
     "updateRules": [
     ],
     "macros": {

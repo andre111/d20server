@@ -70,7 +70,7 @@ export class ClientBattleManager {
 
         //
         if(active) {
-            ClientBattleManager.#infoRoundEl.innerHTML = 'Battle<br>Round '+map.prop('battle_round').getLong();
+            ClientBattleManager.#infoRoundEl.innerHTML = 'Battle<br>Round '+map.getLong('battle_round');
             ClientBattleManager.#entryList.reload(CommonBattleManager.getParticipatingTokens(map));
         }
     }

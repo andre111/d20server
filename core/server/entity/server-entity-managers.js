@@ -27,8 +27,8 @@ export function fullSync(profile) {
 export function setupCascadingDeletes() {
     // remove tokens and walls (and drawings => module!) on map remove
     EntityManagers.get('map').addRemovalListener((id, map) => {
-        EntityManagers.get('token').removeAll(token => token.prop('map').getLong() == id);
-        EntityManagers.get('wall').removeAll(wall => wall.prop('map').getLong() == id);
-        EntityManagers.get('drawing').removeAll(drawing => drawing.prop('map').getLong() == id);
+        EntityManagers.get('token').removeAll(token => token.getLong('map') == id);
+        EntityManagers.get('wall').removeAll(wall => wall.getLong('map') == id);
+        EntityManagers.get('drawing').removeAll(drawing => drawing.getLong('map') == id);
     });
 }

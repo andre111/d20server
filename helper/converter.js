@@ -1,6 +1,6 @@
 import nedb from 'nedb';
-import * as fs from 'fs-extra';
-import { toJson } from '../core/common/util/datautil.js';
+import fs from 'fs-extra';
+import { fromJson, toJson } from '../core/common/util/datautil.js';
 import { readJson } from '../core/server/util/fileutil.js';
 
 function convert(type) {
@@ -9,6 +9,7 @@ function convert(type) {
 
     // import from old format if the new one did not exist
     if(!exists) {
+        console.log('Importing from old storage');
         var entities = readJson('entity.'+type);
         if(!entities) entities = {};
         for(const [id, entity] of Object.entries(entities)) {
@@ -23,9 +24,21 @@ function convert(type) {
         }
     }
 
-    //TODO: convert format (properties stored directly in entity)
+    // convert format (properties stored directly in entity)
+    console.log('Converting to directly stored properties');
+    db.find({}, (err, docs) => {
+        for(const doc of docs) {
+            const entity = fromJson(doc.json);
+            for(const [name, property] of Object.entries(entity.properties)) {
+                if(property.type) entity.properties[name] = property.value;
+            }
+            doc.json = toJson(entity, false, false);
 
-    db.persistence.compactDatafile();
+            db.update({ _id: doc._id }, doc, { upsert: true }, err => {}); 
+        }
+
+        db.persistence.compactDatafile();
+    });
 }
 
 convert('actor');

@@ -23,87 +23,76 @@
         },
         "containedEntities": []
     },
-    "properties": [
-        {
-            "name": "creator",
+    "properties": {
+        "creator": {
             "type": "LONG",
             "editAccess": "SYSTEM",
             "viewAccess": "EVERYONE",
             "value": "-1"
         },
-        {
-            "name": "map",
+        "map": {
             "type": "LONG",
             "editAccess": "SYSTEM",
             "viewAccess": "EVERYONE",
             "value": "-1"
         },
         
-        {
-            "name": "x",
+        "x": {
             "type": "LONG",
             "editAccess": "CONTROLLING_PLAYER",
             "viewAccess": "EVERYONE",
             "value": "0"
         },
-        {
-            "name": "y",
+        "y": {
             "type": "LONG",
             "editAccess": "CONTROLLING_PLAYER",
             "viewAccess": "EVERYONE",
             "value": "0"
         },
-        {
-            "name": "width",
+        "width": {
             "type": "LONG",
             "editAccess": "CONTROLLING_PLAYER",
             "viewAccess": "EVERYONE",
             "value": "70"
         },
-        {
-            "name": "height",
+        "height": {
             "type": "LONG",
             "editAccess": "CONTROLLING_PLAYER",
             "viewAccess": "EVERYONE",
             "value": "70"
         },
-        {
-            "name": "rotation",
+        "rotation": {
             "type": "DOUBLE",
             "editAccess": "CONTROLLING_PLAYER",
             "viewAccess": "EVERYONE",
             "value": "0"
         },
-        {
-            "name": "layer",
+        "layer": {
             "type": "LAYER",
             "editAccess": "GM",
             "viewAccess": "EVERYONE",
             "value": "MAIN"
         },
-        {
-            "name": "depth",
+        "depth": {
             "type": "LONG",
             "editAccess": "CONTROLLING_PLAYER",
             "viewAccess": "EVERYONE",
             "value": "0"
         },
         
-        {
-            "name": "shape",
+        "shape": {
             "type": "STRING",
             "editAccess": "CONTROLLING_PLAYER",
             "viewAccess": "EVERYONE",
             "value": "rect"
         },
-        {
-            "name": "color",
+        "color": {
             "type": "COLOR",
             "editAccess": "CONTROLLING_PLAYER",
             "viewAccess": "EVERYONE",
             "value": "-8341"
         }
-    ],
+    },
     "updateRules": [
     ],
     "macros": {

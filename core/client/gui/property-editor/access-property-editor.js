@@ -23,11 +23,11 @@ export class AccessPropertyEditor extends PropertyEditor {
         return this.select;
     }
     
-    reloadValue(property) {
-        this.select.value = property.getAccessValue();
+    reloadValue(reference, name) {
+        this.select.value = reference.getAccessValue(name);
     }
     
-    applyValue(property) {
-        property.setAccessValue(this.select.value);
+    applyValue(reference, name) {
+        reference.setAccessValue(name, this.select.value);
     }
 }

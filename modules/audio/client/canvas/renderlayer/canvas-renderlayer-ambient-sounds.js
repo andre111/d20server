@@ -14,12 +14,12 @@ export class CanvasRenderLayerAmbientSounds extends CanvasRenderLayer {
         var listenerX = 0;
         var listenerY = 0;
         for(const viewer of viewers) {
-            const dist = (viewer.prop('x').getLong() - camera.getX()) * (viewer.prop('x').getLong() - camera.getX()) + (viewer.prop('y').getLong() - camera.getY()) * (viewer.prop('y').getLong() - camera.getY());
+            const dist = (viewer.getLong('x') - camera.getX()) * (viewer.getLong('x') - camera.getX()) + (viewer.getLong('y') - camera.getY()) * (viewer.getLong('y') - camera.getY());
             if(listener == null || dist < listenerDist) {
                 listener = viewer;
                 listenerDist = dist;
-                listenerX = viewer.prop('x').getLong();
-                listenerY = viewer.prop('y').getLong();
+                listenerX = viewer.getLong('x');
+                listenerY = viewer.getLong('y');
             }
         }
         

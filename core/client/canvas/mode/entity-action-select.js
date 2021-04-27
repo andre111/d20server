@@ -28,17 +28,17 @@ class EntityActionSelectGizmo {
     }
     
     getX(reference) {
-        return Math.trunc((reference.prop('width').getLong() * this.widthMult) + this.xOffset);
+        return Math.trunc((reference.getLong('width') * this.widthMult) + this.xOffset);
     }
     
     getY(reference) {
-        return Math.trunc((reference.prop('height').getLong() * this.heightMult) + this.yOffset);
+        return Math.trunc((reference.getLong('height') * this.heightMult) + this.yOffset);
     }
     
     canUse(reference, profile) {
         var accessLevel = reference.getAccessLevel(profile);
         for(var requiredProperty of this.requiredProperties) {
-            if(!Access.matches(reference.prop(requiredProperty).getEditAccess(), accessLevel)) {
+            if(!reference.canEditProperty(requiredProperty, accessLevel)) {
                 return false;
             }
         }
@@ -115,14 +115,14 @@ export class EntityActionSelect extends EntityAction {
             
             // render token info when a single one is selected -> moves bars above wall occulsion when selected
             if(this.mode.entityType == 'token') {
-                TokenRenderer.renderTokenInfo(ctx, reference, ServerData.localProfile, reference.prop('x').getLong(), reference.prop('y').getLong());
+                TokenRenderer.renderTokenInfo(ctx, reference, ServerData.localProfile, reference.getLong('x'), reference.getLong('y'));
 
                 // draw property boxes
                 const bounds = EntityUtils.getAABB(reference);
                 const actor = TokenUtil.getActor(reference);
                 
                 if(actor) {
-                    const propertiesForBoxes = reference.prop('editBoxes').getString().split(',');
+                    const propertiesForBoxes = reference.getString('editBoxes').split(',');
                     var index = 0;
                     for(const propertyForBox of propertiesForBoxes) {
                         var property = propertyForBox;
@@ -133,7 +133,7 @@ export class EntityActionSelect extends EntityAction {
                         }
                         
                         if(index >= EntityActionSelectPropertyBoxes.length) break;
-                        if(actor.prop(property) && actor.prop(property).getType() == Type.LONG) {
+                        if(actor.has(property) && actor.getPropertyType(property) == Type.LONG) {
                             const propertyBox = EntityActionSelectPropertyBoxes[index++];
                             
                             const x = Math.trunc(bounds.x + bounds.width / 2 + bounds.width * propertyBox.widthMult + propertyBox.xOffset);
@@ -151,7 +151,7 @@ export class EntityActionSelect extends EntityAction {
                             if(property == 'modDamage') { var img = ImageService.getInternalImage('/core/files/img/icon/damage.png'); if(img != null) ctx.drawImage(img, x+1, y+1, 14, 14); }
                             ctx.fillText(label, x+4, y+12);
                             
-                            const value = actor.prop(property).getLong();
+                            const value = actor.getLong(property);
                             const valueString = value >= 0 ? '+'+value : ''+value;
                             ctx.fillText(valueString, x+w-ctx.measureText(valueString).width-4, y+12);
                         }
@@ -221,7 +221,7 @@ export class EntityActionSelect extends EntityAction {
                         const actor = TokenUtil.getActor(reference);
                         
                         if(actor) {
-                            const propertiesForBoxes = reference.prop('editBoxes').getString().split(',');
+                            const propertiesForBoxes = reference.getString('editBoxes').split(',');
                             var index = 0;
                             for(const propertyForBox of propertiesForBoxes) {
                                 var property = propertyForBox;
@@ -230,7 +230,7 @@ export class EntityActionSelect extends EntityAction {
                                 }
                                 
                                 if(index >= EntityActionSelectPropertyBoxes.length) break;
-                                if(actor.prop(property) && actor.prop(property).getType() == Type.LONG) {
+                                if(actor.has(property) && actor.getPropertyType(property) == Type.LONG) {
                                     const propertyBox = EntityActionSelectPropertyBoxes[index++];
                                     
                                     const x = Math.trunc(bounds.x + bounds.width / 2 + bounds.width * propertyBox.widthMult + propertyBox.xOffset);
@@ -296,21 +296,18 @@ export class EntityActionSelect extends EntityAction {
                         // -> change bar value //TODO: can this be simplified?
                         var viewer = Client.getState().getView().getProfile();
                         for(var token of MapUtils.currentEntitiesSorted(this.mode.entityType, Client.getState().getLayer())) {
-                            var accessLevel = token.getAccessLevel(viewer);
                             var bounds = EntityUtils.getAABB(token);
-                            var tx = token.prop('x').getLong();
-                            var ty = token.prop('y').getLong();
+                            var tx = token.getLong('x');
+                            var ty = token.getLong('y');
                             
                             for(var i=1; i<=3; i++) {
                                 if(TokenUtil.isBarVisible(token, viewer, i)) {
-                                    const prop = TokenUtil.getBarCurrentProp(token, i);
-
-                                    if(prop.canEdit(accessLevel)) {
+                                    if(TokenUtil.canEditBarCurrent(token, viewer, i)) {
                                         var bx = tx + TokenRenderer.getBarX(token, bounds, viewer, i);
                                         var by = ty + TokenRenderer.getBarY(token, bounds, viewer, i);
                                         
                                         if(bx <= e.xm && e.xm <= bx + TokenRenderer.getBarWidth(token, bounds, viewer) && by <= e.ym && e.ym <= by + TokenRenderer.getBarHeight(token, bounds, viewer)) {
-                                            this.openLongPropertySetDialog(new EntityReference(TokenUtil.getActor(token)), prop.getName(), true, 'Change Bar Value', 'Set Bar '+i+' value:');
+                                            this.openLongPropertySetDialog(new EntityReference(TokenUtil.getActor(token)), token.getString('bar'+i+'Current'), true, 'Change Bar Value', 'Set Bar '+i+' value:');
                                             return;
                                         }
                                     }
@@ -360,7 +357,7 @@ export class EntityActionSelect extends EntityAction {
     
     canSelect(entity) {
         if(entity.getType() != this.mode.entityType) return false;
-        if(entity.prop('layer').getLayer() != Client.getState().getLayer()) return false;
+        if(entity.getLayer('layer') != Client.getState().getLayer()) return false;
         
         return Access.matches(Access.CONTROLLING_PLAYER, entity.getAccessLevel(ServerData.localProfile));
     }
@@ -379,16 +376,16 @@ export class EntityActionSelect extends EntityAction {
     }
     
     openLongPropertySetDialog(reference, property, allowRelative, title, message) {
-        new CanvasWindowInput(title, message, reference.prop(property).getLong(), value => {
+        new CanvasWindowInput(title, message, reference.getLong(property), value => {
             if(value == null || value == undefined || value == '') return;
             
             var newValueString = value;
             var relative = allowRelative && (newValueString.startsWith('+') || newValueString.startsWith('-'));
             var newValue = Number(newValueString);
             if(newValue != NaN) {
-                if(relative) newValue += reference.prop(property).getLong();
+                if(relative) newValue += reference.getLong(property);
                 
-                reference.prop(property).setLong(newValue);
+                reference.setLong(property, newValue);
                 reference.performUpdate();
             }
         });

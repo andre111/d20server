@@ -19,43 +19,38 @@
         },
         "containedEntities": []
     },
-    "properties": [
-        {
-            "name": "name",
+    "properties": {
+        "name": {
             "type": "STRING",
             "editAccess": "GM",
             "viewAccess": "EVERYONE",
             "value": ""
         },
-        {
-            "name": "imagePath",
+        "imagePath": {
             "type": "STRING",
             "editAccess": "GM",
             "viewAccess": "EVERYONE",
             "value": ""
         },
-        {
-            "name": "descShort",
+        "descShort": {
             "type": "STRING",
             "editAccess": "GM",
             "viewAccess": "EVERYONE",
             "value": ""
         },
-        {
-            "name": "descFull",
+        "descFull": {
             "type": "STRING",
             "editAccess": "GM",
             "viewAccess": "EVERYONE",
             "value": ""
         },
-        {
-            "name": "tags",
+        "tags": {
             "type": "STRING",
             "editAccess": "GM",
             "viewAccess": "EVERYONE",
             "value": ""
         }
-    ],
+    },
     "updateRules": [
     ],
     "macros": {

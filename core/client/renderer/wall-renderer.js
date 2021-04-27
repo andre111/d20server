@@ -25,8 +25,8 @@ export const WallRenderer = {
         var combined = null;
         for(const viewer of viewers) {
             // get or calculate view for single viewer
-			const viewerX = viewer.prop('x').getLong();
-			const viewerY = viewer.prop('y').getLong();
+			const viewerX = viewer.getLong('x');
+			const viewerY = viewer.getLong('y');
 			const localCombined = WallRenderer.getViewerWallCache(walls, viewer, viewerX, viewerY, viewport);
             
             // combine all viewers
@@ -71,9 +71,9 @@ export const WallRenderer = {
 		// create view for single viewer
 		var localCombined = [];
 		for(const wall of walls) {
-			if(wall.prop('seeThrough').getBoolean()) continue;
-			if(wall.prop('door').getBoolean() && wall.prop('open').getBoolean()) continue;
-			if(wall.prop('oneSided').getBoolean() && !IntMathUtils.isPointLeftOfLine(wall.prop('x1').getLong(), wall.prop('y1').getLong(), wall.prop('x2').getLong(), wall.prop('y2').getLong(), viewerX, viewerY)) continue;
+			if(wall.getBoolean('seeThrough')) continue;
+			if(wall.getBoolean('door') && wall.getBoolean('open')) continue;
+			if(wall.getBoolean('oneSided') && !IntMathUtils.isPointLeftOfLine(wall.getLong('x1'), wall.getLong('y1'), wall.getLong('x2'), wall.getLong('y2'), viewerX, viewerY)) continue;
 
 			const poly = WallRenderer.calculateOccolusionPolygon(viewport, wall, viewerX, viewerY);
 			if(poly != null && poly != undefined) {
@@ -102,7 +102,7 @@ export const WallRenderer = {
 		if(maxY <= viewerY) maxY = viewerY+1;
 
 		// clip to inside viewport and discard outside walls
-		var clippedWall = IntMathUtils.getClippedLine(wall.prop('x1').getLong(), wall.prop('y1').getLong(), wall.prop('x2').getLong(), wall.prop('y2').getLong(), minX, maxX, minY, maxY);
+		var clippedWall = IntMathUtils.getClippedLine(wall.getLong('x1'), wall.getLong('y1'), wall.getLong('x2'), wall.getLong('y2'), minX, maxX, minY, maxY);
 		if(clippedWall == null) return null;
 
 		var x1 = Math.trunc(clippedWall.x1);

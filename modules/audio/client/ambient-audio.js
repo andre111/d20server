@@ -25,7 +25,7 @@ export const AmbientAudio = {
         // start new sounds / update
         const walls = MapUtils.currentEntities('wall');
         MapUtils.currentEntities('token').forEach(token => {
-            var audioPath = token.prop('audioPath').getString();
+            var audioPath = token.getString('audioPath');
             if(audioPath && audioPath != '') {
                 if(!managers.has(token.id)) {
                     managers.set(token.id, new AmbientSoundManager(token));

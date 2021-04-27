@@ -17,12 +17,12 @@ export class LongPropertyEditor extends PropertyEditor {
         return this.spinner;
     }
     
-    reloadValue(property) {
-        this.spinner.value = property.getLong();
+    reloadValue(reference, name) {
+        this.spinner.value = reference.getLong(name);
     }
     
-    applyValue(property) {
+    applyValue(reference, name) {
         var value = this.spinner.valueAsNumber;
-        if(value != NaN) property.setLong(Math.trunc(value));
+        if(value != NaN) reference.setLong(name, Math.trunc(value));
     }
 }

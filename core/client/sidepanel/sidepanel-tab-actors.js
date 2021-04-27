@@ -45,7 +45,7 @@ export class SidepanelTabActors extends SidepanelTab {
         new CanvasWindowInput('New Actor', 'Enter Actor Name:', '', name => {
             if(name) {
                 const actor = new Entity('actor');
-                actor.prop('name').setString(name);
+                actor.setString('name', name);
                 EntityManagers.get('actor').add(actor);
             }
         });

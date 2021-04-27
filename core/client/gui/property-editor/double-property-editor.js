@@ -17,12 +17,12 @@ export class DoublePropertyEditor extends PropertyEditor {
         return this.spinner;
     }
     
-    reloadValue(property) {
-        this.spinner.value = property.getDouble();
+    reloadValue(reference, name) {
+        this.spinner.value = reference.getDouble(name);
     }
     
-    applyValue(property) {
+    applyValue(reference, name) {
         var value = this.spinner.valueAsNumber;
-        if(value != NaN) property.setDouble(value);
+        if(value != NaN) reference.setDouble(name, value);
     }
 }

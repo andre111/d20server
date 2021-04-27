@@ -12,8 +12,8 @@ export class EntityActionResize extends EntityAction {
         
         // remember initial location
         var reference = this.mode.activeEntities[0];
-        this.initialW = reference.prop('width').getLong();
-        this.initialH = reference.prop('height').getLong();
+        this.initialW = reference.getLong('width');
+        this.initialH = reference.getLong('height');
         
         this.initialMouseX = mouseX;
         this.initialMouseY = mouseY;
@@ -66,7 +66,7 @@ export class EntityActionResize extends EntityAction {
 		h = this.initialH + yoffset * this.heightMultiplier;
         
         // snap to grid sizes (the complete size?)
-		var gridSize = map.prop('gridSize').getLong();
+		var gridSize = map.getLong('gridSize');
 		if(snap) {
 			w = Math.round(w / gridSize) * gridSize;
 			h = Math.round(h / gridSize) * gridSize;
@@ -82,7 +82,7 @@ export class EntityActionResize extends EntityAction {
 		h = this.initialH + yoffset * this.heightMultiplier;
         
         var reference = this.mode.activeEntities[0];
-        reference.prop('width').setLong(w);
-        reference.prop('height').setLong(h);
+        reference.setLong('width', w);
+        reference.setLong('height', h);
     }
 }

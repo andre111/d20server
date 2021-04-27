@@ -48,14 +48,14 @@ ModuleService.init().then(() => {
             // generate attachment entity
             console.log(`Generating Attachment: ${name}`);
             const attachment = new Entity('attachment');
-            attachment.prop('name').setString(name);
-            attachment.prop('tags').setString(tags);
+            attachment.setString('name', name);
+            attachment.setString('tags', tags);
             if(imagePath) {
-                attachment.prop('imagePath').setString('/image/'+imagePath);
+                attachment.setString('imagePath', '/image/'+imagePath);
                 attachmentsWithIcon++;
             }
-            attachment.prop('descShort').setString(descShort);
-            attachment.prop('descFull').setString(descFull);
+            attachment.setString('descShort', descShort);
+            attachment.setString('descFull', descFull);
 
             attachmentMap[String(attachment.getID())] = attachment;
             genericAttachmentIDMap[toUnifiedName(name)] = attachment.getID();
@@ -117,11 +117,11 @@ ModuleService.init().then(() => {
             // generate attachment entity
             console.log(`Generating Zauber: ${name}`);
             const attachment = new Entity('attachment');
-            attachment.prop('name').setString('Zauber/'+name.replace(/\//, '\\'));
-            if(imagePath) attachment.prop('imagePath').setString('/image/'+imagePath);
-            attachment.prop('descShort').setString(descShort);
-			attachment.prop('descFull').setString(descFull);
-            attachment.prop('tags').setString(tags);
+            attachment.setString('name', 'Zauber/'+name.replace(/\//, '\\'));
+            if(imagePath) attachment.setString('imagePath', '/image/'+imagePath);
+            attachment.setString('descShort', descShort);
+			attachment.setString('descFull', descFull);
+            attachment.setString('tags', tags);
             
             attachmentMap[String(attachment.getID())] = attachment;
             zauberIDMap[toUnifiedName(name)] = attachment.getID();
@@ -163,11 +163,11 @@ ModuleService.init().then(() => {
             // generate attachment entity
             console.log(`Generating Talent: ${name}`);
             const attachment = new Entity('attachment');
-            attachment.prop('name').setString('Talente/'+name.replace(/\//, '\\'));
-            if(imagePath) attachment.prop('imagePath').setString('/image/'+imagePath);
-            attachment.prop('descShort').setString(descShort);
-			attachment.prop('descFull').setString(descFull);
-            attachment.prop('tags').setString('');
+            attachment.setString('name', 'Talente/'+name.replace(/\//, '\\'));
+            if(imagePath) attachment.setString('imagePath', '/image/'+imagePath);
+            attachment.setString('descShort', descShort);
+			attachment.setString('descFull', descFull);
+            attachment.setString('tags', '');
             
             attachmentMap[String(attachment.getID())] = attachment;
             talenteIDMap[toUnifiedName(name)] = attachment.getID();
@@ -191,29 +191,29 @@ ModuleService.init().then(() => {
             const monsterActor = new Entity('actor');
 
             // apply properties
-            monsterActor.prop('name').setString(name);
-            monsterActor.prop('path').setString(`Monster/HG ${hgString}/`);
-            monsterActor.prop('pf_alignment').setString(entry['Gesinnung']);
-            monsterActor.prop('pf_class').setString(entry['Art']['Klasse']);
-            monsterActor.prop('pf_race').setString(getStringWithNotes(entry['Art']['Art'], entry['Art']['Unterart'], true));
+            monsterActor.setString('name', name);
+            monsterActor.setString('path', `Monster/HG ${hgString}/`);
+            monsterActor.setString('pf_alignment', entry['Gesinnung']);
+            monsterActor.setString('pf_class', entry['Art']['Klasse']);
+            monsterActor.setString('pf_race', getStringWithNotes(entry['Art']['Art'], entry['Art']['Unterart'], true));
 
-            monsterActor.prop('pf_str').setLong(entry['Attribute']['Stärke']);
-            monsterActor.prop('pf_dex').setLong(entry['Attribute']['Geschicklichkeit']);
-            monsterActor.prop('pf_con').setLong(entry['Attribute']['Konstitution']);
-            monsterActor.prop('pf_int').setLong(entry['Attribute']['Intelligenz']);
-            monsterActor.prop('pf_wis').setLong(entry['Attribute']['Weisheit']);
-            monsterActor.prop('pf_cha').setLong(entry['Attribute']['Charisma']);
+            monsterActor.setLong('pf_str', entry['Attribute']['Stärke']);
+            monsterActor.setLong('pf_dex', entry['Attribute']['Geschicklichkeit']);
+            monsterActor.setLong('pf_con', entry['Attribute']['Konstitution']);
+            monsterActor.setLong('pf_int', entry['Attribute']['Intelligenz']);
+            monsterActor.setLong('pf_wis', entry['Attribute']['Weisheit']);
+            monsterActor.setLong('pf_cha', entry['Attribute']['Charisma']);
             
-            monsterActor.prop('pf_hp').setLong(entry['TP']['Wert']);
-            monsterActor.prop('pf_hpMax').setLong(entry['TP']['Wert']);
+            monsterActor.setLong('pf_hp', entry['TP']['Wert']);
+            monsterActor.setLong('pf_hpMax', entry['TP']['Wert']);
 
-            monsterActor.prop('pf_baseAttackBonus').setLong(entry['GAB']);
+            monsterActor.setLong('pf_baseAttackBonus', entry['GAB']);
 
-            const currentInit = monsterActor.prop('pf_initMod').getLong();
+            const currentInit = monsterActor.getLong('pf_initMod');
             const targetInit = entry['Initiative']['Wert'];
-            monsterActor.prop('pf_initMiscMod').setLong(targetInit - currentInit);
+            monsterActor.setLong('pf_initMiscMod', targetInit - currentInit);
             
-            monsterActor.prop('pf_spellResistance').setLong(entry['Verteidigung']['ZR']['Wert']);
+            monsterActor.setLong('pf_spellResistance', entry['Verteidigung']['ZR']['Wert']);
 
             // armor class //TODO: check against provided value
             var acArmorBonus = 0;
@@ -250,24 +250,24 @@ ModuleService.init().then(() => {
                 }
             }
 
-            monsterActor.prop('pf_acArmorBonus').setLong(acArmorBonus);
-            monsterActor.prop('pf_acShieldBonus').setLong(acShieldBonus);
-            monsterActor.prop('pf_acSizeMod').setLong(acSizeMod);
-            monsterActor.prop('pf_acNaturalArmor').setLong(acNaturalArmor);
-            monsterActor.prop('pf_acDeflectionMod').setLong(acDeflectionMod);
-            monsterActor.prop('pf_acMiscMod').setLong(acMiscMod);
-            monsterActor.prop('pf_sizeMod').setLong(-acSizeMod);
+            monsterActor.setLong('pf_acArmorBonus', acArmorBonus);
+            monsterActor.setLong('pf_acShieldBonus', acShieldBonus);
+            monsterActor.setLong('pf_acSizeMod', acSizeMod);
+            monsterActor.setLong('pf_acNaturalArmor', acNaturalArmor);
+            monsterActor.setLong('pf_acDeflectionMod', acDeflectionMod);
+            monsterActor.setLong('pf_acMiscMod', acMiscMod);
+            monsterActor.setLong('pf_sizeMod', -acSizeMod);
 
             // saves
-            const currentSaveReflex = monsterActor.prop('pf_saveReflex').getLong();
+            const currentSaveReflex = monsterActor.getLong('pf_saveReflex');
             const targetSaveReflex = entry['Rettungswürfe']['Reflex']['Wert'];
-            monsterActor.prop('pf_saveReflex').setLong(targetSaveReflex - currentSaveReflex);
-            const currentSaveWill = monsterActor.prop('pf_saveWill').getLong();
+            monsterActor.setLong('pf_saveReflex', targetSaveReflex - currentSaveReflex);
+            const currentSaveWill = monsterActor.getLong('pf_saveWill');
             const targetSaveWill = entry['Rettungswürfe']['Willen']['Wert'];
-            monsterActor.prop('pf_saveWill').setLong(targetSaveWill - currentSaveWill);
-            const currentSaveFortitude = monsterActor.prop('pf_saveFortitude').getLong();
+            monsterActor.setLong('pf_saveWill', targetSaveWill - currentSaveWill);
+            const currentSaveFortitude = monsterActor.getLong('pf_saveFortitude');
             const targetSaveFortitude = entry['Rettungswürfe']['Zähigkeit']['Wert'];
-            monsterActor.prop('pf_saveFortitude').setLong(targetSaveFortitude - currentSaveFortitude);
+            monsterActor.setLong('pf_saveFortitude', targetSaveFortitude - currentSaveFortitude);
 
             // abilities
             var auftretenIndex = 1;
@@ -282,11 +282,11 @@ ModuleService.init().then(() => {
                 if(abilityName.startsWith('handwerk')) { abilityText = abilityFullName.substring(abilityFullName.indexOf('(')+1, abilityFullName.length-1); abilityName = 'handwerk'+(handwerkIndex++); }
             
                 if(abilityNameMap[abilityName]) {
-                    monsterActor.prop(abilityNameMap[abilityName]+'Class').setBoolean(true);
-                    const currentAbilityValue = monsterActor.prop(abilityNameMap[abilityName]).getLong();
+                    monsterActor.setBoolean(abilityNameMap[abilityName]+'Class', true);
+                    const currentAbilityValue = monsterActor.getLong(abilityNameMap[abilityName]);
                     const targetAbilityValue = abilityObject['Wert'];
-                    monsterActor.prop(abilityNameMap[abilityName]+'Misc').setLong(targetAbilityValue - currentAbilityValue);
-                    if(abilityText) monsterActor.prop(abilityNameMap[abilityName]+'Text').setString(abilityText);
+                    monsterActor.setLong(abilityNameMap[abilityName]+'Misc', targetAbilityValue - currentAbilityValue);
+                    if(abilityText) monsterActor.setString(abilityNameMap[abilityName]+'Text', abilityText);
                 } else {
                     console.error(`${name}: Skipping unknown ability: ${abilityFullName}`);
                 }
@@ -295,16 +295,16 @@ ModuleService.init().then(() => {
             // sight
             for(const sense of entry['Sinne']) {
                 if(sense == 'Dämmersicht') {
-                    monsterActor.prop('lightDimMult').setDouble(2);
+                    monsterActor.setDouble('lightDimMult', 2);
                 } else if(sense.startsWith('Dunkelsicht')) {
                     const distM = sense.replace('Dunkelsicht', '').replace('m', '').trim();
                     const dist = Number(distM) / 1.5;
-                    monsterActor.prop('sightDark').setDouble(dist);
+                    monsterActor.setDouble('sightDark', dist);
                 }
             }
 
             // bio //TODO: complete parsing and restoring of the remaining sections
-            monsterActor.prop('bio').setString(entry['Beschreibung']);
+            monsterActor.setString('bio', entry['Beschreibung']);
 
             var gmBio = '';
             gmBio += createBaseSection(entry) + '<p>&nbsp;</p>';
@@ -322,7 +322,7 @@ ModuleService.init().then(() => {
             gmBio += '<p>';
             gmBio += `${entry['Regelwerk']} - Seite ${entry['Seite']}`;
             gmBio += '</p>';
-            monsterActor.prop('gmBio').setString(gmBio);
+            monsterActor.setString('gmBio', gmBio);
 
             // attachments
             var attachmentList = [];
@@ -359,7 +359,7 @@ ModuleService.init().then(() => {
                     }
                 }
             }
-            monsterActor.prop('attachments').setLongList(attachmentList);
+            monsterActor.setLongList('attachments', attachmentList);
 
             // create attack macros
             var macros = {};
@@ -386,7 +386,7 @@ ModuleService.init().then(() => {
                     }
                 }
             }
-            monsterActor.prop('macros').setStringMap(macros);
+            monsterActor.setStringMap('macros', macros);
 
             // image
             var imagePath = 'tokens/unknown.png';
@@ -396,8 +396,8 @@ ModuleService.init().then(() => {
             if(imagePath) imagePath = '/image/'+imagePath;
 
             if(imagePath) {
-                monsterActor.prop('imagePath').setString(imagePath);
-                monsterActor.prop('tokenImagePath').setString(imagePath);
+                monsterActor.setString('imagePath', imagePath);
+                monsterActor.setString('tokenImagePath', imagePath);
             }
 
             // token size
@@ -407,8 +407,8 @@ ModuleService.init().then(() => {
             if(acSizeMod<=-2) sizeMult = 3;
             if(acSizeMod<=-4) sizeMult = 4;
             if(acSizeMod<=-8) sizeMult = 5;
-            monsterActor.prop('tokenWidth').setLong(monsterActor.prop('tokenWidth').getLong() * sizeMult);
-            monsterActor.prop('tokenHeight').setLong(monsterActor.prop('tokenHeight').getLong() * sizeMult);
+            monsterActor.setLong('tokenWidth', monsterActor.getLong('tokenWidth') * sizeMult);
+            monsterActor.setLong('tokenHeight', monsterActor.getLong('tokenHeight') * sizeMult);
 
             //TODO: verify calculated values match expected results: ac, acTouch, acFlatFooted, cmb, cmd
             //TODO: specifically cmb and cmd seem like they cannot simply be calculated correctly in all cases

@@ -217,16 +217,16 @@ Events.on('entityMenu', event => {
     const menu = event.data.menu;
     const reference = event.data.reference;
 
-    if(reference.prop('depth') && reference.prop('depth').canEdit(event.data.accessLevel)) {
+    if(reference.has('depth') && reference.canEditProperty('depth', event.data.accessLevel)) {
         const move = menu.createCategory(menu.container, 'Move');
         menu.createItem(move, 'to front', () => {
-            const currentMinDepth = MapUtils.currentEntitiesInLayer(reference.getType(), Client.getState().getLayer()).map(e => e.prop('depth').getLong()).reduce((a, b) => Math.min(a, b), 0);
-            reference.prop('depth').setLong(currentMinDepth-1);
+            const currentMinDepth = MapUtils.currentEntitiesInLayer(reference.getType(), Client.getState().getLayer()).map(e => e.getLong('depth')).reduce((a, b) => Math.min(a, b), 0);
+            reference.setLong('depth', currentMinDepth-1);
             reference.performUpdate();
         });
         menu.createItem(move, 'to back', () => {
-            const currentMaxDepth = MapUtils.currentEntitiesInLayer(reference.getType(), Client.getState().getLayer()).map(e => e.prop('depth').getLong()).reduce((a, b) => Math.max(a, b), 0);
-            reference.prop('depth').setLong(currentMaxDepth+1);
+            const currentMaxDepth = MapUtils.currentEntitiesInLayer(reference.getType(), Client.getState().getLayer()).map(e => e.getLong('depth')).reduce((a, b) => Math.max(a, b), 0);
+            reference.setLong('depth', currentMaxDepth+1);
             reference.performUpdate();
         });
     }
@@ -297,8 +297,8 @@ Events.on('entityMenu', event => {
     // actor macros
     if(actor) {
         const actorAccessLevel = actor.getAccessLevel(ServerData.localProfile);
-        if(Access.matches(actor.prop('macroUse').getAccessValue(), actorAccessLevel)) {
-            addMacros('Macros', Object.keys(actor.prop('macros').getStringMap()));
+        if(Access.matches(actor.getAccessValue('macroUse'), actorAccessLevel)) {
+            addMacros('Macros', Object.keys(actor.getStringMap('macros')));
 
             addMacros('Inbuilt Macros', Object.keys(actor.getPredefinedMacros()), false, '!');
         }
@@ -306,7 +306,7 @@ Events.on('entityMenu', event => {
 
     // gm actions
     if(event.data.isGM) {
-        menu.createItem(menu.container, 'View Notes', () => new CanvasWindowText('GM Notes', reference.prop('gmNotes').getString()));
+        menu.createItem(menu.container, 'View Notes', () => new CanvasWindowText('GM Notes', reference.getString('gmNotes')));
         menu.createItem(menu.container, 'Fit to Grid', () => new CanvasWindowFitToGrid(reference));
     }
 }, true, 100);
@@ -318,24 +318,24 @@ Events.on('entityMenu', event => {
     const menu = event.data.menu;
     const reference = event.data.reference;
 
-    if(reference.prop('oneSided').getBoolean()) {
+    if(reference.getBoolean('oneSided')) {
         menu.createItem(menu.container, 'Flip', () => {
-            const x1 = reference.prop('x1').getLong();
-            const y1 = reference.prop('y1').getLong();
-            reference.prop('x1').setLong(reference.prop('x2').getLong());
-            reference.prop('y1').setLong(reference.prop('y2').getLong());
-            reference.prop('x2').setLong(x1);
-            reference.prop('y2').setLong(y1);
+            const x1 = reference.getLong('x1');
+            const y1 = reference.getLong('y1');
+            reference.setLong('x1', reference.getLong('x2'));
+            reference.setLong('y1', reference.getLong('y2'));
+            reference.setLong('x2', x1);
+            reference.setLong('y2', y1);
             reference.performUpdate();
         });
     }
     
-    if(reference.prop('door').getBoolean()) {
-        if(reference.prop('open').getBoolean()) menu.createItem(menu.container, 'Close Door', () => { reference.prop('open').setBoolean(false); reference.performUpdate(); });
-        else menu.createItem(menu.container, 'Open Door', () => { reference.prop('open').setBoolean(true); reference.performUpdate(); });
+    if(reference.getBoolean('door')) {
+        if(reference.getBoolean('open')) menu.createItem(menu.container, 'Close Door', () => { reference.setBoolean('open', false); reference.performUpdate(); });
+        else menu.createItem(menu.container, 'Open Door', () => { reference.setBoolean('open', true); reference.performUpdate(); });
         
-        if(reference.prop('locked').getBoolean()) menu.createItem(menu.container, 'Unlock Door', () => { reference.prop('locked').setBoolean(false); reference.performUpdate(); });
-        else menu.createItem(menu.container, 'Lock Door', () => { reference.prop('locked').setBoolean(true); reference.performUpdate(); });
+        if(reference.getBoolean('locked')) menu.createItem(menu.container, 'Unlock Door', () => { reference.setBoolean('locked', false); reference.performUpdate(); });
+        else menu.createItem(menu.container, 'Lock Door', () => { reference.setBoolean('locked', true); reference.performUpdate(); });
     }
 }, true, 100);
 
@@ -346,7 +346,7 @@ Events.on('entityMenu', event => {
     const menu = event.data.menu;
     const reference = event.data.reference;
 
-    if(event.data.isGM || reference.prop("playersCanEnter").getBoolean()) {
+    if(event.data.isGM || reference.getBoolean("playersCanEnter")) {
         menu.createItem(menu.container, 'Open', () => MessageService.send(new MovePlayerToMap(reference, ServerData.localProfile)));
     }
     if(event.data.isGM) {
@@ -364,10 +364,10 @@ Events.on('entityMenu', event => {
     if(event.data.isGM) {
         menu.createItem(menu.container, 'Create Token', () => {
             const token = new Entity('token');
-            token.prop('actorID').setLong(reference.getID());
-            token.prop('imagePath').setString(reference.prop('tokenImagePath').getString());
-            token.prop('width').setLong(reference.prop('tokenWidth').getLong());
-            token.prop('height').setLong(reference.prop('tokenHeight').getLong());
+            token.setLong('actorID', reference.getID());
+            token.setString('imagePath', reference.getString('tokenImagePath'));
+            token.setLong('width', reference.getLong('tokenWidth'));
+            token.setLong('height', reference.getLong('tokenHeight'));
 
             const event = Events.trigger('createTokenFromActor', { token: token, actor: reference }, true);
             if(!event.canceled) {
@@ -381,15 +381,15 @@ Events.on('entityMenu', event => {
                 if(Client.getState().getMode().activeEntities.length == 1) {
                     const token = Client.getState().getMode().activeEntities[0].clone();
 
-                    reference.prop('tokenImagePath').setString(token.prop('imagePath').getString());
-                    reference.prop('tokenWidth').setLong(token.prop('width').getLong());
-                    reference.prop('tokenHeight').setLong(token.prop('height').getLong());
+                    reference.setString('tokenImagePath', token.getString('imagePath'));
+                    reference.setLong('tokenWidth', token.getLong('width'));
+                    reference.setLong('tokenHeight', token.getLong('height'));
                     reference.performUpdate();
                 }
             }
         });
         menu.createItem(menu.container, 'Show Image', () => {
-            const imagePath = reference.prop('imagePath').getString();
+            const imagePath = reference.getString('imagePath');
             if(imagePath) MessageService.send(new ActionCommand('SHOW_IMAGE', 0, 0, 0, false, '/data/files'+imagePath));
         });
     }

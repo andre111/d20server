@@ -15,7 +15,7 @@ export class CanvasRenderLayerMeasurements extends CanvasRenderLayer {
     }
     
     render(ctx, state, view, viewers, camera, viewport, map) {
-        const gridSize = map.prop('gridSize').getLong();
+        const gridSize = map.getLong('gridSize');
         
         for (const [profile, measurement] of Measurements) {
             if(measurement.map != ServerData.currentMap) continue;
