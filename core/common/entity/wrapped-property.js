@@ -4,41 +4,13 @@ export class WrappedProperty extends Property {
     reference;
 
     changedValue;
-    changedEditAccess;
-    changedViewAccess;
 
     constructor(reference, property) {
-        super(property.getType(), property.getEditAccess(), property.getViewAccess(), property.getInternal());
+        super(property.getType(), property.getInternal());
 
         this.reference = reference;
         this.setHolder(reference);
         this.setName(property.getName());
-    }
-
-    getEditAccess() {
-        if(this.changedEditAccess) return this.changedEditAccess;
-        return this.getBackingProperty().getEditAccess();
-    }
-
-    setEditAccess(editAccess) {
-        if(!editAccess || editAccess == this.getBackingProperty().getEditAccess()) {
-            this.changedEditAccess = undefined;
-        } else {
-            this.changedEditAccess = editAccess;
-        }
-    }
-
-    getViewAccess() {
-        if(this.changedViewAccess) return this.changedViewAccess;
-        return this.getBackingProperty().getViewAccess();
-    }
-
-    setViewAccess(viewAccess) {
-        if(!viewAccess || viewAccess == this.getBackingProperty().getViewAccess()) {
-            this.changedViewAccess = undefined;
-        } else {
-            this.changedViewAccess = viewAccess;
-        }
     }
 
     getInternal() {
@@ -56,7 +28,7 @@ export class WrappedProperty extends Property {
     }
 
     isChanged() {
-        return (this.changedValue != null && this.changedValue != undefined) || this.changedEditAccess || this.changedViewAccess;
+        return (this.changedValue != null && this.changedValue != undefined);
     }
 
     getBackingProperty() {

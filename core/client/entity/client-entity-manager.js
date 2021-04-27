@@ -82,7 +82,7 @@ export class ClientEntityManager extends EntityManager {
         for(const [key, value] of Object.entries(map)) {
             var ownProperty = entity.properties[key];
             if(ownProperty == null || ownProperty == undefined) {
-                ownProperty = entity.addPropertyIfAbsentOrWrong(key, value.getType(), value.getEditAcces(), value.getViewAcces(), value.getInternal());
+                ownProperty = entity.addPropertyIfAbsentOrWrong(key, value.getType(), value.getInternal());
             }
             
             // transfer value
@@ -90,10 +90,6 @@ export class ClientEntityManager extends EntityManager {
             if(ownProperty.type == value.type) {
                 ownProperty.value = value.value;
             }
-            
-            // transfer access
-            ownProperty.viewAccess = value.viewAccess;
-            ownProperty.editAccess = value.editAccess;
         }
         
         this.notifyListeners();

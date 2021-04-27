@@ -142,18 +142,6 @@ export class ServerEntityManager extends EntityManager {
                     console.log(`Recieved invalid property value: ${error}`);
                 }
             }
-
-            // transfer access (GM only, and do not allow changing of SYSTEM level access)
-            if(accessLevel == Access.GM) {
-                if(value.getViewAccess() != Access.SYSTEM && ownProperty.getViewAccess() != Access.SYSTEM && value.getViewAccess() != ownProperty.getViewAccess()) {
-                    ownProperty.setViewAccess(value.getViewAccess());
-                    changedProperties[key] = ownProperty;
-                }
-                if(value.getEditAccess() != Access.SYSTEM && ownProperty.getEditAccess() != Access.SYSTEM && value.getEditAccess() != ownProperty.getEditAccess()) {
-                    ownProperty.setEditAccess(value.getEditAccess());
-                    changedProperties[key] = ownProperty;
-                }
-            }
         }
 
         // save

@@ -1,5 +1,3 @@
-import { CanvasWindowEditEntity } from './canvas-window-edit-entity.js';
-
 import { EditorList } from '../../gui/editor-list.js';
 import { createPropertyEditor } from '../../gui/property-editors.js';
 import { MultiLineStringPropertyEditor } from '../../gui/property-editor/special/multi-line-property-editor.js';
@@ -7,10 +5,7 @@ import { HTMLStringPropertyEditor } from '../../gui/property-editor/special/html
 import { LongListPropertyEditor } from '../../gui/property-editor/special/long-list-property-editor.js';
 import { StringSelectionPropertyEditor } from '../../gui/property-editor/special/string-selection-property-editor.js';
 import { ImagePropertyEditor } from '../../gui/property-editor/special/image-property-editor.js';
-import { PropertyAccessEditor } from '../../gui/property-editor/special/property-access-editor.js';
 
-import { EntityManagers } from '../../../common/entity/entity-managers.js';
-import { EntityReference } from '../../../common/entity/entity-reference.js';
 import { DefinitionUtils } from '../../../common/util/definitionutil.js'
 import { StringFilePropertyEditor } from '../../gui/property-editor/special/string-file-property-editor.js';
 
@@ -126,11 +121,6 @@ export class CanvasWindowEditEntityTab extends EditorList {
 					editor.getEditComponent().style.height = compDefinition.h+'px';
 				}
                 if(compDefinition.disabled) editor.setForceDisable(true);
-                break;
-            case 'ACCESS_EDITOR':
-                var accessEditor = new PropertyAccessEditor(compDefinition.property.split(','), compDefinition.text);
-                this.registerEditor(accessEditor);
-                component = accessEditor.getContainer();
                 break;
             case 'LABEL':
                 component = document.createElement('div');

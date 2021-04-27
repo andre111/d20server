@@ -1,6 +1,5 @@
-import { fromJson, registerType, toJson } from '../util/datautil.js';
+import { registerType } from '../util/datautil.js';
 import { Access, Type } from '../constants.js';
-import { Entity } from './entity.js';
 
 //TODO: verify values are actually of correct type!
 export class Property {
@@ -8,15 +7,11 @@ export class Property {
     _transient_name = '';
 
     type = Type.STRING;
-    editAccess = Access.SYSTEM;
-    viewAccess = Access.SYSTEM;
 
     value = '';
 
-    constructor(type, editAccess, viewAccess, value) {
+    constructor(type, value) {
         this.type = type;
-        this.editAccess = editAccess;
-        this.viewAccess = viewAccess;
 
         this.value = ''+value;
     }
@@ -38,16 +33,10 @@ export class Property {
         return this.type;
     }
     getEditAccess() {
-        return this.editAccess;
-    }
-    setEditAccess(editAccess) {
-        this.editAccess = editAccess;
+        return this._transient_holder.getPropertyEditAccess(this._transient_name);
     }
     getViewAccess() {
-        return this.viewAccess;
-    }
-    setViewAccess(viewAccess) {
-        this.viewAccess = viewAccess;
+        return this._transient_holder.getPropertyViewAccess(this._transient_name);
     }
 
     getInternal() {
@@ -183,7 +172,7 @@ export class Property {
         other.setInternal(this.getInternal());
     }
     clone() {
-        const clone = new Property(this.getType(), this.getEditAccess(), this.getViewAccess(), this.getInternal());
+        const clone = new Property(this.getType(), this.getInternal());
         clone.setName(this.getName());
         return clone;
     }

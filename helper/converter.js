@@ -1,23 +1,30 @@
+import nedb from 'nedb';
+import * as fs from 'fs-extra';
+import { toJson } from '../core/common/util/datautil.js';
 import { readJson } from '../core/server/util/fileutil.js';
 
-import nedb from 'nedb';
-import { toJson } from '../core/common/util/datautil.js';
-
 function convert(type) {
-    var entities = readJson('entity.'+type);
-    if(!entities) entities = {};
+    const exists = fs.existsSync('./data/entity/'+type+'.db');
+    const db = new nedb({ filename: './data/entity/'+type+'.db', autoload: true });
 
-    var db = new nedb({ filename: './data/entity/'+type+'.db', autoload: true });
-    for(const [id, entity] of Object.entries(entities)) {
-        const stored = {
-            _id: id,
-            json: toJson(entity, false, false)
-        };
+    // import from old format if the new one did not exist
+    if(!exists) {
+        var entities = readJson('entity.'+type);
+        if(!entities) entities = {};
+        for(const [id, entity] of Object.entries(entities)) {
+            const stored = {
+                _id: id,
+                json: toJson(entity, false, false)
+            };
 
-        db.update({ _id: id }, stored, { upsert: true }, (err) => {
-            if(err) console.log(err);
-        });
+            db.update({ _id: id }, stored, { upsert: true }, (err) => {
+                if(err) console.log(err);
+            });
+        }
     }
+
+    //TODO: convert format (properties stored directly in entity)
+
     db.persistence.compactDatafile();
 }
 

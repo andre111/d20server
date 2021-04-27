@@ -95,6 +95,7 @@ export class Entity {
     }
 
     getPropertyDefinition(name) {
+        //TODO: this is terribly inefficient, move to map based property definitions
         for(const propertyDefinition of this.getDefinition().properties) {
             if(propertyDefinition.name == name) return propertyDefinition;
         }
@@ -116,13 +117,13 @@ export class Entity {
 
     addPropertiesFromDefs(propertyDefinitions) {
         for(const propDef of propertyDefinitions) {
-            this.addPropertyIfAbsentOrWrong(propDef.name, propDef.type, propDef.editAccess, propDef.viewAccess, propDef.value);
+            this.addPropertyIfAbsentOrWrong(propDef.name, propDef.type, propDef.value);
         }
     }
 
-    addPropertyIfAbsentOrWrong(name, type, editAccess, viewAccess, value) {
+    addPropertyIfAbsentOrWrong(name, type, value) {
         if(!this.properties[name] || this.properties[name].getType() != type) {
-            const property = new Property(type, editAccess, viewAccess, value);
+            const property = new Property(type, value);
             property.setHolder(this);
             property.setName(name);
             this.properties[name] = property;
@@ -240,6 +241,14 @@ export class Entity {
         for(const name in newMap) {
             masterMap[name] = newMap[name];
         }
+    }
+
+    getPropertyViewAccess(name) {
+        return this.getPropertyDefinition(name).viewAccess;
+    }
+
+    getPropertyEditAccess(name) {
+        return this.getPropertyDefinition(name).editAccess;
     }
 
     // ----------------------
