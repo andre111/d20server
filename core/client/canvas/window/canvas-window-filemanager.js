@@ -14,6 +14,7 @@ import { FileActionUpload } from './filemanager/action/file-action-upload.js';
 import { DirectoryActionCreate } from './filemanager/action/directory-action-create.js';
 import { DirectoryActionRename } from './filemanager/action/directory-action-rename.js';
 import { DirectoryActionDelete } from './filemanager/action/directory-action-delete.js';
+import { I18N } from '../../../common/util/i18n.js';
 
 export function createDefaultFileManager(selectedPath) {
     return new CanvasWindowFilemanager(ServerData.isGM(), ServerData.editKey, ServerData.isGM() ? null : '/public', selectedPath);
@@ -50,7 +51,7 @@ export class CanvasWindowFilemanager extends CanvasWindow {
     selectedFile = null;
 
     constructor(editable, key, forcedRoot, startupPath) {
-        super('File Manager', true);
+        super(I18N.get('filemanager.title', 'File Manager'), true);
 
         this.editable = editable;
         this.key = key;
@@ -155,7 +156,7 @@ export class CanvasWindowFilemanager extends CanvasWindow {
     createDirHTML(dirPane) {
         // loading notice
         dirPane.appendChild(this.divDirLoading = document.createElement('div'));
-        this.divDirLoading.innerHTML = '<span>Loading directories...</span><br><img src="/core/files/img/fileman/loading.gif" title="Loading directories...">';
+        this.divDirLoading.innerHTML = '<span>'+I18N.get('filemanager.loaddirs', 'Loading directories...')+'</span><br><img src="/core/files/img/fileman/loading.gif" title="'+I18N.get('filemanager.loaddirs', 'Loading directories...')+'">';
 
         // actual directory list
         dirPane.appendChild(this.ulDirList = document.createElement('ul'));
@@ -174,22 +175,22 @@ export class CanvasWindowFilemanager extends CanvasWindow {
 
         const orderSpan = document.createElement('span');
         orderSpan.className = 'fileman-input-info';
-        orderSpan.innerHTML = 'Order by: ';
+        orderSpan.innerText = I18N.get('filemanager.order.by', 'Order by: ');
         fileActionPane.appendChild(orderSpan);
         this.inputOrder = document.createElement('select');
         const addOption = (value, name) => { const option = document.createElement('option'); option.value = value; option.innerHTML = name; this.inputOrder.appendChild(option); };
-        addOption('nameASC', '&uarr;&nbsp;&nbsp;Name');
-        addOption('nameDESC', '&darr;&nbsp;&nbsp;Name');
-        addOption('sizeASC', '&uarr;&nbsp;&nbsp;Size');
-        addOption('sizeDESC', '&darr;&nbsp;&nbsp;Size');
-        addOption('timeASC', '&uarr;&nbsp;&nbsp;Last Modified');
-        addOption('timeDESC', '&darr;&nbsp;&nbsp;Last Modified');
+        addOption('nameASC', '&uarr;&nbsp;&nbsp;'+I18N.get('filemanager.order.name', 'Name'));
+        addOption('nameDESC', '&darr;&nbsp;&nbsp;'+I18N.get('filemanager.order.name', 'Name'));
+        addOption('sizeASC', '&uarr;&nbsp;&nbsp;'+I18N.get('filemanager.order.size', 'Size'));
+        addOption('sizeDESC', '&darr;&nbsp;&nbsp;'+I18N.get('filemanager.order.size', 'Size'));
+        addOption('timeASC', '&uarr;&nbsp;&nbsp;'+I18N.get('filemanager.order.modified', 'Last Modified'));
+        addOption('timeDESC', '&darr;&nbsp;&nbsp;'+I18N.get('filemanager.order.modified', 'Last Modified'));
         this.inputOrder.onchange = () => this.selectDirectory(this.getSelectedDirectory(), false);
         fileActionPane.appendChild(this.inputOrder);
 
         const searchSpan = document.createElement('span');
         searchSpan.className = 'fileman-input-info';
-        searchSpan.innerHTML = 'Search: ';
+        searchSpan.innerText = I18N.get('filemanager.search', 'Search: ');
         fileActionPane.appendChild(searchSpan);
         this.inputSearch = document.createElement('input');
         this.inputSearch.type = 'text';
@@ -200,17 +201,17 @@ export class CanvasWindowFilemanager extends CanvasWindow {
     createFileHTML(filePane) {
         // loading notice
         filePane.appendChild(this.divFilesLoading = document.createElement('div'));
-        this.divFilesLoading.innerHTML = '<span>Loading files...</span><br><img src="/core/files/img/fileman/loading.gif" title="Loading files...">';
+        this.divFilesLoading.innerHTML = '<span>'+I18N.get('filemanager.loadfiles', 'Loading files...')+'</span><br><img src="/core/files/img/fileman/loading.gif" title="'+I18N.get('filemanager.loadfiles', 'Loading files...')+'">';
         this.divFilesLoading.style.display = 'none';
 
         // directory empty notice
         filePane.appendChild(this.divFilesEmpty = document.createElement('div'));
-        this.divFilesEmpty.innerHTML = 'This directory is empty';
+        this.divFilesEmpty.innerHTML = I18N.get('filemanager.status.empty', 'This directory is empty');
         this.divFilesEmpty.style.display = 'none';
 
         // search empty notice
         filePane.appendChild(this.divFilesSearchEmpty = document.createElement('div'));
-        this.divFilesSearchEmpty.innerHTML = 'No files matching search';
+        this.divFilesSearchEmpty.innerHTML = I18N.get('filemanager.status.nomatch', 'No files matching search');
         this.divFilesSearchEmpty.style.display = 'none';
         
         // actual file list
@@ -364,7 +365,9 @@ export class CanvasWindowFilemanager extends CanvasWindow {
         }
 
         // change status
-        this.setStatus('Directory: '+directory.getPath()+' - Directories: '+directory.getDirectoryCount()+' Files: '+directory.getFileCount());
+        this.setStatus(I18N.get('filemanager.status.directory.path', 'Directory: ')+directory.getPath() + ' - '
+            + I18N.get('filemanager.status.directory.dircount', 'Directories: ')+directory.getDirectoryCount() + ' '
+            + I18N.get('filemanager.status.directory.filecount', 'Files: ')+directory.getFileCount());
         this.selectedDirectory = directory;
         this.updateButtons();
 
@@ -414,7 +417,9 @@ export class CanvasWindowFilemanager extends CanvasWindow {
         if(file) file.getElement().className = 'selected';
 
         // change status
-        if(file) this.setStatus('File: '+file.getPath()+' - Size: '+toFormatedSize(file.getSize())+' - Last Modified: '+dayjs.unix(file.getModified()).format('lll'));
+        if(file) this.setStatus(I18N.get('filemanager.status.file.path', 'File: ')+file.getPath() + ' - '
+            + I18N.get('filemanager.status.file.size', 'Size: ')+toFormatedSize(file.getSize()) + ' - '
+            + I18N.get('filemanager.status.file.modified', 'Last Modified: ')+dayjs.unix(file.getModified()).format('lll'));
         else this.setStatus('');
 
         // store selection, update buttons and make file visible

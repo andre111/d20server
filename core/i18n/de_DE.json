@@ -1,4 +1,16 @@
 {
+    "global": {
+        "yes": "Ja",
+        "no": "Nein",
+        "ok": "Ok",
+        "cancel": "Abbrechen",
+        "edit": "Bearbeiten"
+    },
+    "attachment": {
+        "edit": {
+            "name": "Name: "
+        }
+    },
     "token": {
         "edit": {
             "position": "Position: ",
@@ -36,6 +48,45 @@
             }
         }
     },
+    "sidepanel": {
+        "tabs": {
+            "chat": "Chat",
+            "players": "Spieler",
+            "actors": "Akteure",
+            "attachments": "Anhang",
+            "maps": "Karten"
+        },
+        "chat": {
+            "send": "Senden"
+        },
+        "players": {
+            "changecolor": {
+                "button": "Eigene Farbe ändern",
+                "window": "Eigene Farbe auswählen"
+            }
+        },
+        "actors": {
+            "new": {
+                "button": "Neuen Akteur erstellen",
+                "title": "Neuen Akteur erstellen",
+                "prompt": "Name eingeben: "
+            }
+        },
+        "attachments": {
+            "new": {
+                "button": "Neuen Anhang erstellen",
+                "title": "Neuen Anhang erstellen",
+                "prompt": "Name eingeben: "
+            }
+        },
+        "maps": {
+            "new": {
+                "button": "Neue Karte erstellen",
+                "title": "Neue Karte erstellen",
+                "prompt": "Name eingeben: "
+            }
+        }
+    },
     "settings": {
         "title": "Einstellungen",
         "page": {
@@ -46,5 +97,71 @@
             "global": "Gesammt Lautstärke",
             "weather": "Wetter Lautstärke"
         }
+    },
+    "filemanager": {
+        "title": "Dateimanager",
+        "loaddirs": "Lade Ordner...",
+        "loadfiles": "Lade Dateien...",
+        "action": {
+            "file": {
+                "createtoken": "Als Token erstellen",
+                "delete": {
+                    "name": "Löschen",
+                    "title": "Datei löschen",
+                    "question": "Möchtest du die Datei \"%0\" löschen?"
+                },
+                "rename": {
+                    "name": "Umbenennen",
+                    "title": "Datei umbenennen",
+                    "prompt": "Neuer Dateiname: "
+                },
+                "select": "Auswählen",
+                "showtoplayers": "Allen Spielern zeigen",
+                "upload": "Upload"
+            },
+            "directory": {
+                "create": {
+                    "name": "Neuer Ordner",
+                    "title": "Ordner erstellen",
+                    "prompt": "Ordnername: "
+                },
+                "delete": {
+                    "name": "Löschen",
+                    "title": "Ordner löschen",
+                    "question": "Möchtest du den Ordner \"%0\" mitsammt allen Inhalten löschen?"
+                },
+                "rename": {
+                    "name": "Umbenennen",
+                    "title": "Ordner umbenennen",
+                    "prompt": "Neuer Ordnername: "
+                }
+            }
+        },
+        "status": {
+            "empty": "Dieser Ordner ist leer",
+            "nomatch": "Suche erzielt keine Treffer",
+            "directory": {
+                "path": "Ordner: ",
+                "dircount": "Ordner: ",
+                "filecount": "Dateien: "
+            },
+            "file": {
+                "path": "Datei: ",
+                "size": "Größe: ",
+                "modified": "Geändert: "
+            }
+        },
+        "search": "Suche: ",
+        "order": {
+            "by": "Sortiert nach: ",
+            "name": "Name",
+            "size": "Größe",
+            "modified": "Geändert"
+        },
+        "uploadwindow": "Dateiupload" 
+    },
+    "window": {
+        "fittogrid": "An das Gitter anpassen (wähle mit Links- und Rechtsklick einen 7x7 Zellbereich aus)",
+        "image": "Bild"
     }
 }

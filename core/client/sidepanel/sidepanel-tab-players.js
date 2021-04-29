@@ -8,10 +8,11 @@ import { MessageService } from '../service/message-service.js';
 
 import { SetPlayerColor } from '../../common/messages.js';
 import { Events } from '../../common/events.js';
+import { I18N } from '../../common/util/i18n.js';
 
 export class SidepanelTabPlayers extends SidepanelTab {
     constructor() {
-        super('Players', true);
+        super('players', true);
         
         this.tab.style.display = 'grid';
         this.tab.style.gridTemplateRows = 'auto max-content';
@@ -24,11 +25,11 @@ export class SidepanelTabPlayers extends SidepanelTab {
         
         const buttonPanel = document.createElement('div');
         this.tab.appendChild(buttonPanel);
-        GuiUtils.createButton(buttonPanel, 'Change Color', () => this.doChangeColor()).className = 'sidepanel-button';
+        GuiUtils.createButton(buttonPanel, I18N.get('sidepanel.players.changecolor.button', 'Change own Color'), () => this.doChangeColor()).className = 'sidepanel-button';
     }
     
     doChangeColor() {
-        new CanvasWindowColorInput('Select Player Color', '#' + (ServerData.localProfile.getColor() & 0x00FFFFFF).toString(16).padStart(6, '0'), color => { 
+        new CanvasWindowColorInput(I18N.get('sidepanel.players.changecolor.window', 'Select Player Color'), '#' + (ServerData.localProfile.getColor() & 0x00FFFFFF).toString(16).padStart(6, '0'), color => { 
             if(color != null && color != undefined) { 
                 const msg = new SetPlayerColor(parseInt(color.substring(1), 16));
                 MessageService.send(msg);

@@ -5,6 +5,7 @@ import { MouseControllerCamera } from '../mouse-controller-camera.js';
 import { ImageService } from '../../service/image-service.js';
 import { Events } from '../../../common/events.js';
 import { MapUtils } from '../../util/maputil.js';
+import { I18N } from '../../../common/util/i18n.js';
 
 class CanvasWindowFitToGridMouseController extends MouseController {
     constructor(w) {
@@ -24,7 +25,7 @@ class CanvasWindowFitToGridMouseController extends MouseController {
 
 export class CanvasWindowFitToGrid extends CanvasWindow {
     constructor(reference) {
-        super('Fit to Grid (select a 7x7 cells area with left and right click)', true);
+        super(I18N.get('window.fittogrid', 'Fit to Grid (select a 7x7 cells area with left and right click)'), true);
         
         this.reference = reference;
         this.x1 = null;
@@ -63,11 +64,11 @@ export class CanvasWindowFitToGrid extends CanvasWindow {
         this.maximize();
         
         // 
-        this.addButton('Ok', () => {
+        this.addButton(I18N.get('global.ok', 'Ok'), () => {
             this.doUpdateEntity();
             this.close();
         });
-        this.addButton('Cancel', () => {
+        this.addButton(I18N.get('global.cancel', 'Cancel'), () => {
             this.close();
         });
         this.maximize();

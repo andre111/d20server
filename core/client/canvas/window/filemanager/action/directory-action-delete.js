@@ -1,9 +1,10 @@
 import { DirectoryAction } from './directory-action.js';
 import { CanvasWindowConfirm } from '../../canvas-window-confirm.js';
+import { I18N } from '../../../../../common/util/i18n.js';
 
 export class DirectoryActionDelete extends DirectoryAction {
     constructor(window) {
-        super(window, 'Delete', 2);
+        super(window, I18N.get('filemanager.action.directory.delete.name', 'Delete'), 2);
     }
 
     shouldShowFor(directory) {
@@ -13,7 +14,7 @@ export class DirectoryActionDelete extends DirectoryAction {
     applyTo(directory) {
         if(!this.shouldShowFor(directory)) return;
 
-        new CanvasWindowConfirm('Delete directory', 'Do you want to delete "'+directory.getName()+'" and all of its contents?', () => {
+        new CanvasWindowConfirm(I18N.get('filemanager.action.directory.delete.title', 'Delete directory'), I18N.get('filemanager.action.directory.delete.question', 'Do you want to delete "%0" and all of its contents?').replace('%0', directory.getName()), () => {
             const URL = '/fileman/delete';
             $.ajax({
                 url: URL,

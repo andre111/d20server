@@ -1,4 +1,16 @@
 {
+    "global": {
+        "yes": "Yes",
+        "no": "No",
+        "ok": "Ok",
+        "cancel": "Cancel",
+        "edit": "Edit"
+    },
+    "attachment": {
+        "edit": {
+            "name": "Name: "
+        }
+    },
     "token": {
         "edit": {
             "position": "Position: ",
@@ -36,6 +48,45 @@
             }
         }
     },
+    "sidepanel": {
+        "tabs": {
+            "chat": "Chat",
+            "players": "Players",
+            "actors": "Actors",
+            "attachments": "Attachments",
+            "maps": "Maps"
+        },
+        "chat": {
+            "send": "Send"
+        },
+        "players": {
+            "changecolor": {
+                "button": "Change own Color",
+                "window": "Select Player Color"
+            }
+        },
+        "actors": {
+            "new": {
+                "button": "New Actor",
+                "title": "New Actor",
+                "prompt": "Enter Actor Name: "
+            }
+        },
+        "attachments": {
+            "new": {
+                "button": "New Attachment",
+                "title": "New Attachment",
+                "prompt": "Enter Attachment Name: "
+            }
+        },
+        "maps": {
+            "new": {
+                "button": "New Map",
+                "title": "New Map",
+                "prompt": "Enter Map Name: "
+            }
+        }
+    },
     "settings": {
         "title": "Settings",
         "page": {
@@ -46,5 +97,71 @@
             "global": "Global Volume",
             "weather": "Weather Volume"
         }
+    },
+    "filemanager": {
+        "title": "File Manager",
+        "loaddirs": "Loading directories...",
+        "loadfiles": "Loading files...",
+        "action": {
+            "file": {
+                "createtoken": "Create Token",
+                "delete": {
+                    "name": "Delete",
+                    "title": "Delete file",
+                    "question": "Do you want to delete \"%0\"?"
+                },
+                "rename": {
+                    "name": "Rename",
+                    "title": "Rename file",
+                    "prompt": "Enter new file name: "
+                },
+                "select": "Select",
+                "showtoplayers": "Show to Players",
+                "upload": "Upload"
+            },
+            "directory": {
+                "create": {
+                    "name": "Create",
+                    "title": "Create directory",
+                    "prompt": "Enter directory name: "
+                },
+                "delete": {
+                    "name": "Delete",
+                    "title": "Delete directory",
+                    "question": "Do you want to delete \"%0\" and all of its contents?"
+                },
+                "rename": {
+                    "name": "Rename",
+                    "title": "Rename directory",
+                    "prompt": "Enter new directory name: "
+                }
+            }
+        },
+        "status": {
+            "empty": "This directory is empty",
+            "nomatch": "No files matching search",
+            "directory": {
+                "path": "Directory: ",
+                "dircount": "Directories: ",
+                "filecount": "Files: "
+            },
+            "file": {
+                "path": "File: ",
+                "size": "Size: ",
+                "modified": "Last Modified: "
+            }
+        },
+        "search": "Search: ",
+        "order": {
+            "by": "Order by: ",
+            "name": "Name",
+            "size": "Size",
+            "modified": "Last Modified"
+        },
+        "uploadwindow": "Upload Files" 
+    },
+    "window": {
+        "fittogrid": "Fit to Grid (select a 7x7 cells area with left and right click)",
+        "image": "Image"
     }
 }

@@ -1,12 +1,12 @@
-import { ServerData } from '../server-data.js';
+import { I18N } from '../../common/util/i18n.js';
 
 export class SidepanelTab {
-    name;
+    key;
     visible;
     tab;
 
-    constructor(name, visible) {
-        this.name = name;
+    constructor(key, visible) {
+        this.key = key;
         this.visible = visible;
 
         this.tab = document.createElement('div');
@@ -17,7 +17,7 @@ export class SidepanelTab {
     }
 
     getName() {
-        return this.name;
+        return I18N.get('sidepanel.tabs.'+this.key, this.key);
     }
 
     isVisible() {

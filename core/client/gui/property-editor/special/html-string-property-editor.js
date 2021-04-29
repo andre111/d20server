@@ -4,6 +4,7 @@ import { createDefaultFileManager } from '../../../canvas/window/canvas-window-f
 
 import { Type } from '../../../../common/constants.js';
 import { FILE_TYPE_IMAGE } from '../../../../common/util/datautil.js';
+import { I18N } from '../../../../common/util/i18n.js';
 
 export class HTMLStringPropertyEditor extends PropertyEditor {
     constructor(name, label) {
@@ -11,8 +12,6 @@ export class HTMLStringPropertyEditor extends PropertyEditor {
     }
     
     initContent(label) {
-        if(label) GuiUtils.makeBordered(this.container, label);
-        
         this.container.classList.add('html-editor');
         this.form = document.createElement('form');
         this.form.onsubmit = () => this.doSubmit(tinymce.activeEditor);
@@ -27,7 +26,7 @@ export class HTMLStringPropertyEditor extends PropertyEditor {
         this.container.appendChild(this.form);
 
         this.editButton = document.createElement('button');
-        this.editButton.innerText = 'Edit';
+        this.editButton.innerText = I18N.get('global.edit', 'Edit');
         this.editButton.onclick = () => this.createEditor();
         this.container.appendChild(this.editButton);
         

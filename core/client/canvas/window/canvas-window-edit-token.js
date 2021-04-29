@@ -88,7 +88,7 @@ export class CanvasWindowEditToken extends CanvasWindowEditCustom {
         {
             const tab = document.createElement('div');
             tab.name = I18N.get('token.edit.tabs.gmnotes', 'GM-Notes');
-            tab.style.height = '100%';
+            tab.className = 'edit-window-area edit-window-full-area';
             tabs.appendChild(tab);
             
             const editor = new MultiLineStringPropertyEditor('gmNotes', '');

@@ -9,8 +9,6 @@ export class MultiLineStringPropertyEditor extends PropertyEditor {
     }
     
     initContent(label) {
-        if(label) GuiUtils.makeBordered(this.container, label);
-        
         this.textArea = document.createElement('textarea');
         this.textArea.style.width = '100%';
         this.textArea.style.height = '100%';

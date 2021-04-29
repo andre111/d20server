@@ -3,7 +3,6 @@ import { SearchableIDTree } from '../../../gui/searchable-id-tree.js';
 import { getValueProvider } from '../../../gui/value-providers.js';
 import { CanvasWindowChoose } from '../../../canvas/window/canvas-window-choose.js';
 import { CanvasWindowEditEntity } from '../../../canvas/window/canvas-window-edit-entity.js';
-import { GuiUtils } from '../../../util/guiutil.js';
 
 import { Type } from '../../../../common/constants.js';
 import { EntityManagers } from '../../../../common/entity/entity-managers.js';
@@ -20,7 +19,6 @@ export class LongListPropertyEditor extends PropertyEditor {
         this.valueList = [];
         this.valueProvider = getValueProvider(this.referenceType);
         
-        if(label) GuiUtils.makeBordered(this.container, label);
         this.container.style.overflow = 'auto';
         
         this.tree = new SearchableIDTree(this.container, null, this.valueProvider, () => this.doOpen());

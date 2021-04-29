@@ -159,14 +159,14 @@ textarea {
 }
 
 table {
-    border: 1px solid black;
+    border: var(--border-separator);
     border-collapse: collapse;
     padding: 5px;
     margin-left: auto;
     margin-right: auto;
 }
 th, td {
-    border: 1px solid black;
+    border: var(--border-separator);
     border-collapse: collapse;
     padding: 5px;
 }
@@ -270,7 +270,7 @@ input:focus {
     right: 0;
     top: 0;
 
-    width: 32px;
+    width: initial;
     height: 20px;
 
     display: none;
@@ -279,19 +279,9 @@ input:focus {
     display: block;
 }
 
-/* Used for bordered divs with overlaying legend on border -> see: GuiUtils.makeBordered */
-.bordered {
-    padding: 5px 5px 5px 5px;
-    margin-top: 18px;
-    border: 1px solid black;
-}
-.border-title {
-    font-size: 17px;
-    font-style: normal;
-    font-weight: normal;
-    margin: -27px 2px 5px 0;
-    width: fit-content;
-    position: absolute;
+.image-editor {
+    border: none;
+    padding: 2px;
 }
 
 /* Used for links that open internaly */
@@ -987,7 +977,7 @@ div.chat-box-content th, div.chat-box-content td {
 }
 .edit-window-container textarea {
     background: none;
-    border: var(--border-separator);
+    border: none;
 }
 
 /* Header */
@@ -1099,7 +1089,6 @@ div.chat-box-content th, div.chat-box-content td {
 }
 
 
-
 /* Token Edit Window */
 .edit-token-image {
     width: 90px;
@@ -1131,6 +1120,20 @@ div.chat-box-content th, div.chat-box-content td {
 .edit-token-edit-boxes,
 .edit-token-edit-boxes input {
     width: 100%;
+}
+
+
+/* Attachment Edit Window */
+.edit-attachment-image {
+    width: 90px;
+    height: 90px;
+
+    flex: 0 0 90px;
+    border-right: var(--border-separator);
+}
+.edit-attachment-content {
+    width: calc(100% - 8px);
+    height: calc(100% - 90px);
 }
 
 

@@ -1,6 +1,7 @@
 import { CanvasWindow } from '../canvas-window.js';
 import { getValueProvider } from '../../gui/value-providers.js';
 import { SearchableIDTree } from '../../gui/searchable-id-tree.js';
+import { I18N } from '../../../common/util/i18n.js';
 
 export class CanvasWindowChoose extends CanvasWindow {
     #callback;
@@ -15,10 +16,10 @@ export class CanvasWindowChoose extends CanvasWindow {
         this.#tree.getContainer().style.overflow = 'auto';
         this.#tree.getContainer().style.height = 'calc(100% - 23px)';
 
-        this.addButton('Ok', () => {
+        this.addButton(I18N.get('global.ok', 'Ok'), () => {
             this.onChoose();
         });
-        this.addButton('Cancel', () => {
+        this.addButton(I18N.get('global.cancel', 'Cancel'), () => {
             this.close();
         });
         this.setDimensions(300, 500);

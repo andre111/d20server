@@ -10,10 +10,11 @@ import { Entity } from '../../common/entity/entity.js';
 import { EntityManagers } from '../../common/entity/entity-managers.js';
 import { EntityReference } from '../../common/entity/entity-reference.js';
 import { EntityMenu } from '../canvas/mode/entity-menu.js';
+import { I18N } from '../../common/util/i18n.js';
 
 export class SidepanelTabAttachments extends SidepanelTab {
     constructor() {
-        super('Attachments', true);
+        super('attachments', true);
         
         this.tab.style.display = 'grid';
         this.tab.style.gridTemplateRows = 'auto max-content max-content';
@@ -27,7 +28,7 @@ export class SidepanelTabAttachments extends SidepanelTab {
         if(ServerData.isGM()) {
             const buttonPanel = document.createElement('div');
             this.tab.appendChild(buttonPanel);
-            GuiUtils.createButton(buttonPanel, 'New Attachment', () => this.doAdd()).className = 'sidepanel-button';
+            GuiUtils.createButton(buttonPanel, I18N.get('sidepanel.attachments.new.button', 'New Attachment'), () => this.doAdd()).className = 'sidepanel-button';
         }
     }
     
@@ -42,7 +43,7 @@ export class SidepanelTabAttachments extends SidepanelTab {
     }
     
     doAdd() {
-        new CanvasWindowInput('New Attachment', 'Enter Attachment Name:', '', name => {
+        new CanvasWindowInput(I18N.get('sidepanel.attachments.new.title', 'New Attachment'), I18N.get('sidepanel.attachments.new.prompt', 'Enter Attachment Name:'), '', name => {
             if(name) {
                 const attachment = new Entity('attachment');
                 attachment.setString('name', name);

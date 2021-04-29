@@ -52,6 +52,7 @@ import { TokenUtil } from '../common/util/tokenutil.js';
 import { CanvasWindowEditToken } from './canvas/window/canvas-window-edit-token.js';
 import { I18N } from '../common/util/i18n.js';
 import { StateMain } from './state/state-main.js';
+import { CanvasWindowEditAttachment } from './canvas/window/canvas-window-edit-attachment.js';
 
 // Initialize common code
 Common.init(new ClientIDProvider(), ClientEntityManager);
@@ -398,10 +399,13 @@ Events.on('entityMenu', event => {
 
 // Edit Windows
 Events.on('editWindowCreateTabs', event => {
-    if(event.data.reference.getType() !== 'token') return;
-    
-    new CanvasWindowEditToken(event.data.window, event.data.reference);
-    event.cancel();
+    if(event.data.reference.getType() === 'token') {    
+        new CanvasWindowEditToken(event.data.window, event.data.reference);
+        event.cancel();
+    } else if(event.data.reference.getType() === 'attachment') {
+        new CanvasWindowEditAttachment(event.data.window, event.data.reference);
+        event.cancel();
+    }
 }, false);
 
 

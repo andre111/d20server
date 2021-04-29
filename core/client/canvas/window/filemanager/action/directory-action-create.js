@@ -1,9 +1,10 @@
+import { I18N } from '../../../../../common/util/i18n.js';
 import { CanvasWindowInput } from '../../canvas-window-input.js';
 import { DirectoryAction } from './directory-action.js';
 
 export class DirectoryActionCreate extends DirectoryAction {
     constructor(window) {
-        super(window, 'Create', 1);
+        super(window, I18N.get('filemanager.action.directory.create.name', 'Create'), 1);
     }
 
     shouldShowFor(directory) {
@@ -11,7 +12,7 @@ export class DirectoryActionCreate extends DirectoryAction {
     }
 
     applyTo(directory) {
-        new CanvasWindowInput('Create directory', 'Enter directory name: ', '', input => {
+        new CanvasWindowInput(I18N.get('filemanager.action.directory.create.title', 'Create directory'), I18N.get('filemanager.action.directory.create.prompt', 'Enter directory name: '), '', input => {
             if(!input || input.trim() == '') return;
 
             const URL = '/fileman/createdir';

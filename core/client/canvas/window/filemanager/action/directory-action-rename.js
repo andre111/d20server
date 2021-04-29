@@ -1,9 +1,10 @@
+import { I18N } from '../../../../../common/util/i18n.js';
 import { CanvasWindowInput } from '../../canvas-window-input.js';
 import { DirectoryAction } from './directory-action.js';
 
 export class DirectoryActionRename extends DirectoryAction {
     constructor(window) {
-        super(window, 'Rename', 3);
+        super(window, I18N.get('filemanager.action.directory.rename.name', 'Rename'), 3);
     }
 
     shouldShowFor(directory) {
@@ -13,7 +14,7 @@ export class DirectoryActionRename extends DirectoryAction {
     applyTo(directory) {
         if(!this.shouldShowFor(directory)) return;
         
-        new CanvasWindowInput('Rename directory', 'Enter new directory name: ', directory.getName(), input => {
+        new CanvasWindowInput(I18N.get('filemanager.action.directory.rename.title', 'Rename directory'), I18N.get('filemanager.action.directory.rename.prompt', 'Enter new directory name: '), directory.getName(), input => {
             if(!input || input.trim() == '') return;
 
             const URL = '/fileman/rename';

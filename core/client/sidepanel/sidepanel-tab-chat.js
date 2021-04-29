@@ -4,10 +4,11 @@ import { MessageService } from '../service/message-service.js';
 
 import { SendChatMessage } from '../../common/messages.js';
 import { Events } from '../../common/events.js';
+import { I18N } from '../../common/util/i18n.js';
 
 export class SidepanelTabChat extends SidepanelTab {
     constructor() {
-        super('Chat', true);
+        super('chat', true);
         
         // create html elements
         this.tab.style.display = 'grid';
@@ -55,7 +56,7 @@ export class SidepanelTabChat extends SidepanelTab {
             }
         };
         inputPanel.appendChild(this.input);
-        var send = GuiUtils.createButton(inputPanel, 'Send', () => this.doSend());
+        var send = GuiUtils.createButton(inputPanel, I18N.get('sidepanel.chat.send', 'Send'), () => this.doSend());
         send.style.width = '20%';
         this.tab.appendChild(inputPanel);
         

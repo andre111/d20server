@@ -1,6 +1,5 @@
 import { PropertyEditor } from './property-editor.js';
 import { CanvasWindowInput } from '../../canvas/window/canvas-window-input.js';
-import { GuiUtils } from '../../util/guiutil.js';
 
 import { Type } from '../../../common/constants.js';
 
@@ -12,7 +11,6 @@ export class StringMapPropertyEditor extends PropertyEditor {
     }
     
     initContent(label) {
-        if(label) GuiUtils.makeBordered(this.container, label);
         this.container.style.overflow = 'auto';
         this.container.style.height = 'calc(100% - 18px)';
         

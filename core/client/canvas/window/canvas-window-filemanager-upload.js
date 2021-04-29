@@ -1,5 +1,6 @@
 import { CanvasWindow } from '../canvas-window.js';
 import { toFormatedSize } from '../../../common/util/datautil.js';
+import { I18N } from '../../../common/util/i18n.js';
 
 export class CanvasWindowFilemanagerUpload extends CanvasWindow {
     window;
@@ -13,7 +14,7 @@ export class CanvasWindowFilemanagerUpload extends CanvasWindow {
     uploadFileList;
 
     constructor(window, directory) {
-        super('Upload files', true);
+        super(I18N.get('filemanager.uploadwindow', 'Upload files'), true);
 
         this.window = window;
         this.directory = directory;
@@ -45,10 +46,10 @@ export class CanvasWindowFilemanagerUpload extends CanvasWindow {
     }
 
     createButtons() {
-        this.addButton('Ok', () => {
+        this.addButton(I18N.get('global.ok', 'Ok'), () => {
             this.doUpload();
         });
-        this.addButton('Cancel', () => {
+        this.addButton(I18N.get('global.cancel', 'Cancel'), () => {
             this.doCancel();
         });
     }

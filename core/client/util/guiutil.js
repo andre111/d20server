@@ -82,14 +82,6 @@ export const GuiUtils = {
         div.appendChild(copyrightDiv);
     },
     
-    makeBordered: function(container, label) {
-        container.classList.add('bordered');
-        const h1 = document.createElement('h1');
-        h1.className = 'border-title';
-        h1.innerHTML = label ? label : '?';
-        container.appendChild(h1);
-    },
-    
     // makes children elements hoverable (requires 'hoverable' class and a child with 'onhover' class)
     makeHoverable: function(element) {
         // this updates to "tooltip" location

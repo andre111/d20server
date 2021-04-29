@@ -11,10 +11,11 @@ import { EntityManagers } from '../../common/entity/entity-managers.js';
 import { EntityReference } from '../../common/entity/entity-reference.js';
 import { MovePlayerToMap } from '../../common/messages.js';
 import { EntityMenu } from '../canvas/mode/entity-menu.js';
+import { I18N } from '../../common/util/i18n.js';
 
 export class SidepanelTabMaps extends SidepanelTab {
     constructor() {
-        super('Maps', true);
+        super('maps', true);
         
         this.tab.style.display = 'grid';
         this.tab.style.gridTemplateRows = 'auto max-content max-content';
@@ -28,7 +29,7 @@ export class SidepanelTabMaps extends SidepanelTab {
         if(ServerData.isGM()) {
             const buttonPanel = document.createElement('div');
             this.tab.appendChild(buttonPanel);
-            GuiUtils.createButton(buttonPanel, 'New Map', () => this.doNewMap()).className = 'sidepanel-button';
+            GuiUtils.createButton(buttonPanel, I18N.get('sidepanel.maps.new.button', 'New Map'), () => this.doNewMap()).className = 'sidepanel-button';
         }
     }
     
@@ -43,7 +44,7 @@ export class SidepanelTabMaps extends SidepanelTab {
     }
     
     doNewMap() {
-        new CanvasWindowInput('New Map', 'Enter Map Name:', '', name => {
+        new CanvasWindowInput(I18N.get('sidepanel.maps.new.title', 'New Map'), I18N.get('sidepanel.maps.new.prompt', 'Enter Map Name:'), '', name => {
             if(name) {
                 const map = new Entity('map');
                 map.setString('name', name);

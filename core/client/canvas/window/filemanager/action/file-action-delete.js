@@ -1,9 +1,10 @@
+import { I18N } from '../../../../../common/util/i18n.js';
 import { CanvasWindowConfirm } from '../../canvas-window-confirm.js';
 import { FileAction } from './file-action.js';
 
 export class FileActionDelete extends FileAction {
     constructor(window) {
-        super(window, 'Delete', 7);
+        super(window, I18N.get('filemanager.action.file.delete.name', 'Delete'), 7);
     }
 
     shouldShowFor(file) {
@@ -11,7 +12,7 @@ export class FileActionDelete extends FileAction {
     }
 
     applyTo(file) {
-        new CanvasWindowConfirm('Delete file', 'Do you want to delete "'+file.getName()+'"?', () => {
+        new CanvasWindowConfirm(I18N.get('filemanager.action.file.delete.title', 'Delete file'), I18N.get('filemanager.action.file.delete.question', 'Do you want to delete "%0"?').replace('%0', file.getName()), () => {
             const URL = '/fileman/delete';
             $.ajax({
                 url: URL,

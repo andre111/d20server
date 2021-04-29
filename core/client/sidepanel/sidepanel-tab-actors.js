@@ -10,10 +10,11 @@ import { Entity } from '../../common/entity/entity.js';
 import { EntityManagers } from '../../common/entity/entity-managers.js';
 import { EntityReference } from '../../common/entity/entity-reference.js';
 import { EntityMenu } from '../canvas/mode/entity-menu.js';
+import { I18N } from '../../common/util/i18n.js';
 
 export class SidepanelTabActors extends SidepanelTab {
     constructor() {
-        super('Actors', true);
+        super('actors', true);
         
         this.tab.style.display = 'grid';
         this.tab.style.gridTemplateRows = 'auto max-content max-content';
@@ -27,7 +28,7 @@ export class SidepanelTabActors extends SidepanelTab {
         if(ServerData.isGM()) {
             const buttonPanel = document.createElement('div');
             this.tab.appendChild(buttonPanel);
-            GuiUtils.createButton(buttonPanel, 'New Actor', () => this.doAdd()).className = 'sidepanel-button';
+            GuiUtils.createButton(buttonPanel, I18N.get('sidepanel.actors.new.button', 'New Actor'), () => this.doAdd()).className = 'sidepanel-button';
         }
     }
     
@@ -42,7 +43,7 @@ export class SidepanelTabActors extends SidepanelTab {
     }
     
     doAdd() {
-        new CanvasWindowInput('New Actor', 'Enter Actor Name:', '', name => {
+        new CanvasWindowInput(I18N.get('sidepanel.actors.new.title', 'New Actor'), I18N.get('sidepanel.actors.new.prompt', 'Enter Actor Name:'), '', name => {
             if(name) {
                 const actor = new Entity('actor');
                 actor.setString('name', name);

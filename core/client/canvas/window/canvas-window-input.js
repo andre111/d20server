@@ -1,3 +1,4 @@
+import { I18N } from '../../../common/util/i18n.js';
 import { CanvasWindow } from '../canvas-window.js';
 
 export class CanvasWindowInput extends CanvasWindow {
@@ -12,11 +13,11 @@ export class CanvasWindowInput extends CanvasWindow {
         input.value = value;
         this.content.appendChild(input);
         
-        this.addButton('Ok', () => {
+        this.addButton(I18N.get('global.ok', 'Ok'), () => {
             callback(input.value);
             this.close();
         });
-        this.addButton('Cancel', () => {
+        this.addButton(I18N.get('global.cancel', 'Cancel'), () => {
             this.close();
         });
         this.setDimensions(300, 100);

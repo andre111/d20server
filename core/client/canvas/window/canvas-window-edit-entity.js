@@ -6,6 +6,7 @@ import { ServerData } from '../../server-data.js';
 import { Access } from '../../../common/constants.js';
 import { EntityReference } from '../../../common/entity/entity-reference.js';
 import { Events } from '../../../common/events.js';
+import { I18N } from '../../../common/util/i18n.js';
 
 export class CanvasWindowEditEntity extends CanvasWindow {
     constructor(reference) {
@@ -14,11 +15,11 @@ export class CanvasWindowEditEntity extends CanvasWindow {
         this.reference = new EntityReference(reference.getBackingEntity());
         this.tabs = [];
         
-        this.addButton('Ok', () => {
+        this.addButton(I18N.get('global.ok', 'Ok'), () => {
             this.doUpdateEntity();
             this.close();
         });
-        this.addButton('Cancel', () => {
+        this.addButton(I18N.get('global.cancel', 'Cancel'), () => {
             this.close();
         });
 

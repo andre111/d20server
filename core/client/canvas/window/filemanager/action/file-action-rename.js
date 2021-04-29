@@ -1,9 +1,10 @@
+import { I18N } from '../../../../../common/util/i18n.js';
 import { CanvasWindowInput } from '../../canvas-window-input.js';
 import { FileAction } from './file-action.js';
 
 export class FileActionRename extends FileAction {
     constructor(window) {
-        super(window, 'Rename', 6);
+        super(window, I18N.get('filemanager.action.file.rename.name', 'Rename'), 6);
     }
 
     shouldShowFor(file) {
@@ -11,7 +12,7 @@ export class FileActionRename extends FileAction {
     }
 
     applyTo(file) {
-        new CanvasWindowInput('Rename file', 'Enter new file name: ', file.getName(), input => {
+        new CanvasWindowInput(I18N.get('filemanager.action.file.rename.title', 'Rename file'), I18N.get('filemanager.action.file.rename.prompt', 'Enter new file name: '), file.getName(), input => {
             if(!input || input.trim() == '') return;
 
             const URL = '/fileman/rename';

@@ -13,9 +13,8 @@ export class ImagePropertyEditor extends PropertyEditor {
     }
     
     initContent(label) {
-        if(label) GuiUtils.makeBordered(this.container, label);
-
         this.image = document.createElement('img');
+        this.image.className = 'image-editor';
         this.image.style.width = '100%';
         this.image.style.height = '100%';
         this.image.style.objectFit = 'contain';
@@ -24,9 +23,7 @@ export class ImagePropertyEditor extends PropertyEditor {
         this.container.oncontextmenu = () => this.doClearImage();
         this.container.appendChild(this.image);
         
-        this.input = document.createElement('input');
-        
-        return this.input;
+        return this.image;
     }
     
     reloadValue(reference, name) {
@@ -48,7 +45,7 @@ export class ImagePropertyEditor extends PropertyEditor {
     }
     
     doEditImage() {
-        if(!this.input.disabled) {
+        if(!this.image.disabled) {
             const manager = createDefaultFileManager(this.imagePath);
             manager.init(file => {
                 if(!file) return;
@@ -64,7 +61,7 @@ export class ImagePropertyEditor extends PropertyEditor {
     }
 
     doClearImage() {
-        if(!this.input.disabled) {
+        if(!this.image.disabled) {
             this.imagePath = '';
             this.reloadImage();
             this.onChange();

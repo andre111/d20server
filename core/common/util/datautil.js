@@ -1,9 +1,7 @@
 // funtion for registering types NEEDS to be called for every type/class transmitted/stored as json
 const nameToTypeMap = new Map();
 export function registerType(type) {
-    const object = new type();
-
-    nameToTypeMap.set(object.constructor.name, type);
+    nameToTypeMap.set(type.name, type);
 }
 
 // automatically store 'type' of registered types as object property
