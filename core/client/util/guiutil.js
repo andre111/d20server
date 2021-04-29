@@ -41,6 +41,15 @@ export const GuiUtils = {
         container.appendChild(button);
         return button;
     },
+
+    createInternalLink: function(target, text) {
+        const link = document.createElement('a');
+        link.className = 'internal-link';
+        link.href = '#';
+        link.dataset['target'] = target;
+        link.innerText = text;
+        return link;
+    },
     
     //TODO: do not use? fieldsets seem to be annoying to layout, currently only uses left are for quick temporary implementation of basic states
     createBorderedSet: function(label, fixedWidth, fixedHeight, useClass = true) {

@@ -294,6 +294,14 @@ input:focus {
     position: absolute;
 }
 
+/* Used for links that open internaly */
+.internal-link {
+    color: black;
+}
+.internal-link:hover {
+    text-shadow: var(--text-shadow-hover);
+}
+
 /* Custom Scrollbars (TODO: only works in webkit based browsers (so no firefox) and doesn't even look that great?) */
 ::-webkit-scrollbar {
     width: 12px;

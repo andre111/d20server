@@ -405,6 +405,24 @@ Events.on('editWindowCreateTabs', event => {
 }, false);
 
 
+// Internal Links
+Events.on('internalLinkClick', event => {{
+    const target = event.data.target;
+
+    for(const targetEntityType of [ 'actor', 'attachment' ]) 
+        if(target.startsWith(targetEntityType+':')) {
+            const id = Number(target.substring(targetEntityType.length+1));
+            const entity = EntityManagers.get(targetEntityType).find(id);
+            if(entity) {
+                new CanvasWindowEditEntity(new EntityReference(entity));
+            }
+
+            event.cancel();
+        }
+    }
+}, false);
+
+
 // Settings
 export const SETTING_GLOBAL_VOLUME = new SettingsEntryNumberRange('settings.volume.global', 'Global Volume', 100, 0, 100);
 export const SETTING_WEATHER_VOLUME = new SettingsEntryNumberRange('settings.volume.weather', 'Weather Volume', 100, 0, 100);

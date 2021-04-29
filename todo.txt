@@ -1,4 +1,5 @@
 //TODO: current plans:
+// implement (a custom plugin for?) adding internal links in TinyMCE editors
 // webrtc settings (input devices)
 // rethink entity menu (it has become quite large)
 // allow players to end turns of their tokens in battle

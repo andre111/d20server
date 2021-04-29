@@ -60,6 +60,17 @@ export class StateMain extends State {
 
         this.notificationManager = new NotificationManager();
         document.body.appendChild(this.notificationManager.getContainer());
+
+        // add global listener for internal links
+        this.internalLinkListener = e => {
+            if(e.target.nodeName == 'A' && e.target.className == 'internal-link') {
+                if(e.target.closest('.mce-content-body') == null) { // only trigger when not inside an active TinyMCE instance
+                    Events.trigger('internalLinkClick', { target: e.target.dataset['target'] }, true);
+                }
+                e.preventDefault();
+            }
+        };
+        document.body.addEventListener('click', this.internalLinkListener);
         
         // get reference to main canvas
         this.canvas = document.getElementById('canvas');

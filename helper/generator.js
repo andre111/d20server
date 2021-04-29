@@ -13,7 +13,16 @@ const IGNORE_MISSING_IMAGES = false;
 
 //TODO: split this into more sensible parts
 Common.init(new GeneratorIDProvider(), null);
-ModuleService.init().then(() => {
+ModuleService.init().then(() => doGenerate());
+
+// Data / ID Map Storage
+const attachmentMap = {};
+const genericAttachmentIDMap = {};
+const zauberIDMap = {};
+const talenteIDMap = {};
+
+// Actual Functions
+function doGenerate() {
     //TODO: implement/port generator
 
     const directory = './generated/';
@@ -29,10 +38,6 @@ ModuleService.init().then(() => {
     }
 
     // generate attachments
-    const attachmentMap = {};
-    const genericAttachmentIDMap = {};
-    const zauberIDMap = {};
-    const talenteIDMap = {};
     {
         // generic attachments
         const attachmentData = getCombinedJsonData('../d20helper/dataFull/attachments/');
@@ -328,33 +333,30 @@ ModuleService.init().then(() => {
             var attachmentList = [];
             {
                 // feats
-                for(var talent of entry['Talente']) {
-                    talent = toUnifiedName(talent);
+                for(const talent of entry['Talente']) {
+                    const talentID = getTalentID(talent);
 
-                    // try to find the matching talent (first simply with unified name, then ignoring brackets, then adding '(legende)')
-                    if(!talenteIDMap[talent] && talent.includes('(')) talent = talent.substring(0, talent.indexOf('(')).trim();
-                    if(!talenteIDMap[talent] && talenteIDMap[talent+'(legende)']) talent = talent+'(legende)';
-                    if(!talenteIDMap[talent]) {
+                    if(talentID == -1) {
                         console.error(`${name}: Skipping unknown talent: ${talent}`);
                         continue;
                     }
 
-                    attachmentList.push(talenteIDMap[talent]);
+                    attachmentList.push(talentID);
                 }
 
                 // spells
-                for(var zauberListe of entry['Zauberlisten']) {
-                    for(var zauberEntry of zauberListe['Einträge']) {
-                        for(var zauber of zauberEntry['Zauber']) {
-                            zauber = toUnifiedName(zauber['Wert'], true);
+                for(const zauberListe of entry['Zauberlisten']) {
+                    for(const zauberEntry of zauberListe['Einträge']) {
+                        for(const zauber of zauberEntry['Zauber']) {
+                            const zauberID = getZauberID(zauber['Wert']);
 
                             // try to find the matching spell
-                            if(!zauberIDMap[zauber]) {
-                                console.error(`${name}: Skipping unknown spell: ${zauber}`);
+                            if(zauberID == -1) {
+                                console.error(`${name}: Skipping unknown spell: ${zauber['Wert']}`);
                                 continue;
                             }
         
-                            attachmentList.push(zauberIDMap[zauber]);
+                            attachmentList.push(zauberID);
                         }
                     }
                 }
@@ -420,7 +422,7 @@ ModuleService.init().then(() => {
         console.log(`Monster with icon: ${monsterWithIcon}/${monsterData.length} (${monsterWithIcon/monsterData.length*100}%)`);
     }
     saveJsonFile(path.join(directory, 'actor.json'), actorMap);
-})
+}
 
 function getCombinedJsonData(directory) {
     var combinedData = [];
@@ -440,6 +442,27 @@ function getCombinedJsonData(directory) {
         }
     }
     return combinedData;
+}
+
+function getTalentID(name) {
+    var uname = toUnifiedName(name);
+
+    // try to find the matching talent (first simply with unified name, then ignoring brackets, then adding '(legende)')
+    if(!talenteIDMap[uname] && uname.includes('(')) uname = uname.substring(0, uname.indexOf('(')).trim();
+    if(!talenteIDMap[uname] && talenteIDMap[uname+'(legende)']) uname = uname+'(legende)';
+    if(!talenteIDMap[uname]) return -1;
+
+    return talenteIDMap[uname];
+}
+
+function getZauberID(name) {
+    var uname = toUnifiedName(name, false);
+
+    // try to find the matching spell
+    if(!zauberIDMap[uname]) uname = toUnifiedName(name, true);
+    if(!zauberIDMap[uname]) return -1;
+
+    return zauberIDMap[uname];
 }
 
 function toUnifiedName(name, removeModifier) {
@@ -748,7 +771,7 @@ function createAttackSection(entry) {
     // [Zauberähnliche Fähigkeiten/Bekannte Zauber/... (ZS <value>[; Konzentration <value>])]
     //     REPEATED: <grad+usage> - <commaSepAnnotatedValues>
     //     [* <notes>]
-    for(var spellList of entry['Zauberlisten']) {
+    for(const spellList of entry['Zauberlisten']) {
         sb += `<strong>${spellList['Name']}</strong>`;
         if(spellList['ZS']) {
             sb += ` (ZS ${spellList['ZS']}`;
@@ -756,11 +779,16 @@ function createAttackSection(entry) {
             sb += ')<br>';
         }
 
-        for(var spellListEntry of spellList['Einträge']) {
+        for(const spellListEntry of spellList['Einträge']) {
             var sl = '';
-            for(var spell of spellListEntry['Zauber']) {
+            for(const spell of spellListEntry['Zauber']) {
                 if(sl) sl += ', ';
-                sl += `${getStringWithNotes(spell['Wert'], spell['Anmerkung'], true)}`;
+
+                var spellString = spell['Wert'];
+                const spellID = getZauberID(spell['Wert']);
+                if(spellID != -1) spellString = `<a href="#" class="internal-link" data-target="attachment:${spellID}">${spell['Wert']}</a>`;
+
+                sl += `${getStringWithNotes(spellString, spell['Anmerkung'], true)}`;
             }
             sb += `${spellListEntry['GradUndLimits']} - ${sl}<br>`;
         }
@@ -794,7 +822,15 @@ function createValuesSection(entry) {
     sb += `<strong>KMV</strong> ${getStringWithNotes(getSigned(entry['KMV']['Wert']), entry['KMV']['Anmerkung'], true)}<br>`;
     
     // [Talente <commaSepValues>]
-    sb += `<strong>Talente</strong> ${getCombinedString(entry['Talente'], false)}<br>`;
+    var talentString = '';
+    for(const talent of entry['Talente']) {
+        if(talentString) talentString += ', ';
+
+        const talentID = getTalentID(talent);
+        if(talentID != -1) talentString += `<a href="#" class="internal-link" data-target="attachment:${talentID}">${talent}</a>`;
+        else talentString += talent;
+    }
+    sb += `<strong>Talente</strong> ${talentString}<br>`;
 
     // [Fertigkeiten <commaSepValues>[; Volksmodifikatoren <commaSepValues>]]
     if(entry['Fertigkeiten'].length > 0) {
