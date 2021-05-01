@@ -6,7 +6,7 @@
 // allow interacting with doors in CanvasModeEntities as long as a controllable entity is near it (toggle isOpen or play locked sound)
 // add motd (and maybe more? - maybe allow customizing the backgrounds) to login screen
 // language/translation support (including settings option)
-// make pf character sheet more complete (atleast: movementrates, ...) AND replace with custom no copyright sheet
+// make pf character sheet more complete (atleast: movementrates, ...)
 // support sending selected entities of other types
 // Doppelklick um Dinge zu öffnen
 // create real "import" command line functionality on server (+ other commands?)

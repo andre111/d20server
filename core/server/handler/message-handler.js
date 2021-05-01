@@ -3,8 +3,8 @@ import { MessageService } from '../service/message-service.js';
 import { UserService } from '../service/user-service.js';
 
 import { EntityManagers } from '../../common/entity/entity-managers.js';
-import { ActionCommand, AddEntity, EntityLoading, MakeActorLocal, MovePlayerToMap, Ping, PlayEffect, PlayerList, RemoveEntity, RequestAccounts, ResponseFail, ResponseOk, SelectedEntities, SendChatMessage, SendNotification, SetPlayerColor, SignIn, SignOut, ToggleModule, UpdateEntityProperties } from '../../common/messages.js';
-import { Role } from '../../common/constants.js';
+import { ActionCommand, AddEntity, CopyEntity, EntityLoading, MakeActorLocal, MovePlayerToMap, Ping, PlayEffect, PlayerList, RemoveEntity, RequestAccounts, ResponseFail, ResponseOk, SelectedEntities, SendChatMessage, SendNotification, SetPlayerColor, SignIn, SignOut, ToggleModule, UpdateEntityProperties } from '../../common/messages.js';
+import { Access, Role } from '../../common/constants.js';
 import { GameService } from '../service/game-service.js';
 import { VERSION } from '../version.js';
 import { Events } from '../../common/events.js';
@@ -140,6 +140,33 @@ function _handleUpdateEntityProperties(profile, message) {
     }
 }
 
+function _handleCopyEntity(profile, message) {
+    // search for entity, check access and copy if valid request
+    const manager = EntityManagers.get(message.getManager());
+    const targetManager = EntityManagers.get(message.getTargetManager());
+    if(manager && targetManager) {
+        const entity = manager.find(message.getID());
+        if(entity && entity.canEdit(profile) && targetManager.canAddRemove(profile, entity)) {
+            // copy entity
+            const copiedEntity = entity.clone();
+            copiedEntity.resetID(); 
+            targetManager.add(copiedEntity);
+
+            // apply modified properties
+            targetManager.updateProperties(copiedEntity.getID(), message.getModifiedProperties(), Access.SYSTEM); //TODO: currently using SYSTEM access here to allow changing mapID
+            
+            // copy contained entities
+            for(const containedEntityType of entity.getDefinition().settings.containedEntities) {
+                const containedSourceManager = EntityManagers.get(entity.getContainedEntityManagerName(containedEntityType));
+                const containedTargetManager = EntityManagers.get(copiedEntity.getContainedEntityManagerName(containedEntityType));
+                for(const containedEntity of containedSourceManager.all()) {
+                    containedTargetManager.add(containedEntity.clone());
+                }
+            }
+        }
+    }
+}
+
 function _handleMakeActorLocal(profile, message) {
     // only allow gms
     if(profile.getRole() != Role.GM) return;
@@ -158,7 +185,7 @@ function _handleMakeActorLocal(profile, message) {
         // store actor locally
         const localManager = EntityManagers.get(token.getContainedEntityManagerName('actor'));
         const clonedActor = actor.clone();
-        clonedActor.id = 0;
+        clonedActor.id = 1;
         localManager.add(clonedActor);
 
         // update flag
@@ -225,6 +252,8 @@ export class MessageHandler {
             _handleRemoveEntity(profile, message);
         } else if(message instanceof UpdateEntityProperties) {
             _handleUpdateEntityProperties(profile, message);
+        } else if(message instanceof CopyEntity) {
+            _handleCopyEntity(profile, message);
         } else if(message instanceof MakeActorLocal) {
             _handleMakeActorLocal(profile, message);
         } else if(message instanceof SendChatMessage) {

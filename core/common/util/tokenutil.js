@@ -7,7 +7,7 @@ export class TokenUtil {
         if(!token || !(token instanceof Entity) || token.getType() !== 'token') throw new Error('Provided object is not a token');
 
         if(token.getBoolean('actorLocal')) {
-            return EntityManagers.get('token/'+token.getID()+'-actor').find(0);
+            return EntityManagers.get('token/'+token.getID()+'-actor').find(1);
         } else {
             const actorID = token.getLong('actorID');
             return EntityManagers.get('actor').find(actorID);

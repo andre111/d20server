@@ -13,6 +13,7 @@ import { Entity } from '../../../common/common.js';
 import { EntityReference } from '../../../common/entity/entity-reference.js';
 import { CanvasWindowConfirm } from '../window/canvas-window-confirm.js';
 import { EntityManagers } from '../../../common/entity/entity-managers.js';
+import { EntityActionCopy } from './entity-action-copy.js';
 
 export class CanvasModeEntities extends CanvasMode {
     constructor(entityType) {
@@ -274,7 +275,7 @@ export class CanvasModeEntities extends CanvasMode {
     }
     
     setAddEntityAction(entity) {
-		var map = MapUtils.currentMap();
+		const map = MapUtils.currentMap();
 		if(map == null) return;
 		if(entity.getType() != this.entityType) return;
         
@@ -289,8 +290,8 @@ export class CanvasModeEntities extends CanvasMode {
         this.addActiveEntity(entity);
         this.setAction(new EntityActionAdd(this));
     }
-    setAddEntitiesAction(references) {
-        var map = MapUtils.currentMap();
+    setCopyEntitiesAction(references) {
+        const map = MapUtils.currentMap();
         if(map == null || map == undefined) return;
         
         this.clearActiveEntities();
@@ -304,8 +305,9 @@ export class CanvasModeEntities extends CanvasMode {
             }
         }
         
-        this.setAction(new EntityActionAdd(this));
+        this.setAction(new EntityActionCopy(this));
     }
+
     
     sendSelectedEntities() {
         const msg = new SelectedEntities(this.entityType, this.activeEntities.map(ref => ref.getID()));

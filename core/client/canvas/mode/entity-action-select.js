@@ -402,7 +402,7 @@ export class EntityActionSelect extends EntityAction {
     doPaste() {
         var clipboardEntities = EntityClipboard.getEntities(this.mode.entityType);
         if(clipboardEntities.length > 0) {
-            this.mode.setAddEntitiesAction(clipboardEntities);
+            this.mode.setCopyEntitiesAction(clipboardEntities);
         }
     }
     

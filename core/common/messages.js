@@ -11,6 +11,7 @@ export { SendChatMessage } from './message/chat/send-chat-message.js';
 // Entity Messages
 export { AddEntity } from './message/entity/add-entity.js';
 export { ClearEntities } from './message/entity/clear-entities.js';
+export { CopyEntity } from './message/entity/copy-entity.js';
 export { EntityLoading } from './message/entity/entity-loading.js';
 export { RemoveEntity } from './message/entity/remove-entity.js';
 export { UpdateEntityProperties } from './message/entity/update-entity-properties.js';

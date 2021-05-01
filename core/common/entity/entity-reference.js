@@ -28,10 +28,6 @@ export class EntityReference extends Entity {
         }
     }
 
-    getType() {
-        return this.backingEntity.getType();
-    }
-
     getManager() {
         return this.backingEntity.getManager();
     }
@@ -131,6 +127,10 @@ export class EntityReference extends Entity {
         const modified = this.getBackingEntity().clone();
         modified.clonePropertiesFrom(this);
         return modified;
+    }
+
+    getModifiedProperties() {
+        return this.changedProperties;
     }
 
     isValid() {
