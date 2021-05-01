@@ -18,12 +18,15 @@ import { ATTRIBUTES, SAVES, SKILL_LIST } from './character-values.js';
 import { DefinitionUtils } from '../../../core/common/util/definitionutil.js';
 import { CanvasWindowEditCustom } from '../../../core/client/canvas/window/canvas-window-edit-custom.js';
 import { ServerData } from '../../../core/client/server-data.js';
+import { Access } from '../../../core/common/constants.js';
 
 export class CanvasWindowEditActor extends CanvasWindowEditCustom {
     constructor(w, reference) {
         super(w, reference);
         const container = w.content;
         container.className = 'edit-window-container cs-container';
+
+        const accessLevel = reference.getAccessLevel(ServerData.localProfile);
         
         // build content
         // Header
@@ -61,27 +64,30 @@ export class CanvasWindowEditActor extends CanvasWindowEditCustom {
             headerRow1.appendChild(sizeLI);
             headerSide.appendChild(headerRow1);
             
-            const headerRow2 = document.createElement('ul');
-            headerRow2.className = 'edit-window-header-row flexrow';
-            // hp
-            const hpLI = document.createElement('li');
-            hpLI.appendChild(document.createTextNode('TP: '));
-            hpLI.appendChild(this.createLongEditor('pf_hp'));
-            hpLI.appendChild(document.createTextNode('/'));
-            hpLI.appendChild(this.createLongEditor('pf_hpMax'));
-            headerRow2.appendChild(hpLI);
-            // non lethal damage
-            const nldLI = document.createElement('li');
-            nldLI.appendChild(document.createTextNode('Nicht tödlicher Schaden: '));
-            nldLI.appendChild(this.createLongEditor('pf_nonLethalDamage'));
-            headerRow2.appendChild(nldLI);
-            // BAB
-            const babLI = document.createElement('li');
-            babLI.appendChild(document.createTextNode('Grundangriffsbonus: '));
-            babLI.appendChild(this.createLongEditor('pf_baseAttackBonus'));
-            headerRow2.appendChild(babLI);
-            //TODO: move some more stuff up here: initiative, bab?
-            headerSide.appendChild(headerRow2);
+            if(Access.matches(Access.CONTROLLING_PLAYER, accessLevel)) {
+                const headerRow2 = document.createElement('ul');
+                headerRow2.className = 'edit-window-header-row flexrow';
+                // hp
+                const hpLI = document.createElement('li');
+                hpLI.appendChild(document.createTextNode('TP: '));
+                hpLI.appendChild(this.createLongEditor('pf_hp'));
+                hpLI.appendChild(document.createTextNode('/'));
+                hpLI.appendChild(this.createLongEditor('pf_hpMax'));
+                headerRow2.appendChild(hpLI);
+                // non lethal damage
+                const nldLI = document.createElement('li');
+                nldLI.appendChild(document.createTextNode('Nicht tödlicher Schaden: '));
+                nldLI.appendChild(this.createLongEditor('pf_nonLethalDamage'));
+                headerRow2.appendChild(nldLI);
+                // BAB
+                const babLI = document.createElement('li');
+                babLI.appendChild(document.createTextNode('Grundangriffsbonus: '));
+                babLI.appendChild(this.createLongEditor('pf_baseAttackBonus'));
+                headerRow2.appendChild(babLI);
+                //TODO: move some more stuff up here: initiative, bab?
+                headerSide.appendChild(headerRow2);
+            }
+            
             header.appendChild(headerSide);
         }
         
@@ -90,7 +96,7 @@ export class CanvasWindowEditActor extends CanvasWindowEditCustom {
         tabs.className = 'cs-tabs';
         container.appendChild(tabs);
         //    Attributes
-        {
+        if(Access.matches(Access.CONTROLLING_PLAYER, accessLevel)) {
             const tab = document.createElement('div');
             tab.name = 'Attribute';
             tab.style.display = 'flex';
@@ -269,7 +275,7 @@ export class CanvasWindowEditActor extends CanvasWindowEditCustom {
             this.registerEditor(editor);
         }
         //    Talente/Zauber
-        {
+        if(Access.matches(Access.CONTROLLING_PLAYER, accessLevel)) {
             const tab = document.createElement('div');
             tab.name = 'Talente/Zauber';
             tab.className = 'edit-window-area edit-window-full-area flexrow';
@@ -280,7 +286,7 @@ export class CanvasWindowEditActor extends CanvasWindowEditCustom {
             this.registerEditor(editor);
         }
         //    Macros
-        {
+        if(Access.matches(Access.CONTROLLING_PLAYER, accessLevel)) {
             const tab = document.createElement('div');
             tab.name = 'Macros';
             tab.className = 'edit-window-area edit-window-full-area flexrow';
@@ -316,7 +322,7 @@ export class CanvasWindowEditActor extends CanvasWindowEditCustom {
             this.registerEditor(editor);
         }
         //    GM
-        if(ServerData.isGM()) {
+        if(Access.matches(Access.GM, accessLevel))  {
             const tab = document.createElement('div');
             tab.name = 'GM';
             tab.className = 'edit-window-area edit-window-full-area flexrow';

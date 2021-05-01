@@ -25,8 +25,7 @@ export const MessageService = {
         } else if(msg instanceof ServerDefinitions) {
             setDefinitions(msg.getDefinitions());
         } else if(msg instanceof ClearEntities) {
-           const manager = EntityManagers.get(msg.getManager());
-           if(manager) manager.serverClearEntities();
+           EntityManagers.getOrCreate(msg.getManager()).serverClearEntities();
         } else if(msg instanceof AddEntity) {
             if(Client.getState() instanceof StateLoading) Client.getState().increaseCurrent();
             EntityManagers.getOrCreate(msg.getEntity().getManager(), msg.getEntity().getType()).serverAddEntity(msg.getEntity());

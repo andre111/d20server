@@ -4,91 +4,91 @@
         "pf_alignment": {
             "type": "STRING",
             "editAccess": "CONTROLLING_PLAYER",
-            "viewAccess": "CONTROLLING_PLAYER",
+            "viewAccess": "EVERYONE",
             "value": ""
         },
         "pf_playerName": {
             "type": "STRING",
             "editAccess": "CONTROLLING_PLAYER",
-            "viewAccess": "CONTROLLING_PLAYER",
+            "viewAccess": "EVERYONE",
             "value": ""
         },
         "pf_class": {
             "type": "STRING",
             "editAccess": "CONTROLLING_PLAYER",
-            "viewAccess": "CONTROLLING_PLAYER",
+            "viewAccess": "EVERYONE",
             "value": ""
         },
 		"pf_level": {
             "type": "LONG",
             "editAccess": "CONTROLLING_PLAYER",
-            "viewAccess": "CONTROLLING_PLAYER",
+            "viewAccess": "EVERYONE",
             "value": "1"
         },
         "pf_race": {
             "type": "STRING",
             "editAccess": "CONTROLLING_PLAYER",
-            "viewAccess": "CONTROLLING_PLAYER",
+            "viewAccess": "EVERYONE",
             "value": ""
         },
         "pf_campaign": {
             "type": "STRING",
             "editAccess": "CONTROLLING_PLAYER",
-            "viewAccess": "CONTROLLING_PLAYER",
+            "viewAccess": "EVERYONE",
             "value": ""
         },
         "pf_homeland": {
             "type": "STRING",
             "editAccess": "CONTROLLING_PLAYER",
-            "viewAccess": "CONTROLLING_PLAYER",
+            "viewAccess": "EVERYONE",
             "value": ""
         },
         "pf_deity": {
             "type": "STRING",
             "editAccess": "CONTROLLING_PLAYER",
-            "viewAccess": "CONTROLLING_PLAYER",
+            "viewAccess": "EVERYONE",
             "value": ""
         },
         "pf_sizeCategory": {
             "type": "STRING",
             "editAccess": "SYSTEM",
-            "viewAccess": "CONTROLLING_PLAYER",
+            "viewAccess": "EVERYONE",
             "value": ""
         },
         "pf_gender": {
             "type": "STRING",
             "editAccess": "CONTROLLING_PLAYER",
-            "viewAccess": "CONTROLLING_PLAYER",
+            "viewAccess": "EVERYONE",
             "value": ""
         },
         "pf_age": {
             "type": "STRING",
             "editAccess": "CONTROLLING_PLAYER",
-            "viewAccess": "CONTROLLING_PLAYER",
+            "viewAccess": "EVERYONE",
             "value": ""
         },
         "pf_size": {
             "type": "STRING",
             "editAccess": "CONTROLLING_PLAYER",
-            "viewAccess": "CONTROLLING_PLAYER",
+            "viewAccess": "EVERYONE",
             "value": ""
         },
         "pf_weight": {
             "type": "STRING",
             "editAccess": "CONTROLLING_PLAYER",
-            "viewAccess": "CONTROLLING_PLAYER",
+            "viewAccess": "EVERYONE",
             "value": ""
         },
         "pf_hairColor": {
             "type": "STRING",
             "editAccess": "CONTROLLING_PLAYER",
-            "viewAccess": "CONTROLLING_PLAYER",
+            "viewAccess": "EVERYONE",
             "value": ""
         },
         "pf_eyeColor": {
             "type": "STRING",
             "editAccess": "CONTROLLING_PLAYER",
-            "viewAccess": "CONTROLLING_PLAYER",
+            "viewAccess": "EVERYONE",
             "value": ""
         },
     
