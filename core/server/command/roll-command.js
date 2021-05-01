@@ -33,6 +33,7 @@ export class RollCommand extends Command {
             result = expression.eval(new Context(profile, EntityManagers.get('map').find(profile.getCurrentMap()), null));
         } catch(e) {
             error = e;
+            console.log(e.stack);
         }
 
         const rollMessage = RollFormatter.formatDiceRoll(profile, args, this.showPublic, result, error);

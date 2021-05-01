@@ -53,7 +53,7 @@ export class RollFormatter {
             text = text + '?';
         }
         // show full result on hover
-        text = text + '<div class="onhover">' + result.getString() + '</div>';
+        text = text + '<div class="onhover">' + (result ? result.getString() : (error ? error : '')) + '</div>';
         text = text + '</span>';
 
         // show expression on hover

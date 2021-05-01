@@ -104,7 +104,7 @@ export class Dice extends Expression {
         // (count + sides)
         const countValue = Math.trunc(this.count.eval(context).getValue());
         const sidesValue = Math.trunc(this.sides.eval(context).getValue());
-        if(countValue == 0) return ZERO;
+        if(countValue == 0) return new Result(0, '<0>', []);
         if(countValue <= 0) throw new Error(`Cannot throw ${countValue} dice`);
         if(sidesValue <= 0) throw new Error(`Cannot throw ${sidesValue} sided dice`);
 

@@ -16,5 +16,5 @@ export class Expr extends Expression {
     }
 }
 
-export const ZERO = new Expr(c => new Result(0, '0'));
-export const ONE = new Expr(c => new Result(1, '1'));
+export const ZERO = new Expr(c => new Result(0, '0', []));
+export const ONE = new Expr(c => new Result(1, '1', []));

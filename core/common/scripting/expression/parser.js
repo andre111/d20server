@@ -354,9 +354,9 @@ export class Parser {
         if(isNaN(value)) throw new Error(`Not a praseable number: ${valueString} at ${startPos}`);
 
         if(_isIntegerExp.test(valueString)) {
-            return new Expr(c => new Result(Math.trunc(value), String(Math.trunc(value))));
+            return new Expr(c => new Result(Math.trunc(value), String(Math.trunc(value)), []));
         } else {
-            return new Expr(c => new Result(value, String(value)));
+            return new Expr(c => new Result(value, String(value), []));
         }
     }
 }
