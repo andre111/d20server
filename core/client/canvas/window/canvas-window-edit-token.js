@@ -5,6 +5,7 @@ import { Tabs } from '../../gui/tabs.js';
 import { MultiLineStringPropertyEditor } from '../../gui/property-editor/special/multi-line-property-editor.js';
 import { Events } from '../../../common/events.js';
 import { I18N } from '../../../common/util/i18n.js';
+import { ServerData } from '../../server-data.js';
 
 export class CanvasWindowEditToken extends CanvasWindowEditCustom {
 
@@ -85,7 +86,7 @@ export class CanvasWindowEditToken extends CanvasWindowEditCustom {
             tab.appendChild(editBoxesValue);
         }
         //    GM-Notes
-        {
+        if(ServerData.isGM()) {
             const tab = document.createElement('div');
             tab.name = I18N.get('token.edit.tabs.gmnotes', 'GM-Notes');
             tab.className = 'edit-window-area edit-window-full-area';
