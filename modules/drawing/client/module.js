@@ -21,8 +21,7 @@ Events.on('addModeButtons', event => {
             new ModeButton('/modules/drawing/files/img/gui/rect', 'Draw Rectangles', () => Client.getState().getMode() instanceof CanvasModeDrawings && Client.getState().getMode().action == 'DRAW_RECT', () => Client.getState().setMode(new CanvasModeDrawings('DRAW_RECT'))),
             new ModeButton('/modules/drawing/files/img/gui/oval', 'Draw Ovals', () => Client.getState().getMode() instanceof CanvasModeDrawings && Client.getState().getMode().action == 'DRAW_OVAL', () => Client.getState().setMode(new CanvasModeDrawings('DRAW_OVAL'))),
             new ModeButton('/modules/drawing/files/img/gui/text', 'Write Text', () => Client.getState().getMode() instanceof CanvasModeDrawings && Client.getState().getMode().action == 'WRITE_TEXT', () => Client.getState().setMode(new CanvasModeDrawings('WRITE_TEXT'))),
-            new ModeButton('/modules/drawing/files/img/gui/trash', 'Delete Drawings', () => Client.getState().getMode() instanceof CanvasModeDrawings && Client.getState().getMode().action == 'DELETE', () => Client.getState().setMode(new CanvasModeDrawings('DELETE'))),
-            new ModeButton('/modules/drawing/files/img/gui/trashAll', 'Delete All Drawings', () => false, () => { if(!(Client.getState().getMode() instanceof CanvasModeDrawings)) Client.getState().setMode(new CanvasModeDrawings('DELETE')); Client.getState().getMode().deleteAllDrawings(); }),
+            new ModeButton('/modules/drawing/files/img/gui/trashAll', 'Delete All Drawings', () => false, () => { CanvasModeDrawings.deleteAllDrawings(); }),
             new ModeButton('/core/files/img/gui/x_empty', 'Select Color', (mb) => { mb.button.style.background = CanvasModeDrawingsGlobals.color; return false; }, () => { 
                 new CanvasWindowColorInput('Select Drawing Color', CanvasModeDrawingsGlobals.color, color => { 
                     if(color) CanvasModeDrawingsGlobals.color = color; 
