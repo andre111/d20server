@@ -131,7 +131,7 @@ export class CanvasModeEntities extends CanvasMode {
             if(this.activeEntities.length > 0) {
                 new CanvasWindowConfirm('Delete Object(s)', 'Do you want to delete all selected objects?', () => {
                     for(const reference of this.activeEntities) {
-                        EntityManagers.get(this.entityType).remove(reference.getID());
+                        EntityManagers.get(reference.getManager()).remove(reference.getID());
                     }
                     this.clearActiveEntities();
                 });
