@@ -17,6 +17,7 @@ import { SendChatMessage } from '../../../core/common/messages.js';
 import { ATTRIBUTES, SAVES, SKILL_LIST } from './character-values.js';
 import { DefinitionUtils } from '../../../core/common/util/definitionutil.js';
 import { CanvasWindowEditCustom } from '../../../core/client/canvas/window/canvas-window-edit-custom.js';
+import { ServerData } from '../../../core/client/server-data.js';
 
 export class CanvasWindowEditActor extends CanvasWindowEditCustom {
     constructor(w, reference) {
@@ -62,16 +63,23 @@ export class CanvasWindowEditActor extends CanvasWindowEditCustom {
             
             const headerRow2 = document.createElement('ul');
             headerRow2.className = 'edit-window-header-row flexrow';
+            // hp
             const hpLI = document.createElement('li');
             hpLI.appendChild(document.createTextNode('TP: '));
             hpLI.appendChild(this.createLongEditor('pf_hp'));
             hpLI.appendChild(document.createTextNode('/'));
             hpLI.appendChild(this.createLongEditor('pf_hpMax'));
             headerRow2.appendChild(hpLI);
+            // non lethal damage
             const nldLI = document.createElement('li');
             nldLI.appendChild(document.createTextNode('Nicht tödlicher Schaden: '));
             nldLI.appendChild(this.createLongEditor('pf_nonLethalDamage'));
             headerRow2.appendChild(nldLI);
+            // BAB
+            const babLI = document.createElement('li');
+            babLI.appendChild(document.createTextNode('Grundangriffsbonus: '));
+            babLI.appendChild(this.createLongEditor('pf_baseAttackBonus'));
+            headerRow2.appendChild(babLI);
             //TODO: move some more stuff up here: initiative, bab?
             headerSide.appendChild(headerRow2);
             header.appendChild(headerSide);
@@ -113,27 +121,47 @@ export class CanvasWindowEditActor extends CanvasWindowEditCustom {
             const valueAC = this.createValueContainer('Rüstungsklasse');
             valueAC.appendChild(this.createCSNamedEditor('Wert', new LongPropertyEditor('pf_ac')));
 
-            const acCalcSpan = document.createElement('span');
-            acCalcSpan.className = 'cs-ac-calc';
-            acCalcSpan.style.fontSize = '12px';
-            acCalcSpan.appendChild(document.createTextNode('= 10 +'));
-            acCalcSpan.appendChild(this.createLongEditor('pf_acArmorBonus'));
-            acCalcSpan.appendChild(document.createTextNode('+'));
-            acCalcSpan.appendChild(this.createLongEditor('pf_acShieldBonus'));
-            acCalcSpan.appendChild(document.createTextNode('+ GE - Größe +'));
-            acCalcSpan.appendChild(this.createLongEditor('pf_acNaturalArmor'));
-            acCalcSpan.appendChild(document.createTextNode('+'));
-            acCalcSpan.appendChild(this.createLongEditor('pf_acDeflectionMod'));
-            acCalcSpan.appendChild(document.createTextNode('+'));
-            acCalcSpan.appendChild(this.createLongEditor('pf_acMiscMod'));
-            valueAC.appendChild(acCalcSpan);
+            const acCalcSpan1 = document.createElement('span');
+            acCalcSpan1.className = 'cs-ac-calc';
+            acCalcSpan1.style.fontSize = '12px';
+            acCalcSpan1.appendChild(document.createTextNode('= 10 - Größe + GE (Max: '));
+            acCalcSpan1.appendChild(this.createLongEditor('pf_acMaxDexMod'));
+            acCalcSpan1.appendChild(document.createTextNode(')'));
+            valueAC.appendChild(acCalcSpan1);
 
-            const maxDexEditor = new LongPropertyEditor('pf_acMaxDexMod');
-            maxDexEditor.getEditComponent().style.height = '12px';
-            maxDexEditor.getEditComponent().style.width = '30px';
-            const maxDexSpan = this.createCSNamedEditor('Max GE: ', maxDexEditor);
-            maxDexSpan.style.fontSize = '12px';
-            valueAC.appendChild(maxDexSpan);
+            const acCalcSpan2 = document.createElement('span');
+            acCalcSpan2.className = 'cs-ac-calc';
+            acCalcSpan2.style.fontSize = '12px';
+            acCalcSpan2.appendChild(document.createTextNode('+'));
+            acCalcSpan2.appendChild(this.createLongEditor('pf_acArmorBonus'));
+            acCalcSpan2.appendChild(document.createTextNode('Rüstung +'));
+            acCalcSpan2.appendChild(this.createLongEditor('pf_acShieldBonus'));
+            acCalcSpan2.appendChild(document.createTextNode('Schild'));
+            valueAC.appendChild(acCalcSpan2);
+
+            const acCalcSpan3 = document.createElement('span');
+            acCalcSpan3.className = 'cs-ac-calc';
+            acCalcSpan3.style.fontSize = '12px';
+            acCalcSpan3.appendChild(document.createTextNode('+'));
+            acCalcSpan3.appendChild(this.createLongEditor('pf_acNaturalArmor'));
+            acCalcSpan3.appendChild(document.createTextNode('Natürliche Rüstung'));
+            valueAC.appendChild(acCalcSpan3);
+
+            const acCalcSpan4 = document.createElement('span');
+            acCalcSpan4.className = 'cs-ac-calc';
+            acCalcSpan4.style.fontSize = '12px';
+            acCalcSpan4.appendChild(document.createTextNode('+'));
+            acCalcSpan4.appendChild(this.createLongEditor('pf_acDeflectionMod'));
+            acCalcSpan4.appendChild(document.createTextNode('Ausweichen'));
+            valueAC.appendChild(acCalcSpan4);
+
+            const acCalcSpan5 = document.createElement('span');
+            acCalcSpan5.className = 'cs-ac-calc';
+            acCalcSpan5.style.fontSize = '12px';
+            acCalcSpan5.appendChild(document.createTextNode('+'));
+            acCalcSpan5.appendChild(this.createLongEditor('pf_acMiscMod'));
+            acCalcSpan5.appendChild(document.createTextNode('Sonstiges'));
+            valueAC.appendChild(acCalcSpan5);
 
             valueAC.appendChild(this.createCSNamedEditor('Berührung', new LongPropertyEditor('pf_acTouch')));
             valueAC.appendChild(this.createCSNamedEditor('Auf dem falschen Fuß', new LongPropertyEditor('pf_acFlatFooted')));
@@ -156,11 +184,6 @@ export class CanvasWindowEditActor extends CanvasWindowEditCustom {
                 valueSaves.appendChild(saveCalcSpan);
             }
             otherValuesUL.appendChild(valueSaves);
-
-            // BAB
-            const valueBAB = this.createValueContainer('Grundangriffsbonus');
-            valueBAB.appendChild(this.createLongEditor('pf_baseAttackBonus'));
-            otherValuesUL.appendChild(valueBAB);
 
             // CMB
             const valueCMB = this.createValueContainer('Kampfmanöver', () => this.sendMacro('Kampfmanöver'));
@@ -293,7 +316,7 @@ export class CanvasWindowEditActor extends CanvasWindowEditCustom {
             this.registerEditor(editor);
         }
         //    GM
-        {
+        if(ServerData.isGM()) {
             const tab = document.createElement('div');
             tab.name = 'GM';
             tab.className = 'edit-window-area edit-window-full-area flexrow';

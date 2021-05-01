@@ -112,8 +112,11 @@
     width: 24px;
     height: 24px;
 }
+.cs-ac-calc {
+    height: 18px;
+}
 .cs-ac-calc input {
-    width: 16px;
+    width: 24px;
     height: 16px;
     font-size: 12px;
 }
