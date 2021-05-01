@@ -71,7 +71,7 @@ function moveMacros() {
                     // move and update macros
                     const macros = getStringMap(actor.properties['macros']);
                     for(const [name, value] of Object.entries(tokenMacros)) {
-                        macros[name] = value.replace('selected.property.mod', 'selected.actor.property.mod');
+                        macros[name] = value.replace(/selected\.property\.mod/g, 'selected.actor.property.mod');
                     }
                     actor.properties['macros'] = setStringMap(macros);
                     // save modified actor

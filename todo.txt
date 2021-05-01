@@ -1,4 +1,5 @@
 //TODO: current plans:
+// allow directly entering numbers into barXCurrent and barXMax
 // implement (a custom plugin for?) adding internal links in TinyMCE editors
 // webrtc settings (input devices)
 // rethink entity menu (it has become quite large)
