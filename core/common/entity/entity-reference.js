@@ -117,7 +117,7 @@ export class EntityReference extends Entity {
         if(!this.backingEntity) return;
         
 		// update properties (and clear changes)
-        if(this.changedProperties != {}) {
+        if(Object.keys(this.changedProperties).length > 0) {
             EntityManagers.get(this.getManager()).updateProperties(this.getID(), this.changedProperties, Access.SYSTEM);
             this.changedProperties = {};
         }
