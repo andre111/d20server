@@ -187,7 +187,7 @@ export class ServerEntityManager extends EntityManager {
     }
 
     fullSync(profile) {
-        MessageService.send(new ClearEntities(this.getName()), profile);
+        MessageService.send(new ClearEntities(this.getName(), this.getType()), profile);
         for(const entity of Object.values(this.entities)) {
             if(entity.canView(profile)) this.syncEntity(profile, entity);
         }
