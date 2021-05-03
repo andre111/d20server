@@ -150,9 +150,9 @@ function doGenerate() {
             // build full description
             var descFull = '';
             {
-                if(entry['Voraussetzung']) {
+                if(entry['Voraussetzungen']) {
                     descFull += '<p>';
-                    descFull += `<strong>Voraussetzung:</strong> ${entry['Voraussetzung']}`;
+                    descFull += `<strong>Voraussetzung:</strong> ${getCombinedString(entry['Voraussetzungen'], false)}`;
                     descFull += '</p>';
                 }
 
@@ -244,9 +244,10 @@ function doGenerate() {
                 case 'NatürlicheRüstung':
                     acNaturalArmor += acModObject['Wert'];
                     break;
-                case 'Ablenkung':
+                case 'Ausweichen':
                     acDeflectionMod += acModObject['Wert'];
                     break;
+                case 'Ablenkung':
                 case 'Sonstige':
                     acMiscMod += acModObject['Wert'];
                     break;
@@ -300,6 +301,7 @@ function doGenerate() {
             // sight
             for(const sense of entry['Sinne']) {
                 if(sense == 'Dämmersicht') {
+                    monsterActor.setDouble('lightBrightMult', 2);
                     monsterActor.setDouble('lightDimMult', 2);
                 } else if(sense.startsWith('Dunkelsicht')) {
                     const distM = sense.replace('Dunkelsicht', '').replace('m', '').trim();
