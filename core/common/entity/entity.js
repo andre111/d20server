@@ -219,7 +219,10 @@ export class Entity {
 
     // ---------------------- PROPERTIES
     has(name) {
-        return this.properties.hasOwnProperty(name);
+        // old check based on value existance, causes issues because type and access cannot be determined for undefined properties
+        //return this.properties.hasOwnProperty(name);
+        // new check based on definitions
+        return this.getPropertyDefinition(name) != null;
     }
 
     getPropertyType(name) {
