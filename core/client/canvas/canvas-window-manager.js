@@ -26,9 +26,18 @@ export class CanvasWindowManager {
             document.addEventListener('mouseup', e => {
                 CanvasWindowManager.#dragged = null;
             });
+            window.addEventListener("beforeunload", e => {
+                CanvasWindowManager.closeAll();
+            });
         }
 
         CanvasWindowManager.#windows.push(w);
+    }
+
+    static closeAll() {
+        for(var i=CanvasWindowManager.#windows.length-1; i>=0; i--) {
+            CanvasWindowManager.#windows[i].close();
+        }
     }
 
     static onWindowClose(w) {

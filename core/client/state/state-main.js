@@ -19,6 +19,7 @@ import { PlayEffect } from '../../common/messages.js';
 import { EntityManagers } from '../../common/entity/entity-managers.js';
 import { NotificationManager } from '../gui/notification-manager.js';
 import { Tabs } from '../gui/tabs.js';
+import { CanvasWindowManager } from '../canvas/canvas-window-manager.js';
 
 export class StateMain extends State {
     active;
@@ -157,6 +158,7 @@ export class StateMain extends State {
         //TODO: improve this
         this.active = false;
         Events.remove('mapChange', this.mapChangeListener);
+        CanvasWindowManager.closeAll();
         document.body.innerHTML = '';
     }
 

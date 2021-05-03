@@ -17,7 +17,7 @@ export class CanvasWindowEditEntity extends CanvasWindow {
         
         this.addButton(I18N.get('global.ok', 'Ok'), () => {
             this.doUpdateEntity();
-            this.close();
+            if(!this.isPopout()) this.close();
         });
         this.addButton(I18N.get('global.cancel', 'Cancel'), () => {
             this.close();

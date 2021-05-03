@@ -366,7 +366,7 @@ export class CanvasWindowEditActor extends CanvasWindowEditCustom {
                 valueSight.appendChild(this.createCSSightEditor('Dark', false, 'Dunkel'));
                 valuesLI.appendChild(valueSight);
                 
-                const valueAccess = this.createValueContainer('Zugriff');
+                const valueAccess = this.createValueContainer('Sichtbarkeit');
                 const accessEditor = new AccessPropertyEditor('access', '');
                 valueAccess.appendChild(accessEditor.getContainer());
                 this.registerEditor(accessEditor);
@@ -389,6 +389,7 @@ export class CanvasWindowEditActor extends CanvasWindowEditCustom {
         
         Tabs.init(tabs);
         w.setDimensions(700+2, 800+35);
+        w.showPopoutButton(true);
     }
 
     sendMacro(name) {
