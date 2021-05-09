@@ -39,9 +39,10 @@
     height: 20px;
 }
 .cs-class-level input[type="number"] {
-    width: 32px;
+    width: 60px;
     height: 20px;
-    text-align: center;
+    margin-left: 5px;
+    text-align: left;
 }
 
 .cs-container .edit-window-header-row:nth-of-type(1) input {

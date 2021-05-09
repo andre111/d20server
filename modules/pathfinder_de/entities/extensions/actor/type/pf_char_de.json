@@ -25,6 +25,12 @@
             "viewAccess": "EVERYONE",
             "value": "1"
         },
+		"pf_experience": {
+            "type": "LONG",
+            "editAccess": "CONTROLLING_PLAYER",
+            "viewAccess": "CONTROLLING_PLAYER",
+            "value": "0"
+        },
         "pf_race": {
             "type": "STRING",
             "editAccess": "CONTROLLING_PLAYER",

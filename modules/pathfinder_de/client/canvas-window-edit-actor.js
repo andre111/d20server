@@ -48,6 +48,8 @@ export class CanvasWindowEditActor extends CanvasWindowEditCustom {
             classLevelSpan.appendChild(this.createStringEditor('pf_class', '', 'Klasse...'));
             classLevelSpan.appendChild(document.createTextNode('Level'));
             classLevelSpan.appendChild(this.createLongEditor('pf_level'));
+            classLevelSpan.appendChild(document.createTextNode('EP'));
+            classLevelSpan.appendChild(this.createLongEditor('pf_experience'));
             headerSide.appendChild(classLevelSpan);
 
             const headerRow1 = document.createElement('ul');
