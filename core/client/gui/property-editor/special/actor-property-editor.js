@@ -3,13 +3,12 @@ import { CanvasWindowChoose } from '../../../canvas/window/canvas-window-choose.
 import { ServerData } from '../../../server-data.js';
 import { CanvasWindowConfirm } from '../../../canvas/window/canvas-window-confirm.js';
 import { MessageService } from '../../../service/message-service.js';
-import { CanvasWindowEditEntity } from '../../../canvas/window/canvas-window-edit-entity.js';
 
 import { Type } from '../../../../common/constants.js';
 import { MakeActorLocal } from '../../../../common/messages.js';
 import { TokenUtil } from '../../../../common/util/tokenutil.js';
-import { EntityReference } from '../../../../common/entity/entity-reference.js';
 import { I18N } from '../../../../common/util/i18n.js';
+import { Events } from '../../../../common/events.js';
 
 export class ActorPropertyEditor extends PropertyEditor {
     #reference;
@@ -64,7 +63,7 @@ export class ActorPropertyEditor extends PropertyEditor {
     doSelectActor() {
         if(this.#reference.getBoolean('actorLocal')) return;
 
-        new CanvasWindowChoose('actor', id => {
+        new CanvasWindowChoose(null, 'actor', id => {
             this.#currentActorID = id;
             this.onChange();
         });
@@ -73,14 +72,14 @@ export class ActorPropertyEditor extends PropertyEditor {
     doOpenActor() {
         const actor = TokenUtil.getActor(this.#reference);
         if(actor && actor.canView(ServerData.localProfile)) {
-            new CanvasWindowEditEntity(new EntityReference(actor));
+            Events.trigger('openEntity', { entity: actor }, true)
         }
     }
 
     doMakeLocal() {
         if(this.#reference.getBoolean('actorLocal')) return;
 
-        new CanvasWindowConfirm('Make Actor Local', 'Do you want to make the actor local to this token? Changes to the global actor will no longer be reflected in this tokens actor and vice versa. This cannot be undone.', () => {
+        new CanvasWindowConfirm(null, 'Make Actor Local', 'Do you want to make the actor local to this token? Changes to the global actor will no longer be reflected in this tokens actor and vice versa. This cannot be undone.', () => {
             MessageService.send(new MakeActorLocal(this.#reference));
         });
     }

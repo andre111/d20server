@@ -5,7 +5,7 @@ import { CanvasWindow } from '../canvas-window.js';
 
 export class CanvasWindowSettings extends CanvasWindow {
     constructor() {
-        super(I18N.get('settings.title', 'Settings'), false);
+        super(null, I18N.get('settings.title', 'Settings'), false);
 
         this.initTabs();
         this.setDimensions(640, 700);

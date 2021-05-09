@@ -47,7 +47,7 @@ export class ClientBattleManager {
 
                 const endBattleButton = document.createElement('button');
                 endBattleButton.innerText = 'End Battle';
-                endBattleButton.onclick = () => new CanvasWindowConfirm('End Battle', 'Do you want to end the current battle?', () => {
+                endBattleButton.onclick = () => new CanvasWindowConfirm(null, 'End Battle', 'Do you want to end the current battle?', () => {
                     const msg = new SendChatMessage('/battle end');
                     MessageService.send(msg);
                 });

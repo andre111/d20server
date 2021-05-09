@@ -10,7 +10,7 @@ import { ActionCommand } from '../../../core/common/messages.js';
 
 class MusicPlayerWindow extends CanvasWindow {
     constructor(player) {
-        super('Music Player', false);
+        super(null, 'Music Player', false);
 
         this.player = player;
         this.content.appendChild(this.player.audio);

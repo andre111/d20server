@@ -14,7 +14,7 @@ export class CanvasWindowFilemanagerUpload extends CanvasWindow {
     uploadFileList;
 
     constructor(window, directory) {
-        super(I18N.get('filemanager.uploadwindow', 'Upload files'), true);
+        super(window, I18N.get('filemanager.uploadwindow', 'Upload files'), true);
 
         this.window = window;
         this.directory = directory;

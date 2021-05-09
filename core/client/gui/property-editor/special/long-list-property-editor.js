@@ -2,11 +2,10 @@ import { PropertyEditor } from '../property-editor.js';
 import { SearchableIDTree } from '../../../gui/searchable-id-tree.js';
 import { getValueProvider } from '../../../gui/value-providers.js';
 import { CanvasWindowChoose } from '../../../canvas/window/canvas-window-choose.js';
-import { CanvasWindowEditEntity } from '../../../canvas/window/canvas-window-edit-entity.js';
 
 import { Type } from '../../../../common/constants.js';
 import { EntityManagers } from '../../../../common/entity/entity-managers.js';
-import { EntityReference } from '../../../../common/entity/entity-reference.js';
+import { Events } from '../../../../common/events.js';
 
 
 export class LongListPropertyEditor extends PropertyEditor {
@@ -67,15 +66,13 @@ export class LongListPropertyEditor extends PropertyEditor {
 
         const entry = this.tree.getSelectedValue();
         if(entry != null) {
-            var entity = EntityManagers.get(this.referenceType).find(this.valueList[entry]);
-            if(entity != null && entity != undefined) {
-                new CanvasWindowEditEntity(new EntityReference(entity));
-            }
+            const entity = EntityManagers.get(this.referenceType).find(this.valueList[entry]);
+            if(entity) Events.trigger('openEntity', { entity: entity }, true);
         }
     }
     
     doAdd() {
-        new CanvasWindowChoose(this.referenceType, id => {
+        new CanvasWindowChoose(null, this.referenceType, id => {
             if(id == null || id <= 0) return;
             
             if(this.allowDuplicates || !this.valueList.includes(id)) {

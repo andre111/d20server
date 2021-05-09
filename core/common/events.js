@@ -8,7 +8,7 @@ export const Events = {
 
         const listener = new EventListener(callback, recieveCanceled, priority);
         EventListeners[name].push(listener);
-        EventListeners[name].sort((a, b) => a.priority - b.priority);
+        EventListeners[name].sort((a, b) => b.priority - a.priority);
         return listener;
     },
 

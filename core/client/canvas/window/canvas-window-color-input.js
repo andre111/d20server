@@ -2,8 +2,8 @@ import { I18N } from '../../../common/util/i18n.js';
 import { CanvasWindow } from '../canvas-window.js';
 
 export class CanvasWindowColorInput extends CanvasWindow {
-    constructor(title, value, callback) {
-        super(title, true);
+    constructor(parent, title, value, callback) {
+        super(parent, title, true);
         
         // create html elements
         const input = document.createElement('input');

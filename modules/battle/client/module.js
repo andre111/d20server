@@ -25,7 +25,7 @@ Events.on('entityMenu', event => {
 
     if(event.data.reference.getBoolean('battle_active')) {
         event.data.menu.createItem(category, 'Set Initiative', () => {
-            new CanvasWindowInput('Set Initiative', 'Enter initiative for selected token: ', event.data.reference.getDouble('battle_initiative'), value => {
+            new CanvasWindowInput(null, 'Set Initiative', 'Enter initiative for selected token: ', event.data.reference.getDouble('battle_initiative'), value => {
                 if(value == null || value == undefined || value == '') return;
             
                 const newValue = Number(value);

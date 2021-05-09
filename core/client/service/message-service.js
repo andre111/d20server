@@ -15,7 +15,7 @@ export const MessageService = {
     recieve: function(msg) {
         if(msg instanceof ResponseOk) {
         } else if(msg instanceof ResponseFail) {
-            new CanvasWindowText('Failed', msg.getDescription());
+            new CanvasWindowText(null, 'Failed', msg.getDescription());
         } else if(msg instanceof EntityLoading) {
             Client.setState(new StateLoading(msg.getCount()));
         } else if(msg instanceof EnterGame) {

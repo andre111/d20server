@@ -24,8 +24,8 @@ class CanvasWindowFitToGridMouseController extends MouseController {
 }
 
 export class CanvasWindowFitToGrid extends CanvasWindow {
-    constructor(reference) {
-        super(I18N.get('window.fittogrid', 'Fit to Grid (select a 7x7 cells area with left and right click)'), true);
+    constructor(parent, reference) {
+        super(parent, I18N.get('window.fittogrid', 'Fit to Grid (select a 7x7 cells area with left and right click)'), true);
         
         this.reference = reference;
         this.x1 = null;

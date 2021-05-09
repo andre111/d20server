@@ -14,7 +14,7 @@ export class DirectoryActionDelete extends DirectoryAction {
     applyTo(directory) {
         if(!this.shouldShowFor(directory)) return;
 
-        new CanvasWindowConfirm(I18N.get('filemanager.action.directory.delete.title', 'Delete directory'), I18N.get('filemanager.action.directory.delete.question', 'Do you want to delete "%0" and all of its contents?').replace('%0', directory.getName()), () => {
+        new CanvasWindowConfirm(this.window, I18N.get('filemanager.action.directory.delete.title', 'Delete directory'), I18N.get('filemanager.action.directory.delete.question', 'Do you want to delete "%0" and all of its contents?').replace('%0', directory.getName()), () => {
             const URL = '/fileman/delete';
             $.ajax({
                 url: URL,

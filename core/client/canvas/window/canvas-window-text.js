@@ -1,8 +1,8 @@
 import { CanvasWindow } from '../canvas-window.js';
 
 export class CanvasWindowText extends CanvasWindow {
-    constructor(title, text) {
-        super(title, false);
+    constructor(parent, title, text) {
+        super(parent, title, false);
         
         // create html elements
         const p = document.createElement('p');

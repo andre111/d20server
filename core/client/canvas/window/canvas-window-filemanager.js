@@ -17,7 +17,7 @@ import { DirectoryActionDelete } from './filemanager/action/directory-action-del
 import { I18N } from '../../../common/util/i18n.js';
 
 export function createDefaultFileManager(selectedPath) {
-    return new CanvasWindowFilemanager(ServerData.isGM(), ServerData.editKey, ServerData.isGM() ? null : '/public', selectedPath);
+    return new CanvasWindowFilemanager(null, ServerData.isGM(), ServerData.editKey, ServerData.isGM() ? null : '/public', selectedPath);
 }
 
 export class CanvasWindowFilemanager extends CanvasWindow {
@@ -50,8 +50,8 @@ export class CanvasWindowFilemanager extends CanvasWindow {
     selectedDirectory = null;
     selectedFile = null;
 
-    constructor(editable, key, forcedRoot, startupPath) {
-        super(I18N.get('filemanager.title', 'File Manager'), true);
+    constructor(parent, editable, key, forcedRoot, startupPath) {
+        super(parent, I18N.get('filemanager.title', 'File Manager'), true);
 
         this.editable = editable;
         this.key = key;

@@ -1,7 +1,6 @@
 import { SidepanelTab } from './sidepanel-tab.js';
 import { SearchableIDTree } from '../gui/searchable-id-tree.js';
 import { getValueProvider } from '../gui/value-providers.js';
-import { CanvasWindowEditEntity } from '../canvas/window/canvas-window-edit-entity.js';
 import { CanvasWindowInput } from '../canvas/window/canvas-window-input.js';
 import { GuiUtils } from '../util/guiutil.js';
 import { ServerData } from '../server-data.js';
@@ -11,6 +10,7 @@ import { EntityManagers } from '../../common/entity/entity-managers.js';
 import { EntityReference } from '../../common/entity/entity-reference.js';
 import { EntityMenu } from '../canvas/mode/entity-menu.js';
 import { I18N } from '../../common/util/i18n.js';
+import { Events } from '../../common/events.js';
 
 export class SidepanelTabAttachments extends SidepanelTab {
     constructor() {
@@ -34,7 +34,7 @@ export class SidepanelTabAttachments extends SidepanelTab {
     
     doOpen() {
         const attachment = EntityManagers.get('attachment').find(this.tree.getSelectedValue());
-        if(attachment) new CanvasWindowEditEntity(new EntityReference(attachment));
+        if(attachment) Events.trigger('openEntity', { entity: attachment }, true);
     }
 
     doOpenMenu(x, y) {
@@ -43,7 +43,7 @@ export class SidepanelTabAttachments extends SidepanelTab {
     }
     
     doAdd() {
-        new CanvasWindowInput(I18N.get('sidepanel.attachments.new.title', 'New Attachment'), I18N.get('sidepanel.attachments.new.prompt', 'Enter Attachment Name:'), '', name => {
+        new CanvasWindowInput(null, I18N.get('sidepanel.attachments.new.title', 'New Attachment'), I18N.get('sidepanel.attachments.new.prompt', 'Enter Attachment Name:'), '', name => {
             if(name) {
                 const attachment = new Entity('attachment');
                 attachment.setString('name', name);

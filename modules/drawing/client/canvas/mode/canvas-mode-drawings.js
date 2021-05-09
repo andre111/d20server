@@ -58,7 +58,7 @@ export class CanvasModeDrawings extends CanvasMode {
                 this.currentDrawing = this.newDrawing(ServerData.localProfile, map, this.xStart-1, this.yStart-1, 2, 2, 0, e.shiftKey ? 'ovalOutline' : 'oval', CanvasModeDrawingsGlobals.color);
                 break;
             case 'WRITE_TEXT':
-                new CanvasWindowInput('Add Text', 'Enter Text: ', '', text => {
+                new CanvasWindowInput(null, 'Add Text', 'Enter Text: ', '', text => {
                     if(text != null && text != undefined && text != '') {
                         EntityManagers.get('drawing').add(this.newDrawing(ServerData.localProfile, map, this.xStart-16, this.yStart-16, DrawingRenderer.getTextWidth(text)+8, 40, 0, 'text:'+text, CanvasModeDrawingsGlobals.color));
                     }
@@ -154,7 +154,7 @@ export class CanvasModeDrawings extends CanvasMode {
     }
     
     static deleteAllDrawings() {
-        new CanvasWindowConfirm('Delete Drawings', 'Delete all (accessible) drawings on the current layer?', () => {
+        new CanvasWindowConfirm(null, 'Delete Drawings', 'Delete all (accessible) drawings on the current layer?', () => {
             const drawings = MapUtils.currentEntitiesInLayer('drawing', Client.getState().getLayer()).filter(drawing => drawing.canEdit(ServerData.localProfile));
             for(const drawing of drawings) {
                 EntityManagers.get('drawing').remove(drawing.id);

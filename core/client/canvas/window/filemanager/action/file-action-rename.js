@@ -12,7 +12,7 @@ export class FileActionRename extends FileAction {
     }
 
     applyTo(file) {
-        new CanvasWindowInput(I18N.get('filemanager.action.file.rename.title', 'Rename file'), I18N.get('filemanager.action.file.rename.prompt', 'Enter new file name: '), file.getName(), input => {
+        new CanvasWindowInput(this.window, I18N.get('filemanager.action.file.rename.title', 'Rename file'), I18N.get('filemanager.action.file.rename.prompt', 'Enter new file name: '), file.getName(), input => {
             if(!input || input.trim() == '') return;
 
             const URL = '/fileman/rename';

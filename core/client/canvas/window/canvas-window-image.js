@@ -2,8 +2,8 @@ import { I18N } from '../../../common/util/i18n.js';
 import { CanvasWindow } from '../canvas-window.js';
 
 export class CanvasWindowImage extends CanvasWindow {
-    constructor(imagePath) {
-        super(I18N.get('window.image', 'Image'), false);
+    constructor(parent, imagePath) {
+        super(parent, I18N.get('window.image', 'Image'), false);
         
         // create html elements
         const image = new Image();

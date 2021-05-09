@@ -1,4 +1,6 @@
 //TODO: current plans:
+// Unify all places currently creating new CanvasWindowEditEntity to an 'openEntity' event, that custom edit windows use and cancel and the default app listens with low priority to create the default window
+// Use window parent parameter to parent windows created by property editors to their window
 // allow directly entering numbers into barXCurrent and barXMax
 // implement (a custom plugin for?) adding internal links in TinyMCE editors
 // webrtc settings (input devices)

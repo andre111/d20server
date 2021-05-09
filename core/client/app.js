@@ -40,7 +40,7 @@ import { Settings } from './settings/settings.js';
 import { SettingsEntryNumberRange } from './settings/settings-entry-number-range.js';
 import { CanvasWindowText } from './canvas/window/canvas-window-text.js';
 import { ModuleSettings } from './settings/module-settings.js';
-import { CanvasWindowEditEntity } from './canvas/window/canvas-window-edit-entity.js';
+import { CanvasWindowEntityDefault } from './canvas/window/canvas-window-entity-default.js';
 import { EntityManagers } from '../common/entity/entity-managers.js';
 import { MapUtils } from './util/maputil.js';
 import { EntityReference } from '../common/entity/entity-reference.js';
@@ -50,7 +50,6 @@ import { CanvasWindowFitToGrid } from './canvas/window/canvas-window-fit-to-grid
 import { CanvasWindowConfirm } from './canvas/window/canvas-window-confirm.js';
 import { TokenUtil } from '../common/util/tokenutil.js';
 import { CanvasWindowEditToken } from './canvas/window/canvas-window-edit-token.js';
-import { I18N } from '../common/util/i18n.js';
 import { StateMain } from './state/state-main.js';
 import { CanvasWindowEditAttachment } from './canvas/window/canvas-window-edit-attachment.js';
 
@@ -132,7 +131,7 @@ Events.on('addModeButtonsGM', event => {
     // select view
     event.data.addButton(new ModeButtonExtended(new ModeButton('/core/files/img/gui/viewGM', 'GM-View', () => !Client.getState().getView().isPlayerView(), () => Client.getState().setView(new CanvasView(ServerData.localProfile, false, false, false, true))), 8));
     event.data.addButton(new ModeButtonExtended(new ModeButton('/core/files/img/gui/viewPlayer', 'Player-View', () => Client.getState().getView().isPlayerView(), () => {
-        new CanvasWindowChoose('profile', id => {
+        new CanvasWindowChoose(null, 'profile', id => {
             if(id > 0) Client.getState().setView(new CanvasView(ServerData.profiles.get(id), true, true, true, false));
             Events.trigger('updateModeState');
         });
@@ -193,15 +192,15 @@ Events.on('actionCommand', event => {
     if(!event.data.isGM()) return; // only accept commands from gm
     
     if(event.data.getCommand() == 'SHOW_IMAGE') {
-        new CanvasWindowImage(event.data.getText());
+        new CanvasWindowImage(null, event.data.getText());
     } else if(event.data.getCommand() == 'SHOW_TEXT') {
-        new CanvasWindowText('Text', event.data.getText());
+        new CanvasWindowText(null, 'Text', event.data.getText());
     }
 });
 
 Events.on('fileManagerSelect', event => {
     if(event.data.file.getType() == FILE_TYPE_IMAGE) {
-        new CanvasWindowImage('/data/files' + event.data.file.getPath());
+        new CanvasWindowImage(null, '/data/files' + event.data.file.getPath());
         event.cancel();
     }
 });
@@ -211,8 +210,8 @@ Events.on('fileManagerSelect', event => {
 //    Generic
 Events.on('entityMenu', event => {
     const menu = event.data.menu;
-    menu.createItem(menu.container, 'Edit', () => new CanvasWindowEditEntity(event.data.reference));
-}, true, 1);
+    menu.createItem(menu.container, 'Edit', () => Events.trigger('openEntity', { entity: event.data.reference }, true));
+}, true, 1000);
 
 Events.on('entityMenu', event => {
     const menu = event.data.menu;
@@ -231,19 +230,19 @@ Events.on('entityMenu', event => {
             reference.performUpdate();
         });
     }
-}, true, 200);
+}, true, 100);
 
 Events.on('entityMenu', event => {
     if(!event.data.isGM) return;
 
     const menu = event.data.menu;
     menu.createItem(menu.container, 'Delete', () => {
-        new CanvasWindowConfirm('Confirm removal', 'Are you sure you want to remove the '+event.data.entityType+': '+event.data.reference.getName()+'?', () => {
+        new CanvasWindowConfirm(null, 'Confirm removal', 'Are you sure you want to remove the '+event.data.entityType+': '+event.data.reference.getName()+'?', () => {
             EntityManagers.get(event.data.reference.getManager()).remove(event.data.reference.getID());
             if(menu.mode && menu.mode.clearActiveEntities) menu.mode.clearActiveEntities();
         });
     });
-}, true, 1000);
+}, true, 0);
 
 //    Tokens
 Events.on('entityMenu', event => {
@@ -259,7 +258,7 @@ Events.on('entityMenu', event => {
     if(actor) {
         menu.createItem(menu.container, 'Edit Actor', () => {
             const iActor = TokenUtil.getActor(reference);
-            if(iActor) new CanvasWindowEditEntity(new EntityReference(iActor));
+            if(iActor) Events.trigger('openEntity', { entity: iActor }, true);
         });
     }
 
@@ -307,10 +306,10 @@ Events.on('entityMenu', event => {
 
     // gm actions
     if(event.data.isGM) {
-        menu.createItem(menu.container, 'View Notes', () => new CanvasWindowText('GM Notes', reference.getString('gmNotes')));
-        menu.createItem(menu.container, 'Fit to Grid', () => new CanvasWindowFitToGrid(reference));
+        menu.createItem(menu.container, 'View Notes', () => new CanvasWindowText(null, 'GM Notes', reference.getString('gmNotes')));
+        menu.createItem(menu.container, 'Fit to Grid', () => new CanvasWindowFitToGrid(null, reference));
     }
-}, true, 100);
+}, true, 500);
 
 //    Walls
 Events.on('entityMenu', event => {
@@ -338,7 +337,7 @@ Events.on('entityMenu', event => {
         if(reference.getBoolean('locked')) menu.createItem(menu.container, 'Unlock Door', () => { reference.setBoolean('locked', false); reference.performUpdate(); });
         else menu.createItem(menu.container, 'Lock Door', () => { reference.setBoolean('locked', true); reference.performUpdate(); });
     }
-}, true, 100);
+}, true, 500);
 
 //    Maps
 Events.on('entityMenu', event => {
@@ -353,7 +352,7 @@ Events.on('entityMenu', event => {
     if(event.data.isGM) {
         menu.createItem(menu.container, 'Move Players', () => MessageService.send(new MovePlayerToMap(reference)));
     }
-}, true, 100);
+}, true, 500);
 
 //    Actors
 Events.on('entityMenu', event => {
@@ -394,10 +393,23 @@ Events.on('entityMenu', event => {
             if(imagePath) MessageService.send(new ActionCommand('SHOW_IMAGE', 0, 0, 0, false, '/data/files'+imagePath));
         });
     }
-}, true, 100);
+}, true, 500);
 
 
 // Edit Windows
+//    allow providing both entities and references and convert them to reference in a high priority listener
+Events.on('openEntity', event => {
+    if(event.data.entity instanceof EntityReference) event.data.entity = event.data.entity;
+    else if(event.data.entity instanceof Entity) event.data.entity = new EntityReference(event.data.entity);
+    else throw new Error('Provided object is not an entity in openEntity event');
+}, false, 1000000);
+
+//    open default window with low priority if no other listener has canceled/handled the event
+Events.on('openEntity', event => {
+    new CanvasWindowEntityDefault(null, new EntityReference(event.data.entity));
+    event.cancel();
+}, false, 0);
+
 Events.on('editWindowCreateTabs', event => {
     if(event.data.reference.getType() === 'token') {    
         new CanvasWindowEditToken(event.data.window, event.data.reference);
@@ -417,9 +429,7 @@ Events.on('internalLinkClick', event => {{
         if(target.startsWith(targetEntityType+':')) {
             const id = Number(target.substring(targetEntityType.length+1));
             const entity = EntityManagers.get(targetEntityType).find(id);
-            if(entity) {
-                new CanvasWindowEditEntity(new EntityReference(entity));
-            }
+            if(entity) Events.trigger('openEntity', { entity: entity }, true);
 
             event.cancel();
         }

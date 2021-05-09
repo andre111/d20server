@@ -16,7 +16,9 @@ export class CanvasWindow {
     #popout;
     #popoutButton;
 
-    constructor(title, modal = false) {
+    #children = [];
+
+    constructor(parent, title, modal = false) {
         this.#title = title;
         this.#modal = modal;
         this.#closed = false;
@@ -70,6 +72,8 @@ export class CanvasWindow {
         // position and register
         this.zIndex = CanvasWindowManager.getMaxZIndex() + 1;
         CanvasWindowManager.onWindowOpen(this);
+
+        if(parent && parent instanceof CanvasWindow) parent.#children.push(this);
     }
 
     get zIndex() {
@@ -211,6 +215,7 @@ export class CanvasWindow {
             }
             document.body.appendChild(this.#frame);
             this.center();
+            this.zIndex = this.zIndex;
 
             // close popout
             this.#popout.onWindowClose = null;
@@ -226,12 +231,20 @@ export class CanvasWindow {
     close() {
         if(this.#closed) return;
         
+        // close all children
+        for(const child of this.#children) {
+            child.close();
+        }
+
+        // notify sub class code
         this.onClose();
 
+        // remove from document
         if(this.#modalPane) this.#modalPane.ownerDocument.body.removeChild(this.#modalPane);
         this.#frame.ownerDocument.body.removeChild(this.#frame);
         if(this.#popout) this.#popout.close();
 
+        // remove from manager
         CanvasWindowManager.onWindowClose(this);
         this.#closed = true;
     }

@@ -12,7 +12,7 @@ export class FileActionDelete extends FileAction {
     }
 
     applyTo(file) {
-        new CanvasWindowConfirm(I18N.get('filemanager.action.file.delete.title', 'Delete file'), I18N.get('filemanager.action.file.delete.question', 'Do you want to delete "%0"?').replace('%0', file.getName()), () => {
+        new CanvasWindowConfirm(this.window, I18N.get('filemanager.action.file.delete.title', 'Delete file'), I18N.get('filemanager.action.file.delete.question', 'Do you want to delete "%0"?').replace('%0', file.getName()), () => {
             const URL = '/fileman/delete';
             $.ajax({
                 url: URL,

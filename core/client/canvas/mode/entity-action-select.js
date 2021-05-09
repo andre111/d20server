@@ -376,7 +376,7 @@ export class EntityActionSelect extends EntityAction {
     }
     
     openLongPropertySetDialog(reference, property, allowRelative, title, message) {
-        new CanvasWindowInput(title, message, reference.getLong(property), value => {
+        new CanvasWindowInput(null, title, message, reference.getLong(property), value => {
             if(value == null || value == undefined || value == '') return;
             
             var newValueString = value;

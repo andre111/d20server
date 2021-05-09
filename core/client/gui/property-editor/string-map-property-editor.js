@@ -103,7 +103,7 @@ export class StringMapPropertyEditor extends PropertyEditor {
     }
     
     doAdd() {
-        new CanvasWindowInput('Enter Name:', '', '', name => {
+        new CanvasWindowInput(null, 'Enter Name:', '', '', name => {
             if(name && this.valueMap[name] == undefined) {
                 this.valueMap[name] = '';
                 this.onChange();
@@ -115,7 +115,7 @@ export class StringMapPropertyEditor extends PropertyEditor {
     doRename() {
         if(this.list.selectedIndex >= 0) {
             var oldName = this.list.value;
-            new CanvasWindowInput('Enter Name:', '', oldName, name => {
+            new CanvasWindowInput(null, 'Enter Name:', '', oldName, name => {
                 if(name && this.valueMap[name] == undefined) {
                     var value = this.valueMap[oldName];
                     delete this.valueMap[oldName];

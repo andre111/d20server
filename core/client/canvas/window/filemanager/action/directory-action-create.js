@@ -12,7 +12,7 @@ export class DirectoryActionCreate extends DirectoryAction {
     }
 
     applyTo(directory) {
-        new CanvasWindowInput(I18N.get('filemanager.action.directory.create.title', 'Create directory'), I18N.get('filemanager.action.directory.create.prompt', 'Enter directory name: '), '', input => {
+        new CanvasWindowInput(this.window, I18N.get('filemanager.action.directory.create.title', 'Create directory'), I18N.get('filemanager.action.directory.create.prompt', 'Enter directory name: '), '', input => {
             if(!input || input.trim() == '') return;
 
             const URL = '/fileman/createdir';

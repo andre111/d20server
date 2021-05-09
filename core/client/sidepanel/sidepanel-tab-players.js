@@ -29,7 +29,7 @@ export class SidepanelTabPlayers extends SidepanelTab {
     }
     
     doChangeColor() {
-        new CanvasWindowColorInput(I18N.get('sidepanel.players.changecolor.window', 'Select Player Color'), '#' + (ServerData.localProfile.getColor() & 0x00FFFFFF).toString(16).padStart(6, '0'), color => { 
+        new CanvasWindowColorInput(null, I18N.get('sidepanel.players.changecolor.window', 'Select Player Color'), '#' + (ServerData.localProfile.getColor() & 0x00FFFFFF).toString(16).padStart(6, '0'), color => { 
             if(color != null && color != undefined) { 
                 const msg = new SetPlayerColor(parseInt(color.substring(1), 16));
                 MessageService.send(msg);

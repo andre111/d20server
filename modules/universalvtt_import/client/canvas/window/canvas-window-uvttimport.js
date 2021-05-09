@@ -7,8 +7,8 @@ export class CanvasWindowUVTTImport extends CanvasWindow {
     #nameInput;
     #importLightsInput;
 
-    constructor(file, name) {
-        super('Universal VTT Import', false);
+    constructor(parent, file, name) {
+        super(parent, 'Universal VTT Import', false);
 
         this.#file = file;
         this.initContent(name);

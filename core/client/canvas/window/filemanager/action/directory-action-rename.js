@@ -14,7 +14,7 @@ export class DirectoryActionRename extends DirectoryAction {
     applyTo(directory) {
         if(!this.shouldShowFor(directory)) return;
         
-        new CanvasWindowInput(I18N.get('filemanager.action.directory.rename.title', 'Rename directory'), I18N.get('filemanager.action.directory.rename.prompt', 'Enter new directory name: '), directory.getName(), input => {
+        new CanvasWindowInput(this.window, I18N.get('filemanager.action.directory.rename.title', 'Rename directory'), I18N.get('filemanager.action.directory.rename.prompt', 'Enter new directory name: '), directory.getName(), input => {
             if(!input || input.trim() == '') return;
 
             const URL = '/fileman/rename';
