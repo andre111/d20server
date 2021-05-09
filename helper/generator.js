@@ -527,9 +527,9 @@ function getSigned(value) {
 }
 
 // Zauber Methods
-//  +                                                                                        Magier/Kampfmagus                                                                                                                            Jäger
-const gradProperties = [ 'Alchemist', 'Antipaladin', 'Barde', 'Blutwüter', 'Druide', 'Hexe', 'Hexenmeister', 'Inquisitor', 'Kleriker', 'Medium', 'Mentalist', 'Mesmerist', 'Okkultist', 'Paladin', 'Paktmagier', 'Schamane', 'Spiritist', 'Waldläufer' ];
-const gradShorthands = [ 'ALC', 'ANP', 'BAR', 'BLU', 'DRU', 'HEX', 'HXM/MAG', 'INQ', 'KLE', 'MED', 'MEN', 'MES', 'OKK', 'PAL', 'PKM', 'SHA', 'SPI', 'WAL' ];
+//  +                                                                                        Magier                                                                                                                                                     Jäger
+const gradProperties = [ 'Alchemist', 'Antipaladin', 'Barde', 'Blutwüter', 'Druide', 'Hexe', 'Hexenmeister', 'Inquisitor', 'Kampfmagus', 'Kleriker', 'Medium', 'Mentalist', 'Mesmerist', 'Okkultist', 'Paladin', 'Paktmagier', 'Schamane', 'Spiritist', 'Waldläufer' ];
+const gradShorthands = [ 'ALC', 'ANP', 'BAR', 'BLU', 'DRU', 'HEX', 'HXM/MAG', 'INQ', 'KAM', 'KLE', 'MED', 'MEN', 'MES', 'OKK', 'PAL', 'PKM', 'SHA', 'SPI', 'WAL' ];
 
 function createGradString(grad) {
     var result = '';
