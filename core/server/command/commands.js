@@ -37,7 +37,7 @@ export class Commands {
 
 // register all the commands (this could use a better system)
 Commands.register(new RollCommand('roll', ['r'], true, true, true));
-Commands.register(new RollCommand('gmroll', ['gmr'], false, false, true));
+Commands.register(new RollCommand('gmroll', ['gmr'], false, true, true));
 Commands.register(new RollCommand('hiddenroll', ['hr'], false, true, false));
 Commands.register(new GetCommand('get', ['g']));
 Commands.register(new SetCommand('set', ['s'], true, false));
@@ -46,7 +46,7 @@ Commands.register(new SetCommand('hiddenset', ['hs'], false, true));
 Commands.register(new WhisperCommand('whisper', ['w']));
 Commands.register(new SayCommand('say', []));
 Commands.register(new TemplateCommand('template', ['t'], true, true, true));
-Commands.register(new TemplateCommand('gmtemplate', ['gmt'], false, false, true));
+Commands.register(new TemplateCommand('gmtemplate', ['gmt'], false, true, true));
 Commands.register(new TemplateCommand('hiddentemplate', ['ht'], false, true, false));
 Commands.register(new TriggerCommand('trigger', []));
 Commands.register(new EffectCommand('effect', []));

@@ -1,7 +1,10 @@
 //TODO: current plans:
+// - gmroll and hiddenroll do not seem to work as expected (one of them should show both the GM and the rolling player)
+// client side: catch errors on the outermost layer (->animationFrame and message recieve) -> switch to special error state that shows the error and a reload prompt -> throw error again to print it to console
 // Use window parent parameter to parent windows created by property editors to their window
+// maybe add saving and restoring support to "seen area" (would need server identifier to not cause issues between me switching the servers around - or maybe store it on the server side, could be a good opportunity to finish and start using the entities stored per map system)
+// add a "zauber" tab to pathfinder actor (including spells per day, learned count, saves, ...)
 // allow directly entering numbers into barXCurrent and barXMax
-// maybe add saving and restoring support to "seen area" (would need server identifier to not cause issues between me switching the servers around - or maybe store it on the server side)
 // implement (a custom plugin for?) adding internal links in TinyMCE editors
 // webrtc settings (input devices)
 // rethink entity menu (it has become quite large)
