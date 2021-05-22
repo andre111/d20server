@@ -113,13 +113,13 @@ export class EntityReference extends Entity {
         }
     }
 
-    performUpdate() {
+    performUpdate(keepLocalChanges = false) {
         if(!this.backingEntity) return;
         
 		// update properties (and clear changes)
         if(Object.keys(this.changedProperties).length > 0) {
             EntityManagers.get(this.getManager()).updateProperties(this.getID(), this.changedProperties, Access.SYSTEM);
-            this.changedProperties = {};
+            if(!keepLocalChanges) this.changedProperties = {};
         }
     }
 

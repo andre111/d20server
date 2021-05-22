@@ -8,6 +8,7 @@ import { EntityReference } from '../../../common/entity/entity-reference.js';
 import { Events } from '../../../common/events.js';
 import { I18N } from '../../../common/util/i18n.js';
 
+// TODO: rename to EditEntity and simplify (no longer data driven layout definitions but just a list of properties)
 export class CanvasWindowEntityDefault extends CanvasWindow {
     constructor(parent, reference) {
         super(parent, 'Edit '+reference.getDefinition().displayName, true);

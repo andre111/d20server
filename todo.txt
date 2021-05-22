@@ -1,7 +1,7 @@
 //TODO: current plans:
-// Unify all places currently creating new CanvasWindowEditEntity to an 'openEntity' event, that custom edit windows use and cancel and the default app listens with low priority to create the default window
 // Use window parent parameter to parent windows created by property editors to their window
 // allow directly entering numbers into barXCurrent and barXMax
+// maybe add saving and restoring support to "seen area" (would need server identifier to not cause issues between me switching the servers around - or maybe store it on the server side)
 // implement (a custom plugin for?) adding internal links in TinyMCE editors
 // webrtc settings (input devices)
 // rethink entity menu (it has become quite large)
@@ -11,8 +11,9 @@
 // language/translation support (including settings option)
 // make pf character sheet more complete (atleast: movementrates, ...)
 // support sending selected entities of other types
-// Doppelklick um Dinge zu öffnen
+// add doubleclicking to open stuff in more places
 // create real "import" command line functionality on server (+ other commands?)
+// You could "glitch" through walls with diagonal movements because of server sync delays (not reseting local changes should "fix" that, but cause potential server desync issues when the server denies the changes -> maybe make server send back unchanged value on desync)
 
 //TODO: Long term technical todos
 // document classes and functions (very similar to javadoc, see datautil.js deepMerge for an example)

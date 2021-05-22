@@ -96,19 +96,19 @@ export class CanvasModeEntities extends CanvasMode {
         if(a == 'move_left') {
             var moveAction = new EntityActionMove(this, 0, 0);
             moveAction.doMove(-gridSize, 0, false, true);
-            moveAction.finishMove();
+            moveAction.finishMove(true);
         } else if(a == 'move_right') {
             var moveAction = new EntityActionMove(this, 0, 0);
             moveAction.doMove(gridSize, 0, false, true);
-            moveAction.finishMove();
+            moveAction.finishMove(true);
         } else if(a == 'move_up') {
             var moveAction = new EntityActionMove(this, 0, 0);
             moveAction.doMove(0, -gridSize, false, true);
-            moveAction.finishMove();
+            moveAction.finishMove(true);
         } else if(a == 'move_down') {
             var moveAction = new EntityActionMove(this, 0, 0);
             moveAction.doMove(0, gridSize, false, true);
-            moveAction.finishMove();
+            moveAction.finishMove(true);
         // rotating entities
         } else if(a == 'rotate_left') {
             if(this.activeEntities.length == 1) {
