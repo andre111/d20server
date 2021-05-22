@@ -267,13 +267,13 @@ function doGenerate() {
             // saves
             const currentSaveReflex = monsterActor.getLong('pf_saveReflex');
             const targetSaveReflex = entry['Rettungswürfe']['Reflex']['Wert'];
-            monsterActor.setLong('pf_saveReflex', targetSaveReflex - currentSaveReflex);
+            monsterActor.setLong('pf_saveReflexBase', targetSaveReflex - currentSaveReflex);
             const currentSaveWill = monsterActor.getLong('pf_saveWill');
             const targetSaveWill = entry['Rettungswürfe']['Willen']['Wert'];
-            monsterActor.setLong('pf_saveWill', targetSaveWill - currentSaveWill);
+            monsterActor.setLong('pf_saveWillBase', targetSaveWill - currentSaveWill);
             const currentSaveFortitude = monsterActor.getLong('pf_saveFortitude');
             const targetSaveFortitude = entry['Rettungswürfe']['Zähigkeit']['Wert'];
-            monsterActor.setLong('pf_saveFortitude', targetSaveFortitude - currentSaveFortitude);
+            monsterActor.setLong('pf_saveFortitudeBase', targetSaveFortitude - currentSaveFortitude);
 
             // abilities
             var auftretenIndex = 1;
