@@ -1,8 +1,8 @@
 //TODO: current plans:
-// - client side: catch errors on the outermost layer (->animationFrame and message recieve) -> switch to special error state that shows the error and a reload prompt -> throw error again to print it to console
 // Use window parent parameter to parent windows created by property editors to their window
 // add a "zauber" tab to pathfinder actor (including spells per day, learned count, saves, ...)
-// allow directly entering numbers into barXCurrent and barXMax
+// - allow directly entering numbers into barXCurrent and barXMax
+// document all currently used Events (and switch more stuff to using events)
 // implement (a custom plugin for?) adding internal links in TinyMCE editors
 // webrtc settings (input devices)
 // rethink entity menu (it has become quite large)

@@ -76,8 +76,8 @@ export const TokenRenderer = {
         const barH = TokenRenderer.getBarHeight(token, bounds, viewer);
         for(var i=1; i<=3; i++) {
             if(TokenUtil.isBarVisible(token, viewer, i)) {
-                const current = TokenUtil.getBarCurrent(token, i);
-                const max = TokenUtil.getBarMax(token, i);
+                const current = TokenUtil.getBarCurrent(token, viewer, i);
+                const max = TokenUtil.getBarMax(token, viewer, i);
                 
                 const barX = TokenRenderer.getBarX(token, bounds, viewer, i);
                 const barY = TokenRenderer.getBarY(token, bounds, viewer, i);

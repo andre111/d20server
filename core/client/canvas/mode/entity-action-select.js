@@ -3,7 +3,7 @@ import { EntityActionRotate } from './entity-action-rotate.js';
 import { EntityActionResize } from './entity-action-resize.js';
 import { EntityActionMove } from './entity-action-move.js';
 import { EntityMenu } from './entity-menu.js';
-import { CanvasWindowInput } from '../window/canvas-window-input.js';
+import { CanvasWindowIntegerInput } from '../window/canvas-window-integer-input.js';
 import { EntityClipboard } from '../../entity/entity-clipboard.js';
 import { ImageService } from '../../service/image-service.js';
 import { ServerData } from '../../server-data.js';
@@ -294,7 +294,7 @@ export class EntityActionSelect extends EntityAction {
                     // special casing for tokens, can this be generalized?
                     if(this.mode.entityType == 'token') {
                         // -> change bar value //TODO: can this be simplified?
-                        var viewer = Client.getState().getView().getProfile();
+                        const viewer = Client.getState().getView().getProfile();
                         for(var token of MapUtils.currentEntitiesSorted(this.mode.entityType, Client.getState().getLayer())) {
                             var bounds = EntityUtils.getAABB(token);
                             var tx = token.getLong('x');
@@ -307,7 +307,10 @@ export class EntityActionSelect extends EntityAction {
                                         var by = ty + TokenRenderer.getBarY(token, bounds, viewer, i);
                                         
                                         if(bx <= e.xm && e.xm <= bx + TokenRenderer.getBarWidth(token, bounds, viewer) && by <= e.ym && e.ym <= by + TokenRenderer.getBarHeight(token, bounds, viewer)) {
-                                            this.openLongPropertySetDialog(new EntityReference(TokenUtil.getActor(token)), token.getString('bar'+i+'Current'), true, 'Change Bar Value', 'Set Bar '+i+' value:');
+                                            const index = i;
+                                            new CanvasWindowIntegerInput(null, 'Change Bar Value', 'Set Bar '+index+' value:', TokenUtil.getBarCurrent(token, viewer, index), true, newValue => {
+                                                TokenUtil.setBarCurrent(token, viewer, index, newValue);
+                                            });
                                             return;
                                         }
                                     }
@@ -376,18 +379,9 @@ export class EntityActionSelect extends EntityAction {
     }
     
     openLongPropertySetDialog(reference, property, allowRelative, title, message) {
-        new CanvasWindowInput(null, title, message, reference.getLong(property), value => {
-            if(value == null || value == undefined || value == '') return;
-            
-            var newValueString = value;
-            var relative = allowRelative && (newValueString.startsWith('+') || newValueString.startsWith('-'));
-            var newValue = Number(newValueString);
-            if(newValue != NaN) {
-                if(relative) newValue += reference.getLong(property);
-                
-                reference.setLong(property, newValue);
-                reference.performUpdate();
-            }
+        new CanvasWindowIntegerInput(null, title, message, reference.getLong(property), allowRelative, newValue => {
+            reference.setLong(property, newValue);
+            reference.performUpdate();
         });
     }
     

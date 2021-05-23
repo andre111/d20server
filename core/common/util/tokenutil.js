@@ -1,6 +1,7 @@
 import { Type } from '../constants.js';
 import { EntityManagers } from '../entity/entity-managers.js';
 import { Entity } from '../entity/entity.js';
+import { EntityReference } from '../entity/entity-reference.js';
 
 export class TokenUtil {
     static getActor(token) {
@@ -26,42 +27,62 @@ export class TokenUtil {
 
     // TODO: this has many duplicated lines
     static isBarVisible(token, viewer, number) {
-        const actor = TokenUtil.getActor(token);
-        if(!actor || !actor.canView(viewer)) return false;
+        return TokenUtil.getBarMax(token, viewer, number) != 0;
+    }
 
+    static getBarCurrent(token, viewer, number) {
+        return TokenUtil.getBarValue(token, viewer, 'bar'+number+'Current');
+    }
+
+    static getBarMax(token, viewer, number) {
+        return TokenUtil.getBarValue(token, viewer, 'bar'+number+'Max');
+    }
+
+    static getBarValue(token, viewer, barProp) {
         const accessLevel = token.getAccessLevel(viewer);
-        if(!actor.canViewProperty(token.getString('bar'+number+'Current'), accessLevel)) return false;
-        if(!actor.canViewProperty(token.getString('bar'+number+'Max'), accessLevel)) return false;
+        if(!token.canViewProperty(barProp, accessLevel)) return 0;
+        const propNameOrValue = token.getString(barProp);
+        
+        // direct value
+        if(propNameOrValue.match(/^-?\d+$/)) return parseInt(propNameOrValue);
 
-        const max = TokenUtil.getBarMax(token, number);
-        return max != 0;
-    }
-
-    static getBarCurrent(token, number) {
+        // actor property
         const actor = TokenUtil.getActor(token);
         if(!actor) return 0;
-
-        const propName = token.getString('bar'+number+'Current');
-        if(!actor.has(propName) || actor.getPropertyType(propName) != Type.LONG) return 0;
-
-        return actor.getLong(propName);
-    }
-
-    static getBarMax(token, number) {
-        const actor = TokenUtil.getActor(token);
-        if(!actor) return 0;
-
-        const propName = token.getString('bar'+number+'Max');
-        if(!actor.has(propName) || actor.getPropertyType(propName) != Type.LONG) return 0;
-
-        return actor.getLong(propName);
+        if(!actor.has(propNameOrValue) || actor.getPropertyType(propNameOrValue) != Type.LONG) return 0;
+        if(!actor.canViewProperty(propNameOrValue, accessLevel)) return 0;
+        return actor.getLong(propNameOrValue);
     }
 
     static canEditBarCurrent(token, viewer, number) {
+        const accessLevel = token.getAccessLevel(viewer);
+        const propNameOrValue = token.getString('bar'+number+'Current');
+
+        // direct value
+        if(propNameOrValue.match(/^-?\d+$/)) return token.canEditProperty('bar'+number+'Current', accessLevel);
+
+        // actor property
         const actor = TokenUtil.getActor(token);
         if(!actor || !actor.canView(viewer)) return false;
+        return actor.canEditProperty(propNameOrValue, accessLevel);
+    }
 
-        const accessLevel = token.getAccessLevel(viewer);
-        return actor.canEditProperty(token.getString('bar'+number+'Current'), accessLevel);
+    static setBarCurrent(token, viewer, number, newValue) {
+        if(!TokenUtil.canEditBarCurrent(token, viewer, number)) return;
+
+        const propNameOrValue = token.getString('bar'+number+'Current');
+
+        // direct value
+        if(propNameOrValue.match(/^-?\d+$/)) {
+            const reference = new EntityReference(token);
+            reference.setString('bar'+number+'Current', ''+newValue);
+            reference.performUpdate();
+            return;
+        }
+
+        // actor property
+        const reference = new EntityReference(TokenUtil.getActor(token));
+        reference.setLong(propNameOrValue, newValue);
+        reference.performUpdate();
     }
 }

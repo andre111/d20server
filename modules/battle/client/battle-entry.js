@@ -88,8 +88,8 @@ export class BattleEntry {
         // bars
         for(var i=1; i<=3; i++) {
             if(TokenUtil.isBarVisible(token, ServerData.localProfile, i)) {
-                const current = TokenUtil.getBarCurrent(token, i);
-                const max = TokenUtil.getBarMax(token, i);
+                const current = TokenUtil.getBarCurrent(token, ServerData.localProfile, i);
+                const max = TokenUtil.getBarMax(token, ServerData.localProfile, i);
                 const percentage = Math.max(0, Math.min(current, max)) / max * 100;
 
                 this.changeValue('barWidth'+i, `${percentage}%`, v => this.#barFillers[i-1].style.width = v);

@@ -3,9 +3,7 @@ import { EntityManagers } from './entity-managers.js';
 import { registerType } from '../util/datautil.js';
 import { Access, Type, Role } from '../constants.js';
 import { getDefinitions } from '../definitions.js';
-import { ParserInstance } from '../scripting/expression/parser.js';
-import { Context } from '../scripting/context.js';
-import { TokenUtil } from '../util/tokenutil.js';
+import { Events } from '../events.js';
 
 export class Entity {
     type;
@@ -152,54 +150,12 @@ export class Entity {
             this._transient_updating = true;
             this.addDefaultProperties();
 
-            const changedProperties = {};
-            const def = this.getDefinition();
-            this.applyUpdateRules(def.updateRules, changedProperties);
-            for(const extDef of this.getActiveExtensions()) {
-                this.applyUpdateRules(extDef.updateRules, changedProperties);
-            }
-
+            const event = Events.trigger('propertyChange', { entity: this, name: name, changedProperties: {} }, false);
             this._transient_updating = false;
-            return changedProperties;
+
+            return event.data.changedProperties;
         }
         return {};
-    }
-
-    applyUpdateRules(updateRules, changedProperties) {
-        for(const ruleDef of updateRules) {
-            if(!this.has(ruleDef.property)) throw new Error(`Error in UpdateRule: Property ${ruleDef.property} does not exist`);
-
-            try {
-                // use cached expression or parse from definition (because parsing is an expensive operation that can lock up the browser for a noticeable time)
-                const expression = ruleDef._transient_parsedExpression ? ruleDef._transient_parsedExpression : ParserInstance.parse(ruleDef.expression);
-                ruleDef._transient_parsedExpression = expression;
-
-                const result = expression.eval(new Context(null, null, this));
-            
-                const value = result.getValue();
-                switch(this.getPropertyType(ruleDef.property)) {
-                case Type.DOUBLE:
-                    this.setDouble(ruleDef.property, value);
-                    break;
-                case Type.LONG:
-                    this.setLong(ruleDef.property, Math.trunc(value));
-                    break;
-                case Type.STRING:
-                    var stringValue = '?';
-                    if(ruleDef.stringMap && ruleDef.stringMap[Math.trunc(value)]) stringValue = ruleDef.stringMap[Math.trunc(value)];
-                    this.setString(ruleDef.property, stringValue);
-                    break;
-                default:
-                    throw new Error(`Error in UpdateRule: Cannot modify property of type ${this.getPropertyType(ruleDef.property)}`);
-                }
-                changedProperties[ruleDef.property] = this.getInternal(ruleDef.property);
-            } catch (error) {
-                //TODO: how can I report where the old error happended?
-                //throw new Error(`Error in UpdateRule: ${error.message}`);
-                console.log(`Error in UpdateRule: ${error.message}`);
-                throw error;
-            }
-        }
     }
 
     getPredefinedMacros() {
@@ -454,25 +410,8 @@ export class Entity {
     }
 
     getControllingPlayers() {
-        const cdef = this.getDefinition().settings.control;
-        switch(cdef.mode) {
-        case 'NONE':
-        default:
-            return [];
-        case 'PROPERTY':
-            if(!this.has(cdef.property)) return [];
-            switch(this.getPropertyType(cdef.property)) {
-            case Type.LONG:
-                return [this.getLong(cdef.property)];
-            case Type.LONG_LIST:
-                return this.getLongList(cdef.property);
-            default:
-                return [];
-            }
-        //TODO: remove this wierd stuff, maybe just move away from data driven again and just use code
-        case 'TOKEN':
-            return TokenUtil.getControllingPlayers(this);
-        }
+        const event = Events.trigger('getControllingPlayers', { entity: this, controllingPlayers: [] }, false);
+        return event.data.controllingPlayers;
     }
 
     clone() {
