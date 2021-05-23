@@ -3,7 +3,7 @@ import { MessageService } from '../service/message-service.js';
 import { UserService } from '../service/user-service.js';
 
 import { EntityManagers } from '../../common/entity/entity-managers.js';
-import { ActionCommand, AddEntity, CopyEntity, EntityLoading, MakeActorLocal, MovePlayerToMap, Ping, PlayEffect, PlayerList, RemoveEntity, RequestAccounts, ResponseFail, ResponseOk, SelectedEntities, SendChatMessage, SendNotification, SetPlayerColor, SignIn, SignOut, ToggleModule, UpdateEntityProperties } from '../../common/messages.js';
+import { ActionCommand, AddEntity, CopyEntity, EntityLoading, MakeActorLocal, MovePlayerToMap, Ping, PlayEffect, PlayerList, RemoveEntity, RequestAccounts, ResponseFail, ResponseOk, SelectedEntities, SendChatMessage, SendNotification, SetPlayerColor, SignIn, SignOut, ToggleModule, UpdateEntityProperties, UpdateFOW } from '../../common/messages.js';
 import { Access, Role } from '../../common/constants.js';
 import { GameService } from '../service/game-service.js';
 import { VERSION } from '../version.js';
@@ -195,6 +195,21 @@ function _handleMakeActorLocal(profile, message) {
     }
 }
 
+function _handleUpdateFOW(profile, message) {
+    const map = EntityManagers.get('map').find(message.getMapID());
+    if(!map) return;
+
+    if(message.getReset()) {
+        if(profile.getRole() == Role.GM) {
+            GameService.resetFOW(map);
+        }
+    } else {
+        if(profile.getCurrentMap() == map.getID()) {
+            GameService.setFOW(map, profile, message.getFOW());
+        }
+    }
+}
+
 function _handleSendChatMessage(profile, message) {
     ChatService.onMessage(profile, message.getMessage());
 }
@@ -256,6 +271,8 @@ export class MessageHandler {
             _handleCopyEntity(profile, message);
         } else if(message instanceof MakeActorLocal) {
             _handleMakeActorLocal(profile, message);
+        } else if(message instanceof UpdateFOW) {
+            _handleUpdateFOW(profile, message);
         } else if(message instanceof SendChatMessage) {
             _handleSendChatMessage(profile, message);
         } else if(message instanceof Ping) {

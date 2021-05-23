@@ -1,9 +1,9 @@
 {
-    "displayName": "",
+    "displayName": "FOW",
     "settings": {
-        "synched": "true",
-        "global": "true",
-        "addRemoveAccess": "GM",
+        "synched": "false",
+        "global": "false",
+        "addRemoveAccess": "SYSTEM",
         "control": {
             "mode": "NONE"
         },
@@ -12,20 +12,20 @@
         },
         "viewAccess": {
             "mode": "SET",
-            "value": "EVERYONE"
+            "value": "SYSTEM"
         },
         "editAccess": {
             "mode": "SET",
-            "value": "GM"
+            "value": "SYSTEM"
         },
         "containedEntities": []
     },
     "properties": {
-        "name": {
+        "area": {
             "type": "STRING",
-            "editAccess": "CONTROLLING_PLAYER",
-            "viewAccess": "CONTROLLING_PLAYER",
-            "value": ""
+            "editAccess": "SYSTEM",
+            "viewAccess": "SYSTEM",
+            "value": "[]"
         }
     },
     "updateRules": [

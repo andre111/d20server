@@ -1,20 +1,25 @@
 import { Events } from '../../common/events.js';
+import { UpdateFOW } from '../../common/messages.js';
+import { MessageService } from '../service/message-service.js';
+import { MapUtils } from '../util/maputil.js';
 
 var _seen = null;
 var _cpr = new ClipperLib.Clipper();
+var _counter = 0;
 export const FOWRenderer = {
-    reset: function() {
-        _seen = null;
+    reset: function(fow) {
+        _seen = fow;
     },
     
     updateAndGetClip: function(hiddenArea, viewport) {
         if(hiddenArea == null || hiddenArea == undefined) return null;
         
-        var seenArea = FOWRenderer.calculateSeenArea(hiddenArea, viewport);
-        if(_seen == null) {
+        // calculate updated fow area
+        const seenArea = FOWRenderer.calculateSeenArea(hiddenArea, viewport);
+        if(!_seen || _seen == []) {
             _seen = seenArea;
         } else {
-            var result = new ClipperLib.Paths();
+            const result = new ClipperLib.Paths();
             _cpr.Clear();
             _cpr.AddPaths(_seen, ClipperLib.PolyType.ptSubject, true);
             _cpr.AddPaths(seenArea, ClipperLib.PolyType.ptClip, true);
@@ -22,7 +27,16 @@ export const FOWRenderer = {
             _seen = result;
         }
         
-        var clip = new ClipperLib.Paths();
+        // update fow on server side
+        //TODO: think of a better system than using a counter
+        _counter++;
+        if(_counter == 30 * 10) {
+            _counter = 0;
+            MessageService.send(new UpdateFOW(MapUtils.currentMap(), _seen, false));
+        }
+
+        // substract currently seen area
+        const clip = new ClipperLib.Paths();
         _cpr.Clear();
         _cpr.AddPaths(_seen, ClipperLib.PolyType.ptSubject, true);
         _cpr.AddPaths(seenArea, ClipperLib.PolyType.ptClip, true);
@@ -31,7 +45,7 @@ export const FOWRenderer = {
     },
     
     calculateSeenArea: function(hiddenArea, viewport) {
-        var seenArea = new ClipperLib.Paths();
+        const seenArea = new ClipperLib.Paths();
         _cpr.Clear();
         _cpr.AddPath(viewport.toPath(), ClipperLib.PolyType.ptSubject, true);
         _cpr.AddPaths(hiddenArea, ClipperLib.PolyType.ptClip, true);
@@ -39,5 +53,5 @@ export const FOWRenderer = {
         return seenArea;
     }
 }
-Events.on('mapChange', event => FOWRenderer.reset());
-Events.on('viewChange', event => FOWRenderer.reset());
+Events.on('mapChange', event => FOWRenderer.reset(event.data.newFOW));
+//Events.on('viewChange', event => FOWRenderer.reset()); //TODO: is this needed?

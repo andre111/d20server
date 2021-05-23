@@ -5,10 +5,11 @@ import { MessageService } from './message-service.js';
 import { UserService } from './user-service.js';
 
 import { Entity } from '../../common/common.js';
-import { Role } from '../../common/constants.js';
+import { Access, Role } from '../../common/constants.js';
 import { EntityManagers } from '../../common/entity/entity-managers.js';
 import { AddEntity, EnterGame, EnterMap, PlayerList } from '../../common/messages.js';
 import { ModuleService } from './module-service.js';
+import { fromJson, toJson } from '../../common/util/datautil.js';
 
 export class GameService {
     static init() {
@@ -52,10 +53,40 @@ export class GameService {
             const map = EntityManagers.get('map').find(profile.getCurrentMap());
             if(map) {
                 MessageService.send(new AddEntity(map), profile); // send map because client could have no independent access
-                MessageService.send(new EnterMap(map), profile);
+                MessageService.send(new EnterMap(map, GameService.getFOW(map, profile)), profile);
             }
         } else {
             UserService.forEach(profile => GameService.reloadMaps(profile));
         }
+    }
+
+    static getFOW(map, profile) {
+        if(!map || !profile) return [];
+        const manager = EntityManagers.get(map.getContainedEntityManagerName('fow'));
+        if(!manager) return [];
+        const fowEntity = manager.find(profile.getID());
+        if(!fowEntity) return [];
+
+        return fromJson(fowEntity.getString('area'));
+    }
+
+    static setFOW(map, profile, fow) {
+        if(!map || !profile || !fow) throw new Error('Missing required parameter');
+        const manager = EntityManagers.get(map.getContainedEntityManagerName('fow'));
+        if(!manager.has(profile.getID())) {
+            manager.add(new Entity('fow', profile.getID()));
+        }
+
+        manager.updateProperties(profile.getID(), { 'area': toJson(fow) }, Access.SYSTEM);
+    }
+
+    static resetFOW(map) {
+        if(!map) throw new Error('Missing required parameter');
+        const manager = EntityManagers.get(map.getContainedEntityManagerName('fow'));
+        for(const fowEntity of manager.all()) {
+            manager.remove(fowEntity.getID());
+        }
+
+        GameService.reloadMaps();
     }
 }

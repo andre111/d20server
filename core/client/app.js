@@ -45,7 +45,7 @@ import { EntityManagers } from '../common/entity/entity-managers.js';
 import { MapUtils } from './util/maputil.js';
 import { EntityReference } from '../common/entity/entity-reference.js';
 import { MessageService } from './service/message-service.js';
-import { ActionCommand, MovePlayerToMap, SendChatMessage } from '../common/messages.js';
+import { ActionCommand, MovePlayerToMap, SendChatMessage, UpdateFOW } from '../common/messages.js';
 import { CanvasWindowFitToGrid } from './canvas/window/canvas-window-fit-to-grid.js';
 import { CanvasWindowConfirm } from './canvas/window/canvas-window-confirm.js';
 import { TokenUtil } from '../common/util/tokenutil.js';
@@ -351,6 +351,7 @@ Events.on('entityMenu', event => {
     }
     if(event.data.isGM) {
         menu.createItem(menu.container, 'Move Players', () => MessageService.send(new MovePlayerToMap(reference)));
+        menu.createItem(menu.container, 'Reset FOW', () => MessageService.send(new UpdateFOW(reference, [], true)));
     }
 }, true, 500);
 

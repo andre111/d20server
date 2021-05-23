@@ -2,6 +2,7 @@
     "displayName": "Wall",
     "settings": {
         "synched": "true",
+        "global": "true",
         "addRemoveAccess": "GM",
         "control": {
             "mode": "NONE"

@@ -72,6 +72,7 @@ var _entityManagers = {};
 
 var _total = 0;
 var _loaded = 0;
+var _loadCB;
 
 export const EntityManagers = {
     init: function(entityManagerClass) {
@@ -82,12 +83,17 @@ export const EntityManagers = {
         _entityManagers = {};
         _total = Object.keys(getDefinitions().getEntityDefinitions()).length;
         _loaded = 0;
+        _loadCB = () => {
+            _loaded++;
+            if(_loaded == _total && cb) cb();
+        };
 
         for(const [type, entityDefinition] of Object.entries(getDefinitions().getEntityDefinitions())) {
-            EntityManagers.create(type, type, () => {
-                _loaded++;
-                if(_loaded == _total && cb) cb();
-            });
+            if(entityDefinition.settings.global) {
+                EntityManagers.create(type, type, _loadCB);
+            } else {
+                _loadCB();
+            }
         }
     },
 

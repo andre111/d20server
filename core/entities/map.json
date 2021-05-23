@@ -2,6 +2,7 @@
     "displayName": "Map",
     "settings": {
         "synched": "true",
+        "global": "true",
         "addRemoveAccess": "GM",
         "control": {
             "mode": "NONE"
@@ -17,7 +18,9 @@
             "mode": "SET",
             "value": "GM"
         },
-        "containedEntities": []
+        "containedEntities": [
+            "fow"
+        ]
     },
     "properties": {
         "name": {

@@ -2,6 +2,7 @@
     "displayName": "Drawing",
     "settings": {
         "synched": "true",
+        "global": "true",
         "addRemoveAccess": "CONTROLLING_PLAYER",
         "control": {
             "mode": "PROPERTY",

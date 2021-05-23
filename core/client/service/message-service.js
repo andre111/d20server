@@ -38,7 +38,8 @@ export const MessageService = {
         } else if(msg instanceof EnterMap) {
             const data = {
                 oldMapID: ServerData.currentMap,
-                newMapID: msg.getMapID()
+                newMapID: msg.getMapID(),
+                newFOW: msg.getFOW()
             };
             ServerData.currentMap = msg.getMapID();
             Events.trigger('mapChange', data);
