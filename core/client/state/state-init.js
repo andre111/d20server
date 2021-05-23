@@ -22,6 +22,14 @@ export class StateInit extends State {
         // load language file
         fetch('/lang.json').then(res => res.json()).then(data => I18N.mergeObject(data));
 
+        // add global error "handler" for reporting unhandled/uncaught errors
+        window.onerror = function(message, source, lineno, colno, error) {
+            if(!(Client.getState() instanceof StateDisconnected)) {
+                Client.setState(new StateDisconnected(error));
+                Connection.close();
+            }
+        }
+
         // initialize connection
         document.body.innerHTML = 'Connecting to server...';
         Connection.init(() => this.onConnect(), () => this.onClose());
@@ -39,6 +47,8 @@ export class StateInit extends State {
     onClose() {
         // do NOT go back to StateInit, as old event listeners and other stuff could remain 
         // -> ask for manualy full page reload
-        Client.setState(new StateDisconnected());
+        if(!(Client.getState() instanceof StateDisconnected)) {
+            Client.setState(new StateDisconnected());
+        }
     }
 }

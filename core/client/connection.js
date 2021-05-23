@@ -21,7 +21,6 @@ export const Connection = {
     },
 
     read(evt) {
-        //TODO: remove debugging log messages
         const msg = fromJson(evt.data);
         //console.log('Decoded: ', msg);
         MessageService.recieve(msg);

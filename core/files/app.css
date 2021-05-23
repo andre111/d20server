@@ -118,6 +118,12 @@ html, body {
     margin: 2px;
 }
 
+.error-trace {
+    white-space: nowrap;
+    font-size: 12px;
+    margin-top: 12px;
+}
+
 .copyright {
     position: absolute;
     right: 0;
