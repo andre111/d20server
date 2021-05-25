@@ -12,7 +12,7 @@ export class CanvasWindowEditCustom {
 
     constructor(w, reference) {
         // create and register one "tab"/EditorList to manage the editors
-        this.#editorList = new EditorList(reference);
+        this.#editorList = new EditorList(reference, w);
         w.tabs = [this.#editorList];
     }
 
@@ -25,56 +25,56 @@ export class CanvasWindowEditCustom {
         const editor = new BooleanPropertyEditor(property, label);
         this.#editorList.registerEditor(editor, true);
 
-        if(className) editor.getContainer().className = className;
-        return editor.getContainer();
+        if(className) editor.container.className = className;
+        return editor.container;
     }
 
     createLongEditor(property, label, className = '') {
         const editor = new LongPropertyEditor(property, label);
         this.#editorList.registerEditor(editor, true);
 
-        if(className) editor.getContainer().className = className;
-        return editor.getContainer();
+        if(className) editor.container.className = className;
+        return editor.container;
     }
 
     createDoubleEditor(property, label, className = '') {
         const editor = new DoublePropertyEditor(property, label);
         this.#editorList.registerEditor(editor, true);
 
-        if(className) editor.getContainer().className = className;
-        return editor.getContainer();
+        if(className) editor.container.className = className;
+        return editor.container;
     }
     
     createStringEditor(property, label, placeholder = '', className = '') {
         const editor = new StringPropertyEditor(property, label, placeholder);
         this.#editorList.registerEditor(editor);
 
-        if(className) editor.getContainer().className = className;
-        return editor.getContainer();
+        if(className) editor.container.className = className;
+        return editor.container;
     }
 
     createLayerEditor(property, label, className = '') {
         const editor = new LayerPropertyEditor(property, label);
         this.#editorList.registerEditor(editor, true);
 
-        if(className) editor.getContainer().className = className;
-        return editor.getContainer();
+        if(className) editor.container.className = className;
+        return editor.container;
     }
 
     createColorEditor(property, label, className = '') {
         const editor = new ColorPropertyEditor(property, label);
         this.#editorList.registerEditor(editor, true);
 
-        if(className) editor.getContainer().className = className;
-        return editor.getContainer();
+        if(className) editor.container.className = className;
+        return editor.container;
     }
 
     createFileEditor(property, filetype, label, className = '') {
         const editor = new StringFilePropertyEditor(property, label, filetype);
         this.#editorList.registerEditor(editor, true);
 
-        if(className) editor.getContainer().className = className;
-        return editor.getContainer();
+        if(className) editor.container.className = className;
+        return editor.container;
     }
 
     // Advanced Layout Components

@@ -1,5 +1,5 @@
+import { Events } from '../common/events.js';
 import { toJson, fromJson } from '../common/util/datautil.js';
-import { MessageService } from './service/message-service.js';
 
 var _ws = null;
 
@@ -23,6 +23,6 @@ export const Connection = {
     read(evt) {
         const msg = fromJson(evt.data);
         //console.log('Decoded: ', msg);
-        MessageService.recieve(msg);
+        Events.trigger('recievedMessage', { message: msg }, true);
     }
 }

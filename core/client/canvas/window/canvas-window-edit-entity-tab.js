@@ -11,7 +11,7 @@ import { StringFilePropertyEditor } from '../../gui/property-editor/special/stri
 
 export class CanvasWindowEditEntityTab extends EditorList {
     constructor(w, container, definition) {
-        super(w.getReference());
+        super(w.getReference(), w);
         
         // create tab panel
         var panel = document.createElement('div');
@@ -73,26 +73,26 @@ export class CanvasWindowEditEntityTab extends EditorList {
                 switch(editorType) {
                 case 'DEFAULT':
                     editor = createPropertyEditor(type, property, compDefinition.text);
-                    component = editor.getContainer();
+                    component = editor.container;
                     break;
                 case 'MULTI_LINE_STRING':
                     if(type != 'STRING') throw new Error('Cannot use MULTI_LINE_STRING editor for property of type: '+type);
 					editor = new MultiLineStringPropertyEditor(property, compDefinition.text);
-					component = editor.getContainer();
+					component = editor.container;
                     break;
                 case 'HTML_STRING':
                     if(type != 'STRING') throw new Error('Cannot use HTML_STRING editor for property of type: '+type);
 					editor = new HTMLStringPropertyEditor(property, compDefinition.text);
-					component = editor.getContainer();
+					component = editor.container;
                     break;
                 case 'FILE':
                     if(type != 'STRING') throw new Error('Cannot use FILE editor for property of type: '+type);
                     editor = new StringFilePropertyEditor(property, compDefinition.text, compDefinition.filetype);
-                    component = editor.getContainer();
+                    component = editor.container;
                     break;
                 case 'REFERENCE_MULTI':
                     editor = new LongListPropertyEditor(property, compDefinition.text, compDefinition.reference, false);
-                    component = editor.getContainer();
+                    component = editor.container;
                     break;
                 case 'EXTENSION_SELECT':
                     if(type != 'STRING') throw new Error('Cannot use EXTENSION_SELECT editor for property of type: '+type);
@@ -103,11 +103,11 @@ export class CanvasWindowEditEntityTab extends EditorList {
                         extensions[key] = value.displayName;
                     }
                     editor = new StringSelectionPropertyEditor(compDefinition.property, compDefinition.text, extensions);
-                    component = editor.getContainer();
+                    component = editor.container;
                     break;
                 case 'IMAGE':
                     editor = new ImagePropertyEditor(compDefinition.property, 'Image');
-                    component = editor.getContainer();
+                    component = editor.container;
                     break;
                 default:
                     throw new Error('Editor Type not implemented: '+editorType);
@@ -115,11 +115,6 @@ export class CanvasWindowEditEntityTab extends EditorList {
                 this.registerEditor(editor, compDefinition.update);
                 
                 // special cases: 
-				// free scroll -> make edit component the full size of the container
-				if(this.definition.layout == 'FREE_SCROLL') {
-					editor.getEditComponent().style.width = compDefinition.w+'px';
-					editor.getEditComponent().style.height = compDefinition.h+'px';
-				}
                 if(compDefinition.disabled) editor.setForceDisable(true);
                 break;
             case 'LABEL':

@@ -21,16 +21,16 @@ export class CanvasWindowEditToken extends CanvasWindowEditCustom {
         container.appendChild(header);
         {
             const imageEditor = new ImagePropertyEditor('imagePath');
-            imageEditor.getContainer().className = 'edit-token-image';
-            header.appendChild(imageEditor.getContainer());
+            imageEditor.container.className = 'edit-token-image';
+            header.appendChild(imageEditor.container);
             this.registerEditor(imageEditor);
             
             const headerSide = document.createElement('div');
             headerSide.className = 'cs-header-side flexrow';
 
             const actorEditor = new ActorPropertyEditor(reference);
-            actorEditor.getContainer().className = 'edit-token-actor flexrow';
-            headerSide.appendChild(actorEditor.getContainer());
+            actorEditor.container.className = 'edit-token-actor flexrow';
+            headerSide.appendChild(actorEditor.container);
             this.registerEditor(actorEditor, true);
             
             const headerRow1 = document.createElement('ul');
@@ -93,10 +93,10 @@ export class CanvasWindowEditToken extends CanvasWindowEditCustom {
             tabs.appendChild(tab);
             
             const editor = new MultiLineStringPropertyEditor('gmNotes', '');
-            editor.getContainer().style.width = 'calc(100% - 10px)';
-            editor.getContainer().style.height = 'calc(100% - 10px)';
-            editor.getContainer().style.margin = '5px';
-            tab.appendChild(editor.getContainer());
+            editor.container.style.width = 'calc(100% - 10px)';
+            editor.container.style.height = 'calc(100% - 10px)';
+            editor.container.style.margin = '5px';
+            tab.appendChild(editor.container);
             this.registerEditor(editor);
         }
         //    Light

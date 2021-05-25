@@ -1,5 +1,4 @@
 import { PropertyEditor } from '../property-editor.js';
-import { GuiUtils } from '../../../util/guiutil.js';
 import { createDefaultFileManager } from '../../../canvas/window/canvas-window-filemanager.js';
 
 import { Type } from '../../../../common/constants.js';
@@ -46,7 +45,7 @@ export class ImagePropertyEditor extends PropertyEditor {
     
     doEditImage() {
         if(!this.image.disabled) {
-            const manager = createDefaultFileManager(this.imagePath);
+            const manager = createDefaultFileManager(this.imagePath, this.window);
             manager.init(file => {
                 if(!file) return;
                 if(file.getType() == FILE_TYPE_IMAGE) {

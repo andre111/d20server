@@ -1,4 +1,4 @@
-import { Client } from '../app.js';
+import { Client } from '../client.js';
 
 export class Notification {
     #element;

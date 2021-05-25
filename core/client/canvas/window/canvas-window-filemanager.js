@@ -16,8 +16,8 @@ import { DirectoryActionRename } from './filemanager/action/directory-action-ren
 import { DirectoryActionDelete } from './filemanager/action/directory-action-delete.js';
 import { I18N } from '../../../common/util/i18n.js';
 
-export function createDefaultFileManager(selectedPath) {
-    return new CanvasWindowFilemanager(null, ServerData.isGM(), ServerData.editKey, ServerData.isGM() ? null : '/public', selectedPath);
+export function createDefaultFileManager(selectedPath, parentWindow = null) {
+    return new CanvasWindowFilemanager(parentWindow, ServerData.isGM(), ServerData.editKey, ServerData.isGM() ? null : '/public', selectedPath);
 }
 
 export class CanvasWindowFilemanager extends CanvasWindow {

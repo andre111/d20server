@@ -10,7 +10,7 @@ import { ServerData } from '../../server-data.js';
 import { TokenRenderer } from '../../renderer/token-renderer.js';
 import { EntityUtils } from '../../util/entityutil.js';
 import { MapUtils } from '../../util/maputil.js';
-import { Client } from '../../app.js';
+import { Client } from '../../client.js';
 
 import { Access, Type } from '../../../common/constants.js';
 import { EntityReference } from '../../../common/entity/entity-reference.js';

@@ -1,8 +1,7 @@
 import { ImageService } from '../service/image-service.js';
 import { IntMathUtils } from '../../common/util/mathutil.js';
 import { Effect } from '../../common/constants.js';
-import { SettingsUtils } from '../util/settingsutil.js';
-import { SETTING_WEATHER_VOLUME } from '../app.js';
+import { Settings, SETTING_WEATHER_VOLUME } from '../settings/settings.js';
 
 class WeatherRendererParticle {
     constructor(x, y, height, vx, vy, vh, color) {
@@ -161,7 +160,7 @@ export const WeatherRenderer = {
                 WeatherRenderer._soundSrc = soundSrc;
                 WeatherRenderer._sound = new Howl({
                     src: [soundSrc],
-                    volume: 0.1 * SettingsUtils.getVolume(SETTING_WEATHER_VOLUME),
+                    volume: 0.1 * Settings.getVolume(SETTING_WEATHER_VOLUME),
                     autoplay: true,
                     loop: true
                 });
@@ -179,7 +178,7 @@ export const WeatherRenderer = {
             var thunderSound = '/core/files/audio/weather/thunder'+IntMathUtils.getRandomInt(4)+'.mp3';
             new Howl({
                 src: [thunderSound],
-                volume: 0.5 * SettingsUtils.getVolume(SETTING_WEATHER_VOLUME),
+                volume: 0.5 * Settings.getVolume(SETTING_WEATHER_VOLUME),
                 autoplay: true
             });
         }

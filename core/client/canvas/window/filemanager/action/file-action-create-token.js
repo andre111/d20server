@@ -1,5 +1,5 @@
 import { FileAction } from './file-action.js';
-import { Client } from '../../../../app.js';
+import { Client } from '../../../../client.js';
 import { StateMain } from '../../../../state/state-main.js';
 import { CanvasModeEntities } from '../../../mode/canvas-mode-entities.js';
 

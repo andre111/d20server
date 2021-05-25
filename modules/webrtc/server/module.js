@@ -14,7 +14,7 @@ Events.on('serverInit', event => {
 });
 
 // simply broadcast any WebRTCMessage communications (but include sender)
-Events.on('customMessage', event => {
+Events.on('recievedMessage', event => {
     if(event.data.message instanceof WebRTCMessage) {
         event.data.message.sender = event.data.profile.getID();
         MessageService.broadcast(event.data.message);

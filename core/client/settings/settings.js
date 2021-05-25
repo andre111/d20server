@@ -1,4 +1,8 @@
+import { Events } from '../../common/events.js';
 import { CanvasWindowSettings } from '../canvas/window/canvas-window-settings.js';
+import { ServerData } from '../server-data.js';
+import { ModuleSettings } from './module-settings.js';
+import { SettingsEntryNumberRange } from './settings-entry-number-range.js';
 import { SettingsPage } from './settings-page.js';
 
 export class Settings {
@@ -55,7 +59,26 @@ export class Settings {
     static get pages() {
         return Object.values(Settings.#pages);
     }
+
+    static getVolume(volumeSetting) {
+        return (SETTING_GLOBAL_VOLUME.value / 100) * (volumeSetting.value / 100);
+    }
+    
+    static addVolumeSettingListener(volumeSetting, listener) {
+        volumeSetting.addListener(listener);
+        SETTING_GLOBAL_VOLUME.addListener(listener);
+    }
     
     constructor() {
     }
 }
+
+// Default Settings
+export const SETTING_GLOBAL_VOLUME = new SettingsEntryNumberRange('settings.volume.global', 'Global Volume', 100, 0, 100);
+export const SETTING_WEATHER_VOLUME = new SettingsEntryNumberRange('settings.volume.weather', 'Weather Volume', 100, 0, 100);
+export const SETTING_PAGE_AUDIO = Settings.createPage('audio', 'Audio');
+SETTING_PAGE_AUDIO.addEntry('volume', SETTING_GLOBAL_VOLUME);
+SETTING_PAGE_AUDIO.addEntry('weather_volume', SETTING_WEATHER_VOLUME);
+Events.on('enterMainState', event => {
+    if(ServerData.isGM()) ModuleSettings.init();
+});

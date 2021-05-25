@@ -32,7 +32,7 @@ export class StringFilePropertyEditor extends PropertyEditor {
     }
     
     doSelectFile() {
-        const manager = createDefaultFileManager(this.currentPath);
+        const manager = createDefaultFileManager(this.currentPath, this.window);
         manager.init(file => {
             if(!file) return;
             if(file.getType().getName() == this.filetype) {

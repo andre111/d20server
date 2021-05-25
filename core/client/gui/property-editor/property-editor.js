@@ -1,47 +1,47 @@
 export class PropertyEditor {
+    #name;
+
+    #container;
+    #editComponent;
+    #forceDisable = false;
+
+    #reloading = false;
+    #changed = false;
+    #changeListeners = [];
+
+    #window;
+
     constructor(name, type, label) {
-        this.name = name;
-        this.forceDisable = false;
-        this.reloading = false;
-        this.changed = false;
-        this.changeListeners = [];
+        this.#name = name;
         
-        this.container = document.createElement('div');
-        this.editComponent = this.initContent(label);
+        this.#container = document.createElement('div');
+        this.#editComponent = this.initContent(label);
         
-        if(this.editComponent == null || this.editComponent == undefined) {
-            this.editComponent = document.createElement('input');
-            var label = document.createElement('label');
+        if(this.#editComponent == null || this.#editComponent == undefined) {
+            this.#editComponent = document.createElement('input');
+            const label = document.createElement('label');
             label.innerHTML = '{'+name+'}';
-            this.container.appendChild(label);
+            this.#container.appendChild(label);
         }
         
-        this.editComponent.classList.add('property-editor');
-        this.editComponent.title = 'Property: '+name+' - Type: '+type;
-    }
-    
-    getContainer() {
-        return this.container;
-    }
-    
-    getEditComponent() {
-        return this.editComponent;
+        this.#editComponent.classList.add('property-editor');
+        this.#editComponent.title = 'Property: '+name+' - Type: '+type;
     }
     
     setForceDisable(forceDisable) {
-        this.forceDisable = forceDisable;
+        this.#forceDisable = forceDisable;
     }
     
     addChangeListener(listener) {
-        this.changeListeners.push(listener);
+        this.#changeListeners.push(listener);
     }
     
     //TODO: call onChange on changes, duh
     onChange() {
-        if(this.reloading) return;
-        this.changed = true;
+        if(this.#reloading) return;
+        this.#changed = true;
         
-        for(const listener of this.changeListeners) {
+        for(const listener of this.#changeListeners) {
             listener();
         }
     }
@@ -49,32 +49,32 @@ export class PropertyEditor {
     reload(reference, accessLevel) {
         // determine property
         if(!reference.has(this.name)) {
-            this.container.style.visibility = 'hidden';
+            this.#container.style.visibility = 'hidden';
             return;
         }
         
         // update state
-        this.container.style.visibility = reference.canViewProperty(this.name, accessLevel) ? 'visible' : 'hidden';
-        this.editComponent.style.visibility = reference.canViewProperty(this.name, accessLevel) ? 'visible' : 'hidden';
-        this.editComponent.disabled = !reference.canEditProperty(this.name, accessLevel) || this.forceDisable;
+        this.#container.style.visibility = reference.canViewProperty(this.name, accessLevel) ? 'visible' : 'hidden';
+        this.#editComponent.style.visibility = reference.canViewProperty(this.name, accessLevel) ? 'visible' : 'hidden';
+        this.#editComponent.disabled = !reference.canEditProperty(this.name, accessLevel) || this.#forceDisable;
         
         // update value
-        this.reloading = true;
+        this.#reloading = true;
         this.reloadValue(reference, this.name);
-        this.reloading = false;
-        this.changed = false;
+        this.#reloading = false;
+        this.#changed = false;
     }
     
     apply(reference, accessLevel) {
         // do nothing if nothing changed -> optimizes response times
-        if(!this.changed) return;
-        this.changed = false;
+        if(!this.#changed) return;
+        this.#changed = false;
 
         // determine property
         if(!reference.has(this.name)) return;
         if(!reference.canEditProperty(this.name, accessLevel)) return;
-        if(this.editComponent.disabled) return;
-        if(this.forceDisable) return;
+        if(this.#editComponent.disabled) return;
+        if(this.#forceDisable) return;
         
         // apply value
         this.applyValue(reference, this.name);
@@ -88,7 +88,23 @@ export class PropertyEditor {
         label.innerHTML = text;
         label.style.display = 'inline-block';
         if(fixedWidth) label.style.width = fixedWidth;
-        this.container.appendChild(label);
+        this.#container.appendChild(label);
+    }
+
+    get name() {
+        return this.#name;
+    }
+
+    get container() {
+        return this.#container;
+    }
+
+    get window() {
+        return this.#window;
+    }
+
+    set window(window) {
+        this.#window = window;
     }
     
     initContent(label) { throw new Error('Cannot call abstract function'); }

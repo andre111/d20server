@@ -1,12 +1,12 @@
-import { Access, Role } from '../../common/constants.js';
+import { Role } from '../../common/constants.js';
 import { EntityManagers } from '../../common/entity/entity-managers.js';
+import { Events } from '../../common/events.js';
 import { ChatEntry } from '../../common/message/chat/chat-entry.js';
 import { ChatEntries } from '../../common/messages.js';
 import { Context } from '../../common/scripting/context.js';
 import { Parser } from '../../common/scripting/expression/parser.js';
 import { parseVariable } from '../../common/scripting/variable/parser/variable-parsers.js';
 import { TokenUtil } from '../../common/util/tokenutil.js';
-import { Commands } from '../command/commands.js';
 import { readJson, saveJson } from '../util/fileutil.js';
 import { RollFormatter } from '../util/roll-formatter.js';
 import { MessageService } from './message-service.js';
@@ -50,92 +50,79 @@ function canRecieve(profile, entry) {
 
 const parser = new Parser();
 
-export class ChatService {
-    static onMessage(profile, message) {
-        if(message.startsWith('/')) {
-            // extract command name and arguments
-            var endIndex = message.indexOf(' ');
-            if(endIndex < 0) endIndex = message.length;
-            const commandName = message.substring(1, endIndex);
-            const commandArgs = message.substring(Math.min(endIndex+1, message.length));
-            
-            const command = Commands.get(commandName);
-            if(command) {
-                if(command.requiresGM() && profile.getRole() != Role.GM) {
-                    ChatService.appendNote(profile, 'You do not have permission to use this command');
-                    return;
-                }
+// Handle Macros
+//TODO: move to more fitting location
+Events.on('chatMessage', event => {
+    const message = event.data.message;
+    const profile = event.data.profile;
 
-                // handle command
-                try {
-                    command.execute(profile, commandArgs);
-                } catch(error) {
-                    ChatService.appendNote(profile, `Error in /${commandName}:`, `${error}`);
-                    if(error instanceof Error) console.log(error.stack);
-                }
-            } else {
-                ChatService.appendNote(profile, `Unknown command: ${commandName}`);
-                return;
-            }
-        } else if(message.startsWith('!')) {
-            // extract macro name
-            const macroName = message.substring(1);
-            
-            // find token and check access
-            const token = profile.getSelectedToken(true);
-            if(!token) {
-                ChatService.appendNote(profile, 'No (single) token selected');
-                return;
-            }
-            const actor = TokenUtil.getActor(token);
-            if(!actor) {
-                ChatService.appendNote(profile, 'Token has no macros');
-                return;
-            }
+    if(message.startsWith('!')) {
+        event.cancel();
 
-            // find macro (!<name> -> custom in token or actor, !!<name> -> predefined)
-            var macro = null;
-            if(macroName.startsWith('!')) {
-                const actorPredefMacros = actor.getPredefinedMacros();
-                if(actorPredefMacros[macroName.substring(1)]) {
-                    macro = actorPredefMacros[macroName.substring(1)].join('\n');
-                }
-            } else {
-                const actorMacros = actor.getStringMap('macros');
-                macro = actorMacros[macroName];
-            }
-            if(!macro) {
-                ChatService.appendNote(profile, `Could not find macro: ${macroName}`);
-                return;
-            }
+        // extract macro name
+        const macroName = message.substring(1);
+        
+        // find token and check access
+        const token = profile.getSelectedToken(true);
+        if(!token) {
+            ChatService.appendNote(profile, 'No (single) token selected');
+            return;
+        }
+        const actor = TokenUtil.getActor(token);
+        if(!actor) {
+            ChatService.appendNote(profile, 'Token has no actor');
+            return;
+        }
 
-            // execute macro
-            const macroLines = macro.split('\n');
-            for(const macroLine of macroLines) {
-                if(macroLine.trim() == '') continue;
-
-                ChatService.onMessage(profile, macroLine);
+        // find macro (!<name> -> custom, !!<name> -> predefined)
+        var macro = null;
+        if(macroName.startsWith('!')) {
+            const actorPredefMacros = actor.getPredefinedMacros();
+            if(actorPredefMacros[macroName.substring(1)]) {
+                macro = actorPredefMacros[macroName.substring(1)].join('\n');
             }
         } else {
-            // handle simple message
-            try {
-                const parsed = ChatService.parseInlineRolls(message, profile);
+            const actorMacros = actor.getStringMap('macros');
+            macro = actorMacros[macroName];
+        }
+        if(!macro) {
+            ChatService.appendNote(profile, `Could not find macro: ${macroName}`);
+            return;
+        }
 
-                var text = '<div class="chat-sender">';
-                text = text + ChatService.escape(profile.getUsername()) + ': ';
-                text = text + '</div>';
-                text = text + '<div class="chat-message">';
-                text = text + parsed.string;
-                text = text + '</div>';
+        // execute macro
+        const macroLines = macro.split('\n');
+        for(const macroLine of macroLines) {
+            if(macroLine.trim() == '') continue;
 
-                const entry = new ChatEntry(text, profile.getID());
-                entry.setRolls(parsed.diceRolls);
-                entry.setTriggeredContent(parsed.triggeredContent);
+            ChatService.onMessage(profile, macroLine);
+        }
+    }
+});
 
-                ChatService.append(true, entry);
-            } catch(error) {
-                ChatService.appendNote(profile, `Error:`, `${error}`);
-            }
+export class ChatService {
+    static onMessage(profile, message) {
+        const event = Events.trigger('chatMessage', { message: message, profile: profile }, true);
+        if(event.canceled) return;
+
+        // handle simple message
+        try {
+            const parsed = ChatService.parseInlineRolls(message, profile);
+
+            var text = '<div class="chat-sender">';
+            text = text + ChatService.escape(profile.getUsername()) + ': ';
+            text = text + '</div>';
+            text = text + '<div class="chat-message">';
+            text = text + parsed.string;
+            text = text + '</div>';
+
+            const entry = new ChatEntry(text, profile.getID());
+            entry.setRolls(parsed.diceRolls);
+            entry.setTriggeredContent(parsed.triggeredContent);
+
+            ChatService.append(true, entry);
+        } catch(error) {
+            ChatService.appendNote(profile, `Error:`, `${error}`);
         }
     }
 

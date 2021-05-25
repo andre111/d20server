@@ -143,7 +143,7 @@ if(location.protocol == 'https:') {
         }).catch(errorHandler);
     });
 
-    Events.on('customMessage', event => {
+    Events.on('recievedMessage', event => {
         if(event.data.message instanceof WebRTCMessage) {
             onMessage(event.data.message);
 
@@ -151,7 +151,7 @@ if(location.protocol == 'https:') {
         }
     });
 } else {
-    Events.on('customMessage', event => {
+    Events.on('recievedMessage', event => {
         if(event.data.message instanceof WebRTCMessage) {
             event.cancel();
         }

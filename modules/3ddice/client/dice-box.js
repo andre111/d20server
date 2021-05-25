@@ -1,7 +1,7 @@
 import { DICE_MODELS } from './dice-models.js';
 import { COLORSETS } from './dice-colors.js';
-import { SettingsUtils } from '../../../core/client/util/settingsutil.js';
-import { SETTING_3DDICE_VOLUME } from './module.js';
+import { SETTING_3DDICE_VOLUME } from './settings.js';
+import { Settings } from '../../../core/client/settings/settings.js';
 
 export class DiceBox {
 	constructor(element_container, dice_factory, config) {
@@ -573,7 +573,7 @@ export class DiceBox {
 	}
 
 	playSoundCollide(sound){
-		let volume = sound[1] * SettingsUtils.getVolume(SETTING_3DDICE_VOLUME);
+		let volume = sound[1] * Settings.getVolume(SETTING_3DDICE_VOLUME);
 		new Howl({
 			src: sound[0],
 			volume: volume,

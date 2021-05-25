@@ -67,12 +67,12 @@ export class LongListPropertyEditor extends PropertyEditor {
         const entry = this.tree.getSelectedValue();
         if(entry != null) {
             const entity = EntityManagers.get(this.referenceType).find(this.valueList[entry]);
-            if(entity) Events.trigger('openEntity', { entity: entity }, true);
+            if(entity) Events.trigger('openEntity', { entity: entity, parentWindow: this.window }, true);
         }
     }
     
     doAdd() {
-        new CanvasWindowChoose(null, this.referenceType, id => {
+        new CanvasWindowChoose(this.window, this.referenceType, id => {
             if(id == null || id <= 0) return;
             
             if(this.allowDuplicates || !this.valueList.includes(id)) {
@@ -84,7 +84,7 @@ export class LongListPropertyEditor extends PropertyEditor {
     }
     
     doRemove() {
-        var entry = this.tree.getSelectedValue();
+        const entry = this.tree.getSelectedValue();
         if(entry != null) {
             this.valueList.splice(entry, 1);
             this.reloadTree();

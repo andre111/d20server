@@ -5,7 +5,7 @@ import { EntityActionSelect } from './entity-action-select.js';
 import { MapUtils } from '../../util/maputil.js';
 import { EntityUtils } from '../../util/entityutil.js';
 import { MessageService } from '../../service/message-service.js';
-import { Client } from '../../app.js';
+import { Client } from '../../client.js';
 
 import { IntMathUtils } from '../../../common/util/mathutil.js';
 import { SelectedEntities } from '../../../common/messages.js';

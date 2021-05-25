@@ -1,9 +1,9 @@
-import { Client } from '../../../core/client/app.js';
+import { Client } from '../../../core/client/client.js';
+import { Settings } from '../../../core/client/settings/settings.js';
 import { MapUtils } from '../../../core/client/util/maputil.js';
-import { SettingsUtils } from '../../../core/client/util/settingsutil.js';
 
 import { IntMathUtils } from '../../../core/common/util/mathutil.js';
-import { SETTING_AMBIENT_VOLUME } from './module.js';
+import { SETTING_AMBIENT_VOLUME } from './settings.js';
 
 export class AmbientSoundManager {
     constructor(token) {
@@ -18,7 +18,7 @@ export class AmbientSoundManager {
             
             // and play new sounds
             this.stop();
-            var volume = token.getDouble('audioVolume') * SettingsUtils.getVolume(SETTING_AMBIENT_VOLUME);
+            var volume = token.getDouble('audioVolume') * Settings.getVolume(SETTING_AMBIENT_VOLUME);
             this.sound = new Howl({
                 src: ['/data/files'+token.getString('audioPath')],
                 format: ['ogg'],

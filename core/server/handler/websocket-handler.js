@@ -1,7 +1,7 @@
 import websocket from 'ws';
+import { Events } from '../../common/events.js';
 
 import { fromJson } from '../../common/util/datautil.js';
-import { MessageService } from '../service/message-service.js';
 import { UserService } from '../service/user-service.js';
 
 var wss = null;
@@ -34,8 +34,16 @@ export class WebsocketHandler {
 
         // decode messages and call recieve
         ws.on('message', message => {
-            const msg = fromJson(message);
-            MessageService.recieve(ws, msg);
+            try {
+                const msg = fromJson(message);
+                const event = Events.trigger('recievedMessage', { message: msg, ws: ws, profile: null, map: null }, true);
+                if(!event.canceled) {
+                    throw new Error(`Recieved unhandled message: ${message}`);
+                }
+            } catch(error) {
+                console.log(`Error during message recieve: ${error}`);
+                if(error instanceof Error) console.log(error.stack);
+            }
         });
 
         // listen for disconnect

@@ -1,8 +1,7 @@
 import { ModeButton, ModeButtonExtended } from '../../../core/client/canvas/mode-panel.js';
 import { ServerData } from '../../../core/client/server-data.js';
 import { MapUtils } from '../../../core/client/util/maputil.js';
-import { Client } from '../../../core/client/app.js';
-import { StateMain } from '../../../core/client/state/state-main.js';
+import { Client } from '../../../core/client/client.js';
 import { CanvasModeEntities } from '../../../core/client/canvas/mode/canvas-mode-entities.js';
 import { CanvasWindowColorInput } from '../../../core/client/canvas/window/canvas-window-color-input.js';
 

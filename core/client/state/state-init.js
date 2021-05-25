@@ -3,7 +3,7 @@ import { StateSignIn } from './state-sign-in.js';
 import { StateDisconnected } from './state-disconnected.js';
 
 import { Connection } from '../connection.js';
-import { Client } from '../app.js';
+import { Client } from '../client.js';
 import { Settings } from '../settings/settings.js';
 import { I18N } from '../../common/util/i18n.js';
 

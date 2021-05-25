@@ -1,5 +1,4 @@
 import { PropertyEditor } from '../property-editor.js';
-import { GuiUtils } from '../../../util/guiutil.js';
 import { createDefaultFileManager } from '../../../canvas/window/canvas-window-filemanager.js';
 
 import { Type } from '../../../../common/constants.js';
@@ -14,7 +13,7 @@ export class HTMLStringPropertyEditor extends PropertyEditor {
     initContent(label) {
         this.container.classList.add('html-editor');
         this.form = document.createElement('form');
-        this.form.onsubmit = () => this.doSubmit(tinymce.activeEditor);
+        this.form.onsubmit = () => this.doSubmit();
         this.textDiv = document.createElement('div');
         this.textDiv.style.width = '100%';
         this.textDiv.style.height = '100%';
@@ -88,7 +87,7 @@ export class HTMLStringPropertyEditor extends PropertyEditor {
     }
 
     doOpenFilePicker(callback, value, meta) {
-        const manager = createDefaultFileManager(value.replace('data/files', ''));
+        const manager = createDefaultFileManager(value.replace('data/files', ''), this.window);
         manager.init(file => {
             if(!file) return;
             if(meta.filetype == 'image' && file.getType() == FILE_TYPE_IMAGE) {

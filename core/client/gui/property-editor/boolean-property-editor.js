@@ -6,9 +6,6 @@ export class BooleanPropertyEditor extends PropertyEditor {
 
     constructor(name, label) {
         super(name, Type.BOOLEAN, label);
-        
-        /* override default style size TODO: make this use css aswell */
-        this.checkBox.style.width = this.checkBox.style.height = '20px';
     }
     
     initContent(label) {

@@ -3,16 +3,18 @@ import { ServerData } from '../server-data.js';
 export class EditorList {
     #editors = [];
     #reference;
+    #window;
 
-    constructor(reference) {
+    constructor(reference, window) {
         this.#reference = reference;
+        this.#window = window;
     }
 
     registerEditor(editor, autoUpdate = false) {
         this.#editors.push(editor);
+        editor.window = this.#window;
 
         // automatically apply changes (to local reference), so reloading when the entity is changed does not revert locally modified values
-        if(!this.#reference) return; //TODO: remove this is just so the stubbedf dev window works
         editor.addChangeListener(() => {
             const accesLevel = this.#reference.getAccessLevel(ServerData.localProfile);
             

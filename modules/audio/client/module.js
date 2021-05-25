@@ -1,12 +1,11 @@
 import { AmbientAudio } from './ambient-audio.js';
 import { CanvasRenderLayerAmbientSounds } from './canvas/renderlayer/canvas-renderlayer-ambient-sounds.js';
 import { getMusicPlayer } from './music-player.js';
+import './settings.js';
 
 import { ModeButton, ModeButtonExtended } from '../../../core/client/canvas/mode-panel.js';
 
 import { Events } from '../../../core/common/events.js';
-import { SETTING_PAGE_AUDIO } from '../../../core/client/app.js';
-import { SettingsEntryNumberRange } from '../../../core/client/settings/settings-entry-number-range.js';
 import { FILE_TYPE_AUDIO } from '../../../core/common/util/datautil.js';
 import { I18N } from '../../../core/common/util/i18n.js';
 
@@ -62,9 +61,3 @@ Events.on('fileManagerSelect', event => {
         event.cancel();
     }
 });
-
-
-export const SETTING_AMBIENT_VOLUME = new SettingsEntryNumberRange('settings.volume.ambient', 'Ambient Volume', 100, 0, 100);
-export const SETTING_MUSIC_VOLUME = new SettingsEntryNumberRange('settings.volume.music', 'Music Volume', 25, 0, 100);
-SETTING_PAGE_AUDIO.addEntry('ambient_volume', SETTING_AMBIENT_VOLUME);
-SETTING_PAGE_AUDIO.addEntry('music_volume', SETTING_MUSIC_VOLUME);

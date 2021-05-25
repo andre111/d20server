@@ -42,7 +42,7 @@ export class CanvasWindow {
         document.body.appendChild(this.#frame);
         
         // title bar
-        const titleBar = document.createElement('div');
+        const titleBar = this.#frame.ownerDocument.createElement('div');
         titleBar.className = 'dialog-title';
         titleBar.onmousedown = e => {
             if(this.#popout) return;
@@ -50,21 +50,21 @@ export class CanvasWindow {
             CanvasWindowManager.dragInit(this, e.clientX, e.clientY);
         };
         this.#frame.appendChild(titleBar);
-        const titleP = document.createElement('p');
+        const titleP = this.#frame.ownerDocument.createElement('p');
         titleP.innerText = title;
         titleBar.appendChild(titleP);
-        this.#popoutButton = document.createElement('button');
+        this.#popoutButton = this.#frame.ownerDocument.createElement('button');
         this.#popoutButton.style.display = 'none';
         this.#popoutButton.innerText = '↗';
         this.#popoutButton.onclick = () => this.togglePopout();
         titleBar.appendChild(this.#popoutButton);
-        const closeButton = document.createElement('button');
+        const closeButton = this.#frame.ownerDocument.createElement('button');
         closeButton.innerText = '✖';
         closeButton.onclick = () => this.close();
         titleBar.appendChild(closeButton);
 
         // content div
-        this.#content = document.createElement('div');
+        this.#content = this.#frame.ownerDocument.createElement('div');
         this.#content.className = 'dialog-content';
         this.#content.style.height = 'calc(100% - 24px)';
         this.#frame.appendChild(this.#content);
@@ -73,7 +73,11 @@ export class CanvasWindow {
         this.zIndex = CanvasWindowManager.getMaxZIndex() + 1;
         CanvasWindowManager.onWindowOpen(this);
 
-        if(parent && parent instanceof CanvasWindow) parent.#children.push(this);
+        if(parent && parent instanceof CanvasWindow) {
+            parent.#children.push(this);
+            //TODO: this runs into the chrome popup blocker
+            //if(parent.isPopout()) this.togglePopout();
+        }
     }
 
     get zIndex() {
@@ -195,11 +199,16 @@ export class CanvasWindow {
                 }
             }
             //TODO: transfer library scripts?
+            const tinyMCEScriptTag = this.#popout.document.createElement('script');
+            tinyMCEScriptTag.src = '/core/files/libs/tinymce/tinymce.min.js';
+            this.#popout.document.head.appendChild(tinyMCEScriptTag);
             // create title
             const title = this.#popout.document.createElement('title');
             title.innerText = this.#title;
             this.#popout.document.head.appendChild(title);
-            this.#popout.onWindowClose = () => this.close();
+            this.#popout.addEventListener("beforeunload", e => {
+                this.close();
+            });
 
             // move window contents to popout
             this.#popout.document.body.appendChild(this.#frame);
@@ -230,6 +239,7 @@ export class CanvasWindow {
     
     close() {
         if(this.#closed) return;
+        this.#closed = true;
         
         // close all children
         for(const child of this.#children) {
@@ -246,6 +256,5 @@ export class CanvasWindow {
 
         // remove from manager
         CanvasWindowManager.onWindowClose(this);
-        this.#closed = true;
     }
 }

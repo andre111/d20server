@@ -225,67 +225,76 @@ function _handleToggleModule(profile, message) {
     }
 }
 
-export class MessageHandler {
-    static handle(ws, message) {
-        // get profile
-        var profile = null;
-        if(message.requiresAuthentication()) {
-            profile = UserService.getProfileFor(ws);
-            if(!profile) throw new Error('Not authenticated');
-        }
+Events.on('recievedMessage', event => {
+    const message = event.data.message;
 
-        // get map
-        var map = null;
-        if(message.requiresMap()) {
-            map = EntityManagers.get('map').find(profile.getCurrentMap());
-            if(!map) throw new Error('No map loaded');
-        }
-
-        // handle message
-        // Basic / Login Messages
-        if(message instanceof RequestAccounts) {
-            _handleRequestAccounts(ws, message);
-        } else if(message instanceof SignIn) {
-            _handleSignIn(ws, message);
-        } else if(message instanceof SignOut) {
-            _handleSignOut(profile, message);
-        }
-        // In Game Messages
-        else if(message instanceof MovePlayerToMap) {
-            _handleMovePlayerToMap(profile, message);
-        } else if(message instanceof SelectedEntities) {
-            _handleSelectedEntities(profile, message);
-        } else if(message instanceof ActionCommand) {
-            _handleActionCommand(profile, message);
-        } else if(message instanceof PlayEffect) {
-            _handlePlayEffect(profile, map, message);
-        } else if(message instanceof SetPlayerColor) {
-            _handleSetPlayerColor(profile, message);
-        } else if(message instanceof AddEntity) {
-            _handleAddEntity(profile, message);
-        } else if(message instanceof RemoveEntity) {
-            _handleRemoveEntity(profile, message);
-        } else if(message instanceof UpdateEntityProperties) {
-            _handleUpdateEntityProperties(profile, message);
-        } else if(message instanceof CopyEntity) {
-            _handleCopyEntity(profile, message);
-        } else if(message instanceof MakeActorLocal) {
-            _handleMakeActorLocal(profile, message);
-        } else if(message instanceof UpdateFOW) {
-            _handleUpdateFOW(profile, message);
-        } else if(message instanceof SendChatMessage) {
-            _handleSendChatMessage(profile, message);
-        } else if(message instanceof Ping) {
-            _handlePing(profile, message);
-        } else if(message instanceof ToggleModule) {
-            _handleToggleModule(profile, message);
-        } else if(message instanceof EntityLoading) {
-			// discard client callbacks for now
-        } else {
-            const event = Events.trigger('customMessage', { message: message, profile: profile, map: map }, true);
-            if(!event.canceled) {
-                throw new Error(`Recieved unhandled message: ${message}`);
-            }
-        }
+    // get profile
+    var profile = null;
+    if(message.requiresAuthentication()) {
+        profile = UserService.getProfileFor(event.data.ws);
+        if(!profile) throw new Error('Not authenticated');
     }
-}
+    event.data.profile = profile;
+
+    // get map
+    var map = null;
+    if(message.requiresMap()) {
+        map = EntityManagers.get('map').find(profile.getCurrentMap());
+        if(!map) throw new Error('No map loaded');
+    }
+    event.data.map = map;
+}, false, 1000000);
+
+Events.on('recievedMessage', event => {
+    const message = event.data.message;
+    const ws = event.data.ws;
+    const profile = event.data.profile;
+    const map = event.data.map;
+
+    // handle message
+    var handled = true;
+    // Basic / Login Messages
+    if(message instanceof RequestAccounts) {
+        _handleRequestAccounts(ws, message);
+    } else if(message instanceof SignIn) {
+        _handleSignIn(ws, message);
+    } else if(message instanceof SignOut) {
+        _handleSignOut(profile, message);
+    }
+    // In Game Messages
+    else if(message instanceof MovePlayerToMap) {
+        _handleMovePlayerToMap(profile, message);
+    } else if(message instanceof SelectedEntities) {
+        _handleSelectedEntities(profile, message);
+    } else if(message instanceof ActionCommand) {
+        _handleActionCommand(profile, message);
+    } else if(message instanceof PlayEffect) {
+        _handlePlayEffect(profile, map, message);
+    } else if(message instanceof SetPlayerColor) {
+        _handleSetPlayerColor(profile, message);
+    } else if(message instanceof AddEntity) {
+        _handleAddEntity(profile, message);
+    } else if(message instanceof RemoveEntity) {
+        _handleRemoveEntity(profile, message);
+    } else if(message instanceof UpdateEntityProperties) {
+        _handleUpdateEntityProperties(profile, message);
+    } else if(message instanceof CopyEntity) {
+        _handleCopyEntity(profile, message);
+    } else if(message instanceof MakeActorLocal) {
+        _handleMakeActorLocal(profile, message);
+    } else if(message instanceof UpdateFOW) {
+        _handleUpdateFOW(profile, message);
+    } else if(message instanceof SendChatMessage) {
+        _handleSendChatMessage(profile, message);
+    } else if(message instanceof Ping) {
+        _handlePing(profile, message);
+    } else if(message instanceof ToggleModule) {
+        _handleToggleModule(profile, message);
+    } else if(message instanceof EntityLoading) {
+        // discard client callbacks for now
+    } else {
+        handled = false;
+    }
+
+    if(handled) event.cancel();
+}, false, 1000);

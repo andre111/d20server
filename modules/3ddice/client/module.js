@@ -1,12 +1,10 @@
 import { DiceRoller } from './dice-roller.js';
+import { SETTING_3DDICE_ENABLE } from './settings.js';
 
-import { Client } from '../../../core/client/app.js';
+import { Client } from '../../../core/client/client.js';
 import { StateMain } from '../../../core/client/state/state-main.js';
 
 import { Events } from '../../../core/common/events.js';
-import { SettingsEntryToggle } from '../../../core/client/settings/settings-entry-toggle.js';
-import { SettingsEntryNumberRange } from '../../../core/client/settings/settings-entry-number-range.js';
-import { Settings } from '../../../core/client/settings/settings.js';
 
 var diceRoller = null;
 
@@ -42,9 +40,3 @@ Events.on('chatMessage', event => {
 Events.on('frameEnd', event => {
     diceRoller.onFrame();
 });
-
-export const SETTING_3DDICE_ENABLE = new SettingsEntryToggle('settings.3ddice.enabled', 'Enabled', true);
-export const SETTING_3DDICE_VOLUME = new SettingsEntryNumberRange('settings.3ddice.volume', 'Volume', 100, 0, 100);
-export const SETTING_PAGE_3DDICE = Settings.createPage('3ddice', '3D Dice');
-SETTING_PAGE_3DDICE.addEntry('enable', SETTING_3DDICE_ENABLE);
-SETTING_PAGE_3DDICE.addEntry('volume', SETTING_3DDICE_VOLUME);

@@ -18,8 +18,8 @@ export class CanvasWindowEditAttachment extends CanvasWindowEditCustom {
         container.appendChild(header);
         {
             const imageEditor = new ImagePropertyEditor('imagePath');
-            imageEditor.getContainer().className = 'edit-attachment-image';
-            header.appendChild(imageEditor.getContainer());
+            imageEditor.container.className = 'edit-attachment-image';
+            header.appendChild(imageEditor.container);
             this.registerEditor(imageEditor);
             
             const headerSide = document.createElement('div');
@@ -36,7 +36,7 @@ export class CanvasWindowEditAttachment extends CanvasWindowEditCustom {
             const headerRow2 = document.createElement('ul');
             headerRow2.className = 'edit-window-header-row flexrow';
             const shortDescEditor = new MultiLineStringPropertyEditor('descShort');
-            headerRow2.appendChild(shortDescEditor.getContainer());
+            headerRow2.appendChild(shortDescEditor.container);
             this.registerEditor(shortDescEditor, true);
             headerSide.appendChild(headerRow2);
             
@@ -48,10 +48,10 @@ export class CanvasWindowEditAttachment extends CanvasWindowEditCustom {
         container.appendChild(content);
         {
             const editor = new HTMLStringPropertyEditor('descFull', '');
-            editor.getContainer().style.width = 'calc(100% - 10px)';
-            editor.getContainer().style.height = 'calc(100% - 10px)';
-            editor.getContainer().style.margin = '5px';
-            content.appendChild(editor.getContainer());
+            editor.container.style.width = 'calc(100% - 10px)';
+            editor.container.style.height = 'calc(100% - 10px)';
+            editor.container.style.margin = '5px';
+            content.appendChild(editor.container);
             this.registerEditor(editor);
         }
 

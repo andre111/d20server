@@ -1,4 +1,4 @@
-import { Client } from '../app.js';
+import { Client } from '../client.js';
 import { State } from './state.js';
 import { Camera } from '../canvas/camera.js';
 import { MouseControllerCamera } from '../canvas/mouse-controller-camera.js';

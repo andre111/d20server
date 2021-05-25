@@ -1,4 +1,4 @@
-import { Client } from '../../../core/client/app.js';
+import { Client } from '../../../core/client/client.js';
 import { TokenRenderer } from '../../../core/client/renderer/token-renderer.js';
 import { ServerData } from '../../../core/client/server-data.js';
 import { EntityManagers } from '../../../core/common/entity/entity-managers.js';

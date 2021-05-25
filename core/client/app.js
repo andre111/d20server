@@ -3,6 +3,7 @@ import { Events } from '../common/events.js';
 import { Access, Layer } from '../common/constants.js';
 import { FILE_TYPE_IMAGE } from '../common/util/datautil.js';
 
+import { Client } from './client.js';
 import { ClientIDProvider } from './entity/id.js';
 import { ClientEntityManager } from './entity/client-entity-manager.js';
 
@@ -36,10 +37,7 @@ import { FileActionCreateToken } from './canvas/window/filemanager/action/file-a
 import { FileActionShowToPlayers } from './canvas/window/filemanager/action/file-action-show-to-players.js';
 
 import { StateInit } from './state/state-init.js';
-import { Settings } from './settings/settings.js';
-import { SettingsEntryNumberRange } from './settings/settings-entry-number-range.js';
 import { CanvasWindowText } from './canvas/window/canvas-window-text.js';
-import { ModuleSettings } from './settings/module-settings.js';
 import { CanvasWindowEntityDefault } from './canvas/window/canvas-window-entity-default.js';
 import { EntityManagers } from '../common/entity/entity-managers.js';
 import { MapUtils } from './util/maputil.js';
@@ -59,26 +57,9 @@ Common.init(new ClientIDProvider(), ClientEntityManager);
 // apply "catching" contextmenu listener to body
 document.body.oncontextmenu = () => false;
 
-// Export public 'interface'
-var _state = null;
-export const Client = {
-    VERSION: 10,
-    FPS: 30,
-
-    getState: function() {
-        return _state;
-    },
-
-    setState: function(state) {
-        if(_state) _state.exit();
-        _state = state;
-        state.init();
-
-        Events.trigger('enterState');
-    }
-}
-Events.on('enterState', () => {
-    if(Client.getState() instanceof StateMain) Events.trigger('enterMainState');
+// Create unified enterMainState event
+Events.on('enterState', event => {
+    if(event.data.state instanceof StateMain) Events.trigger('enterMainState');
 });
 
 // register some default stuff
@@ -407,7 +388,7 @@ Events.on('openEntity', event => {
 
 //    open default window with low priority if no other listener has canceled/handled the event
 Events.on('openEntity', event => {
-    new CanvasWindowEntityDefault(null, new EntityReference(event.data.entity));
+    new CanvasWindowEntityDefault(event.data.parentWindow, new EntityReference(event.data.entity));
     event.cancel();
 }, false, 0);
 
@@ -436,17 +417,6 @@ Events.on('internalLinkClick', event => {{
         }
     }
 }, false);
-
-
-// Settings
-export const SETTING_GLOBAL_VOLUME = new SettingsEntryNumberRange('settings.volume.global', 'Global Volume', 100, 0, 100);
-export const SETTING_WEATHER_VOLUME = new SettingsEntryNumberRange('settings.volume.weather', 'Weather Volume', 100, 0, 100);
-export const SETTING_PAGE_AUDIO = Settings.createPage('audio', 'Audio');
-SETTING_PAGE_AUDIO.addEntry('volume', SETTING_GLOBAL_VOLUME);
-SETTING_PAGE_AUDIO.addEntry('weather_volume', SETTING_WEATHER_VOLUME);
-Events.on('enterMainState', event => {
-    if(ServerData.isGM()) ModuleSettings.init();
-});
 
 // initialize state
 Client.setState(new StateInit());

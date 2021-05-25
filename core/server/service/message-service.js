@@ -1,19 +1,8 @@
 import { Message } from '../../common/message/message.js';
 import { toJson } from '../../common/util/datautil.js';
-import { MessageHandler } from '../handler/message-handler.js';
 import { UserService } from './user-service.js';
 
 export class MessageService {
-    // RECIEVING
-    static recieve(ws, message) {
-        try {
-            MessageHandler.handle(ws, message);
-        } catch(error) {
-            console.log(`Error during message recieve: ${error}`);
-            if(error instanceof Error) console.log(error.stack);
-        }
-    }
-
     // SENDING
     static send(message, profile) {
         MessageService._send(message, UserService.getWSFor(profile));

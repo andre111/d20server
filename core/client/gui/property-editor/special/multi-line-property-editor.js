@@ -1,5 +1,4 @@
 import { PropertyEditor } from '../property-editor.js';
-import { GuiUtils } from '../../../util/guiutil.js';
 
 import { Type } from '../../../../common/constants.js';
 

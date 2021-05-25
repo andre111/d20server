@@ -1,3 +1,6 @@
+import { Events } from '../../common/events.js';
+
+import { ChatService } from '../service/chat-service.js';
 import { Command } from './command.js';
 import { EffectCommand } from './effect-command.js';
 import { GetCommand } from './get-command.js';
@@ -34,6 +37,40 @@ export class Commands {
         return COMMANDS_MAP.get(name);
     }
 }
+
+// Handle Commands
+Events.on('chatMessage', event => {
+    const message = event.data.message;
+    const profile = event.data.profile;
+    
+    if(message.startsWith('/')) {
+        event.cancel();
+
+        // extract command name and arguments
+        var endIndex = message.indexOf(' ');
+        if(endIndex < 0) endIndex = message.length;
+        const commandName = message.substring(1, endIndex);
+        const commandArgs = message.substring(Math.min(endIndex+1, message.length));
+        
+        const command = Commands.get(commandName);
+        if(command) {
+            if(command.requiresGM() && profile.getRole() != Role.GM) {
+                ChatService.appendNote(profile, 'You do not have permission to use this command');
+                return;
+            }
+
+            // handle command
+            try {
+                command.execute(profile, commandArgs);
+            } catch(error) {
+                ChatService.appendNote(profile, `Error in /${commandName}:`, `${error}`);
+                if(error instanceof Error) console.log(error.stack);
+            }
+        } else {
+            ChatService.appendNote(profile, `Unknown command: ${commandName}`);
+        }
+    }
+});
 
 // register all the commands (this could use a better system)
 Commands.register(new RollCommand('roll', ['r'], true, true, true));

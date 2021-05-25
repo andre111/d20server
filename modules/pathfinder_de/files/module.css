@@ -97,7 +97,13 @@
     
     font-size: 18px;
 }
-.cs-attribute .cs-attribute-mod input {
+.cs-attribute-value input {
+    margin-right: 16px;
+}
+.cs-attribute-temp input {
+    color: gray;
+}
+.cs-attribute-mod input {
     width: 42px;
     height: 34px;
     
@@ -173,6 +179,15 @@
     text-align: center;
     
     -moz-appearance: textfield;
+}
+.cs-skill .checkbox {
+    width: 16px;
+    height: 16px;
+    margin: 2px;
+}
+.cs-skill-text {
+    width: 70px;
+    margin-left: 5px;
 }
 
 /* Macros Tab */
