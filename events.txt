@@ -1,0 +1,248 @@
+############################################################
+# COMMON
+############################################################
+
+propertyChange
+------------------------------------------------------------
+    Description: TODO
+    Cancelable: No
+    Data:
+        entity: TODO
+        name: TODO
+        changedProperties: TODO
+------------------------------------------------------------
+
+getControllingPlayers
+------------------------------------------------------------
+    Description: TODO
+    Cancelable: No
+    Data:
+        entity: TODO
+        controllingPlayers: TODO
+------------------------------------------------------------
+
+
+
+############################################################
+# SERVER
+############################################################
+
+chatMessage
+------------------------------------------------------------
+    Description: TODO
+    Cancelable: Yes
+    Data:
+        message: TODO
+        profile: TODO
+------------------------------------------------------------
+
+recievedMessage
+------------------------------------------------------------
+    Description: TODO
+    Cancelable: Yes
+    Data:
+        message: TODO
+        ws: TODO
+        profile: TODO
+        map: TODO
+------------------------------------------------------------
+
+serverInit
+------------------------------------------------------------
+    Description: TODO
+    Cancelable: No
+------------------------------------------------------------
+
+
+
+############################################################
+# CLIENT
+############################################################
+
+actionCommand
+------------------------------------------------------------
+    Description: TODO
+    Cancelable: No
+    Data:
+        (msg object): TODO
+------------------------------------------------------------
+
+addEntityRenderers
+------------------------------------------------------------
+    Description: TODO
+    Cancelable: No
+    Data:
+        addEntityRenderer: TODO
+------------------------------------------------------------
+
+addModeButtons
+------------------------------------------------------------
+    Description: TODO
+    Cancelable: No
+    Data:
+        addButton: TODO
+------------------------------------------------------------
+
+addModeButtonsGM
+------------------------------------------------------------
+    Description: TODO
+    Cancelable: No
+    Data:
+        addButton: TODO
+------------------------------------------------------------
+
+addRenderLayers
+------------------------------------------------------------
+    Description: TODO
+    Cancelable: No
+    Data:
+        addRenderLayer: TODO
+------------------------------------------------------------
+
+addSidepanelTabs
+------------------------------------------------------------
+    Description: TODO
+    Cancelable: No
+    Data:
+        addSidepanelTab: TODO
+------------------------------------------------------------
+
+chatMessage
+------------------------------------------------------------
+    Description: TODO
+    Cancelable: Yes
+    Data:
+        entry: TODO
+        historical: TODO
+------------------------------------------------------------
+
+createTokenFromActor
+------------------------------------------------------------
+    Description: TODO
+    Cancelable: Yes
+    Data:
+        token: TODO
+        actor: TODO
+------------------------------------------------------------
+
+editTokenWindowCreateTabs - TODO REMOVE REPLACE
+------------------------------------------------------------
+    Description: TODO
+    Cancelable: No
+    Data:
+        w: TODO
+        tabs: TODO
+        reference: TODO
+------------------------------------------------------------
+
+editWindowCreateTabs - TODO REMOVE REPLACE
+------------------------------------------------------------
+    Description: TODO
+    Cancelable: Yes
+    Data:
+        window: TODO
+        reference: TODO
+------------------------------------------------------------
+
+enterMainState
+------------------------------------------------------------
+    Description: TODO
+    Cancelable: No
+------------------------------------------------------------
+
+enterState
+------------------------------------------------------------
+    Description: TODO
+    Cancelable: No
+    Data:
+        state: TODO
+------------------------------------------------------------
+
+entityMenu
+------------------------------------------------------------
+    Description: TODO
+    Cancelable: Yes
+    Data:
+        menu: TODO
+        entityType: TODO
+        reference: TODO
+        accessLevel: TODO
+        isGM: TODO 
+------------------------------------------------------------
+
+fileManagerSelect
+------------------------------------------------------------
+    Description: TODO
+    Cancelable: Yes
+    Data:
+        file: TODO
+        manager: TODO
+------------------------------------------------------------
+
+frameEnd
+------------------------------------------------------------
+    Description: TODO
+    Cancelable: No
+------------------------------------------------------------
+
+frameStart
+------------------------------------------------------------
+    Description: TODO
+    Cancelable: No
+------------------------------------------------------------
+
+internalLinkClick
+------------------------------------------------------------
+    Description: TODO
+    Cancelable: Yes
+    Data:
+        target: TODO
+------------------------------------------------------------
+
+mapChange
+------------------------------------------------------------
+    Description: TODO
+    Cancelable: No
+    Data:
+        oldMapID: TODO
+        newMapID: TODO
+        newFOW: TODO
+------------------------------------------------------------
+
+openEntity
+------------------------------------------------------------
+    Description: TODO
+    Cancelable: Yes
+    Data:
+        entity: TODO
+        parentWindow: TODO
+------------------------------------------------------------
+
+profileListChange
+------------------------------------------------------------
+    Description: TODO
+    Cancelable: No
+------------------------------------------------------------
+
+recievedMessage
+------------------------------------------------------------
+    Description: TODO
+    Cancelable: Yes
+    Data:
+        message: TODO
+------------------------------------------------------------
+
+updateModeState
+------------------------------------------------------------
+    Description: TODO
+    Cancelable: No
+------------------------------------------------------------
+
+viewChange
+------------------------------------------------------------
+    Description: TODO
+    Cancelable: No
+    Data:
+        oldView: TODO
+        newView: TODO
+------------------------------------------------------------
