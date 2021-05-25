@@ -15,6 +15,7 @@ export class CanvasWindow {
 
     #popout;
     #popoutButton;
+    #popoutCloseListener;
 
     #children = [];
 
@@ -199,16 +200,12 @@ export class CanvasWindow {
                 }
             }
             //TODO: transfer library scripts?
-            const tinyMCEScriptTag = this.#popout.document.createElement('script');
-            tinyMCEScriptTag.src = '/core/files/libs/tinymce/tinymce.min.js';
-            this.#popout.document.head.appendChild(tinyMCEScriptTag);
             // create title
             const title = this.#popout.document.createElement('title');
             title.innerText = this.#title;
             this.#popout.document.head.appendChild(title);
-            this.#popout.addEventListener("beforeunload", e => {
-                this.close();
-            });
+            this.#popoutCloseListener = e => this.close();
+            this.#popout.addEventListener('beforeunload', this.#popoutCloseListener);
 
             // move window contents to popout
             this.#popout.document.body.appendChild(this.#frame);
@@ -227,7 +224,7 @@ export class CanvasWindow {
             this.zIndex = this.zIndex;
 
             // close popout
-            this.#popout.onWindowClose = null;
+            this.#popout.removeEventListener('beforeunload', this.#popoutCloseListener);
             this.#popout.close();
             this.#popout = null;
         }

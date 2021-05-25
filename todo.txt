@@ -19,6 +19,7 @@
 // use "npx madge --circular ./core/ ./modules/" to find circular dependencies and get rid of them
 // automatically send client side error traces to server
 // rewrite classes to use private properties and actual getter and setter methods
+// rewrite registerType and the json system to take the class names as a string and use them to restore AND STORE the type/class so that minified (->renamed) code does not cause issues
 // document classes and functions (very similar to javadoc, see datautil.js deepMerge for an example)
 // remove data driven entity stuff and go back to code based definitions?
 // Use Mocha (https://mochajs.org/#getting-started) for writing unit tests
