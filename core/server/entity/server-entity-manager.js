@@ -6,7 +6,7 @@ import { MessageService } from '../service/message-service.js';
 import { UserService } from '../service/user-service.js';
 
 import { fromJson, toJson } from '../../common/util/datautil.js';
-import nedb from 'nedb';
+import nedb from '@rmanibus/nedb'; // NOTE: This uses a special 'updated' nedb fork (with updated dependencies)
 import fs from 'fs-extra';
 
 export class ServerEntityManager extends EntityManager {
@@ -28,6 +28,7 @@ export class ServerEntityManager extends EntityManager {
         // load entities (into map)
         this.entities = {};
         this.db = new nedb({ filename: './data/entity/'+name+'.db', autoload: true });
+        this.db.setAutocompactionInterval(1000 * 60 * 60); // auto compact every hour to avoid files getting to large during long sessions
         this.db.find({}, (err, docs) => {
             for(const doc of docs) {
                 this.entities[doc._id] = fromJson(doc.json);
@@ -234,6 +235,6 @@ export class ServerEntityManager extends EntityManager {
     }
 
     isSaving() {
-        return this.saveOperations > 0;
+        return this.saveOperations > 0 || !this.db.executor.queue.idle();
     }
 }
