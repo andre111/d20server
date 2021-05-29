@@ -50,6 +50,9 @@ export class Dice extends Expression {
     constructor(count, sides) {
         super();
 
+        if(!(count instanceof Expression)) throw new Error('Provided count object is no an expression.');
+        if(!(sides instanceof Expression)) throw new Error('Provided sides object is no an expression.');
+
         this.count = count;
         this.sides = sides;
     }

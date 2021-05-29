@@ -22,14 +22,16 @@ const _isIntegerExp = RegExp(/^\d+$/);
 
 //Grammar:
 // expression = term | expression `+` term | expression `-` term
-// term = factor | term `*` factor | term `/` factor
-// factor = `+` factor | `-` factor | function | value
+// term = dice | term `*` dice | term `/` dice
+// dice = factor | dice 'd' factor modifiers
+// factor = `+` factor | `-` factor | value
+// value = `{` identifier(variable) `}` | `(` expression `)` | function | number
+
 // function = identifier `(` parameters `)`
 // parameters = expression | parameters `,` expression
-// value = `{` identifier(variable) `}` | `(` expression `)` | number | value `D/W` dice
-// dice = value modifiers | value modifiers `[` identifier `]`
-// modifiers = modifier*
-// modifier = `CS` condition | `CF` condition | `R` condition | `RO` condition | `!` | `!O` | `DL` value | `DH` value | `KL` value | `KH` value
+
+// modifiers = modifier* | modifier* `[` identifier `]`
+// modifier = `cs` condition | `cf` condition | `r` condition | `ro` condition | `!` | `!o` | `dl` value | `dh` value | `kl` value | `kh` value
 // condition = value | `<` value | `<=` value | `>` value | `>=` value
 export class Parser {
     string;
@@ -56,10 +58,13 @@ export class Parser {
         this.c = (++this.pos < this.string.length) ? this.string.charAt(this.pos) : -1;
     }
 
-    // skips spaces and reads the nextChar if it matches
-    eat(charToEat) {
+    // skips spaces and reads the nextChar(s) if it matches
+    eat(charsToEat) {
         while(this.c == ' ') this.nextChar();
-        if(this.c == charToEat) {
+        if(this.pos + charsToEat.length > this.string.length) return false;
+        
+        if(this.string.substring(this.pos, this.pos + charsToEat.length) == charsToEat) {
+            this.pos += charsToEat.length - 1;
             this.nextChar();
             return true;
         }
@@ -96,14 +101,14 @@ export class Parser {
         }
     }
 
-    // term = factor | term `*` factor | term `/` factor
+    // term = dice | term `*` dice | term `/` dice
     parseTerm() {
-        var x = this.parseFactor();
+        var x = this.parseDice();
         while(true) {
             if(this.eat('*')) {
                 // parse multiplication
                 const a = x;
-                const b = this.parseFactor();
+                const b = this.parseDice();
 
                 x = new Expr(c => {
                     const ar = a.eval(c);
@@ -113,7 +118,7 @@ export class Parser {
             } else if(this.eat('/')) {
                 // parse division
                 const a = x;
-                const b = this.parseFactor();
+                const b = this.parseDice();
 
                 x = new Expr(c => {
                     const ar = a.eval(c);
@@ -126,7 +131,25 @@ export class Parser {
         }
     }
 
-    // factor = `+` factor | `-` factor | function | value
+    // dice = factor | dice 'd' factor modifiers
+    parseDice() {
+        var x = this.parseFactor();
+        while(true) {
+            if(this.eat('d') || this.eat('D') || this.eat('w') || this.eat('W')) {
+                const count = x;
+                const sides = this.parseFactor();
+                
+                const dice = new Dice(count, sides);
+                this.parseModifiers(dice);
+
+                x = dice;
+            } else {
+                return x;
+            }
+        }
+    }
+
+    // factor = `+` factor | `-` factor | value
     parseFactor() {
         // parse signed factor
         if(this.eat('+')) {
@@ -140,15 +163,39 @@ export class Parser {
             });
         }
 
-        // function
-        if(isLetter(this.c)) {
-            return this.parseFunction();
-        }
-
         // parse value
         return this.parseValue();
     }
 
+    // value = `{` identifier(variable) `}` | `(` expression `)` | function | number
+    parseValue() {
+        // {variable}
+        if(this.eat('{')) {
+            const variableString = this.parseIdentifier();
+            if(!this.eat('}')) throw new Error('Unclosed variable parentheses');
+
+            return parseVariable(variableString);
+        }
+        // (expression)
+        else if(this.eat('(')) {
+            const a = this.parseExpression();
+            if(!this.eat(')')) throw new Error('Unclosed parentheses');
+
+            return new Expr(c => {
+                const ar = a.eval(c);
+                return new Result(ar.v, '('+ar.s+')', ar.drs);
+            });
+        }
+        // function
+        else if(isLetter(this.c)) {
+            return this.parseFunction();
+        }
+        // number
+        else {
+            return this.parseNumber();
+        }
+    }
+    
     // function = identifier `(` parameters `)`
     parseFunction() {
         const name = this.parseIdentifier();
@@ -213,47 +260,10 @@ export class Parser {
         return parameters;
     }
 
-    // value = `{` identifier(variable) `}` | `(` expression `)` | number | value 'D/W' dice
-    parseValue() {
-        var expr = null;
-
-        // {variable}
-        if(this.eat('{')) {
-            const variableString = this.parseIdentifier();
-            if(!this.eat('}')) throw new Error('Unclosed variable parentheses');
-
-            expr = parseVariable(variableString);
-        }
-        // (expression)
-        else if(this.eat('(')) {
-            const a = this.parseExpression();
-            if(!this.eat(')')) throw new Error('Unclosed parentheses');
-
-            expr = new Expr(c => {
-                const ar = a.eval(c);
-                return new Result(ar.v, '('+ar.s+')', ar.drs);
-            });
-        }
-        // number
-        else {
-            expr = this.parseNumber();
-        }
-
-        // parse dice if present
-        if(this.eat('d') || this.eat('D') || this.eat('w') || this.eat('W')) {
-            return this.parseDice(expr);
-        } else {
-            return expr;
-        }
-    }
-
-    // dice = value modifiers | value modifiers `[` identifier `]`
-    parseDice(count) {
-        const sides = this.parseValue();
-
-        const dice = new Dice(count, sides);
-        this.parseModifiers(dice);
-
+    // modifiers = modifier* | modifier* `[` identifier `]`
+    parseModifiers(dice) {
+        while(this.parseModifier(dice)) {};
+        
         // parse label
         if(this.eat('[')) {
             const label = this.parseIdentifier();
@@ -261,67 +271,37 @@ export class Parser {
 
             dice.setLabel(label);
         }
-
-        return dice;
     }
 
-    // modifiers = modifier*
-    parseModifiers(dice) {
-        while(this.parseModifier(dice)) {};
-    }
-
-    // modifier = `CS` condition | `CF` condition | `R` condition | `RO' condition | `!` | `!O` | `DL` value | `DH` value | `KL` value | `KH` value
+    // modifier = `cs` condition | `cf` condition | `r` condition | `ro` condition | `!` | `!o` | `dl` value | `dh` value | `kl` value | `kh` value
     parseModifier(dice) {
-        if(this.eat('c') || this.eat('C')) {
-            if(this.eat('s') || this.eat('S')) {
-				dice.setCriticalSuccessCondition(this.parseCondition());
-            } else if(this.eat('f') || this.eat('F')) {
-				dice.setCriticalFailureCondition(this.parseCondition());
-            } else {
-                throw new Error(`Unknown modifier at ${this.pos-1}`);
-            }
-            return true;
-        } else if(this.eat('r') || this.eat('R')) {
-            if(this.eat('o') || this.eat('O')) {
-				dice.setRerollCondition(this.parseCondition());
-				dice.setMaxRerollCount(1);
-            } else {
-				dice.setRerollCondition(this.parseCondition());
-            }
-            return true;
+        if(this.eat('cs')) {
+            dice.setCriticalSuccessCondition(this.parseCondition());
+        } else if(this.eat('cf')) {
+            dice.setCriticalFailureCondition(this.parseCondition());
+        } else if(this.eat('r')) {
+            dice.setRerollCondition(this.parseCondition());
+            if(this.eat('o')) dice.setMaxRerollCount(1);
         } else if(this.eat('!')) {
-            if(this.eat('o') || this.eat('O')) {
-				dice.setExplodeDice(true);
-				dice.setMaxExplodeCount(1);
-            } else {
-				dice.setExplodeDice(true);
-            }
-            return true;
-        } else if(this.eat('d') || this.eat('D')) {
-            if(this.eat('l') || this.eat('L')) {
-				dice.setLowAction(Dice.Action.DROP);
-				dice.setLowCount(this.parseValue());
-            } else if(this.eat('h') || this.eat('H')) {
-				dice.setHighAction(Dice.Action.DROP);
-				dice.setHighCount(this.parseValue());
-            } else {
-                throw new Error(`Unknown modifier at ${this.pos-1}`);
-            }
-            return true;
-        } else if(this.eat('k') || this.eat('K')) {
-            if(this.eat('l') || this.eat('L')) {
-				dice.setLowAction(Dice.Action.KEEP);
-				dice.setLowCount(this.parseValue());
-            } else if(this.eat('h') || this.eat('H')) {
-				dice.setHighAction(Dice.Action.KEEP);
-				dice.setHighCount(this.parseValue());
-            } else {
-                throw new Error(`Unknown modifier at ${this.pos-1}`);
-            }
-            return true;
+            dice.setExplodeDice(true);
+            if(this.eat('o')) dice.setMaxExplodeCount(1);
+        } else if(this.eat('dl')) {
+            dice.setLowAction(Dice.Action.DROP);
+            dice.setLowCount(this.parseValue());
+        } else if(this.eat('dh')) {
+            dice.setHighAction(Dice.Action.DROP);
+            dice.setHighCount(this.parseValue());
+        } else if(this.eat('kl')) {
+            dice.setLowAction(Dice.Action.KEEP);
+            dice.setLowCount(this.parseValue());
+        } else if(this.eat('kh')) {
+            dice.setHighAction(Dice.Action.KEEP);
+            dice.setHighCount(this.parseValue());
         } else {
             return false;
         }
+
+        return true;
     }
 
     // condition = value | `<` value | `<=` value | `>` value | `>=` value
