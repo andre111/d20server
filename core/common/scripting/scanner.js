@@ -181,7 +181,9 @@ export class Scanner {
         if(this.#current-this.#start != 1) return false;
         const c = this.#source[this.#start];
         if(c != 'd' && c != 'D' && c != 'w' && c != 'W') return false;
-        return this.#isDigit(this.#peek());
+
+        if(!this.#isAlphaNumeric(this.#peek())) return true; // case 1: just 'd' with no more alphanum characters -> dice operator
+        return this.#isDigit(this.#peek()); // case 2: 'd[digit]' -> dice operator
     }
 
     get tokens() {
