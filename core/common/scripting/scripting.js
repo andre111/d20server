@@ -2,7 +2,6 @@ import { Type } from '../constants.js';
 import { EntityManagers } from '../entity/entity-managers.js';
 import { EntityReference } from '../entity/entity-reference.js';
 import { Entity } from '../entity/entity.js';
-import { Events } from '../events.js';
 import { TokenUtil } from '../util/tokenutil.js';
 import { BUILTIN_CEIL, BUILTIN_FIND, BUILTIN_FLOOR, BUILTIN_MAX, BUILTIN_MIN, BUILTIN_NUMBER, BUILTIN_SQRT, Func } from './func.js';
 import { Interpreter } from './interpreter.js';
@@ -11,22 +10,25 @@ import { Scanner } from './scanner.js';
 import { Value } from './value.js';
 
 // see: craftinginterpreters.com
+// possible syntactic sugar to add: +=, -=, *=, /=, for loops
 export class Scripting {
     #lines;
     #errors;
     #diceRolls;
     
     #applyEntityChanges;
+    #modifiedEntities;
 
     constructor(applyEntityChanges = true) {
         this.#applyEntityChanges = applyEntityChanges;
+        this.#modifiedEntities = new Set();
     }
 
     // Programs
     //---------------------------------------------------------------
-    interpret(source, profile, self) {
+    interpret(source, profile, self, interpreterCallback = null) {
         const program = this.parse(source);
-        return this.execute(program, profile, self);
+        this.execute(program, profile, self, interpreterCallback);
     }
 
     parse(source) {
@@ -37,7 +39,7 @@ export class Scripting {
         };
     }
 
-    execute(program, profile, self) {
+    execute(program, profile, self, interpreterCallback = null) {
         if(program.errors.length != 0) {
             this.#errors = program.errors;
             return;
@@ -46,16 +48,26 @@ export class Scripting {
         this.#errors = [];
         
         this.#diceRolls = [];
+        this.#modifiedEntities.clear();
 
+        // run interpreter
         const interpreter = this.#createInterpreter(profile, self);
-        return interpreter.interpret(program.statements);
+        if(interpreterCallback) interpreterCallback(interpreter);
+        interpreter.interpret(program.statements);
+
+        // update entities
+        if(this.#applyEntityChanges) {
+            for(const modifiedEntity of this.#modifiedEntities) {
+                modifiedEntity.performUpdate();
+            }
+        }
     }
 
     // Expressions
     //---------------------------------------------------------------
-    interpretExpression(source, profile, self) {
+    interpretExpression(source, profile, self, interpreterCallback = null) {
         const expression = this.parseExpression(source);
-        return this.evalExpression(expression, profile, self);
+        return this.evalExpression(expression, profile, self, interpreterCallback);
     }
 
     parseExpression(source) {
@@ -66,7 +78,7 @@ export class Scripting {
         };
     }
 
-    evalExpression(expression, profile, self) {
+    evalExpression(expression, profile, self, interpreterCallback = null) {
         if(expression.errors.length != 0) {
             this.#errors = expression.errors;
             return;
@@ -75,9 +87,21 @@ export class Scripting {
         this.#errors = [];
         
         this.#diceRolls = [];
+        this.#modifiedEntities.clear();
 
+        // run interpreter
         const interpreter = this.#createInterpreter(profile, self);
-        return interpreter.interpretExpression(expression.expr);
+        if(interpreterCallback) interpreterCallback(interpreter);
+        const result = interpreter.interpretExpression(expression.expr);
+
+        // update entities
+        if(this.#applyEntityChanges) {
+            for(const modifiedEntity of this.#modifiedEntities) {
+                modifiedEntity.performUpdate();
+            }
+        }
+
+        return result;
     }
 
     //---------------------------------------------------------------
@@ -149,6 +173,10 @@ export class Scripting {
 
     addDiceRoll(dr) {
         this.#diceRolls.push(dr);
+    }
+
+    modifiedEntity(entity) {
+        this.#modifiedEntities.add(entity);
     }
 
     checkReadAccess(profile, entity, property) {

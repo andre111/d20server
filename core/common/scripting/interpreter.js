@@ -26,6 +26,10 @@ export class Interpreter extends Visitor {
         this.#globals.define(name, value);
     }
 
+    getProfile() {
+        return this.#profile;
+    }
+
     interpret(statements) {
         try {
             for(const statement of statements) {
@@ -277,10 +281,8 @@ export class Interpreter extends Visitor {
                 throw new RuntimeError(get.name, 'Cannot set property of type '+type);
             }
 
-            //TODO: should this always directly apply changes or only somehow at the end of the script?
-            if(this.#scripting.applyEntityChanges) {
-                entity.performUpdate(true);
-            }
+            // notify scripting system of entity modification
+            this.#scripting.modifiedEntity(entity);
 
             return value;
         }

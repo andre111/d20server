@@ -4,12 +4,14 @@ import { ChatEntry } from '../../common/message/chat/chat-entry.js';
 import { ChatEntries } from '../../common/messages.js';
 import { Scripting } from '../../common/scripting/scripting.js';
 import { TokenUtil } from '../../common/util/tokenutil.js';
+import { SERVER_BUILTIN_SENDCHAT } from '../scripting/func.js';
 import { readJson, saveJson } from '../util/fileutil.js';
 import { RollFormatter } from '../util/roll-formatter.js';
 import { MessageService } from './message-service.js';
 import { UserService } from './user-service.js';
 
 const SYSTEM_SOURCE = 0;
+const SCRIPT = new Scripting();
 
 var chatData = null;
 function getChatData() {
@@ -86,16 +88,25 @@ Events.on('chatMessage', event => {
         }
 
         // execute macro
-        const macroLines = macro.split('\n');
-        for(const macroLine of macroLines) {
-            if(macroLine.trim() == '') continue;
+        const scriptMarker = '?SCRIPT?\n';
+        if(macro.startsWith(scriptMarker)) {
+            SCRIPT.interpret(macro.substring('?SCRIPT?\n'.length), profile, null, interpreter => {
+                interpreter.defineGlobal('sendChat', SERVER_BUILTIN_SENDCHAT);
+            });
+            if(SCRIPT.errors.length != 0) {
+                ChatService.appendError(profile, SCRIPT.errors.join('\n'));
+            }
+        } else {
+            const macroLines = macro.split('\n');
+            for(const macroLine of macroLines) {
+                if(macroLine.trim() == '') continue;
 
-            ChatService.onMessage(profile, macroLine);
+                ChatService.onMessage(profile, macroLine);
+            }
         }
     }
 });
 
-const SCRIPT = new Scripting();
 export class ChatService {
     static onMessage(profile, message) {
         const event = Events.trigger('chatMessage', { message: message, profile: profile }, true);
@@ -193,7 +204,7 @@ export class ChatService {
                 // extract expression string
                 var exprStr = text.substring(startIndex+2, endIndex);
                 var triggered = false;
-                if(exprStr.startsWith('!')) { triggered = true; exprStr = exprStr.substring(1); }
+                if(exprStr.startsWith('?')) { triggered = true; exprStr = exprStr.substring(1); }
                 startIndex = endIndex + 2;
                 
                 // parse expression
