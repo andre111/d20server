@@ -376,8 +376,9 @@ function doGenerate() {
                             for(var i=0; i<attack['Anzahl']; i++) {
                                 const critRange = attack['KritischWert'] < 20 ? `cs>=${attack['KritischWert']}` : '';
                                 const modCount = attack['Modifikatoren'].length;
+                                const adjustedFormula = attack['Formel'].replace(/[\[\]]/g, '"'); // change type declaration from [...] to "..." for parser syntax
                                 for(var m=0; m<modCount; m++) {
-                                    macro += `/template attack21 ${attack['Name']};${(attack['Berührung'] ? 'Berührung' : '')+(modCount > 1 ? ` ${m+1}. Angriff ` : '')};Angriff;1d20${critRange}+${attack['Modifikatoren'][m]}+{selected.actor.property.modAttack};Schaden;${attack['Formel']}+{selected.actor.property.modDamage};${attack['SchadenUndEffekte']}\n`;
+                                    macro += `/template attack21 ${attack['Name']};${(attack['Berührung'] ? 'Berührung' : '')+(modCount > 1 ? ` ${m+1}. Angriff ` : '')};Angriff;1d20${critRange}+${attack['Modifikatoren'][m]}+sActor.modAttack;Schaden;${adjustedFormula}+sActor.modDamage;${attack['SchadenUndEffekte']}\n`;
                                 }
                             }
 
