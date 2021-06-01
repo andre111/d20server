@@ -1,5 +1,5 @@
 import { Scripting } from '../../common/scripting/scripting.js';
-import { EOF } from '../../common/scripting/token.js';
+import { EOF, IDENTIFIER, LEFT_PAREN, UNKNOWN } from '../../common/scripting/token.js';
 
 //TODO: somehow add support for error reporting directly in editor (needs display and full parsing)
 const SCRIPT = new Scripting(false);
@@ -68,12 +68,23 @@ export class CodeEditor extends HTMLElement {
 
             const tokens = SCRIPT.tokenize(value, true);
             const converted = [];
-            for(const token of tokens) {
+            for(var i=0; i<tokens.length; i++) {
+                const token = tokens[i];
                 if(token.type == EOF) break; // stop at EOF (and do NOT include it)
 
+                // find token class (simply based on type description + small hack to "detect functions")
+                var tokenClass = token.type.description;
+                if(token.type == IDENTIFIER) {
+                    var next = i+1;
+                    while(tokens[next].type == UNKNOWN) next++;
+
+                    if(tokens[next].type == LEFT_PAREN) tokenClass = 'function';
+                }
+
+                // append token lexeme (with potential highlighting)
                 const lexeme = token.lexeme.replace(/&/g, '&amp;').replace(/</g, '&lt;');
-                if(token.type.description) {
-                    converted.push(`<span class="token ${token.type.description}">${lexeme}</span>`);
+                if(tokenClass) {
+                    converted.push(`<span class="token ${tokenClass}">${lexeme}</span>`);
                 } else {
                     converted.push(lexeme);
                 }
