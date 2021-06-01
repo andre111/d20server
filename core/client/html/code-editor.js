@@ -4,6 +4,8 @@ import { EOF } from '../../common/scripting/token.js';
 //TODO: somehow add support for error reporting directly in editor (needs display and full parsing)
 const SCRIPT = new Scripting(false);
 export class CodeEditor extends HTMLElement {
+    #initialized;
+
     #textarea;
     #pre;
     #code;
@@ -16,41 +18,42 @@ export class CodeEditor extends HTMLElement {
     
     connectedCallback() {
         // Added to document
+        if(!this.#initialized) {
+            this.#initialized = true;
+
+            // Defaults
+            const placeholder = this.getAttribute("placeholder") || "";
+            this.innerHTML = ""; // Clear Content
+            
+            // Create Textarea
+            this.#textarea = document.createElement("textarea");
+            this.#textarea.placeholder = placeholder;
+            this.#textarea.value = '';
+            this.#textarea.spellcheck = false;
+            
+            if(this.getAttribute("name")) {
+                this.#textarea.name = this.getAttribute("name"); // for use in forms
+                this.removeAttribute("name");
+            }
+            
+            this.#textarea.oninput = () => this.update(this.#textarea.value);
+            this.#textarea.onscroll = () => {
+                this.#pre.scrollTop = this.#textarea.scrollTop;
+                this.#pre.scrollLeft = this.#textarea.scrollLeft;
+            };
+            
+            this.append(this.#textarea);
         
-        // Defaults
-        const placeholder = this.getAttribute("placeholder") || "";
-        const value = this.getAttribute("value") || this.innerHTML || "";
-        
-        this.innerHTML = ""; // Clear Content
-        
-        // Create Textarea
-        this.#textarea = document.createElement("textarea");
-        this.#textarea.placeholder = placeholder;
-        this.#textarea.value = value;
-        this.#textarea.spellcheck = false;
-        
-        if(this.getAttribute("name")) {
-            this.#textarea.name = this.getAttribute("name"); // for use in forms
-            this.removeAttribute("name");
+            // Create pre code
+            this.#code = document.createElement("code");
+            this.#code.className = "language-d20";
+            this.#code.innerText = '';
+            
+            this.#pre = document.createElement("pre");
+            this.#pre.setAttribute("aria-hidden", "true"); // Hide for screen readers
+            this.#pre.append(this.#code);
+            this.append(this.#pre);
         }
-        
-        this.#textarea.oninput = () => this.update(this.#textarea.value);
-        this.#textarea.onscroll = () => {
-            this.#pre.scrollTop = this.#textarea.scrollTop;
-            this.#pre.scrollLeft = this.#textarea.scrollLeft;
-        };
-        
-        this.append(this.#textarea);
-    
-        // Create pre code
-        this.#code = document.createElement("code");
-        this.#code.className = "language-d20";
-        this.#code.innerText = value;
-        
-        this.#pre = document.createElement("pre");
-        this.#pre.setAttribute("aria-hidden", "true"); // Hide for screen readers
-        this.#pre.append(this.#code);
-        this.append(this.#pre);
     }
 
     update(value) {
@@ -83,9 +86,6 @@ export class CodeEditor extends HTMLElement {
     
     attributeChangedCallback(name, oldValue, newValue) {
         switch(name) {
-        case "value":
-            this.update(newValue);
-            break;
         case "placeholder":
             this.#textarea.placeholder = newValue;
             break;
@@ -109,7 +109,7 @@ export class CodeEditor extends HTMLElement {
     }
     
     static get observedAttributes() {
-        return ["value", "placeholder"];
+        return ["placeholder"];
     }
 } 
 
