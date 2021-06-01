@@ -1,11 +1,8 @@
-import { Role } from '../../common/constants.js';
-import { EntityManagers } from '../../common/entity/entity-managers.js';
+import { Role, Type } from '../../common/constants.js';
 import { Events } from '../../common/events.js';
 import { ChatEntry } from '../../common/message/chat/chat-entry.js';
 import { ChatEntries } from '../../common/messages.js';
-import { Context } from '../../common/scripting/context.js';
-import { Parser } from '../../common/scripting/expression/parser.js';
-import { parseVariable } from '../../common/scripting/variable/parser/variable-parsers.js';
+import { Scripting } from '../../common/scripting/scripting.js';
 import { TokenUtil } from '../../common/util/tokenutil.js';
 import { readJson, saveJson } from '../util/fileutil.js';
 import { RollFormatter } from '../util/roll-formatter.js';
@@ -47,8 +44,6 @@ function canRecieve(profile, entry) {
 
     return entry.getRecipents().includes(profile.getID());
 }
-
-const parser = new Parser();
 
 // Handle Macros
 //TODO: move to more fitting location
@@ -100,6 +95,7 @@ Events.on('chatMessage', event => {
     }
 });
 
+const SCRIPT = new Scripting();
 export class ChatService {
     static onMessage(profile, message) {
         const event = Events.trigger('chatMessage', { message: message, profile: profile }, true);
@@ -122,7 +118,8 @@ export class ChatService {
 
             ChatService.append(true, entry);
         } catch(error) {
-            ChatService.appendNote(profile, `Error:`, `${error}`);
+            ChatService.appendError(profile, `Error:`, `${error}`);
+            console.log(error);
         }
     }
 
@@ -143,7 +140,17 @@ export class ChatService {
     static appendNote(recipent, ...lines) {
         var text = '<div class="chat-info">';
         for(const line of lines) {
-            text = text + ChatService.escape(line) + '<br>';
+            text = text + ChatService.escape(line)+ '<br>';
+        }
+        text = text + '</div>';
+
+        ChatService.append(false, new ChatEntry(text, SYSTEM_SOURCE, false, recipent ? [recipent.getID()] : []));
+    }
+
+    static appendError(recipent, ...lines) {
+        var text = '<div class="chat-error">';
+        for(const line of lines) {
+            text = text + ChatService.escape(line)+ '<br>';
         }
         text = text + '</div>';
 
@@ -172,9 +179,7 @@ export class ChatService {
         var startIndex = 0;
         while(startIndex < text.length) {
             const inlineStartIndex = text.indexOf('[[', startIndex);
-            const variableStartIndex = text.indexOf('{', startIndex);
-            const nextIsInlineRoll = inlineStartIndex != -1 && (variableStartIndex == -1 || inlineStartIndex < variableStartIndex);
-            const nextIsVariable = variableStartIndex != -1 && (inlineStartIndex == -1 || variableStartIndex < inlineStartIndex);
+            const nextIsInlineRoll = inlineStartIndex != -1;
 
             if(nextIsInlineRoll) {
                 // add remaing text
@@ -185,13 +190,6 @@ export class ChatService {
                 var endIndex = text.indexOf(']]', startIndex);
                 if(endIndex == -1) throw new Error(`Unclosed inline roll at ${startIndex}`);
 
-                // detect exceptional case in expression 
-                // when it ends with ']' (e.g. 4d6[fire] -> inline expression is [[4d6[fire]]])
-                // checking for index of ]] will get position that is off by one
-                // -> check for ]]] -> if present at the same position move endIndex by one
-                var exceptionalEndIndex = text.indexOf(']]]', startIndex);
-                if(endIndex == exceptionalEndIndex) endIndex += 1;
-
                 // extract expression string
                 var exprStr = text.substring(startIndex+2, endIndex);
                 var triggered = false;
@@ -199,50 +197,50 @@ export class ChatService {
                 startIndex = endIndex + 2;
                 
                 // parse expression
-                var result = null;
+                const result = SCRIPT.interpretExpression(ChatService.unescape(exprStr), profile, null);
+                const resultDiceRolls = SCRIPT.diceRolls;
                 var error = null;
-                try {
-                    const expr = parser.parse(exprStr);
-                    result = expr.eval(new Context(profile, EntityManagers.get('map').find(profile.getCurrentMap()), null));
-                } catch(e) {
-                    error = e;
+                if(SCRIPT.errors.length != 0) {
+                    error = SCRIPT.errors.join('\n');
+                    console.log(error);
+                }
+
+                // create resultString
+                var resultString = '';
+                var triggerText = 'Roll';
+                if(result) {
+                    switch(result.type) {
+                    case Type.DOUBLE:
+                        resultString = RollFormatter.formatInlineDiceRoll(exprStr, result, resultDiceRolls, error);
+                        break;
+                    case Type.STRING:
+                        resultString = result.value;
+                        triggerText = 'Show';
+                        break;
+                    default:
+                        resultString = 'Error: Unsupported type - '+result.type;
+                        break;
+                    }
+                } else {
+                    resultString = RollFormatter.formatInlineDiceRoll(exprStr, null, [], error);
                 }
 
                 // append rolls or trigger button
                 if(triggered) {
-                    const entry = new ChatEntry(RollFormatter.formatInlineDiceRoll(exprStr, result, error), profile.getID());
-                    if(result) entry.setRolls(result.getDiceRolls());
+                    const entry = new ChatEntry(resultString, profile.getID());
+                    entry.setRolls(resultDiceRolls);
                     triggeredContent.push({
                         entry: entry,
                         parent: null,
                         triggerd: false
                     });
-                    string += `<span id="${entry.getID()}" class="chat-dice-inline chat-button replaceable">Roll</span>`;
+                    string += `<span id="${entry.getID()}" class="chat-dice-inline chat-button replaceable">${triggerText}</span>`;
                 } else {
-                    if(result) {
-                        for(const diceRoll of result.getDiceRolls()) {
-                            diceRolls.push(diceRoll);
-                        }
+                    for(const diceRoll of resultDiceRolls) {
+                        diceRolls.push(diceRoll);
                     }
-                    string += RollFormatter.formatInlineDiceRoll(exprStr, result, error);
+                    string += resultString;
                 }
-            } else if(nextIsVariable) {
-                // add remaing text
-                string += '<span class="chat-text">'+ChatService.escape(text.substring(startIndex, variableStartIndex))+"</span>";
-                startIndex = variableStartIndex;
-
-                // find end
-                var endIndex = text.indexOf('}', startIndex);
-                if(endIndex == -1) throw new Error(`Unclosed variable at ${startIndex}`);
-
-                // extract variable name
-                const variableName = text.substring(startIndex+1, endIndex);
-                startIndex = endIndex + 1;
-                
-                // append variable value
-				const variable = parseVariable(variableName);
-				const value = variable.get(new Context(profile, EntityManagers.get('map').find(profile.getCurrentMap()), null));
-                string += ChatService.escape(String(value));
             } else {
                 string += '<span class="chat-text">'+ChatService.escape(text.substring(startIndex, text.length))+"</span>";
                 startIndex = text.length;

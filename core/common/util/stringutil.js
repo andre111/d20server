@@ -1,4 +1,4 @@
-// split line at "spaces but only outside Quotes" and "quotes" to sepparate arguments
+// split line at "spaces but only outside Single-Quotes" and "quotes" to sepparate arguments
 export function splitArguments(line, limit = 0) {
     if(limit == 1) return [line];
 
@@ -9,7 +9,7 @@ export function splitArguments(line, limit = 0) {
     var shouldSplit = false;
     for(var i=0; i<line.length; i++) {
         shouldSplit = false;
-        if(line[i] == '"') {
+        if(line[i] == '\'') {
             inQuotes = !inQuotes;
             shouldSplit = true;
         } else if(line[i] == ' ' && !inQuotes) {
@@ -28,7 +28,7 @@ export function splitArguments(line, limit = 0) {
     if(start != line.length) {
         var lastPart = line.substring(start, line.length);
         lastPart = lastPart.trimStart();
-        if(lastPart.startsWith('"') && lastPart.endsWith('"')) lastPart = lastPart.substring(1, lastPart.length-1);
+        if(lastPart.startsWith('\'') && lastPart.endsWith('\'')) lastPart = lastPart.substring(1, lastPart.length-1);
         split.push(lastPart);
     }
 

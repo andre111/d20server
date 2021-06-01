@@ -52,7 +52,12 @@ export const Type = {
     LIGHT: 'LIGHT',
     EFFECT: 'EFFECT',
     COLOR: 'COLOR',
-    ACCESS: 'ACCESS'
+    ACCESS: 'ACCESS',
+
+    // scripting only types
+    ENTITY: 'ENTITY',
+    FUNCTION: 'FUNCTION',
+    NULL: 'NULL'
 }
 
 export const Role = {

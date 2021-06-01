@@ -1,51 +1,30 @@
-import { EntityManagers } from '../../common/entity/entity-managers.js';
-import { Context } from '../../common/scripting/context.js';
-import { Parser } from '../../common/scripting/expression/parser.js';
+import { Scripting } from '../../common/scripting/scripting.js';
 import { splitArguments } from '../../common/util/stringutil.js';
 import { ChatService } from '../service/chat-service.js';
 import { Command } from './command.js';
 
+const SCRIPT = new Scripting(false);
 export class IfCommand extends Command {
     parser;
 
     constructor(name, aliases) {
         super(name, aliases, false);
-
-        this.parser = new Parser();
     }
 
     execute(profile, args) {
         // parse components
-        const split = splitArguments(args, 4);
-        if(split.length < 4) throw new Error('Wrong arguments: <expression> <condition> <expression> ...');
+        const split = splitArguments(args, 2);
+        if(split.length < 2) throw new Error('Wrong arguments: <expression> ...');
 
-        const firstExpression = split[0];
-        const comparison = split[1];
-        const secondExpression = split[2];
-        const message = split[3];
+        const expression = split[0];
+        const message = split[1];
 
-        // create context, parse and evalute expressions
-        const context = new Context(profile, EntityManagers.get('map').find(profile.getCurrentMap()), null);
-
-        const expr1 = this.parser.parse(firstExpression);
-        const value1 = expr1.eval(context).getValue();
-        const expr2 = this.parser.parse(secondExpression);
-        const value2 = expr2.eval(context).getValue();
-
-        // compare
-        var isTrue = false;
-        switch(comparison) {
-        case '==': isTrue = value1 == value2; break;
-        case '!=': isTrue = value1 != value2; break;
-        case '>': isTrue = value1 > value2; break;
-        case '<': isTrue = value1 < value2; break;
-        case '>=': isTrue = value1 >= value2; break;
-        case '<=': isTrue = value1 <= value2; break;
-        default: throw new Error(`Unknown comparison type: ${comparison}`);
-        }
+        // evalute expression
+        const result = SCRIPT.interpretExpression(ChatService.unescape(expression), profile, null);
+        SCRIPT.throwIfErrored();
 
         // send message/command if isTrue
-        if(isTrue) {
+        if(result.isTruthy()) {
             ChatService.onMessage(profile, message);
         }
     }

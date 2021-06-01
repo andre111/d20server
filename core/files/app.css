@@ -379,6 +379,13 @@ input:focus {
     font-size: 16px;
     margin: 8px 0 0 8px;
 }
+.chat-error {
+    font-family: monospace;
+    font-style: italic;
+    font-size: 14px;
+    margin: 0;
+    white-space: pre-wrap;
+}
 .chat-info {
     font-style: italic;
     font-size: 14px;
@@ -431,10 +438,11 @@ span.chat-dice-uncounted {
     text-decoration-color: red;
 }
 span.chat-dice-inline {
-    width: 32px;
     height: 20px;
     display: inline-flex;
     border: solid 1px black;
+    padding-left: 2px;
+    padding-right: 2px;
     place-content: center;
     line-height: 18px;
 }

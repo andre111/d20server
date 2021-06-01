@@ -1,7 +1,7 @@
 import { ChatService } from '../service/chat-service.js';
 
 export class RollFormatter {
-    static formatDiceRoll(profile, rollExpression, showPublic, result, error) {
+    static formatDiceRoll(profile, rollExpression, showPublic, result, diceRolls, error) {
         // build 'header'
         var text = '<div class="chat-sender">';
         text = text + ChatService.escape(profile.getUsername());
@@ -17,7 +17,7 @@ export class RollFormatter {
         // result
         text = text + '<div class="chat-message">';
         if(result) {
-            text = text + result.getString() + '<br>';
+            text = text + result.expr + '<br>';
             text = text + ' = ' + RollFormatter.getResultValue(result);
         } else {
             text = text + ' = ?';
@@ -26,23 +26,29 @@ export class RollFormatter {
 
         // potential error message
         if(error) {
-            text = text + `<div class="chat-info">( ${error} )</div>`;
+            text = text + `<div class="chat-error">${error}</div>`;
         }
 
         return text;
     }
 
-    static formatInlineDiceRoll(rollExpression, result, error) {
+    static formatInlineDiceRoll(rollExpression, result, diceRolls, error) {
+        // check crits
+        var hadCriticalFailure = false;
+        var hadCriticalSuccess = false;
+        for(const roll of diceRolls) {
+            if(roll.cf) hadCriticalFailure = true;
+            if(roll.cs) hadCriticalSuccess = true;
+        }
+
         // color format
         var color = '#000000';
-        if(result) {
-            if(result.hadCriticalFailure() && result.hadCriticalSuccess()) {
-                color = '#0000FF';
-            } else if(result.hadCriticalFailure()) {
-                color = '#FF0000';
-            } else if(result.hadCriticalSuccess()) {
-                color = '#008800';
-            }
+        if(hadCriticalFailure && hadCriticalSuccess) {
+            color = '#0000FF';
+        } else if(hadCriticalFailure) {
+            color = '#FF0000';
+        } else if(hadCriticalSuccess) {
+            color = '#008800';
         }
 
         // total value
@@ -53,7 +59,7 @@ export class RollFormatter {
             text = text + '?';
         }
         // show full result on hover
-        text = text + '<div class="onhover">' + (result ? result.getString() : (error ? error : '')) + '</div>';
+        text = text + `<div class="onhover${!result && error ? ' chat-error' : ''}">` + (result ? result.expr : (error ? error : '')) + '</div>';
         text = text + '</span>';
 
         // show expression on hover
@@ -66,10 +72,10 @@ export class RollFormatter {
     }
 
     static getResultValue(result) {
-        if(Math.trunc(result.getValue()) == result.getValue()) {
-            return String(Math.trunc(result.getValue()));
+        if(Math.trunc(result.value) == result.value) {
+            return String(Math.trunc(result.value));
         } else {
-            return String(result.getValue());
+            return String(result.value);
         }
     }
 

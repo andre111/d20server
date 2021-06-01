@@ -7,6 +7,7 @@
     "start": "node ./core/server/app.js",
     "generator": "node ./helper/generator.js",
     "converter": "node ./helper/converter.js",
+    "scripting": "node ./core/common/scripting/scripting.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "dependencies": {

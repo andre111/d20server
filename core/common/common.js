@@ -13,3 +13,4 @@ export { Entity } from './entity/entity.js';
 export { Profile } from './profile.js';
 export { Definitions } from './definitions.js';
 import './entity/entity-logic.js';
+import './scripting/scripting.js';

@@ -28,7 +28,7 @@ export const FOWRenderer = {
         }
         
         // update fow on server side
-        //TODO: think of a better system than using a counter
+        //TODO: think of a better system than using a counter (and only send of the fow has actually changed)
         _counter++;
         if(_counter == 30 * 10) {
             _counter = 0;

@@ -3,12 +3,11 @@ import { Events } from '../../common/events.js';
 import { ChatService } from '../service/chat-service.js';
 import { Command } from './command.js';
 import { EffectCommand } from './effect-command.js';
-import { GetCommand } from './get-command.js';
+import { EvalCommand } from './eval-command.js';
 import { IfCommand } from './if-command.js';
 import { NotificationCommand } from './notification-command.js';
 import { RollCommand } from './roll-command.js';
 import { SayCommand } from './say-command.js';
-import { SetCommand } from './set-command.js';
 import { TemplateCommand } from './template-command.js';
 import { TriggerCommand } from './trigger-command.js';
 import { WhisperCommand } from './whisper-command.js';
@@ -55,7 +54,7 @@ Events.on('chatMessage', event => {
         const command = Commands.get(commandName);
         if(command) {
             if(command.requiresGM() && profile.getRole() != Role.GM) {
-                ChatService.appendNote(profile, 'You do not have permission to use this command');
+                ChatService.appendError(profile, 'You do not have permission to use this command');
                 return;
             }
 
@@ -63,11 +62,11 @@ Events.on('chatMessage', event => {
             try {
                 command.execute(profile, commandArgs);
             } catch(error) {
-                ChatService.appendNote(profile, `Error in /${commandName}:`, `${error}`);
+                ChatService.appendError(profile, `Error in /${commandName}:`, `${error}`);
                 if(error instanceof Error) console.log(error.stack);
             }
         } else {
-            ChatService.appendNote(profile, `Unknown command: ${commandName}`);
+            ChatService.appendError(profile, `Unknown command: ${commandName}`);
         }
     }
 });
@@ -76,10 +75,6 @@ Events.on('chatMessage', event => {
 Commands.register(new RollCommand('roll', ['r'], true, true, true));
 Commands.register(new RollCommand('gmroll', ['gmr'], false, true, true));
 Commands.register(new RollCommand('hiddenroll', ['hr'], false, true, false));
-Commands.register(new GetCommand('get', ['g']));
-Commands.register(new SetCommand('set', ['s'], true, false));
-Commands.register(new SetCommand('gmset', ['gms'], false, false));
-Commands.register(new SetCommand('hiddenset', ['hs'], false, true));
 Commands.register(new WhisperCommand('whisper', ['w']));
 Commands.register(new SayCommand('say', []));
 Commands.register(new TemplateCommand('template', ['t'], true, true, true));
@@ -89,3 +84,4 @@ Commands.register(new TriggerCommand('trigger', []));
 Commands.register(new EffectCommand('effect', []));
 Commands.register(new IfCommand('if', []));
 Commands.register(new NotificationCommand('notification', []));
+Commands.register(new EvalCommand('eval', []));

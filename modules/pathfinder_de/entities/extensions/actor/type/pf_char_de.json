@@ -1421,233 +1421,233 @@
     "updateRules": [
         {
             "property": "pf_strMod",
-            "expression": "floor(({self.property.pf_str} + {self.property.pf_strTemp} - 10) / 2)"
+            "expression": "floor((self.pf_str + self.pf_strTemp - 10) / 2)"
         },
         {
             "property": "pf_dexMod",
-            "expression": "floor(({self.property.pf_dex} + {self.property.pf_dexTemp} - 10) / 2)"
+            "expression": "floor((self.pf_dex + self.pf_dexTemp - 10) / 2)"
         },
         {
             "property": "pf_conMod",
-            "expression": "floor(({self.property.pf_con} + {self.property.pf_conTemp} - 10) / 2)"
+            "expression": "floor((self.pf_con + self.pf_conTemp - 10) / 2)"
         },
         {
             "property": "pf_intMod",
-            "expression": "floor(({self.property.pf_int} + {self.property.pf_intTemp} - 10) / 2)"
+            "expression": "floor((self.pf_int + self.pf_intTemp - 10) / 2)"
         },
         {
             "property": "pf_wisMod",
-            "expression": "floor(({self.property.pf_wis} + {self.property.pf_wisTemp} - 10) / 2)"
+            "expression": "floor((self.pf_wis + self.pf_wisTemp - 10) / 2)"
         },
         {
             "property": "pf_chaMod",
-            "expression": "floor(({self.property.pf_cha} + {self.property.pf_chaTemp} - 10) / 2)"
+            "expression": "floor((self.pf_cha + self.pf_chaTemp - 10) / 2)"
         },
         
         {
             "property": "pf_initMod",
-            "expression": "{self.property.pf_dexMod} + {self.property.pf_initMiscMod}"
+            "expression": "self.pf_dexMod + self.pf_initMiscMod"
         },
         
         {
             "property": "pf_acSizeMod",
-            "expression": "-{self.property.pf_sizeMod}"
+            "expression": "-self.pf_sizeMod"
         },
         {
             "property": "pf_ac",
-            "expression": "10 + {self.property.pf_acArmorBonus} + {self.property.pf_acShieldBonus} + min({self.property.pf_dexMod}, {self.property.pf_acMaxDexMod}) + {self.property.pf_acSizeMod} + {self.property.pf_acNaturalArmor} + {self.property.pf_acDeflectionMod} + {self.property.pf_acMiscMod}"
+            "expression": "10 + self.pf_acArmorBonus + self.pf_acShieldBonus + min(self.pf_dexMod, self.pf_acMaxDexMod) + self.pf_acSizeMod + self.pf_acNaturalArmor + self.pf_acDeflectionMod + self.pf_acMiscMod"
         },
         {
             "property": "pf_acTouch",
-            "expression": "10 + min({self.property.pf_dexMod}, {self.property.pf_acMaxDexMod}) + {self.property.pf_acSizeMod} + {self.property.pf_acDeflectionMod} + {self.property.pf_acMiscMod}"
+            "expression": "10 + min(self.pf_dexMod, self.pf_acMaxDexMod) + self.pf_acSizeMod + self.pf_acDeflectionMod + self.pf_acMiscMod"
         },
         {
             "property": "pf_acFlatFooted",
-            "expression": "10 + {self.property.pf_acArmorBonus} + {self.property.pf_acShieldBonus} + min({self.property.pf_dexMod}, 0) + {self.property.pf_acSizeMod} + {self.property.pf_acNaturalArmor} + {self.property.pf_acMiscMod}"
+            "expression": "10 + self.pf_acArmorBonus + self.pf_acShieldBonus + min(self.pf_dexMod, 0) + self.pf_acSizeMod + self.pf_acNaturalArmor + self.pf_acMiscMod"
         },
         
         {
             "property": "pf_saveReflex",
-            "expression": "{self.property.pf_saveReflexBase} + {self.property.pf_dexMod} + {self.property.pf_saveReflexMagic} + {self.property.pf_saveReflexMisc} + {self.property.pf_saveReflexTemp}"
+            "expression": "self.pf_saveReflexBase + self.pf_dexMod + self.pf_saveReflexMagic + self.pf_saveReflexMisc + self.pf_saveReflexTemp"
         },
         {
             "property": "pf_saveWill",
-            "expression": "{self.property.pf_saveWillBase} + {self.property.pf_wisMod} + {self.property.pf_saveWillMagic} + {self.property.pf_saveWillMisc} + {self.property.pf_saveWillTemp}"
+            "expression": "self.pf_saveWillBase + self.pf_wisMod + self.pf_saveWillMagic + self.pf_saveWillMisc + self.pf_saveWillTemp"
         },
         {
             "property": "pf_saveFortitude",
-            "expression": "{self.property.pf_saveFortitudeBase} + {self.property.pf_conMod} + {self.property.pf_saveFortitudeMagic} + {self.property.pf_saveFortitudeMisc} + {self.property.pf_saveFortitudeTemp}"
+            "expression": "self.pf_saveFortitudeBase + self.pf_conMod + self.pf_saveFortitudeMagic + self.pf_saveFortitudeMisc + self.pf_saveFortitudeTemp"
         },
         
         {
             "property": "pf_cmb",
-            "expression": "{self.property.pf_baseAttackBonus} + {self.property.pf_strMod} + {self.property.pf_sizeMod}"
+            "expression": "self.pf_baseAttackBonus + self.pf_strMod + self.pf_sizeMod"
         },
         {
             "property": "pf_cmd",
-            "expression": "{self.property.pf_baseAttackBonus} + {self.property.pf_strMod} + {self.property.pf_sizeMod} + {self.property.pf_dexMod} + 10"
+            "expression": "self.pf_baseAttackBonus + self.pf_strMod + self.pf_sizeMod + self.pf_dexMod + 10"
         },
         
         {
             "property": "pf_skillAcrobatics",
-            "expression": "{self.property.pf_dexMod} + {self.property.pf_skillAcrobaticsRanks} + {self.property.pf_skillAcrobaticsMisc} + min({self.property.pf_skillAcrobaticsClass}*{self.property.pf_skillAcrobaticsRanks}, 1) * 3"
+            "expression": "self.pf_dexMod + self.pf_skillAcrobaticsRanks + self.pf_skillAcrobaticsMisc + min(number(self.pf_skillAcrobaticsClass)*self.pf_skillAcrobaticsRanks, 1) * 3"
         },
         {
             "property": "pf_skillAppraise",
-            "expression": "{self.property.pf_intMod} + {self.property.pf_skillAppraiseRanks} + {self.property.pf_skillAppraiseMisc} + min({self.property.pf_skillAppraiseClass}*{self.property.pf_skillAppraiseRanks}, 1) * 3"
+            "expression": "self.pf_intMod + self.pf_skillAppraiseRanks + self.pf_skillAppraiseMisc + min(number(self.pf_skillAppraiseClass)*self.pf_skillAppraiseRanks, 1) * 3"
         },
         {
             "property": "pf_skillBluff",
-            "expression": "{self.property.pf_chaMod} + {self.property.pf_skillBluffRanks} + {self.property.pf_skillBluffMisc} + min({self.property.pf_skillBluffClass}*{self.property.pf_skillBluffRanks}, 1) * 3"
+            "expression": "self.pf_chaMod + self.pf_skillBluffRanks + self.pf_skillBluffMisc + min(number(self.pf_skillBluffClass)*self.pf_skillBluffRanks, 1) * 3"
         },
         {
             "property": "pf_skillClimb",
-            "expression": "{self.property.pf_strMod} + {self.property.pf_skillClimbRanks} + {self.property.pf_skillClimbMisc} + min({self.property.pf_skillClimbClass}*{self.property.pf_skillClimbRanks}, 1) * 3"
+            "expression": "self.pf_strMod + self.pf_skillClimbRanks + self.pf_skillClimbMisc + min(number(self.pf_skillClimbClass)*self.pf_skillClimbRanks, 1) * 3"
         },
         {
             "property": "pf_skillCraft1",
-            "expression": "{self.property.pf_intMod} + {self.property.pf_skillCraft1Ranks} + {self.property.pf_skillCraft1Misc} + min({self.property.pf_skillCraft1Class}*{self.property.pf_skillCraft1Ranks}, 1) * 3"
+            "expression": "self.pf_intMod + self.pf_skillCraft1Ranks + self.pf_skillCraft1Misc + min(number(self.pf_skillCraft1Class)*self.pf_skillCraft1Ranks, 1) * 3"
         },
         {
             "property": "pf_skillCraft2",
-            "expression": "{self.property.pf_intMod} + {self.property.pf_skillCraft2Ranks} + {self.property.pf_skillCraft2Misc} + min({self.property.pf_skillCraft2Class}*{self.property.pf_skillCraft2Ranks}, 1) * 3"
+            "expression": "self.pf_intMod + self.pf_skillCraft2Ranks + self.pf_skillCraft2Misc + min(number(self.pf_skillCraft2Class)*self.pf_skillCraft2Ranks, 1) * 3"
         },
         {
             "property": "pf_skillCraft3",
-            "expression": "{self.property.pf_intMod} + {self.property.pf_skillCraft3Ranks} + {self.property.pf_skillCraft3Misc} + min({self.property.pf_skillCraft3Class}*{self.property.pf_skillCraft3Ranks}, 1) * 3"
+            "expression": "self.pf_intMod + self.pf_skillCraft3Ranks + self.pf_skillCraft3Misc + min(number(self.pf_skillCraft3Class)*self.pf_skillCraft3Ranks, 1) * 3"
         },
         {
             "property": "pf_skillDiplomacy",
-            "expression": "{self.property.pf_chaMod} + {self.property.pf_skillDiplomacyRanks} + {self.property.pf_skillDiplomacyMisc} + min({self.property.pf_skillDiplomacyClass}*{self.property.pf_skillDiplomacyRanks}, 1) * 3"
+            "expression": "self.pf_chaMod + self.pf_skillDiplomacyRanks + self.pf_skillDiplomacyMisc + min(number(self.pf_skillDiplomacyClass)*self.pf_skillDiplomacyRanks, 1) * 3"
         },
         {
             "property": "pf_skillDisableDevice",
-            "expression": "{self.property.pf_dexMod} + {self.property.pf_skillDisableDeviceRanks} + {self.property.pf_skillDisableDeviceMisc} + min({self.property.pf_skillDisableDeviceClass}*{self.property.pf_skillDisableDeviceRanks}, 1) * 3"
+            "expression": "self.pf_dexMod + self.pf_skillDisableDeviceRanks + self.pf_skillDisableDeviceMisc + min(number(self.pf_skillDisableDeviceClass)*self.pf_skillDisableDeviceRanks, 1) * 3"
         },
         {
             "property": "pf_skillDisguise",
-            "expression": "{self.property.pf_chaMod} + {self.property.pf_skillDisguiseRanks} + {self.property.pf_skillDisguiseMisc} + min({self.property.pf_skillDisguiseClass}*{self.property.pf_skillDisguiseRanks}, 1) * 3"
+            "expression": "self.pf_chaMod + self.pf_skillDisguiseRanks + self.pf_skillDisguiseMisc + min(number(self.pf_skillDisguiseClass)*self.pf_skillDisguiseRanks, 1) * 3"
         },
         {
             "property": "pf_skillEscapeArtist",
-            "expression": "{self.property.pf_dexMod} + {self.property.pf_skillEscapeArtistRanks} + {self.property.pf_skillEscapeArtistMisc} + min({self.property.pf_skillEscapeArtistClass}*{self.property.pf_skillEscapeArtistRanks}, 1) * 3"
+            "expression": "self.pf_dexMod + self.pf_skillEscapeArtistRanks + self.pf_skillEscapeArtistMisc + min(number(self.pf_skillEscapeArtistClass)*self.pf_skillEscapeArtistRanks, 1) * 3"
         },
         {
             "property": "pf_skillFly",
-            "expression": "{self.property.pf_dexMod} + {self.property.pf_skillFlyRanks} + {self.property.pf_skillFlyMisc} + min({self.property.pf_skillFlyClass}*{self.property.pf_skillFlyRanks}, 1) * 3"
+            "expression": "self.pf_dexMod + self.pf_skillFlyRanks + self.pf_skillFlyMisc + min(number(self.pf_skillFlyClass)*self.pf_skillFlyRanks, 1) * 3"
         },
         {
             "property": "pf_skillHandleAnimal",
-            "expression": "{self.property.pf_chaMod} + {self.property.pf_skillHandleAnimalRanks} + {self.property.pf_skillHandleAnimalMisc} + min({self.property.pf_skillHandleAnimalClass}*{self.property.pf_skillHandleAnimalRanks}, 1) * 3"
+            "expression": "self.pf_chaMod + self.pf_skillHandleAnimalRanks + self.pf_skillHandleAnimalMisc + min(number(self.pf_skillHandleAnimalClass)*self.pf_skillHandleAnimalRanks, 1) * 3"
         },
         {
             "property": "pf_skillHeal",
-            "expression": "{self.property.pf_wisMod} + {self.property.pf_skillHealRanks} + {self.property.pf_skillHealMisc} + min({self.property.pf_skillHealClass}*{self.property.pf_skillHealRanks}, 1) * 3"
+            "expression": "self.pf_wisMod + self.pf_skillHealRanks + self.pf_skillHealMisc + min(number(self.pf_skillHealClass)*self.pf_skillHealRanks, 1) * 3"
         },
         {
             "property": "pf_skillIntimidate",
-            "expression": "{self.property.pf_chaMod} + {self.property.pf_skillIntimidateRanks} + {self.property.pf_skillIntimidateMisc} + min({self.property.pf_skillIntimidateClass}*{self.property.pf_skillIntimidateRanks}, 1) * 3"
+            "expression": "self.pf_chaMod + self.pf_skillIntimidateRanks + self.pf_skillIntimidateMisc + min(number(self.pf_skillIntimidateClass)*self.pf_skillIntimidateRanks, 1) * 3"
         },
         {
             "property": "pf_skillKnowledgeArcana",
-            "expression": "{self.property.pf_intMod} + {self.property.pf_skillKnowledgeArcanaRanks} + {self.property.pf_skillKnowledgeArcanaMisc} + min({self.property.pf_skillKnowledgeArcanaClass}*{self.property.pf_skillKnowledgeArcanaRanks}, 1) * 3"
+            "expression": "self.pf_intMod + self.pf_skillKnowledgeArcanaRanks + self.pf_skillKnowledgeArcanaMisc + min(number(self.pf_skillKnowledgeArcanaClass)*self.pf_skillKnowledgeArcanaRanks, 1) * 3"
         },
         {
             "property": "pf_skillKnowledgeDungeoneering",
-            "expression": "{self.property.pf_intMod} + {self.property.pf_skillKnowledgeDungeoneeringRanks} + {self.property.pf_skillKnowledgeDungeoneeringMisc} + min({self.property.pf_skillKnowledgeDungeoneeringClass}*{self.property.pf_skillKnowledgeDungeoneeringRanks}, 1) * 3"
+            "expression": "self.pf_intMod + self.pf_skillKnowledgeDungeoneeringRanks + self.pf_skillKnowledgeDungeoneeringMisc + min(number(self.pf_skillKnowledgeDungeoneeringClass)*self.pf_skillKnowledgeDungeoneeringRanks, 1) * 3"
         },
         {
             "property": "pf_skillKnowledgeEngineering",
-            "expression": "{self.property.pf_intMod} + {self.property.pf_skillKnowledgeEngineeringRanks} + {self.property.pf_skillKnowledgeEngineeringMisc} + min({self.property.pf_skillKnowledgeEngineeringClass}*{self.property.pf_skillKnowledgeEngineeringRanks}, 1) * 3"
+            "expression": "self.pf_intMod + self.pf_skillKnowledgeEngineeringRanks + self.pf_skillKnowledgeEngineeringMisc + min(number(self.pf_skillKnowledgeEngineeringClass)*self.pf_skillKnowledgeEngineeringRanks, 1) * 3"
         },
         {
             "property": "pf_skillKnowledgeGeography",
-            "expression": "{self.property.pf_intMod} + {self.property.pf_skillKnowledgeGeographyRanks} + {self.property.pf_skillKnowledgeGeographyMisc} + min({self.property.pf_skillKnowledgeGeographyClass}*{self.property.pf_skillKnowledgeGeographyRanks}, 1) * 3"
+            "expression": "self.pf_intMod + self.pf_skillKnowledgeGeographyRanks + self.pf_skillKnowledgeGeographyMisc + min(number(self.pf_skillKnowledgeGeographyClass)*self.pf_skillKnowledgeGeographyRanks, 1) * 3"
         },
         {
             "property": "pf_skillKnowledgeHistory",
-            "expression": "{self.property.pf_intMod} + {self.property.pf_skillKnowledgeHistoryRanks} + {self.property.pf_skillKnowledgeHistoryMisc} + min({self.property.pf_skillKnowledgeHistoryClass}*{self.property.pf_skillKnowledgeHistoryRanks}, 1) * 3"
+            "expression": "self.pf_intMod + self.pf_skillKnowledgeHistoryRanks + self.pf_skillKnowledgeHistoryMisc + min(number(self.pf_skillKnowledgeHistoryClass)*self.pf_skillKnowledgeHistoryRanks, 1) * 3"
         },
         {
             "property": "pf_skillKnowledgeLocal",
-            "expression": "{self.property.pf_intMod} + {self.property.pf_skillKnowledgeLocalRanks} + {self.property.pf_skillKnowledgeLocalMisc} + min({self.property.pf_skillKnowledgeLocalClass}*{self.property.pf_skillKnowledgeLocalRanks}, 1) * 3"
+            "expression": "self.pf_intMod + self.pf_skillKnowledgeLocalRanks + self.pf_skillKnowledgeLocalMisc + min(number(self.pf_skillKnowledgeLocalClass)*self.pf_skillKnowledgeLocalRanks, 1) * 3"
         },
         {
             "property": "pf_skillKnowledgeNature",
-            "expression": "{self.property.pf_intMod} + {self.property.pf_skillKnowledgeNatureRanks} + {self.property.pf_skillKnowledgeNatureMisc} + min({self.property.pf_skillKnowledgeNatureClass}*{self.property.pf_skillKnowledgeNatureRanks}, 1) * 3"
+            "expression": "self.pf_intMod + self.pf_skillKnowledgeNatureRanks + self.pf_skillKnowledgeNatureMisc + min(number(self.pf_skillKnowledgeNatureClass)*self.pf_skillKnowledgeNatureRanks, 1) * 3"
         },
         {
             "property": "pf_skillKnowledgeNobility",
-            "expression": "{self.property.pf_intMod} + {self.property.pf_skillKnowledgeNobilityRanks} + {self.property.pf_skillKnowledgeNobilityMisc} + min({self.property.pf_skillKnowledgeNobilityClass}*{self.property.pf_skillKnowledgeNobilityRanks}, 1) * 3"
+            "expression": "self.pf_intMod + self.pf_skillKnowledgeNobilityRanks + self.pf_skillKnowledgeNobilityMisc + min(number(self.pf_skillKnowledgeNobilityClass)*self.pf_skillKnowledgeNobilityRanks, 1) * 3"
         },
         {
             "property": "pf_skillKnowledgePlanes",
-            "expression": "{self.property.pf_intMod} + {self.property.pf_skillKnowledgePlanesRanks} + {self.property.pf_skillKnowledgePlanesMisc} + min({self.property.pf_skillKnowledgePlanesClass}*{self.property.pf_skillKnowledgePlanesRanks}, 1) * 3"
+            "expression": "self.pf_intMod + self.pf_skillKnowledgePlanesRanks + self.pf_skillKnowledgePlanesMisc + min(number(self.pf_skillKnowledgePlanesClass)*self.pf_skillKnowledgePlanesRanks, 1) * 3"
         },
         {
             "property": "pf_skillKnowledgeReligion",
-            "expression": "{self.property.pf_intMod} + {self.property.pf_skillKnowledgeReligionRanks} + {self.property.pf_skillKnowledgeReligionMisc} + min({self.property.pf_skillKnowledgeReligionClass}*{self.property.pf_skillKnowledgeReligionRanks}, 1) * 3"
+            "expression": "self.pf_intMod + self.pf_skillKnowledgeReligionRanks + self.pf_skillKnowledgeReligionMisc + min(number(self.pf_skillKnowledgeReligionClass)*self.pf_skillKnowledgeReligionRanks, 1) * 3"
         },
         {
             "property": "pf_skillLinguistics",
-            "expression": "{self.property.pf_intMod} + {self.property.pf_skillLinguisticsRanks} + {self.property.pf_skillLinguisticsMisc} + min({self.property.pf_skillLinguisticsClass}*{self.property.pf_skillLinguisticsRanks}, 1) * 3"
+            "expression": "self.pf_intMod + self.pf_skillLinguisticsRanks + self.pf_skillLinguisticsMisc + min(number(self.pf_skillLinguisticsClass)*self.pf_skillLinguisticsRanks, 1) * 3"
         },
         {
             "property": "pf_skillPerception",
-            "expression": "{self.property.pf_wisMod} + {self.property.pf_skillPerceptionRanks} + {self.property.pf_skillPerceptionMisc} + min({self.property.pf_skillPerceptionClass}*{self.property.pf_skillPerceptionRanks}, 1) * 3"
+            "expression": "self.pf_wisMod + self.pf_skillPerceptionRanks + self.pf_skillPerceptionMisc + min(number(self.pf_skillPerceptionClass)*self.pf_skillPerceptionRanks, 1) * 3"
         },
         {
             "property": "pf_skillPerform1",
-            "expression": "{self.property.pf_chaMod} + {self.property.pf_skillPerform1Ranks} + {self.property.pf_skillPerform1Misc} + min({self.property.pf_skillPerform1Class}*{self.property.pf_skillPerform1Ranks}, 1) * 3"
+            "expression": "self.pf_chaMod + self.pf_skillPerform1Ranks + self.pf_skillPerform1Misc + min(number(self.pf_skillPerform1Class)*self.pf_skillPerform1Ranks, 1) * 3"
         },
         {
             "property": "pf_skillPerform2",
-            "expression": "{self.property.pf_chaMod} + {self.property.pf_skillPerform2Ranks} + {self.property.pf_skillPerform2Misc} + min({self.property.pf_skillPerform2Class}*{self.property.pf_skillPerform2Ranks}, 1) * 3"
+            "expression": "self.pf_chaMod + self.pf_skillPerform2Ranks + self.pf_skillPerform2Misc + min(number(self.pf_skillPerform2Class)*self.pf_skillPerform2Ranks, 1) * 3"
         },
         {
             "property": "pf_skillProfession1",
-            "expression": "{self.property.pf_wisMod} + {self.property.pf_skillProfession1Ranks} + {self.property.pf_skillProfession1Misc} + min({self.property.pf_skillProfession1Class}*{self.property.pf_skillProfession1Ranks}, 1) * 3"
+            "expression": "self.pf_wisMod + self.pf_skillProfession1Ranks + self.pf_skillProfession1Misc + min(number(self.pf_skillProfession1Class)*self.pf_skillProfession1Ranks, 1) * 3"
         },
         {
             "property": "pf_skillProfession2",
-            "expression": "{self.property.pf_wisMod} + {self.property.pf_skillProfession2Ranks} + {self.property.pf_skillProfession2Misc} + min({self.property.pf_skillProfession2Class}*{self.property.pf_skillProfession2Ranks}, 1) * 3"
+            "expression": "self.pf_wisMod + self.pf_skillProfession2Ranks + self.pf_skillProfession2Misc + min(number(self.pf_skillProfession2Class)*self.pf_skillProfession2Ranks, 1) * 3"
         },
         {
             "property": "pf_skillRide",
-            "expression": "{self.property.pf_dexMod} + {self.property.pf_skillRideRanks} + {self.property.pf_skillRideMisc} + min({self.property.pf_skillRideClass}*{self.property.pf_skillRideRanks}, 1) * 3"
+            "expression": "self.pf_dexMod + self.pf_skillRideRanks + self.pf_skillRideMisc + min(number(self.pf_skillRideClass)*self.pf_skillRideRanks, 1) * 3"
         },
         {
             "property": "pf_skillSenseMotive",
-            "expression": "{self.property.pf_wisMod} + {self.property.pf_skillSenseMotiveRanks} + {self.property.pf_skillSenseMotiveMisc} + min({self.property.pf_skillSenseMotiveClass}*{self.property.pf_skillSenseMotiveRanks}, 1) * 3"
+            "expression": "self.pf_wisMod + self.pf_skillSenseMotiveRanks + self.pf_skillSenseMotiveMisc + min(number(self.pf_skillSenseMotiveClass)*self.pf_skillSenseMotiveRanks, 1) * 3"
         },
         {
             "property": "pf_skillSleightOfHand",
-            "expression": "{self.property.pf_dexMod} + {self.property.pf_skillSleightOfHandRanks} + {self.property.pf_skillSleightOfHandMisc} + min({self.property.pf_skillSleightOfHandClass}*{self.property.pf_skillSleightOfHandRanks}, 1) * 3"
+            "expression": "self.pf_dexMod + self.pf_skillSleightOfHandRanks + self.pf_skillSleightOfHandMisc + min(number(self.pf_skillSleightOfHandClass)*self.pf_skillSleightOfHandRanks, 1) * 3"
         },
         {
             "property": "pf_skillSpellcraft",
-            "expression": "{self.property.pf_intMod} + {self.property.pf_skillSpellcraftRanks} + {self.property.pf_skillSpellcraftMisc} + min({self.property.pf_skillSpellcraftClass}*{self.property.pf_skillSpellcraftRanks}, 1) * 3"
+            "expression": "self.pf_intMod + self.pf_skillSpellcraftRanks + self.pf_skillSpellcraftMisc + min(number(self.pf_skillSpellcraftClass)*self.pf_skillSpellcraftRanks, 1) * 3"
         },
         {
             "property": "pf_skillStealth",
-            "expression": "{self.property.pf_dexMod} + {self.property.pf_skillStealthRanks} + {self.property.pf_skillStealthMisc} + min({self.property.pf_skillStealthClass}*{self.property.pf_skillStealthRanks}, 1) * 3"
+            "expression": "self.pf_dexMod + self.pf_skillStealthRanks + self.pf_skillStealthMisc + min(number(self.pf_skillStealthClass)*self.pf_skillStealthRanks, 1) * 3"
         },
         {
             "property": "pf_skillSurvival",
-            "expression": "{self.property.pf_wisMod} + {self.property.pf_skillSurvivalRanks} + {self.property.pf_skillSurvivalMisc} + min({self.property.pf_skillSurvivalClass}*{self.property.pf_skillSurvivalRanks}, 1) * 3"
+            "expression": "self.pf_wisMod + self.pf_skillSurvivalRanks + self.pf_skillSurvivalMisc + min(number(self.pf_skillSurvivalClass)*self.pf_skillSurvivalRanks, 1) * 3"
         },
         {
             "property": "pf_skillSwim",
-            "expression": "{self.property.pf_strMod} + {self.property.pf_skillSwimRanks} + {self.property.pf_skillSwimMisc} + min({self.property.pf_skillSwimClass}*{self.property.pf_skillSwimRanks}, 1) * 3"
+            "expression": "self.pf_strMod + self.pf_skillSwimRanks + self.pf_skillSwimMisc + min(number(self.pf_skillSwimClass)*self.pf_skillSwimRanks, 1) * 3"
         },
         {
             "property": "pf_skillUseMagicDevice",
-            "expression": "{self.property.pf_chaMod} + {self.property.pf_skillUseMagicDeviceRanks} + {self.property.pf_skillUseMagicDeviceMisc} + min({self.property.pf_skillUseMagicDeviceClass}*{self.property.pf_skillUseMagicDeviceRanks}, 1) * 3"
+            "expression": "self.pf_chaMod + self.pf_skillUseMagicDeviceRanks + self.pf_skillUseMagicDeviceMisc + min(number(self.pf_skillUseMagicDeviceClass)*self.pf_skillUseMagicDeviceRanks, 1) * 3"
         },
         
         {
             "property": "pf_sizeCategory",
-            "expression": "{self.property.pf_sizeMod}",
+            "expression": "self.pf_sizeMod",
             "stringMap": {
                 "8": "Kolossal",
                 "4": "Gigantisch",
@@ -1664,160 +1664,164 @@
     "macros": {
         "Initiative": [
             "/battle join",
-            "/set selected.property.battle_initiative 1d20cs>=100cf>=100+{selected.actor.property.pf_initMod}*1.01"
+            "Initiative für [[sActor.name]]: [[sToken.battle_initiative = 1d20cs>=100cf>=100+sActor.pf_initMod*1.01]]"
+        ],
+        "Initiative (Versteckt)": [
+            "/battle join",
+            "Initiative: [[sToken.battle_initiative = 1d20cs>=100cf>=100+sActor.pf_initMod*1.01]]"
         ],
         "Kampfmanöver": [
-            "/template attack1 Kampfmanöver Wurf;für {selected.actor.property.name};Wurf;1d20+{selected.actor.property.pf_cmb};"
+            "/template attack1 Kampfmanöver Wurf;für [[sActor.name]];Wurf;1d20+sActor.pf_cmb;"
         ],
         "KM-Verteidigung": [
-            "/template generic1 Kampfmanöver Verteidigung;für {selected.actor.property.name};Wert;{selected.actor.property.pf_cmd};"
+            "/template generic1 Kampfmanöver Verteidigung;für [[sActor.name]];Wert;sActor.pf_cmd;"
         ],
         
         "Attributswürfe/Stärke": [
-            "/template generic1 Stärke Wurf;für {selected.actor.property.name};Wurf;1d20+{selected.actor.property.pf_strMod};"
+            "/template generic1 Stärke Wurf;für [[sActor.name]];Wurf;1d20+sActor.pf_strMod;"
         ],
         "Attributswürfe/Geschicklichkeit": [
-            "/template generic1 Geschicklichkeits Wurf;für {selected.actor.property.name};Wurf;1d20+{selected.actor.property.pf_dexMod};"
+            "/template generic1 Geschicklichkeits Wurf;für [[sActor.name]];Wurf;1d20+sActor.pf_dexMod;"
         ],
         "Attributswürfe/Konstitution": [
-            "/template generic1 Konstitutions Wurf;für {selected.actor.property.name};Wurf;1d20+{selected.actor.property.pf_conMod};"
+            "/template generic1 Konstitutions Wurf;für [[sActor.name]];Wurf;1d20+sActor.pf_conMod;"
         ],
         "Attributswürfe/Intelligenz": [
-            "/template generic1 Intelligenz Wurf;für {selected.actor.property.name};Wurf;1d20+{selected.actor.property.pf_intMod};"
+            "/template generic1 Intelligenz Wurf;für [[sActor.name]];Wurf;1d20+sActor.pf_intMod;"
         ],
         "Attributswürfe/Weisheit": [
-            "/template generic1 Weisheits Wurf;für {selected.actor.property.name};Wurf;1d20+{selected.actor.property.pf_wisMod};"
+            "/template generic1 Weisheits Wurf;für [[sActor.name]];Wurf;1d20+sActor.pf_wisMod;"
         ],
         "Attributswürfe/Charisma": [
-            "/template generic1 Charisma Wurf;für {selected.actor.property.name};Wurf;1d20+{selected.actor.property.pf_chaMod};"
+            "/template generic1 Charisma Wurf;für [[sActor.name]];Wurf;1d20+sActor.pf_chaMod;"
         ],
         
         "Rettungswürfe/Reflex": [
-            "/template generic1 Reflex Rettungswurf;für {selected.actor.property.name};Wurf;1d20+{selected.actor.property.pf_saveReflex};"
+            "/template generic1 Reflex Rettungswurf;für [[sActor.name]];Wurf;1d20+sActor.pf_saveReflex;"
         ],
         "Rettungswürfe/Willen": [
-            "/template generic1 Willen Rettungswurf;für {selected.actor.property.name};Wurf;1d20+{selected.actor.property.pf_saveWill};"
+            "/template generic1 Willen Rettungswurf;für [[sActor.name]];Wurf;1d20+sActor.pf_saveWill;"
         ],
         "Rettungswürfe/Zähigkeit": [
-            "/template generic1 Zähigkeit Rettungswurf;für {selected.actor.property.name};Wurf;1d20+{selected.actor.property.pf_saveFortitude};"
+            "/template generic1 Zähigkeit Rettungswurf;für [[sActor.name]];Wurf;1d20+sActor.pf_saveFortitude;"
         ],
         
         "Fertigkeiten/Akrobatik": [
-            "/template generic1 Akrobatik Wurf;für {selected.actor.property.name};Wurf;1d20+{selected.actor.property.pf_skillAcrobatics};"
+            "/template generic1 Akrobatik Wurf;für [[sActor.name]];Wurf;1d20+sActor.pf_skillAcrobatics;"
         ],
         "Fertigkeiten/Auftreten 1": [
-            "/template generic1 Auftreten ({selected.actor.property.pf_skillPerform1Text}) Wurf;für {selected.actor.property.name};Wurf;1d20+{selected.actor.property.pf_skillPerform1};"
+            "/template generic1 Auftreten ([[sActor.pf_skillPerform1Text]]) Wurf;für [[sActor.name]];Wurf;1d20+sActor.pf_skillPerform1;"
         ],
         "Fertigkeiten/Auftreten 2": [
-            "/template generic1 Auftreten ({selected.actor.property.pf_skillPerform2Text}) Wurf;für {selected.actor.property.name};Wurf;1d20+{selected.actor.property.pf_skillPerform2};"
+            "/template generic1 Auftreten ([[sActor.pf_skillPerform2Text]]) Wurf;für [[sActor.name]];Wurf;1d20+sActor.pf_skillPerform2;"
         ],
         "Fertigkeiten/Beruf 1": [
-            "/template generic1 Beruf ({selected.actor.property.pf_skillProfession1Text}) Wurf;für {selected.actor.property.name};Wurf;1d20+{selected.actor.property.pf_skillProfession1};"
+            "/template generic1 Beruf ([[sActor.pf_skillProfession1Text]]) Wurf;für [[sActor.name]];Wurf;1d20+sActor.pf_skillProfession1;"
         ],
         "Fertigkeiten/Beruf 2": [
-            "/template generic1 Beruf ({selected.actor.property.pf_skillProfession2Text}) Wurf;für {selected.actor.property.name};Wurf;1d20+{selected.actor.property.pf_skillProfession2};"
+            "/template generic1 Beruf ([[sActor.pf_skillProfession2Text]]) Wurf;für [[sActor.name]];Wurf;1d20+sActor.pf_skillProfession2;"
         ],
         "Fertigkeiten/Bluffen": [
-            "/template generic1 Bluffen Wurf;für {selected.actor.property.name};Wurf;1d20+{selected.actor.property.pf_skillBluff};"
+            "/template generic1 Bluffen Wurf;für [[sActor.name]];Wurf;1d20+sActor.pf_skillBluff;"
         ],
         "Fertigkeiten/Diplomatie": [
-            "/template generic1 Diplomatie Wurf;für {selected.actor.property.name};Wurf;1d20+{selected.actor.property.pf_skillDiplomacy};"
+            "/template generic1 Diplomatie Wurf;für [[sActor.name]];Wurf;1d20+sActor.pf_skillDiplomacy;"
         ],
         "Fertigkeiten/Einschüchtern": [
-            "/template generic1 Einschüchtern Wurf;für {selected.actor.property.name};Wurf;1d20+{selected.actor.property.pf_skillIntimidate};"
+            "/template generic1 Einschüchtern Wurf;für [[sActor.name]];Wurf;1d20+sActor.pf_skillIntimidate;"
         ],
         "Fertigkeiten/Entfesslungskunst": [
-            "/template generic1 Entfesslungskunst Wurf;für {selected.actor.property.name};Wurf;1d20+{selected.actor.property.pf_skillEscapeArtist};"
+            "/template generic1 Entfesslungskunst Wurf;für [[sActor.name]];Wurf;1d20+sActor.pf_skillEscapeArtist;"
         ],
         "Fertigkeiten/Fingerfertigkeit": [
-            "/template generic1 Fingerfertigkeit Wurf;für {selected.actor.property.name};Wurf;1d20+{selected.actor.property.pf_skillSleightOfHand};"
+            "/template generic1 Fingerfertigkeit Wurf;für [[sActor.name]];Wurf;1d20+sActor.pf_skillSleightOfHand;"
         ],
         "Fertigkeiten/Fliegen": [
-            "/template generic1 Fliegen Wurf;für {selected.actor.property.name};Wurf;1d20+{selected.actor.property.pf_skillFly};"
+            "/template generic1 Fliegen Wurf;für [[sActor.name]];Wurf;1d20+sActor.pf_skillFly;"
         ],
         "Fertigkeiten/Handwerk 1": [
-            "/template generic1 Handwerk ({selected.actor.property.pf_skillCraft1Text}) Wurf;für {selected.actor.property.name};Wurf;1d20+{selected.actor.property.pf_skillCraft1};"
+            "/template generic1 Handwerk ([[sActor.pf_skillCraft1Text]]) Wurf;für [[sActor.name]];Wurf;1d20+sActor.pf_skillCraft1;"
         ],
         "Fertigkeiten/Handwerk 2": [
-            "/template generic1 Handwerk ({selected.actor.property.pf_skillCraft2Text}) Wurf;für {selected.actor.property.name};Wurf;1d20+{selected.actor.property.pf_skillCraft2};"
+            "/template generic1 Handwerk ([[sActor.pf_skillCraft2Text]]) Wurf;für [[sActor.name]];Wurf;1d20+sActor.pf_skillCraft2;"
         ],
         "Fertigkeiten/Handwerk 3": [
-            "/template generic1 Handwerk ({selected.actor.property.pf_skillCraft3Text}) Wurf;für {selected.actor.property.name};Wurf;1d20+{selected.actor.property.pf_skillCraft3};"
+            "/template generic1 Handwerk ([[sActor.pf_skillCraft3Text]]) Wurf;für [[sActor.name]];Wurf;1d20+sActor.pf_skillCraft3;"
         ],
         "Fertigkeiten/Heilkunde": [
-            "/template generic1 Heilkunde ({selected.actor.property.pf_skillHealText}) Wurf;für {selected.actor.property.name};Wurf;1d20+{selected.actor.property.pf_skillHeal};"
+            "/template generic1 Heilkunde ([[sActor.pf_skillHealText]]) Wurf;für [[sActor.name]];Wurf;1d20+sActor.pf_skillHeal;"
         ],
         "Fertigkeiten/Heimlichkeit": [
-            "/template generic1 Heimlichkeit Wurf;für {selected.actor.property.name};Wurf;1d20+{selected.actor.property.pf_skillStealth};"
+            "/template generic1 Heimlichkeit Wurf;für [[sActor.name]];Wurf;1d20+sActor.pf_skillStealth;"
         ],
         "Fertigkeiten/Klettern": [
-            "/template generic1 Klettern Wurf;für {selected.actor.property.name};Wurf;1d20+{selected.actor.property.pf_skillClimb};"
+            "/template generic1 Klettern Wurf;für [[sActor.name]];Wurf;1d20+sActor.pf_skillClimb;"
         ],
         "Fertigkeiten/Magischen Gegenstand benutzen": [
-            "/template generic1 Magischen Gegenstand benutzen Wurf;für {selected.actor.property.name};Wurf;1d20+{selected.actor.property.pf_skillUseMagicDevice};"
+            "/template generic1 Magischen Gegenstand benutzen Wurf;für [[sActor.name]];Wurf;1d20+sActor.pf_skillUseMagicDevice;"
         ],
         "Fertigkeiten/Mechanismus ausschalten": [
-            "/template generic1 Mechanismus ausschalten Wurf;für {selected.actor.property.name};Wurf;1d20+{selected.actor.property.pf_skillDisableDevice};"
+            "/template generic1 Mechanismus ausschalten Wurf;für [[sActor.name]];Wurf;1d20+sActor.pf_skillDisableDevice;"
         ],
         "Fertigkeiten/Mit Tieren umgehen": [
-            "/template generic1 Mit Tieren umgehen Wurf;für {selected.actor.property.name};Wurf;1d20+{selected.actor.property.pf_skillHandleAnimal};"
+            "/template generic1 Mit Tieren umgehen Wurf;für [[sActor.name]];Wurf;1d20+sActor.pf_skillHandleAnimal;"
         ],
         "Fertigkeiten/Motiv erkennen": [
-            "/template generic1 Motiv erkennen Wurf;für {selected.actor.property.name};Wurf;1d20+{selected.actor.property.pf_skillSenseMotive};"
+            "/template generic1 Motiv erkennen Wurf;für [[sActor.name]];Wurf;1d20+sActor.pf_skillSenseMotive;"
         ],
         "Fertigkeiten/Reiten": [
-            "/template generic1 Reiten Wurf;für {selected.actor.property.name};Wurf;1d20+{selected.actor.property.pf_skillRide};"
+            "/template generic1 Reiten Wurf;für [[sActor.name]];Wurf;1d20+sActor.pf_skillRide;"
         ],
         "Fertigkeiten/Schätzen": [
-            "/template generic1 Schätzen Wurf;für {selected.actor.property.name};Wurf;1d20+{selected.actor.property.pf_skillAppraise};"
+            "/template generic1 Schätzen Wurf;für [[sActor.name]];Wurf;1d20+sActor.pf_skillAppraise;"
         ],
         "Fertigkeiten/Schwimmen": [
-            "/template generic1 Schwimmen Wurf;für {selected.actor.property.name};Wurf;1d20+{selected.actor.property.pf_skillSwim};"
+            "/template generic1 Schwimmen Wurf;für [[sActor.name]];Wurf;1d20+sActor.pf_skillSwim;"
         ],
         "Fertigkeiten/Sprachkunde": [
-            "/template generic1 Sprachkunde Wurf;für {selected.actor.property.name};Wurf;1d20+{selected.actor.property.pf_skillLinguistics};"
+            "/template generic1 Sprachkunde Wurf;für [[sActor.name]];Wurf;1d20+sActor.pf_skillLinguistics;"
         ],
         "Fertigkeiten/Überlebenskunst": [
-            "/template generic1 Überlebenskunst Wurf;für {selected.actor.property.name};Wurf;1d20+{selected.actor.property.pf_skillSurvival};"
+            "/template generic1 Überlebenskunst Wurf;für [[sActor.name]];Wurf;1d20+sActor.pf_skillSurvival;"
         ],
         "Fertigkeiten/Verkleiden": [
-            "/template generic1 Verkleiden Wurf;für {selected.actor.property.name};Wurf;1d20+{selected.actor.property.pf_skillDisguise};"
+            "/template generic1 Verkleiden Wurf;für [[sActor.name]];Wurf;1d20+sActor.pf_skillDisguise;"
         ],
         "Fertigkeiten/Wahrnehmung": [
-            "/template generic1 Wahrnehmung Wurf;für {selected.actor.property.name};Wurf;1d20+{selected.actor.property.pf_skillPerception};"
+            "/template generic1 Wahrnehmung Wurf;für [[sActor.name]];Wurf;1d20+sActor.pf_skillPerception;"
         ],
         "Fertigkeiten (Wissen)/Adel und Königshäuser": [
-            "/template generic1 Wissen (Adel und Königshäuser) Wurf;für {selected.actor.property.name};Wurf;1d20+{selected.actor.property.pf_skillKnowledgeNobility};"
+            "/template generic1 Wissen (Adel und Königshäuser) Wurf;für [[sActor.name]];Wurf;1d20+sActor.pf_skillKnowledgeNobility;"
         ],
         "Fertigkeiten (Wissen)/Arkanes": [
-            "/template generic1 Wissen (Arkanes) Wurf;für {selected.actor.property.name};Wurf;1d20+{selected.actor.property.pf_skillKnowledgeArcana};"
+            "/template generic1 Wissen (Arkanes) Wurf;für [[sActor.name]];Wurf;1d20+sActor.pf_skillKnowledgeArcana;"
         ],
         "Fertigkeiten (Wissen)/Baukunst": [
-            "/template generic1 Wissen (Baukunst) Wurf;für {selected.actor.property.name};Wurf;1d20+{selected.actor.property.pf_skillKnowledgeEngineering};"
+            "/template generic1 Wissen (Baukunst) Wurf;für [[sActor.name]];Wurf;1d20+sActor.pf_skillKnowledgeEngineering;"
         ],
         "Fertigkeiten (Wissen)/Die Ebenen": [
-            "/template generic1 Wissen (Die Ebenen) Wurf;für {selected.actor.property.name};Wurf;1d20+{selected.actor.property.pf_skillKnowledgePlanes};"
+            "/template generic1 Wissen (Die Ebenen) Wurf;für [[sActor.name]];Wurf;1d20+sActor.pf_skillKnowledgePlanes;"
         ],
         "Fertigkeiten (Wissen)/Geographie": [
-            "/template generic1 Wissen (Geographie) Wurf;für {selected.actor.property.name};Wurf;1d20+{selected.actor.property.pf_skillKnowledgeGeography};"
+            "/template generic1 Wissen (Geographie) Wurf;für [[sActor.name]];Wurf;1d20+sActor.pf_skillKnowledgeGeography;"
         ],
         "Fertigkeiten (Wissen)/Geschichte": [
-            "/template generic1 Wissen (Geschichte) Wurf;für {selected.actor.property.name};Wurf;1d20+{selected.actor.property.pf_skillKnowledgeHistory};"
+            "/template generic1 Wissen (Geschichte) Wurf;für [[sActor.name]];Wurf;1d20+sActor.pf_skillKnowledgeHistory;"
         ],
         "Fertigkeiten (Wissen)/Gewölbekunde": [
-            "/template generic1 Wissen (Gewölbekunde) Wurf;für {selected.actor.property.name};Wurf;1d20+{selected.actor.property.pf_skillKnowledgeDungeoneering};"
+            "/template generic1 Wissen (Gewölbekunde) Wurf;für [[sActor.name]];Wurf;1d20+sActor.pf_skillKnowledgeDungeoneering;"
         ],
         "Fertigkeiten (Wissen)/Lokales": [
-            "/template generic1 Wissen (Lokales) Wurf;für {selected.actor.property.name};Wurf;1d20+{selected.actor.property.pf_skillKnowledgeLocal};"
+            "/template generic1 Wissen (Lokales) Wurf;für [[sActor.name]];Wurf;1d20+sActor.pf_skillKnowledgeLocal;"
         ],
         "Fertigkeiten (Wissen)/Natur": [
-            "/template generic1 Wissen (Natur) Wurf;für {selected.actor.property.name};Wurf;1d20+{selected.actor.property.pf_skillKnowledgeNature};"
+            "/template generic1 Wissen (Natur) Wurf;für [[sActor.name]];Wurf;1d20+sActor.pf_skillKnowledgeNature;"
         ],
         "Fertigkeiten (Wissen)/Religion": [
-            "/template generic1 Wissen (Religion) Wurf;für {selected.actor.property.name};Wurf;1d20+{selected.actor.property.pf_skillKnowledgeReligion};"
+            "/template generic1 Wissen (Religion) Wurf;für [[sActor.name]];Wurf;1d20+sActor.pf_skillKnowledgeReligion;"
         ],
         "Fertigkeiten/Zauberkunde": [
-            "/template generic1 Zauberkunde Wurf;für {selected.actor.property.name};Wurf;1d20+{selected.actor.property.pf_skillSpellcraft};"
+            "/template generic1 Zauberkunde Wurf;für [[sActor.name]];Wurf;1d20+sActor.pf_skillSpellcraft;"
         ]
     },
     "editorTabs": []

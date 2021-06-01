@@ -1,7 +1,6 @@
 import { Type } from '../constants.js';
 import { Events } from '../events.js';
-import { Context } from '../scripting/context.js';
-import { ParserInstance } from '../scripting/expression/parser.js';
+import { Scripting } from '../scripting/scripting.js';
 import { TokenUtil } from '../util/tokenutil.js';
 
 // This file contains extracted entity methods (using the Events system) to avoid circular dependencies
@@ -18,18 +17,21 @@ Events.on('propertyChange', event => {
     }
 });
 
+const SCRIPT = new Scripting(false);
 function applyUpdateRules(entity, updateRules, changedProperties) {
     for(const ruleDef of updateRules) {
         if(!entity.has(ruleDef.property)) throw new Error(`Error in UpdateRule: Property ${ruleDef.property} does not exist`);
 
         try {
             // use cached expression or parse from definition (because parsing is an expensive operation that can lock up the browser for a noticeable time)
-            const expression = ruleDef._transient_parsedExpression ? ruleDef._transient_parsedExpression : ParserInstance.parse(ruleDef.expression);
+            const expression = ruleDef._transient_parsedExpression ? ruleDef._transient_parsedExpression : SCRIPT.parseExpression(ruleDef.expression);
             ruleDef._transient_parsedExpression = expression;
 
-            const result = expression.eval(new Context(null, null, entity));
+            const result = SCRIPT.evalExpression(expression, null, entity);
+            SCRIPT.throwIfErrored();
+            if(result.type != Type.DOUBLE) throw new Error('Updated rule evaluated to unexpected type: expected DOUBLE got '+result.type);
         
-            const value = result.getValue();
+            const value = result.value;
             switch(entity.getPropertyType(ruleDef.property)) {
             case Type.DOUBLE:
                 entity.setDouble(ruleDef.property, value);
