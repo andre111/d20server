@@ -37,54 +37,56 @@ export class Token {
 }
 
 // TYPE VALUES
-export const LEFT_PAREN = Symbol();
-export const RIGHT_PAREN = Symbol();
-export const LEFT_BRACE = Symbol();
-export const RIGHT_BRACE = Symbol();
+export const LEFT_PAREN = Symbol('punctuation');
+export const RIGHT_PAREN = Symbol('punctuation');
+export const LEFT_BRACE = Symbol('punctuation');
+export const RIGHT_BRACE = Symbol('punctuation');
 
-export const COMMA = Symbol();
-export const DOT = Symbol();
-export const SEMICOLON = Symbol();
+export const COMMA = Symbol('punctuation');
+export const DOT = Symbol('punctuation');
+export const SEMICOLON = Symbol('punctuation');
 
-export const MINUS = Symbol();
-export const PLUS = Symbol();
-export const STAR = Symbol();
-export const SLASH = Symbol();
+export const MINUS = Symbol('operator');
+export const PLUS = Symbol('operator');
+export const STAR = Symbol('operator');
+export const SLASH = Symbol('operator');
 
-export const BANG = Symbol();
-export const EQUAL = Symbol();
+export const BANG = Symbol('operator');
+export const EQUAL = Symbol('operator');
 
-export const DICE = Symbol();
+export const DICE = Symbol('dice');
 
 // comparisons
-export const BANG_EQUAL = Symbol();
-export const EQUAL_EQUAL = Symbol();
-export const GREATER = Symbol();
-export const GREATER_EQUAL = Symbol();
-export const LESS = Symbol();
-export const LESS_EQUAL = Symbol();
+export const BANG_EQUAL = Symbol('operator');
+export const EQUAL_EQUAL = Symbol('operator');
+export const GREATER = Symbol('operator');
+export const GREATER_EQUAL = Symbol('operator');
+export const LESS = Symbol('operator');
+export const LESS_EQUAL = Symbol('operator');
 
 // literals
-export const IDENTIFIER = Symbol();
-export const STRING = Symbol();
-export const NUMBER = Symbol();
+export const IDENTIFIER = Symbol('identifier');
+export const STRING = Symbol('string');
+export const NUMBER = Symbol('number');
 
 // keywords
-export const FALSE = Symbol();
-export const TRUE = Symbol();
-export const NULL = Symbol();
+export const FALSE = Symbol('boolean');
+export const TRUE = Symbol('boolean');
+export const NULL = Symbol('null');
 
-export const AND = Symbol();
-export const OR = Symbol();
-export const IF = Symbol();
-export const THEN = Symbol();
-export const ELSE = Symbol();
-export const VAR = Symbol();
-export const WHILE = Symbol();
-export const FUNCTION = Symbol();
-export const RETURN = Symbol();
+export const AND = Symbol('keyword');
+export const OR = Symbol('keyword');
+export const IF = Symbol('keyword');
+export const THEN = Symbol('keyword');
+export const ELSE = Symbol('keyword');
+export const VAR = Symbol('keyword');
+export const WHILE = Symbol('keyword');
+export const FUNCTION = Symbol('keyword');
+export const RETURN = Symbol('keyword');
 
 export const EOF = Symbol();
+export const UNKNOWN = Symbol();
+export const COMMENT = Symbol('comment');
 
 // Keywords
 export const KEYWORDS = Object.freeze({

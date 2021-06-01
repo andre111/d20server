@@ -1,8 +1,9 @@
-import { BANG, BANG_EQUAL, COMMA, DICE, DOT, EOF, EQUAL, EQUAL_EQUAL, GREATER, GREATER_EQUAL, IDENTIFIER, KEYWORDS, LEFT_BRACE, LEFT_PAREN, LESS, LESS_EQUAL, MINUS, NUMBER, PLUS, RIGHT_BRACE, RIGHT_PAREN, SEMICOLON, SLASH, STAR, STRING, Token } from './token.js';
+import { BANG, BANG_EQUAL, COMMA, COMMENT, DICE, DOT, EOF, EQUAL, EQUAL_EQUAL, GREATER, GREATER_EQUAL, IDENTIFIER, KEYWORDS, LEFT_BRACE, LEFT_PAREN, LESS, LESS_EQUAL, MINUS, NUMBER, PLUS, RIGHT_BRACE, RIGHT_PAREN, SEMICOLON, SLASH, STAR, STRING, Token, UNKNOWN } from './token.js';
 
 export class Scanner {
     #scripting
     #source;
+    #keepAll;
 
     #start = 0;
     #current = 0;
@@ -13,9 +14,10 @@ export class Scanner {
 
     #tokens;
 
-    constructor(scripting, source) {
+    constructor(scripting, source, keepAll = false) {
         this.#scripting = scripting;
         this.#source = source;
+        this.#keepAll = keepAll;
 
         this.#tokens = [];
         this.#scanTokens();
@@ -47,6 +49,7 @@ export class Scanner {
             case '/': 
                 if(this.#match('/')) { // comment
                     while(this.#peek() != '\n' && !this.#isAtEOF()) this.#advance();
+                    if(this.#keepAll) this.#addToken(COMMENT);
                 } else {
                     this.#addToken(SLASH); 
                 }
@@ -67,10 +70,12 @@ export class Scanner {
             case ' ':
             case '\r':
             case '\t':
+                if(this.#keepAll) this.#addToken(UNKNOWN);
                 break; // whitespace
             case '\n':
                 this.#line++;
                 this.#column = 0;
+                if(this.#keepAll) this.#addToken(UNKNOWN);
                 break;
             default:
                 if(this.#isDigit(c)) {
@@ -78,6 +83,7 @@ export class Scanner {
                 } else if(this.#isAlpha(c)) {
                     this.#identifier();
                 } else {
+                    if(this.#keepAll) this.#addToken(UNKNOWN);
                     this.#scripting.error(this.#line, this.#startColumn, 'Unexpected character');
                 }
                 break;
@@ -91,6 +97,7 @@ export class Scanner {
 
         if(this.#peek() != '"') {
             this.#scripting.error(this.#line, this.#column, 'Unterminated string');
+            if(this.#keepAll) this.#addToken(UNKNOWN);
             return;
         }
         this.#advance();

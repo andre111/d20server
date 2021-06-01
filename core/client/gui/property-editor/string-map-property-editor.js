@@ -1,5 +1,6 @@
 import { PropertyEditor } from './property-editor.js';
 import { CanvasWindowInput } from '../../canvas/window/canvas-window-input.js';
+import { CodeEditor } from '../../html/code-editor.js';
 
 import { Type } from '../../../common/constants.js';
 
@@ -38,13 +39,9 @@ export class StringMapPropertyEditor extends PropertyEditor {
         buttonPanel.appendChild(this.removeEntry);
         this.container.appendChild(buttonPanel);
         
-        this.editor = document.createElement('textarea');
+        this.editor = new CodeEditor();
         this.editor.style.width = '100%';
         this.editor.style.height = 'calc(100% - 154px)';
-        this.editor.style.overflow = 'auto';
-        //this.editor.style.whiteSpace = 'nowrap'; //TODO: what is better?
-        this.editor.style.resize = 'none';
-        this.editor.spellcheck = false;
         this.container.appendChild(this.editor);
         
         // functionality

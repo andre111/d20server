@@ -105,6 +105,13 @@ export class Scripting {
     }
 
     //---------------------------------------------------------------
+    tokenize(source, keepAll = false) {
+        this.#lines = source.split('\n');
+        this.#errors = [];
+        return new Scanner(this, source, keepAll).tokens;
+    }
+
+    //---------------------------------------------------------------
     get applyEntityChanges() {
         return this.#applyEntityChanges;
     }
