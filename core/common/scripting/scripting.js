@@ -41,15 +41,17 @@ export class Scripting {
     }
 
     execute(program, profile, self, interpreterCallback = null) {
+        // reset state
+        this.#errors = [];
+        this.#diceRolls = [];
+        this.#modifiedEntities.clear();
+        this.#lines = program.lines;
+
+        // check for parse errors
         if(program.errors.length != 0) {
             this.#errors = program.errors;
             return;
         }
-        this.#lines = program.lines;
-        this.#errors = [];
-        
-        this.#diceRolls = [];
-        this.#modifiedEntities.clear();
 
         // run interpreter
         const interpreter = this.#createInterpreter(profile, self);
@@ -80,15 +82,17 @@ export class Scripting {
     }
 
     evalExpression(expression, profile, self, interpreterCallback = null) {
+        // reset state
+        this.#errors = [];
+        this.#diceRolls = [];
+        this.#modifiedEntities.clear();
+        this.#lines = expression.lines;
+
+        // check for parse errors
         if(expression.errors.length != 0) {
             this.#errors = expression.errors;
             return;
         }
-        this.#lines = expression.lines;
-        this.#errors = [];
-        
-        this.#diceRolls = [];
-        this.#modifiedEntities.clear();
 
         // run interpreter
         const interpreter = this.#createInterpreter(profile, self);
@@ -139,6 +143,7 @@ export class Scripting {
     #createParser(source) {
         this.#lines = source.split('\n');
         this.#errors = [];
+        this.#diceRolls = [];
 
         // scan and parse
         const scanner = new Scanner(this, source);
