@@ -74,12 +74,13 @@ Events.on('chatMessage', event => {
 // register all the commands (this could use a better system)
 Commands.register(new RollCommand('roll', ['r'], true, true, true));
 Commands.register(new RollCommand('gmroll', ['gmr'], false, true, true));
-Commands.register(new RollCommand('hiddenroll', ['hr'], false, true, false));
+Commands.register(new RollCommand('selfroll', ['sr'], false, true, false));
+Commands.register(new RollCommand('hiddenroll', ['hr'], false, false, false));
 Commands.register(new WhisperCommand('whisper', ['w']));
 Commands.register(new SayCommand('say', []));
 Commands.register(new TemplateCommand('template', ['t'], true, true, true));
 Commands.register(new TemplateCommand('gmtemplate', ['gmt'], false, true, true));
-Commands.register(new TemplateCommand('hiddentemplate', ['ht'], false, true, false));
+Commands.register(new TemplateCommand('selftemplate', ['st'], false, true, false));
 Commands.register(new TriggerCommand('trigger', []));
 Commands.register(new EffectCommand('effect', []));
 Commands.register(new IfCommand('if', []));

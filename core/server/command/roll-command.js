@@ -7,40 +7,46 @@ import { Scripting } from '../../common/scripting/scripting.js';
 
 const SCRIPT = new Scripting();
 export class RollCommand extends Command {
-    showPublic;
-    showSelf;
-    showGM;
+    #showPublic;
+    #showSelf;
+    #showGM;
+    #sendMessage;
 
     constructor(name, aliases, showPublic, showSelf, showGM) {
         super(name, aliases, false);
 
-        this.showPublic = showPublic;
-        this.showSelf = showSelf;
-        this.showGM = showGM;
+        this.#showPublic = showPublic;
+        this.#showSelf = showSelf;
+        this.#showGM = showGM;
+        this.#sendMessage = showPublic || showSelf || showGM;
     }
 
     execute(profile, args) {
         // parse roll and execute
         const result = SCRIPT.interpretExpression(ChatService.unescape(args), profile, null);
         const diceRolls = SCRIPT.diceRolls;
-        var error = null;
         if(SCRIPT.errors.length != 0) {
-            error = SCRIPT.errors[0];
+            var error = SCRIPT.errors[0];
             if(SCRIPT.errors.length > 1) {
                 error = error + `\nand ${SCRIPT.errors.length-1} more`
             }
+            ChatService.appendError(profile, error);
+            return;
         }
+        
+        if(this.#sendMessage) {
+            const rollAppendix = this.#showPublic ? '' : (this.#showGM ? ' (to GM)' : ' (to Self)');
+            const rollMessage = RollFormatter.formatDiceRoll(profile, args, result, rollAppendix);
 
-        const rollMessage = RollFormatter.formatDiceRoll(profile, args, this.showPublic, result, diceRolls, error);
+            // determine recipents
+            const recipents = this.buildRecipents(profile, this.#showPublic, this.#showSelf);
 
-        // determine recipents
-        const recipents = this.buildRecipents(profile, this.showPublic, this.showSelf);
+            // create entry
+            const entry = new ChatEntry(rollMessage, profile.getID(), this.#showGM, recipents);
+            entry.setRolls(diceRolls);
 
-        // create entry
-        const entry = new ChatEntry(rollMessage, profile.getID(), this.showGM, recipents);
-        entry.setRolls(diceRolls);
-
-        // append message
-        ChatService.append(true, entry);
+            // append message
+            ChatService.append(true, entry);
+        }
     }
 }

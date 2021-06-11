@@ -1,12 +1,10 @@
 import { ChatService } from '../service/chat-service.js';
 
 export class RollFormatter {
-    static formatDiceRoll(profile, rollExpression, showPublic, result, diceRolls, error) {
+    static formatDiceRoll(profile, rollExpression, result, appendix = '') {
         // build 'header'
         var text = '<div class="chat-sender">';
-        text = text + ChatService.escape(profile.getUsername());
-        if(!showPublic) text = text + ' (to GM)';
-        text = text + ': ';
+        text = text + ChatService.escape(profile.getUsername()) + appendix + ': ';
         text = text + '</div>';
 
         text = text + '<span class="hoverable">';
@@ -23,11 +21,6 @@ export class RollFormatter {
             text = text + ' = ?';
         }
         text = text + '</div>';
-
-        // potential error message
-        if(error) {
-            text = text + `<div class="chat-error">${error}</div>`;
-        }
 
         return text;
     }
