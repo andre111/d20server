@@ -1,4 +1,4 @@
-import { BANG, BANG_EQUAL, COMMA, COMMENT, DICE, DOT, EOF, EQUAL, EQUAL_EQUAL, GREATER, GREATER_EQUAL, IDENTIFIER, KEYWORDS, LEFT_BRACE, LEFT_PAREN, LESS, LESS_EQUAL, MINUS, NUMBER, PLUS, RIGHT_BRACE, RIGHT_PAREN, SEMICOLON, SLASH, STAR, STRING, Token, UNKNOWN } from './token.js';
+import { BANG, BANG_EQUAL, COMMA, COMMENT, DICE, DOT, EOF, EQUAL, EQUAL_EQUAL, GREATER, GREATER_EQUAL, IDENTIFIER, KEYWORDS, LEFT_BRACE, LEFT_PAREN, LESS, LESS_EQUAL, MINUS, NEWLINE, NUMBER, PLUS, RIGHT_BRACE, RIGHT_PAREN, SEMICOLON, SLASH, STAR, STRING, Token, UNKNOWN, WHITESPACE } from './token.js';
 
 export class Scanner {
     #scripting
@@ -70,12 +70,12 @@ export class Scanner {
             case ' ':
             case '\r':
             case '\t':
-                if(this.#keepAll) this.#addToken(UNKNOWN);
+                if(this.#keepAll) this.#addToken(WHITESPACE);
                 break; // whitespace
             case '\n':
                 this.#line++;
                 this.#column = 0;
-                if(this.#keepAll) this.#addToken(UNKNOWN);
+                if(this.#keepAll) this.#addToken(NEWLINE);
                 break;
             default:
                 if(this.#isDigit(c)) {

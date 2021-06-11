@@ -5,6 +5,7 @@ export class Token {
     
     #line;
     #column;
+    #error;
 
     constructor(type, lexeme, literal, line, column) {
         this.#type = type;
@@ -13,6 +14,7 @@ export class Token {
 
         this.#line = line;
         this.#column = column;
+        this.#error = false;
     }
 
     get type() {
@@ -33,6 +35,14 @@ export class Token {
 
     get column() {
         return this.#column;
+    }
+
+    get error() {
+        return this.#error;
+    }
+
+    set error(e) {
+        this.#error = e;
     }
 }
 
@@ -86,6 +96,8 @@ export const RETURN = Symbol('keyword');
 
 export const EOF = Symbol();
 export const UNKNOWN = Symbol();
+export const WHITESPACE = Symbol();
+export const NEWLINE = Symbol();
 export const COMMENT = Symbol('comment');
 
 // Keywords

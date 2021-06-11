@@ -42,6 +42,7 @@ export class StringMapPropertyEditor extends PropertyEditor {
         this.editor = new CodeEditor();
         this.editor.style.width = '100%';
         this.editor.style.height = 'calc(100% - 154px)';
+        this.editor.style.border = 'none';
         this.container.appendChild(this.editor);
         
         // functionality

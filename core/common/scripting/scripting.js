@@ -7,6 +7,7 @@ import { BUILTIN_CEIL, BUILTIN_FIND, BUILTIN_FLOOR, BUILTIN_MAX, BUILTIN_MIN, BU
 import { Interpreter } from './interpreter.js';
 import { Parser } from './parser.js';
 import { Scanner } from './scanner.js';
+import { COMMENT, NEWLINE, UNKNOWN, WHITESPACE } from './token.js';
 import { Value } from './value.js';
 
 // see: craftinginterpreters.com
@@ -105,10 +106,15 @@ export class Scripting {
     }
 
     //---------------------------------------------------------------
-    tokenize(source, keepAll = false) {
+    tokenize(source, keepAll = false, fullparse = false) {
         this.#lines = source.split('\n');
         this.#errors = [];
-        return new Scanner(this, source, keepAll).tokens;
+        const tokens = new Scanner(this, source, keepAll).tokens;
+        if(fullparse) {
+            // perform full parse for error detection (TODO: needs some better way to skip the otherwise not included tokens)
+            new Parser(this, tokens.filter(t => (t.type != UNKNOWN && t.type != COMMENT && t.type != WHITESPACE && t.type != NEWLINE))).program();
+        }
+        return tokens;
     }
 
     //---------------------------------------------------------------
@@ -224,6 +230,7 @@ export class Scripting {
     }
 
     errorToken(token, description) {
+        token.error = description;
         this.error(token.line, token.column, description);
     }
 }

@@ -1,4 +1,4 @@
-import nedb from 'nedb';
+import nedb from '@rmanibus/nedb';
 import fs from 'fs-extra';
 import { fromJson, toJson } from '../core/common/util/datautil.js';
 import { readJson } from '../core/server/util/fileutil.js';
@@ -103,7 +103,7 @@ function setStringMap(value) {
     return string;
 }
 
-/*
+//*
 convert('actor');
 convert('attachment');
 convert('drawing');
@@ -113,4 +113,4 @@ convert('wall');
 //*/
 
 //TODO: never call this directly with convert, as these functions DO NOT block until done but return instantly -> conflicts!
-moveMacros();
+//moveMacros();

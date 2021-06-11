@@ -1,5 +1,5 @@
 import { Scripting } from '../../common/scripting/scripting.js';
-import { EOF, IDENTIFIER, LEFT_PAREN, UNKNOWN } from '../../common/scripting/token.js';
+import { EOF, IDENTIFIER, LEFT_PAREN, NEWLINE, UNKNOWN, WHITESPACE } from '../../common/scripting/token.js';
 
 //TODO: somehow add support for error reporting directly in editor (needs display and full parsing)
 const SCRIPT = new Scripting(false);
@@ -11,6 +11,8 @@ export class CodeEditor extends HTMLElement {
     #code;
 
     #value;
+
+    #fullparseTimeout;
 
     constructor() {
         super();
@@ -56,7 +58,7 @@ export class CodeEditor extends HTMLElement {
         }
     }
 
-    update(value) {
+    update(value, fullparse = false) {
         // Update code
         this.#textarea.value = value;
         this.#value = value;
@@ -66,33 +68,66 @@ export class CodeEditor extends HTMLElement {
         if(value.startsWith(scriptMarker)) {
             value = value.substring(scriptMarker.length);
 
-            const tokens = SCRIPT.tokenize(value, true);
+            // start timeout for full parse
+            if(!fullparse) {
+                if(this.#fullparseTimeout) clearTimeout(this.#fullparseTimeout);
+                this.#fullparseTimeout = setTimeout(() => this.update(this.#value, true), 1000);
+            }
+
+            // perform tokenize/parse
+            const tokens = SCRIPT.tokenize(value, true, fullparse);
             const converted = [];
+            converted.push('<span class="line">');
             for(var i=0; i<tokens.length; i++) {
                 const token = tokens[i];
                 if(token.type == EOF) break; // stop at EOF (and do NOT include it)
 
                 // find token class (simply based on type description + small hack to "detect functions")
                 var tokenClass = token.type.description;
+                var tokenError = '';
                 if(token.type == IDENTIFIER) {
                     var next = i+1;
-                    while(tokens[next].type == UNKNOWN) next++;
+                    while(tokens[next].type == WHITESPACE) next++;
 
                     if(tokens[next].type == LEFT_PAREN) tokenClass = 'function';
                 }
+                
+                // add error markers
+                //TODO: add them on other errors aswell
+                if(token.type == UNKNOWN) {
+                    tokenClass = 'error';
+                    tokenError = token.lexeme.startsWith('"') ? 'Unclosed string' : 'Unexpected character';
+                } else if(token.error) {
+                    tokenClass += ' error';
+                    tokenError = token.error;
+                }
 
                 // append token lexeme (with potential highlighting)
-                const lexeme = token.lexeme.replace(/&/g, '&amp;').replace(/</g, '&lt;');
+                const lexeme = this.htmlEntitize(token.lexeme);
                 if(tokenClass) {
-                    converted.push(`<span class="token ${tokenClass}">${lexeme}</span>`);
+                    converted.push(`<span class="token ${tokenClass}" ${tokenError ? `data-error="${tokenError}"` : ''}>${lexeme}</span>`);
                 } else {
                     converted.push(lexeme);
                 }
+                
+                // add line sepparators
+                if(token.type == NEWLINE) {
+                    converted.push('</span><span class="line">');
+                }
             }
-            this.#code.innerHTML = scriptMarker + converted.join('') + '\n'; // NOTE: extra \n required to "stay in sync" with textarea
+            this.#code.innerHTML = scriptMarker + converted.join('') + '</span>\n'; // NOTE: extra \n required to "stay in sync" with textarea
         } else {
-            this.#code.textContent = value + '\n'; // NOTE: extra \n required to "stay in sync" with textarea
+            const lines = this.htmlEntitize(value).split(/\n/g);
+            const converted = [];
+            for(const line of lines) {
+                converted.push(`<span class="line">${line}\n</span>`);
+            }
+            this.#code.innerHTML = converted.join('') + '\n'; // NOTE: extra \n required to "stay in sync" with textarea
         }
+    }
+
+    htmlEntitize(str) {
+        return str.replace(/&/g, '&amp;').replace(/</g, '&lt;');
     }
     
     attributeChangedCallback(name, oldValue, newValue) {
