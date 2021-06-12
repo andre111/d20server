@@ -89,9 +89,7 @@ Events.on('chatMessage', event => {
         // execute macro
         const scriptMarker = '?SCRIPT?\n';
         if(macro.startsWith(scriptMarker)) {
-            SCRIPT.interpret(macro.substring('?SCRIPT?\n'.length), profile, null, interpreter => {
-                Events.trigger('serverCreateInterpreter', { interpreter: interpreter }, false);
-            });
+            SCRIPT.interpret(macro.substring('?SCRIPT?\n'.length), profile, null);
             if(SCRIPT.errors.length != 0) {
                 ChatService.appendError(profile, SCRIPT.errors.join('\n'));
             }

@@ -16,17 +16,9 @@
 // You could "glitch" through walls with diagonal movements because of server sync delays (not reseting local changes should "fix" that, but cause potential server desync issues when the server denies the changes -> maybe make server send back unchanged value on desync)
 
 //TODO: scripting system extensions:
-// - arrays
-//     - notes: ScrArray extends Value
-//     - notes: use actual ArrayGet (add to call grammer rule) and ArraySet expr types, syntactic sugar would be problematic for multiple reasons
-//     - notes: use "array[index]" syntax (maybe allow the same syntax to access and set characters (needs checking value is actually just a single char) in a string)
-//     - notes: requires using something else rather than [[...]] for inline expressions (maybe ||...|| or |...|)
-//     - "getters": array(), list(manager) for getting an array of all entities in a certain manager
-//     - modifications: allow len(array) to work
-// "player/profile" value type 
-//     - notes: needs arrays for most functionality
-//     "getters": getPlayer(name), getControllingPlayers(actor), getSelectingPlayers(token)
-//     functions: getSelectedTokens(player), moveCamera(player, x, y)
+// - "player/profile" value type
+//     - "getters": getControllingPlayers(actor), getSelectingPlayers(token)
+//     - functions: getSelectedTokens(player), moveCamera(player, x, y)
 // a system for server scripts
 //     can run on events (entity modified,...) or periodically with configured time
 

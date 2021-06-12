@@ -77,6 +77,13 @@ export class Profile {
         return token;
     }
 
+    getSelectedTokens() {
+        if(!this._notransfer_selectedTokens) return [];
+
+        const manager = EntityManagers.get('token');
+        return this._notransfer_selectedTokens.map(id => manager.find(id));
+    }
+
     setSelectedTokens(selectedTokens) {
         this._notransfer_selectedTokens = selectedTokens;
     }

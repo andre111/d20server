@@ -2,6 +2,7 @@ import { Type } from '../constants.js';
 import { EntityManagers } from '../entity/entity-managers.js';
 import { EntityReference } from '../entity/entity-reference.js';
 import { Entity } from '../entity/entity.js';
+import { Events } from '../events.js';
 import { TokenUtil } from '../util/tokenutil.js';
 import { BUILTIN_ARRAY, BUILTIN_CEIL, BUILTIN_FIND, BUILTIN_FLOOR, BUILTIN_LEN, BUILTIN_LIST, BUILTIN_MAX, BUILTIN_MIN, BUILTIN_NUMBER, BUILTIN_SQRT, Func } from './func.js';
 import { Interpreter } from './interpreter.js';
@@ -191,6 +192,9 @@ export class Scripting {
         DEBUG_PRINT.call = (interpreter, paren, name, args) => console.log(args[0].value);
         interpreter.defineGlobal('print', DEBUG_PRINT);
         interpreter.defineGlobal('testToken', new Value(new EntityReference(new Entity('token', 0)), Type.ENTITY, ''));
+
+        // event for modifying the interpreter on one side
+        Events.trigger('createInterpreter', { interpreter: interpreter }, false)
 
         return interpreter;
     }

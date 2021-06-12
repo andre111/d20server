@@ -1,27 +1,75 @@
 import { Role, Type } from '../../common/constants.js';
+import { EntityReference } from '../../common/entity/entity-reference.js';
 import { Events } from '../../common/events.js';
 import { PlayEffect } from '../../common/messages.js';
 import { Func } from '../../common/scripting/func.js';
 import { RuntimeError } from '../../common/scripting/runtime-error.js';
+import { ScrArray } from '../../common/scripting/scrarray.js';
 import { Value } from '../../common/scripting/value.js';
 import { ChatService } from '../service/chat-service.js';
 import { MessageService } from '../service/message-service.js';
+import { UserService } from '../service/user-service.js';
 
-export const SERVER_BUILTIN_MOVECAMERA = new Func(3);
+function checkPlayerAccess(interpreter, player, paren) {
+    if(interpreter.getProfile() && interpreter.getProfile() != player && interpreter.getProfile().getRole() != Role.GM) {
+        throw new RuntimeError(paren, 'Only the GM/Server is allowed to access another player');
+    }
+}
+
+const SERVER_BUILTIN_GETCONTROLLINGPLAYERS = new Func(1);
+SERVER_BUILTIN_GETCONTROLLINGPLAYERS.call = (interpreter, paren, name, args) => {
+    interpreter.checkOperandType(paren, args[0], Type.ENTITY);
+
+    const array = new ScrArray();
+    var index = 0;
+    for(const playerID of args[0].value.getControllingPlayers()) {
+        array.set(index, new Value(UserService.getProfile(playerID), Type.PLAYER, ''));
+        index++;
+    }
+    return array;
+};
+
+const SERVER_BUILTIN_GETSELECTEDTOKENS = new Func(1);
+SERVER_BUILTIN_GETSELECTEDTOKENS.call = (interpreter, paren, name, args) => {
+    interpreter.checkOperandType(paren, args[0], Type.PLAYER);
+    checkPlayerAccess(interpreter, args[0].value, paren);
+
+    const array = new ScrArray();
+    var index = 0;
+    for(const entity of args[0].value.getSelectedTokens()) {
+        array.set(index, new Value(new EntityReference(entity), Type.ENTITY, ''));
+        index++;
+    }
+    return array;
+};
+
+const SERVER_BUILTIN_GETSELECTINGPLAYERS = new Func(1);
+SERVER_BUILTIN_GETSELECTINGPLAYERS.call = (interpreter, paren, name, args) => {
+    interpreter.checkOperandType(paren, args[0], Type.ENTITY);
+    if(args[0].value.type != 'token') throw new RuntimeError(paren, 'Can only get selecting players on a token');
+
+    const array = new ScrArray();
+    var index = 0;
+    UserService.forEach(player => {
+        array.set(index, new Value(player, Type.PLAYER, ''));
+        index++;
+    });
+    return array;
+};
+
+const SERVER_BUILTIN_MOVECAMERA = new Func(3);
 SERVER_BUILTIN_MOVECAMERA.call = (interpreter, paren, name, args) => {
     interpreter.checkOperandType(paren, args[0], Type.PLAYER);
     interpreter.checkOperandType(paren, args[1], Type.DOUBLE);
     interpreter.checkOperandType(paren, args[2], Type.DOUBLE);
-
-    if(interpreter.getProfile() && interpreter.getProfile() != args[0].value && interpreter.getProfile().getRole() != Role.GM) {
-        throw new RuntimeError(paren, 'Only the GM/Server is allowed to move the camera of another player');
-    }
+    checkPlayerAccess(interpreter, args[0].value, paren);
 
     const msg = new PlayEffect('NONE', args[1].value, args[2].value, 0, 1, false, true, '');
     MessageService.send(msg, args[0].value);
+    return Value.NULL;
 };
 
-export const SERVER_BUILTIN_SENDCHAT = new Func(1);
+const SERVER_BUILTIN_SENDCHAT = new Func(1);
 SERVER_BUILTIN_SENDCHAT.call = (interpreter, paren, name, args) => {
     interpreter.checkOperandType(paren, args[0], Type.STRING);
 
@@ -32,7 +80,10 @@ SERVER_BUILTIN_SENDCHAT.call = (interpreter, paren, name, args) => {
     return Value.NULL;
 };
 
-Events.on('serverCreateInterpreter', (event) => {
+Events.on('createInterpreter', (event) => {
+    event.data.interpreter.defineGlobal('getControllingPlayers', SERVER_BUILTIN_GETCONTROLLINGPLAYERS);
+    event.data.interpreter.defineGlobal('getSelectedTokens', SERVER_BUILTIN_GETSELECTEDTOKENS);
+    event.data.interpreter.defineGlobal('getSelectingPlayers', SERVER_BUILTIN_GETSELECTINGPLAYERS);
     event.data.interpreter.defineGlobal('moveCamera', SERVER_BUILTIN_MOVECAMERA);
     event.data.interpreter.defineGlobal('sendChat', SERVER_BUILTIN_SENDCHAT);
 });
