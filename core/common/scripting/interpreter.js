@@ -139,7 +139,7 @@ export class Interpreter extends Visitor {
         case LESS:
             this.checkOperandType(binary.operator, left, Type.DOUBLE);
             this.checkOperandType(binary.operator, right, Type.DOUBLE);
-            return new Value(left.vlue < right.value, Type.BOOLEAN, left.expr + ' < ' + right.expr);
+            return new Value(left.value < right.value, Type.BOOLEAN, left.expr + ' < ' + right.expr);
         case LESS_EQUAL:
             this.checkOperandType(binary.operator, left, Type.DOUBLE);
             this.checkOperandType(binary.operator, right, Type.DOUBLE);
