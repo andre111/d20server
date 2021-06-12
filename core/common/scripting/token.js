@@ -51,6 +51,8 @@ export const LEFT_PAREN = Symbol('punctuation');
 export const RIGHT_PAREN = Symbol('punctuation');
 export const LEFT_BRACE = Symbol('punctuation');
 export const RIGHT_BRACE = Symbol('punctuation');
+export const LEFT_SQUARE = Symbol('punctuation');
+export const RIGHT_SQUARE = Symbol('punctuation');
 
 export const COMMA = Symbol('punctuation');
 export const DOT = Symbol('punctuation');

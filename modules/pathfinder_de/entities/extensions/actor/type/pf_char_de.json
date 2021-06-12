@@ -1664,164 +1664,164 @@
     "macros": {
         "Initiative": [
             "/battle join",
-            "Initiative für [[sActor.name]]: [[sToken.battle_initiative = 1d20cs>=100cf>=100+sActor.pf_initMod*1.01]]"
+            "Initiative für |sActor.name|: |sToken.battle_initiative = 1d20cs>=100cf>=100+sActor.pf_initMod*1.01|"
         ],
-        "Initiative (Versteckt)": [
+        "Initiative (Anonym)": [
             "/battle join",
-            "Initiative: [[sToken.battle_initiative = 1d20cs>=100cf>=100+sActor.pf_initMod*1.01]]"
+            "Initiative: |sToken.battle_initiative = 1d20cs>=100cf>=100+sActor.pf_initMod*1.01|"
         ],
         "Kampfmanöver": [
-            "/template attack1 Kampfmanöver Wurf;für [[sActor.name]];Wurf;1d20+sActor.pf_cmb;"
+            "/template attack1 Kampfmanöver Wurf;für |sActor.name|;Wurf;1d20+sActor.pf_cmb;"
         ],
         "KM-Verteidigung": [
-            "/template generic1 Kampfmanöver Verteidigung;für [[sActor.name]];Wert;sActor.pf_cmd;"
+            "/template generic1 Kampfmanöver Verteidigung;für |sActor.name|;Wert;sActor.pf_cmd;"
         ],
         
         "Attributswürfe/Stärke": [
-            "/template generic1 Stärke Wurf;für [[sActor.name]];Wurf;1d20+sActor.pf_strMod;"
+            "/template generic1 Stärke Wurf;für |sActor.name|;Wurf;1d20+sActor.pf_strMod;"
         ],
         "Attributswürfe/Geschicklichkeit": [
-            "/template generic1 Geschicklichkeits Wurf;für [[sActor.name]];Wurf;1d20+sActor.pf_dexMod;"
+            "/template generic1 Geschicklichkeits Wurf;für |sActor.name|;Wurf;1d20+sActor.pf_dexMod;"
         ],
         "Attributswürfe/Konstitution": [
-            "/template generic1 Konstitutions Wurf;für [[sActor.name]];Wurf;1d20+sActor.pf_conMod;"
+            "/template generic1 Konstitutions Wurf;für |sActor.name|;Wurf;1d20+sActor.pf_conMod;"
         ],
         "Attributswürfe/Intelligenz": [
-            "/template generic1 Intelligenz Wurf;für [[sActor.name]];Wurf;1d20+sActor.pf_intMod;"
+            "/template generic1 Intelligenz Wurf;für |sActor.name|;Wurf;1d20+sActor.pf_intMod;"
         ],
         "Attributswürfe/Weisheit": [
-            "/template generic1 Weisheits Wurf;für [[sActor.name]];Wurf;1d20+sActor.pf_wisMod;"
+            "/template generic1 Weisheits Wurf;für |sActor.name|;Wurf;1d20+sActor.pf_wisMod;"
         ],
         "Attributswürfe/Charisma": [
-            "/template generic1 Charisma Wurf;für [[sActor.name]];Wurf;1d20+sActor.pf_chaMod;"
+            "/template generic1 Charisma Wurf;für |sActor.name|;Wurf;1d20+sActor.pf_chaMod;"
         ],
         
         "Rettungswürfe/Reflex": [
-            "/template generic1 Reflex Rettungswurf;für [[sActor.name]];Wurf;1d20+sActor.pf_saveReflex;"
+            "/template generic1 Reflex Rettungswurf;für |sActor.name|;Wurf;1d20+sActor.pf_saveReflex;"
         ],
         "Rettungswürfe/Willen": [
-            "/template generic1 Willen Rettungswurf;für [[sActor.name]];Wurf;1d20+sActor.pf_saveWill;"
+            "/template generic1 Willen Rettungswurf;für |sActor.name|;Wurf;1d20+sActor.pf_saveWill;"
         ],
         "Rettungswürfe/Zähigkeit": [
-            "/template generic1 Zähigkeit Rettungswurf;für [[sActor.name]];Wurf;1d20+sActor.pf_saveFortitude;"
+            "/template generic1 Zähigkeit Rettungswurf;für |sActor.name|;Wurf;1d20+sActor.pf_saveFortitude;"
         ],
         
         "Fertigkeiten/Akrobatik": [
-            "/template generic1 Akrobatik Wurf;für [[sActor.name]];Wurf;1d20+sActor.pf_skillAcrobatics;"
+            "/template generic1 Akrobatik Wurf;für |sActor.name|;Wurf;1d20+sActor.pf_skillAcrobatics;"
         ],
         "Fertigkeiten/Auftreten 1": [
-            "/template generic1 Auftreten ([[sActor.pf_skillPerform1Text]]) Wurf;für [[sActor.name]];Wurf;1d20+sActor.pf_skillPerform1;"
+            "/template generic1 Auftreten (|sActor.pf_skillPerform1Text|) Wurf;für |sActor.name|;Wurf;1d20+sActor.pf_skillPerform1;"
         ],
         "Fertigkeiten/Auftreten 2": [
-            "/template generic1 Auftreten ([[sActor.pf_skillPerform2Text]]) Wurf;für [[sActor.name]];Wurf;1d20+sActor.pf_skillPerform2;"
+            "/template generic1 Auftreten (|sActor.pf_skillPerform2Text|) Wurf;für |sActor.name|;Wurf;1d20+sActor.pf_skillPerform2;"
         ],
         "Fertigkeiten/Beruf 1": [
-            "/template generic1 Beruf ([[sActor.pf_skillProfession1Text]]) Wurf;für [[sActor.name]];Wurf;1d20+sActor.pf_skillProfession1;"
+            "/template generic1 Beruf (|sActor.pf_skillProfession1Text|) Wurf;für |sActor.name|;Wurf;1d20+sActor.pf_skillProfession1;"
         ],
         "Fertigkeiten/Beruf 2": [
-            "/template generic1 Beruf ([[sActor.pf_skillProfession2Text]]) Wurf;für [[sActor.name]];Wurf;1d20+sActor.pf_skillProfession2;"
+            "/template generic1 Beruf (|sActor.pf_skillProfession2Text|) Wurf;für |sActor.name|;Wurf;1d20+sActor.pf_skillProfession2;"
         ],
         "Fertigkeiten/Bluffen": [
-            "/template generic1 Bluffen Wurf;für [[sActor.name]];Wurf;1d20+sActor.pf_skillBluff;"
+            "/template generic1 Bluffen Wurf;für |sActor.name|;Wurf;1d20+sActor.pf_skillBluff;"
         ],
         "Fertigkeiten/Diplomatie": [
-            "/template generic1 Diplomatie Wurf;für [[sActor.name]];Wurf;1d20+sActor.pf_skillDiplomacy;"
+            "/template generic1 Diplomatie Wurf;für |sActor.name|;Wurf;1d20+sActor.pf_skillDiplomacy;"
         ],
         "Fertigkeiten/Einschüchtern": [
-            "/template generic1 Einschüchtern Wurf;für [[sActor.name]];Wurf;1d20+sActor.pf_skillIntimidate;"
+            "/template generic1 Einschüchtern Wurf;für |sActor.name|;Wurf;1d20+sActor.pf_skillIntimidate;"
         ],
         "Fertigkeiten/Entfesslungskunst": [
-            "/template generic1 Entfesslungskunst Wurf;für [[sActor.name]];Wurf;1d20+sActor.pf_skillEscapeArtist;"
+            "/template generic1 Entfesslungskunst Wurf;für |sActor.name|;Wurf;1d20+sActor.pf_skillEscapeArtist;"
         ],
         "Fertigkeiten/Fingerfertigkeit": [
-            "/template generic1 Fingerfertigkeit Wurf;für [[sActor.name]];Wurf;1d20+sActor.pf_skillSleightOfHand;"
+            "/template generic1 Fingerfertigkeit Wurf;für |sActor.name|;Wurf;1d20+sActor.pf_skillSleightOfHand;"
         ],
         "Fertigkeiten/Fliegen": [
-            "/template generic1 Fliegen Wurf;für [[sActor.name]];Wurf;1d20+sActor.pf_skillFly;"
+            "/template generic1 Fliegen Wurf;für |sActor.name|;Wurf;1d20+sActor.pf_skillFly;"
         ],
         "Fertigkeiten/Handwerk 1": [
-            "/template generic1 Handwerk ([[sActor.pf_skillCraft1Text]]) Wurf;für [[sActor.name]];Wurf;1d20+sActor.pf_skillCraft1;"
+            "/template generic1 Handwerk (|sActor.pf_skillCraft1Text|) Wurf;für |sActor.name|;Wurf;1d20+sActor.pf_skillCraft1;"
         ],
         "Fertigkeiten/Handwerk 2": [
-            "/template generic1 Handwerk ([[sActor.pf_skillCraft2Text]]) Wurf;für [[sActor.name]];Wurf;1d20+sActor.pf_skillCraft2;"
+            "/template generic1 Handwerk (|sActor.pf_skillCraft2Text|) Wurf;für |sActor.name|;Wurf;1d20+sActor.pf_skillCraft2;"
         ],
         "Fertigkeiten/Handwerk 3": [
-            "/template generic1 Handwerk ([[sActor.pf_skillCraft3Text]]) Wurf;für [[sActor.name]];Wurf;1d20+sActor.pf_skillCraft3;"
+            "/template generic1 Handwerk (|sActor.pf_skillCraft3Text|) Wurf;für |sActor.name|;Wurf;1d20+sActor.pf_skillCraft3;"
         ],
         "Fertigkeiten/Heilkunde": [
-            "/template generic1 Heilkunde ([[sActor.pf_skillHealText]]) Wurf;für [[sActor.name]];Wurf;1d20+sActor.pf_skillHeal;"
+            "/template generic1 Heilkunde (|sActor.pf_skillHealText|) Wurf;für |sActor.name|;Wurf;1d20+sActor.pf_skillHeal;"
         ],
         "Fertigkeiten/Heimlichkeit": [
-            "/template generic1 Heimlichkeit Wurf;für [[sActor.name]];Wurf;1d20+sActor.pf_skillStealth;"
+            "/template generic1 Heimlichkeit Wurf;für |sActor.name|;Wurf;1d20+sActor.pf_skillStealth;"
         ],
         "Fertigkeiten/Klettern": [
-            "/template generic1 Klettern Wurf;für [[sActor.name]];Wurf;1d20+sActor.pf_skillClimb;"
+            "/template generic1 Klettern Wurf;für |sActor.name|;Wurf;1d20+sActor.pf_skillClimb;"
         ],
         "Fertigkeiten/Magischen Gegenstand benutzen": [
-            "/template generic1 Magischen Gegenstand benutzen Wurf;für [[sActor.name]];Wurf;1d20+sActor.pf_skillUseMagicDevice;"
+            "/template generic1 Magischen Gegenstand benutzen Wurf;für |sActor.name|;Wurf;1d20+sActor.pf_skillUseMagicDevice;"
         ],
         "Fertigkeiten/Mechanismus ausschalten": [
-            "/template generic1 Mechanismus ausschalten Wurf;für [[sActor.name]];Wurf;1d20+sActor.pf_skillDisableDevice;"
+            "/template generic1 Mechanismus ausschalten Wurf;für |sActor.name|;Wurf;1d20+sActor.pf_skillDisableDevice;"
         ],
         "Fertigkeiten/Mit Tieren umgehen": [
-            "/template generic1 Mit Tieren umgehen Wurf;für [[sActor.name]];Wurf;1d20+sActor.pf_skillHandleAnimal;"
+            "/template generic1 Mit Tieren umgehen Wurf;für |sActor.name|;Wurf;1d20+sActor.pf_skillHandleAnimal;"
         ],
         "Fertigkeiten/Motiv erkennen": [
-            "/template generic1 Motiv erkennen Wurf;für [[sActor.name]];Wurf;1d20+sActor.pf_skillSenseMotive;"
+            "/template generic1 Motiv erkennen Wurf;für |sActor.name|;Wurf;1d20+sActor.pf_skillSenseMotive;"
         ],
         "Fertigkeiten/Reiten": [
-            "/template generic1 Reiten Wurf;für [[sActor.name]];Wurf;1d20+sActor.pf_skillRide;"
+            "/template generic1 Reiten Wurf;für |sActor.name|;Wurf;1d20+sActor.pf_skillRide;"
         ],
         "Fertigkeiten/Schätzen": [
-            "/template generic1 Schätzen Wurf;für [[sActor.name]];Wurf;1d20+sActor.pf_skillAppraise;"
+            "/template generic1 Schätzen Wurf;für |sActor.name|;Wurf;1d20+sActor.pf_skillAppraise;"
         ],
         "Fertigkeiten/Schwimmen": [
-            "/template generic1 Schwimmen Wurf;für [[sActor.name]];Wurf;1d20+sActor.pf_skillSwim;"
+            "/template generic1 Schwimmen Wurf;für |sActor.name|;Wurf;1d20+sActor.pf_skillSwim;"
         ],
         "Fertigkeiten/Sprachkunde": [
-            "/template generic1 Sprachkunde Wurf;für [[sActor.name]];Wurf;1d20+sActor.pf_skillLinguistics;"
+            "/template generic1 Sprachkunde Wurf;für |sActor.name|;Wurf;1d20+sActor.pf_skillLinguistics;"
         ],
         "Fertigkeiten/Überlebenskunst": [
-            "/template generic1 Überlebenskunst Wurf;für [[sActor.name]];Wurf;1d20+sActor.pf_skillSurvival;"
+            "/template generic1 Überlebenskunst Wurf;für |sActor.name|;Wurf;1d20+sActor.pf_skillSurvival;"
         ],
         "Fertigkeiten/Verkleiden": [
-            "/template generic1 Verkleiden Wurf;für [[sActor.name]];Wurf;1d20+sActor.pf_skillDisguise;"
+            "/template generic1 Verkleiden Wurf;für |sActor.name|;Wurf;1d20+sActor.pf_skillDisguise;"
         ],
         "Fertigkeiten/Wahrnehmung": [
-            "/template generic1 Wahrnehmung Wurf;für [[sActor.name]];Wurf;1d20+sActor.pf_skillPerception;"
+            "/template generic1 Wahrnehmung Wurf;für |sActor.name|;Wurf;1d20+sActor.pf_skillPerception;"
         ],
         "Fertigkeiten (Wissen)/Adel und Königshäuser": [
-            "/template generic1 Wissen (Adel und Königshäuser) Wurf;für [[sActor.name]];Wurf;1d20+sActor.pf_skillKnowledgeNobility;"
+            "/template generic1 Wissen (Adel und Königshäuser) Wurf;für |sActor.name|;Wurf;1d20+sActor.pf_skillKnowledgeNobility;"
         ],
         "Fertigkeiten (Wissen)/Arkanes": [
-            "/template generic1 Wissen (Arkanes) Wurf;für [[sActor.name]];Wurf;1d20+sActor.pf_skillKnowledgeArcana;"
+            "/template generic1 Wissen (Arkanes) Wurf;für |sActor.name|;Wurf;1d20+sActor.pf_skillKnowledgeArcana;"
         ],
         "Fertigkeiten (Wissen)/Baukunst": [
-            "/template generic1 Wissen (Baukunst) Wurf;für [[sActor.name]];Wurf;1d20+sActor.pf_skillKnowledgeEngineering;"
+            "/template generic1 Wissen (Baukunst) Wurf;für |sActor.name|;Wurf;1d20+sActor.pf_skillKnowledgeEngineering;"
         ],
         "Fertigkeiten (Wissen)/Die Ebenen": [
-            "/template generic1 Wissen (Die Ebenen) Wurf;für [[sActor.name]];Wurf;1d20+sActor.pf_skillKnowledgePlanes;"
+            "/template generic1 Wissen (Die Ebenen) Wurf;für |sActor.name|;Wurf;1d20+sActor.pf_skillKnowledgePlanes;"
         ],
         "Fertigkeiten (Wissen)/Geographie": [
-            "/template generic1 Wissen (Geographie) Wurf;für [[sActor.name]];Wurf;1d20+sActor.pf_skillKnowledgeGeography;"
+            "/template generic1 Wissen (Geographie) Wurf;für |sActor.name|;Wurf;1d20+sActor.pf_skillKnowledgeGeography;"
         ],
         "Fertigkeiten (Wissen)/Geschichte": [
-            "/template generic1 Wissen (Geschichte) Wurf;für [[sActor.name]];Wurf;1d20+sActor.pf_skillKnowledgeHistory;"
+            "/template generic1 Wissen (Geschichte) Wurf;für |sActor.name|;Wurf;1d20+sActor.pf_skillKnowledgeHistory;"
         ],
         "Fertigkeiten (Wissen)/Gewölbekunde": [
-            "/template generic1 Wissen (Gewölbekunde) Wurf;für [[sActor.name]];Wurf;1d20+sActor.pf_skillKnowledgeDungeoneering;"
+            "/template generic1 Wissen (Gewölbekunde) Wurf;für |sActor.name|;Wurf;1d20+sActor.pf_skillKnowledgeDungeoneering;"
         ],
         "Fertigkeiten (Wissen)/Lokales": [
-            "/template generic1 Wissen (Lokales) Wurf;für [[sActor.name]];Wurf;1d20+sActor.pf_skillKnowledgeLocal;"
+            "/template generic1 Wissen (Lokales) Wurf;für |sActor.name|;Wurf;1d20+sActor.pf_skillKnowledgeLocal;"
         ],
         "Fertigkeiten (Wissen)/Natur": [
-            "/template generic1 Wissen (Natur) Wurf;für [[sActor.name]];Wurf;1d20+sActor.pf_skillKnowledgeNature;"
+            "/template generic1 Wissen (Natur) Wurf;für |sActor.name|;Wurf;1d20+sActor.pf_skillKnowledgeNature;"
         ],
         "Fertigkeiten (Wissen)/Religion": [
-            "/template generic1 Wissen (Religion) Wurf;für [[sActor.name]];Wurf;1d20+sActor.pf_skillKnowledgeReligion;"
+            "/template generic1 Wissen (Religion) Wurf;für |sActor.name|;Wurf;1d20+sActor.pf_skillKnowledgeReligion;"
         ],
         "Fertigkeiten/Zauberkunde": [
-            "/template generic1 Zauberkunde Wurf;für [[sActor.name]];Wurf;1d20+sActor.pf_skillSpellcraft;"
+            "/template generic1 Zauberkunde Wurf;für |sActor.name|;Wurf;1d20+sActor.pf_skillSpellcraft;"
         ]
     },
     "editorTabs": []

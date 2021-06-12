@@ -21,7 +21,7 @@ export class WhisperCommand extends Command {
         if(!reciever) throw new Error(`Unknown player: ${split[0]}`);
 
         // parse message
-        const parsed = ChatService.parseInlineRolls(message, profile);
+        const parsed = ChatService.parseInlineExpressions(message, profile);
 
         // build message
         var text = '<div class="chat-sender chat-sender-special">' + ChatService.escape(profile.getUsername()) + ' to ' + ChatService.escape(reciever.getUsername()) + ': </div>';

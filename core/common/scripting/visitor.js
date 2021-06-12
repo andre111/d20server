@@ -10,6 +10,8 @@ export class Visitor {
     visitVarDeclStmt(stmt) { throw new Error('Cannot call abstract function'); }
     visitWhileStmt(stmt) { throw new Error('Cannot call abstract function'); }
 
+    visitArrayGet(aget) { throw new Error('Cannot call abstract function'); }
+    visitArraySet(aset) { throw new Error('Cannot call abstract function'); }
     visitAssignment(assignment) { throw new Error('Cannot call abstract function'); }
     visitBinary(binary) { throw new Error('Cannot call abstract function'); }
     visitCall(call) { throw new Error('Cannot call abstract function'); }

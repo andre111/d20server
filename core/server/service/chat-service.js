@@ -4,7 +4,6 @@ import { ChatEntry } from '../../common/message/chat/chat-entry.js';
 import { ChatEntries } from '../../common/messages.js';
 import { Scripting } from '../../common/scripting/scripting.js';
 import { TokenUtil } from '../../common/util/tokenutil.js';
-import { SERVER_BUILTIN_SENDCHAT } from '../scripting/func.js';
 import { readJson, saveJson } from '../util/fileutil.js';
 import { RollFormatter } from '../util/roll-formatter.js';
 import { MessageService } from './message-service.js';
@@ -91,7 +90,7 @@ Events.on('chatMessage', event => {
         const scriptMarker = '?SCRIPT?\n';
         if(macro.startsWith(scriptMarker)) {
             SCRIPT.interpret(macro.substring('?SCRIPT?\n'.length), profile, null, interpreter => {
-                interpreter.defineGlobal('sendChat', SERVER_BUILTIN_SENDCHAT);
+                Events.trigger('serverCreateInterpreter', { interpreter: interpreter }, false);
             });
             if(SCRIPT.errors.length != 0) {
                 ChatService.appendError(profile, SCRIPT.errors.join('\n'));
@@ -114,7 +113,7 @@ export class ChatService {
 
         // handle simple message
         try {
-            const parsed = ChatService.parseInlineRolls(message, profile);
+            const parsed = ChatService.parseInlineExpressions(message, profile);
 
             var text = '<div class="chat-sender">';
             text = text + ChatService.escape(profile.getUsername()) + ': ';
@@ -182,14 +181,14 @@ export class ChatService {
         sendToClients(true, entries);
     }
 
-    static parseInlineRolls(text, profile) {
+    static parseInlineExpressions(text, profile) {
         var string = '';
         const diceRolls = [];
         const triggeredContent = [];
 
         var startIndex = 0;
         while(startIndex < text.length) {
-            const inlineStartIndex = text.indexOf('[[', startIndex);
+            const inlineStartIndex = text.indexOf('|', startIndex);
             const nextIsInlineRoll = inlineStartIndex != -1;
 
             if(nextIsInlineRoll) {
@@ -198,14 +197,14 @@ export class ChatService {
                 startIndex = inlineStartIndex;
 
                 // find end
-                var endIndex = text.indexOf(']]', startIndex);
-                if(endIndex == -1) throw new Error(`Unclosed inline roll at ${startIndex}`);
+                var endIndex = text.indexOf('|', startIndex+1);
+                if(endIndex == -1) throw new Error(`Unclosed inline expression at ${startIndex}`);
 
                 // extract expression string
-                var exprStr = text.substring(startIndex+2, endIndex);
+                var exprStr = text.substring(startIndex+1, endIndex);
                 var triggered = false;
                 if(exprStr.startsWith('?')) { triggered = true; exprStr = exprStr.substring(1); }
-                startIndex = endIndex + 2;
+                startIndex = endIndex + 1;
                 
                 // parse expression
                 const result = SCRIPT.interpretExpression(ChatService.unescape(exprStr), profile, null);

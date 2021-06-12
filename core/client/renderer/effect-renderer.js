@@ -55,6 +55,8 @@ export const EffectRenderer = {
     
     addEffect(type, x, y, rotation, scale, aboveOcclusion, parameters) {
         switch(type) {
+        case 'NONE':
+            break;
         case 'PING':
             EffectRenderer._addEffect(new PingEffect(x, y, rotation, scale, parameters), aboveOcclusion);
             break;

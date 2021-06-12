@@ -3,7 +3,7 @@ import { EntityManagers } from '../entity/entity-managers.js';
 import { EntityReference } from '../entity/entity-reference.js';
 import { Entity } from '../entity/entity.js';
 import { TokenUtil } from '../util/tokenutil.js';
-import { BUILTIN_CEIL, BUILTIN_FIND, BUILTIN_FLOOR, BUILTIN_MAX, BUILTIN_MIN, BUILTIN_NUMBER, BUILTIN_SQRT, Func } from './func.js';
+import { BUILTIN_ARRAY, BUILTIN_CEIL, BUILTIN_FIND, BUILTIN_FLOOR, BUILTIN_LEN, BUILTIN_LIST, BUILTIN_MAX, BUILTIN_MIN, BUILTIN_NUMBER, BUILTIN_SQRT, Func } from './func.js';
 import { Interpreter } from './interpreter.js';
 import { Parser } from './parser.js';
 import { Scanner } from './scanner.js';
@@ -160,16 +160,22 @@ export class Scripting {
         interpreter.defineGlobal('max', BUILTIN_MAX);
         interpreter.defineGlobal('min', BUILTIN_MIN);
         interpreter.defineGlobal('sqrt', BUILTIN_SQRT);
+        interpreter.defineGlobal('array', BUILTIN_ARRAY);
+        interpreter.defineGlobal('len', BUILTIN_LEN);
         interpreter.defineGlobal('find', BUILTIN_FIND);
+        interpreter.defineGlobal('list', BUILTIN_LIST);
 
-        // define sToken, sActor, cMap and self variables when applicable
+        // define player, sToken, sActor, cMap and self variables when applicable
         if(profile) {
+            interpreter.defineGlobal('player', new Value(profile, Type.PLAYER, ''));
+
             const sToken = profile.getSelectedToken(true);
             if(sToken) {
                 interpreter.defineGlobal('sToken', new Value(new EntityReference(sToken), Type.ENTITY, ''));
                 const sActor = TokenUtil.getActor(sToken);
                 if(sActor) interpreter.defineGlobal('sActor', new Value(new EntityReference(sActor), Type.ENTITY, ''));
             }
+
             const cMap = EntityManagers.get('map').find(profile.getCurrentMap());
             if(cMap) interpreter.defineGlobal('cMap', new Value(new EntityReference(cMap), Type.ENTITY, ''));
         }

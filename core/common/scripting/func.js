@@ -2,6 +2,7 @@ import { Type } from '../constants.js';
 import { EntityManagers } from '../entity/entity-managers.js';
 import { EntityReference } from '../entity/entity-reference.js';
 import { RuntimeError } from './runtime-error.js';
+import { ScrArray } from './scrarray.js';
 import { Value } from './value.js';
 
 export class Func extends Value {
@@ -99,6 +100,24 @@ BUILTIN_SQRT.call = (interpreter, paren, name, args) => {
     return new Value(Math.sqrt(args[0].value), Type.DOUBLE, getExprString(name, args));
 };
 
+// array (and string)
+export const BUILTIN_ARRAY = new Func(0);
+BUILTIN_ARRAY.call = (interpreter, paren, name, args) => {
+    return new ScrArray();
+};
+
+export const BUILTIN_LEN = new Func(1);
+BUILTIN_LEN.call = (interpreter, paren, name, args) => {
+    switch(args[0].type) {
+    case Type.ARRAY:
+        return new Value(args[0].value.length, Type.DOUBLE, getExprString(name, args));
+    case Type.STRING:
+        return new Value(args[0].value.length, Type.DOUBLE, getExprString(name, args));
+    default:
+        throw new RuntimeError(paren, 'Cannot get length of '+args[0].type);
+    }
+};
+
 // entity
 export const BUILTIN_FIND = new Func(2);
 BUILTIN_FIND.call = (interpreter, paren, name, args) => {
@@ -108,6 +127,22 @@ BUILTIN_FIND.call = (interpreter, paren, name, args) => {
     if(manager) {
         const entity = manager.find(Math.trunc(args[1].value));
         if(entity) return new Value(new EntityReference(entity), Type.ENTITY, getExprString(name, args));
+    }
+    return Value.NULL;
+};
+
+export const BUILTIN_LIST = new Func(1);
+BUILTIN_LIST.call = (interpreter, paren, name, args) => {
+    interpreter.checkOperandType(paren, args[0], Type.STRING);
+    const manager = EntityManagers.get(args[0].value);
+    if(manager) {
+        const array = new ScrArray();
+        var index = 0;
+        for(const entity of manager.all()) {
+            array.set(index, new Value(new EntityReference(entity), Type.ENTITY, ''));
+            index++;
+        }
+        return array;
     }
     return Value.NULL;
 };

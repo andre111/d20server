@@ -1,4 +1,4 @@
-import { BANG, BANG_EQUAL, COMMA, COMMENT, DICE, DOT, EOF, EQUAL, EQUAL_EQUAL, GREATER, GREATER_EQUAL, IDENTIFIER, KEYWORDS, LEFT_BRACE, LEFT_PAREN, LESS, LESS_EQUAL, MINUS, NEWLINE, NUMBER, PLUS, RIGHT_BRACE, RIGHT_PAREN, SEMICOLON, SLASH, STAR, STRING, Token, UNKNOWN, WHITESPACE } from './token.js';
+import { BANG, BANG_EQUAL, COMMA, COMMENT, DICE, DOT, EOF, EQUAL, EQUAL_EQUAL, GREATER, GREATER_EQUAL, IDENTIFIER, KEYWORDS, LEFT_BRACE, LEFT_PAREN, LEFT_SQUARE, LESS, LESS_EQUAL, MINUS, NEWLINE, NUMBER, PLUS, RIGHT_BRACE, RIGHT_PAREN, RIGHT_SQUARE, SEMICOLON, SLASH, STAR, STRING, Token, UNKNOWN, WHITESPACE } from './token.js';
 
 export class Scanner {
     #scripting
@@ -40,6 +40,8 @@ export class Scanner {
             case ')': this.#addToken(RIGHT_PAREN); break;
             case '{': this.#addToken(LEFT_BRACE); break;
             case '}': this.#addToken(RIGHT_BRACE); break;
+            case '[': this.#addToken(LEFT_SQUARE); break;
+            case ']': this.#addToken(RIGHT_SQUARE); break;
             case ',': this.#addToken(COMMA); break;
             case '.': this.#addToken(DOT); break;
             case ';': this.#addToken(SEMICOLON); break;

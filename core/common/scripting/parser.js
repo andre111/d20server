@@ -1,8 +1,8 @@
 import { Type } from '../constants.js';
 import { Modifier } from './dice.js';
-import { Assignment, Binary, Call, Dice, Get, Grouping, Literal, Logical, Set, Unary, Variable } from './expr.js';
+import { ArrayGet, ArraySet, Assignment, Binary, Call, Dice, Get, Grouping, Literal, Logical, Set, Unary, Variable } from './expr.js';
 import { Block, ExpressionStmt, FunctionDeclStmt, IfStmt, ReturnStmt, VarDeclStmt, WhileStmt } from './stmt.js';
-import { AND, BANG, BANG_EQUAL, COMMA, DICE, DOT, ELSE, EOF, EQUAL, EQUAL_EQUAL, FALSE, FUNCTION, GREATER, GREATER_EQUAL, IDENTIFIER, IF, LEFT_BRACE, LEFT_PAREN, LESS, LESS_EQUAL, MINUS, NULL, NUMBER, OR, PLUS, RETURN, RIGHT_BRACE, RIGHT_PAREN, SEMICOLON, SLASH, STAR, STRING, TRUE, VAR, WHILE } from './token.js';
+import { AND, BANG, BANG_EQUAL, COMMA, DICE, DOT, ELSE, EOF, EQUAL, EQUAL_EQUAL, FALSE, FUNCTION, GREATER, GREATER_EQUAL, IDENTIFIER, IF, LEFT_BRACE, LEFT_PAREN, LEFT_SQUARE, LESS, LESS_EQUAL, MINUS, NULL, NUMBER, OR, PLUS, RETURN, RIGHT_BRACE, RIGHT_PAREN, RIGHT_SQUARE, SEMICOLON, SLASH, STAR, STRING, TRUE, VAR, WHILE } from './token.js';
 import { Value } from './value.js';
 
 // program      -> declaration* EOF
@@ -28,7 +28,7 @@ import { Value } from './value.js';
 // unary        -> ( BANG | MINUS | PLUS ) unary | dice
 // dice         -> call ( DICE call modifiers STRING? )*
 // modifiers    -> ( IDENTIFIER ( EQUAL_EQUAL | GREATER | GREATER_EQUAL | LESS | LESS_EQUAL )? call )*
-// call         -> primary ( LEFT_PAREN arguments? RIGHT_PAREN | DOT IDENTIFIER )*
+// call         -> primary ( LEFT_PAREN arguments? RIGHT_PAREN | LEFT_SQUARE expression RIGHT_SQUARE | DOT IDENTIFIER )*
 // arguments    -> expression ( COMMA expression )*
 // primary      -> NUMBER | STRING | TRUE | FALSE | NULL | IDENTIFIER | LEFT_PAREN expression RIGHT_PAREN
 export class Parser {
@@ -177,6 +177,9 @@ export class Parser {
             } else if(expr instanceof Get) {
                 const get = expr;
                 return new Set(get.object, get.name, value);
+            } else if(expr instanceof ArrayGet) {
+                const aget = expr;
+                return new ArraySet(aget.object, aget.index, aget.square, value);
             }
 
             error(equals, 'Invalid assignment target');
@@ -315,6 +318,11 @@ export class Parser {
                 const paren = this.#consume(RIGHT_PAREN, 'Expected ) after arguments');
 
                 expr = new Call(expr, paren, args);
+            } else if(this.#match(LEFT_SQUARE)) {
+                const index = this.expression();
+                const square = this.#consume(RIGHT_SQUARE, 'Expected ] after index');
+
+                expr = new ArrayGet(expr, index, square);
             } else if(this.#match(DOT)) {
                 const name = this.#consume(IDENTIFIER, 'Expected property name after .');
                 expr = new Get(expr, name);

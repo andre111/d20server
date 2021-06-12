@@ -9,6 +9,7 @@ import { CommandLineService } from './service/command-line-service.js';
 import { GameService } from './service/game-service.js';
 import { ModuleService } from './service/module-service.js';
 import './handler/message-handler.js';
+import './scripting/func.js';
 
 Common.init(new ServerIDProvider(), ServerEntityManager);
 ModuleService.init().then(() => { // locate and load module definitions and dynamically load server sided module code

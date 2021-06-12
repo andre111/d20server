@@ -55,8 +55,10 @@ export const Type = {
     ACCESS: 'ACCESS',
 
     // scripting only types
+    ARRAY: 'ARRAY',
     ENTITY: 'ENTITY',
     FUNCTION: 'FUNCTION',
+    PLAYER: 'PLAYER',
     NULL: 'NULL'
 }
 

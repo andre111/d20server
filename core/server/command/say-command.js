@@ -17,7 +17,7 @@ export class SayCommand extends Command {
         SCRIPT.throwIfErrored();
 
         // parse message
-        const parsed = ChatService.parseInlineRolls(args);
+        const parsed = ChatService.parseInlineExpressions(args);
 
         var text = '<div class="chat-sender">' + ChatService.escape(''+name.value) + ' (' + ChatService.escape(profile.getUsername()) + '): </div>';
         text = text + '<div class="chat-message">' + parsed.string + '</div>';

@@ -114,6 +114,46 @@ export class Interpreter extends Visitor {
     }
 
     // Expressions
+    visitArrayGet(aget) { 
+        const object = this.#evaluate(aget.object);
+
+        const indexV = this.#evaluate(aget.index);
+        if(indexV.type != Type.DOUBLE || indexV.value != Math.trunc(indexV.value)) throw new RuntimeError(aget.square, 'Can only index with integers');
+        const index = Math.trunc(indexV.value);
+
+        if(object.type == Type.ARRAY) {
+            return object.value.get(index);
+        } else if(object.type == Type.STRING) {
+            if(index < 0 || index >= object.value.length) throw new RuntimeError(aget.square, 'Index out of bounds');
+
+            const c = object.value[index];
+            return new Value(c, Type.STRING, `"${c}"`);
+        }
+
+        throw new RuntimeError(aget.square, 'Can only perform indexed get on arrays or strings');
+    }
+    visitArraySet(aset) {
+        const object = this.#evaluate(aset.object);
+
+        const indexV = this.#evaluate(aset.index);
+        if(indexV.type != Type.DOUBLE || indexV.value != Math.trunc(indexV.value)) throw new RuntimeError(aset.square, 'Can only index with integers');
+        const index = Math.trunc(indexV.value);
+
+        const value = this.#evaluate(aset.expression);
+
+        if(object.type == Type.ARRAY) {
+            object.value.set(index, value);
+            return value;
+        } else if(object.type == Type.STRING) {
+            if(index < 0 || index >= object.value.length) throw new RuntimeError(aset.square, 'Index out of bounds');
+            if(value.type != Type.STRING || value.value.length != 1) throw new RuntimeError(aset.square, 'Can only set single character on string');
+
+            object.value = object.value.substring(0, index) + value.value + object.value.substring(index+1, object.value.length);
+            return value;
+        }
+
+        throw new RuntimeError(aset.square, 'Can only perform indexed set on arrays or strings');
+    }
     visitAssignment(assignment) { 
         const value = this.#evaluate(assignment.expression);
         this.#environment.assign(assignment.name, value);
