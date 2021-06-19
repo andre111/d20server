@@ -50,6 +50,11 @@ export class CanvasModeEntities extends CanvasMode {
         this.action.mouseClicked(e);
     }
     
+    mouseDblClicked(e) {
+        this.validateActiveEntities();
+        this.action.mouseDblClicked(e);
+    }
+    
     mousePressed(e) {
         this.validateActiveEntities();
         this.action.mousePressed(e);

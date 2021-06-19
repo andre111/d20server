@@ -15,7 +15,9 @@ import { Client } from '../../client.js';
 import { Access, Type } from '../../../common/constants.js';
 import { EntityReference } from '../../../common/entity/entity-reference.js';
 import { TokenUtil } from '../../../common/util/tokenutil.js';
+import { Events } from '../../../common/events.js';
 
+//TODO: unhardcode all the token special handling
 class EntityActionSelectGizmo {
     constructor(widthMult, heightMult, xOffset, yOffset, renderSquare, onPress, requiredProperties) {
         this.widthMult = widthMult;
@@ -191,6 +193,21 @@ export class EntityActionSelect extends EntityAction {
         }
     }
     
+    mouseDblClicked(e) {
+        // open entity on double click
+        if(e.which == 1) {
+            if(this.mode.activeEntities.length == 1) {
+                var entity = this.mode.activeEntities[0];
+                //TODO: how to unhardcode special case tokens to open actors?
+                if(this.mode.entityType == 'token') {
+                    var actor = TokenUtil.getActor(entity);
+                    if(actor) entity = actor;
+                }
+
+                Events.trigger('openEntity', { entity: entity }, true);
+            }
+        }
+    }
     
     mousePressed(e) {
         if(this.menu != null) {

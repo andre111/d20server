@@ -6,6 +6,7 @@ export class MouseController {
     mouseMoved(e) {}
     mouseWheelMoved(e) {}
     mouseClicked(e) {}
+    mouseDblClicked(e) {}
     mousePressed(e) {}
     mouseReleased(e) {}
     mouseEntered(e) {}

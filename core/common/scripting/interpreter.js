@@ -270,7 +270,7 @@ export class Interpreter extends Visitor {
     }
     visitGrouping(grouping) {
         const value = this.#evaluate(grouping.expression);
-        return new Value(value.value, value.type, '( ' + value.expr + ' )');
+        return new Value(value.value, value.type, '(' + value.expr + ')');
     }
     visitLiteral(literal) { 
         return literal.value;

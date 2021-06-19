@@ -83,6 +83,7 @@ export class StateMain extends State {
         canvas.addEventListener('mousemove', e => this.mcc.onMove(e), true);
         canvas.addEventListener('wheel', e => this.mcc.mouseWheelMoved(e), true);
         canvas.addEventListener('click', e => this.mcc.mouseClicked(e), true);
+        canvas.addEventListener('dblclick', e => this.mcc.mouseDblClicked(e), true);
         canvas.addEventListener('contextmenu', e => { this.mcc.mouseClicked(e); e.preventDefault(); return false; }, true);
         canvas.addEventListener('mousedown', e => this.mcc.mousePressed(e), true);
         canvas.addEventListener('mouseup', e => this.mcc.mouseReleased(e), true);
@@ -322,6 +323,11 @@ export class StateMain extends State {
     mouseClicked(e) {
         this.canvas.focus();
         if(this.mode) this.mode.mouseClicked(e);
+    }
+
+    mouseDblClicked(e) {
+        this.canvas.focus();
+        if(this.mode) this.mode.mouseDblClicked(e);
     }
 
     mousePressed(e) {

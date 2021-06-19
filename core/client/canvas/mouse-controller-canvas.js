@@ -25,6 +25,9 @@ export class MouseControllerCanvas extends MouseController {
     mouseClicked(e) {
         Client.getState().mouseClicked(e);
     }
+    mouseDblClicked(e) {
+        Client.getState().mouseDblClicked(e);
+    }
     mousePressed(e) {
         Client.getState().mousePressed(e);
     }

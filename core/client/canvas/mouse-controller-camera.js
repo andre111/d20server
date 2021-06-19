@@ -63,6 +63,14 @@ export class MouseControllerCamera extends MouseController {
         if(this.child && !e.altKey) this.child.mouseClicked(this.adjustPosition(e));
     }
 
+    mouseDblClicked(e) {
+        e.preventDefault();
+        e.xm = e.offsetX;
+        e.ym = e.offsetY;
+        
+        if(this.child && !e.altKey) this.child.mouseDblClicked(this.adjustPosition(e));
+    }
+
     mousePressed(e) {
         e.preventDefault();
         e.xm = e.offsetX;
