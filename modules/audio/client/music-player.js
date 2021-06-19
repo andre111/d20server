@@ -44,7 +44,6 @@ export class MusicPlayer {
         this.currentPath = '';
         this.lastUpdate = -1;
         this.lastUpdateProfileID = -1;
-        this.isServerUpdate = false;
 
         // listen to setting changes
         Settings.addVolumeSettingListener(SETTING_MUSIC_VOLUME, () => {
@@ -60,13 +59,13 @@ export class MusicPlayer {
         // handle updating other clients
         this.updateListener = Events.on('frameEnd', event => this.updateState());
         this.audio.onpause = () => {
-            if(ServerData.isGM() && !this.isServerUpdate) {
+            if(this.lastUpdateProfileID == ServerData.localProfile.getID()) {
                 const msg = new ActionCommand('PAUSE_MUSIC');
                 MessageService.send(msg);
             }
         };
         this.audio.onplay = () => {
-            if(ServerData.isGM() && !this.isServerUpdate) {
+            if(this.lastUpdateProfileID == ServerData.localProfile.getID()) {
                 const msg = new ActionCommand('PLAY_MUSIC', -1, -1, -1, false, this.currentPath);
                 MessageService.send(msg);
             }
@@ -75,28 +74,22 @@ export class MusicPlayer {
         // listen to commands
         this.commandListener = Events.on('actionCommand', event => {
             if(!event.data.isGM()) return; // only accept commands from gm
-
-            this.lastUpdateProfileID = event.data.getSender();
             if(event.data.getSender() == ServerData.localProfile.getID()) return; // do not listen to events send from yourself (avoid feedback loops)
             
-            this.isServerUpdate = true;
-            try {
-                switch(event.data.getCommand()) {
-                case 'LOAD_MUSIC':
-                    this.serverDoLoad(event.data.getText());
-                    break;
-                case 'PLAY_MUSIC':
-                    this.serverDoPlay(event.data.getText(), event.data.getX());
-                    break;
-                case 'PAUSE_MUSIC':
-                    this.serverDoPause();
-                    break;
-                case 'STOP_MUSIC':
-                    this.serverDoStop();
-                    break;
-                }
-            } finally {
-                this.isServerUpdate = false;
+            switch(event.data.getCommand()) {
+            case 'LOAD_MUSIC':
+                this.lastUpdateProfileID = event.data.getSender();
+                this.serverDoLoad(event.data.getText());
+                break;
+            case 'PLAY_MUSIC':
+                this.serverDoPlay(event.data.getText(), event.data.getX());
+                break;
+            case 'PAUSE_MUSIC':
+                this.serverDoPause();
+                break;
+            case 'STOP_MUSIC':
+                this.serverDoStop();
+                break;
             }
         });
     }
@@ -112,16 +105,15 @@ export class MusicPlayer {
         this.show();
 
         // load
+        this.lastUpdateProfileID = ServerData.localProfile.getID();
         this.audio.pause();
         this.serverDoLoad(path);
 
         // transmit to others
-        if(!this.isServerUpdate) {
-            const msg = new ActionCommand('STOP_MUSIC');
-            MessageService.send(msg);
-            const msg2 = new ActionCommand('LOAD_MUSIC', -1, -1, -1, false, path);
-            MessageService.send(msg2);
-        }
+        const msg = new ActionCommand('STOP_MUSIC');
+        MessageService.send(msg);
+        const msg2 = new ActionCommand('LOAD_MUSIC', -1, -1, -1, false, path);
+        MessageService.send(msg2);
     }
     
     updateState() {
@@ -133,7 +125,7 @@ export class MusicPlayer {
         if(elapsed > 1000) {
             this.lastUpdate = now - (elapsed % 1000);
             
-            if(ServerData.isGM() && !this.isServerUpdate && this.lastUpdateProfileID == ServerData.localProfile.getID()) {
+            if(this.lastUpdateProfileID == ServerData.localProfile.getID()) {
                 if(!this.audio.paused) {
                     const time = Math.trunc(this.audio.currentTime * 44100);
                     const msg = new ActionCommand('PLAY_MUSIC', -1, time, -1, false, this.currentPath);
