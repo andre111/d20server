@@ -1,10 +1,9 @@
 import express from 'express';
-import http from 'http';
-import https from 'https';
 import path from 'path';
 import morgan from 'morgan';
 import compression from 'compression';
 import fs from 'fs-extra';
+import spdy from 'spdy';
 import { router as filemanRouter } from './filemanager.js';
 
 import { ModuleService } from '../service/module-service.js';
@@ -18,19 +17,18 @@ const baseServer = createBaseServer();
 var isHTTPS = false;
 
 function createBaseServer() {
+    var options = {};
+
     const privateKeyPath = path.join(path.resolve(), '/config/privkey.pem');
     const certificatePath = path.join(path.resolve(), '/config/fullchain.pem');
     if(fs.existsSync(privateKeyPath) && fs.existsSync(certificatePath)) {
-        const privateKey = fs.readFileSync(privateKeyPath);
-        const certificate = fs.readFileSync(certificatePath);
-
+        console.log('Enabling encryption...');
+        options.key = fs.readFileSync(privateKeyPath);
+        options.cert = fs.readFileSync(certificatePath);
         isHTTPS = true;
-        console.log('Creating HTTPS server...');
-        return https.createServer({ key: privateKey, cert: certificate }, server);
-    } else {
-        console.log('Creating HTTP server...');
-        return http.createServer(server);
     }
+    console.log('Starting server...');
+    return spdy.createServer(options, server);
 }
 
 export class HttpHandler {
