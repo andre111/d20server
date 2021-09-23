@@ -7,6 +7,10 @@
         "cancel": "Cancel",
         "edit": "Edit"
     },
+    "input": {
+        "value": "Value: ",
+        "relative": "Relative Change: "
+    },
     "attachment": {
         "edit": {
             "name": "Name: "

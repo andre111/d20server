@@ -208,6 +208,9 @@ p + hr {
 .flexcol > * {
     flex: 1;
 }
+.flexnowrap {
+    flex-wrap: nowrap;
+}
 
 /* General inputs */
 button {
