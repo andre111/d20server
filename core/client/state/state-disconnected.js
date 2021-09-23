@@ -2,11 +2,15 @@ import { State } from "./state.js";
 import { GuiUtils } from '../util/guiutil.js';
 
 export class StateDisconnected extends State {
+    #code;
+    #reason;
     #error;
 
-    constructor(error) {
+    constructor(code, reason, error) {
         super();
 
+        this.#code = code;
+        this.#reason = reason;
         this.#error = error;
     }
 
@@ -29,7 +33,9 @@ export class StateDisconnected extends State {
             div.appendChild(fieldset);
         } else {
             const fieldset = GuiUtils.createBorderedSet('Disconnected', '400px', 'auto');
-            fieldset.appendChild(document.createTextNode('Lost connection to server, please reload...'));
+            fieldset.appendChild(document.createTextNode('Lost connection to server'));
+            fieldset.appendChild(document.createElement('br'));
+            fieldset.appendChild(document.createTextNode((this.#reason && this.#reason != '') ? `Reason: ${this.#reason}` : 'Please reload...'));
             div.appendChild(fieldset);
         }
     }

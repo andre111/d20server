@@ -4,6 +4,7 @@ import { CLICommandStop } from './cli/cli-command-stop.js';
 import { CLICommandRegister } from './cli/cli-command-register.js';
 import { CLICommandDebugImport } from './cli/cli-command-debug-import.js';
 import { CLICommandHelp } from './cli/cli-command-help.js';
+import { CLICommandKick } from './cli/cli-command-kick.js';
 import { splitArguments } from '../../common/util/stringutil.js';
 
 export var clicommands = {};
@@ -16,6 +17,7 @@ addCLICommand(new CLICommandStop());
 addCLICommand(new CLICommandRegister());
 addCLICommand(new CLICommandDebugImport());
 addCLICommand(new CLICommandHelp());
+addCLICommand(new CLICommandKick());
 
 const rl = readline.createInterface({
     input: process.stdin,

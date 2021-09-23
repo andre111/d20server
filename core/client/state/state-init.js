@@ -25,30 +25,30 @@ export class StateInit extends State {
         // add global error "handler" for reporting unhandled/uncaught errors
         window.onerror = function(message, source, lineno, colno, error) {
             if(!(Client.getState() instanceof StateDisconnected)) {
-                Client.setState(new StateDisconnected(error));
+                Client.setState(new StateDisconnected(-1, 'Clientside Error', error));
                 Connection.close();
             }
         }
 
         // initialize connection
         document.body.innerHTML = 'Connecting to server...';
-        Connection.init(() => this.onConnect(), () => this.onClose());
+        Connection.init(this.onConnect, this.onClose);
     }
 
     exit() {
     }
 
-    onConnect() {
+    onConnect(e) {
         document.body.innerHTML = '';
         Settings.load();
         Client.setState(new StateSignIn());
     }
 
-    onClose() {
+    onClose(e) {
         // do NOT go back to StateInit, as old event listeners and other stuff could remain 
         // -> ask for manualy full page reload
         if(!(Client.getState() instanceof StateDisconnected)) {
-            Client.setState(new StateDisconnected());
+            Client.setState(new StateDisconnected(e.code, e.reason));
         }
     }
 }
