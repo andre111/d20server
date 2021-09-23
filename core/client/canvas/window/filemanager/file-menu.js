@@ -10,7 +10,7 @@ export class FileMenu extends Menu {
 
         for(const action of file.getWindow().getFileActions()) {
             if(action.shouldShowFor(file)) {
-                this.createItem(this.container, action.getName(), () => {
+                this.createItem(null, action.getName(), () => {
                     action.applyTo(file);
                     this.close();
                 });

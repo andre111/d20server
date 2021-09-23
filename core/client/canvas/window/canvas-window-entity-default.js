@@ -7,7 +7,6 @@ import { I18N } from '../../../common/util/i18n.js';
 import { createPropertyEditor } from '../../gui/property-editors.js';
 import { EditorList } from '../../gui/editor-list.js';
 
-// TODO: rename to EditEntity and simplify (no longer data driven layout definitions but just a list of properties)
 export class CanvasWindowEntityDefault extends CanvasWindow {
     constructor(parent, reference) {
         super(parent, 'Edit '+reference.getDefinition().displayName, true);

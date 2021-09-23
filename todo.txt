@@ -3,7 +3,7 @@
 // add a "tutorial/controll"bar at the bottom left of the screen (see newer blender versions)
 // implement an easy to use portals module (with one edit mode)
 // add a "zauber" tab to pathfinder actor (including spells per day, learned count, saves, ...) (or maybe add it as a "sidebar" to the Talente/Zauber tab)
-// (make inbuilt macros dynamically refer to the correct actor (by using find("actor", <id>) instead of sActor) - do not forget case for local actors)
+// (make inbuilt macros dynamically refer to the correct actor (by using find("actor", <id>) instead of sActor, or better use an inbuilt var called cActor) - do not forget case for local actors)
 // document all currently used Events (and switch more stuff to using events)
 // implement (a custom plugin for?) adding internal links in TinyMCE editors
 // webrtc settings (input devices)

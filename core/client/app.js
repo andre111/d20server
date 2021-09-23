@@ -191,7 +191,7 @@ Events.on('fileManagerSelect', event => {
 //    Generic
 Events.on('entityMenu', event => {
     const menu = event.data.menu;
-    menu.createItem(menu.container, 'Edit', () => Events.trigger('openEntity', { entity: event.data.reference }, true));
+    menu.createItem(null, 'Edit', () => Events.trigger('openEntity', { entity: event.data.reference }, true));
 }, true, 1000);
 
 Events.on('entityMenu', event => {
@@ -199,7 +199,7 @@ Events.on('entityMenu', event => {
     const reference = event.data.reference;
 
     if(reference.has('depth') && reference.canEditProperty('depth', event.data.accessLevel)) {
-        const move = menu.createCategory(menu.container, 'Move');
+        const move = menu.createCategory(null, 'Move');
         menu.createItem(move, 'to front', () => {
             const currentMinDepth = MapUtils.currentEntitiesInLayer(reference.getType(), Client.getState().getLayer()).map(e => e.getLong('depth')).reduce((a, b) => Math.min(a, b), 0);
             reference.setLong('depth', currentMinDepth-1);
@@ -217,7 +217,7 @@ Events.on('entityMenu', event => {
     if(!event.data.isGM) return;
 
     const menu = event.data.menu;
-    menu.createItem(menu.container, 'Delete', () => {
+    menu.createItem(null, 'Delete', () => {
         new CanvasWindowConfirm(null, 'Confirm removal', 'Are you sure you want to remove the '+event.data.entityType+': '+event.data.reference.getName()+'?', () => {
             EntityManagers.get(event.data.reference.getManager()).remove(event.data.reference.getID());
             if(menu.mode && menu.mode.clearActiveEntities) menu.mode.clearActiveEntities();
@@ -237,7 +237,7 @@ Events.on('entityMenu', event => {
 
     // edit actor
     if(actor) {
-        menu.createItem(menu.container, 'Edit Actor', () => {
+        menu.createItem(null, 'Edit Actor', () => {
             const iActor = TokenUtil.getActor(reference);
             if(iActor) Events.trigger('openEntity', { entity: iActor }, true);
         });
@@ -250,7 +250,7 @@ Events.on('entityMenu', event => {
         if(sort) names.sort();
         
         if(names.length > 0) {
-            const macroCategory = menu.createCategory(menu.container, category);
+            const macroCategory = menu.createCategory(null, category);
             const subCategories = new Map();
 
             for(var i=0; i<names.length; i++) {
@@ -287,8 +287,8 @@ Events.on('entityMenu', event => {
 
     // gm actions
     if(event.data.isGM) {
-        menu.createItem(menu.container, 'View Notes', () => new CanvasWindowText(null, 'GM Notes', reference.getString('gmNotes')));
-        menu.createItem(menu.container, 'Fit to Grid', () => new CanvasWindowFitToGrid(null, reference));
+        menu.createItem(null, 'View Notes', () => new CanvasWindowText(null, 'GM Notes', reference.getString('gmNotes')));
+        menu.createItem(null, 'Fit to Grid', () => new CanvasWindowFitToGrid(null, reference));
     }
 }, true, 500);
 
@@ -300,7 +300,7 @@ Events.on('entityMenu', event => {
     const reference = event.data.reference;
 
     if(reference.getBoolean('oneSided')) {
-        menu.createItem(menu.container, 'Flip', () => {
+        menu.createItem(null, 'Flip', () => {
             const x1 = reference.getLong('x1');
             const y1 = reference.getLong('y1');
             reference.setLong('x1', reference.getLong('x2'));
@@ -312,11 +312,11 @@ Events.on('entityMenu', event => {
     }
     
     if(reference.getBoolean('door')) {
-        if(reference.getBoolean('open')) menu.createItem(menu.container, 'Close Door', () => { reference.setBoolean('open', false); reference.performUpdate(); });
-        else menu.createItem(menu.container, 'Open Door', () => { reference.setBoolean('open', true); reference.performUpdate(); });
+        if(reference.getBoolean('open')) menu.createItem(null, 'Close Door', () => { reference.setBoolean('open', false); reference.performUpdate(); });
+        else menu.createItem(null, 'Open Door', () => { reference.setBoolean('open', true); reference.performUpdate(); });
         
-        if(reference.getBoolean('locked')) menu.createItem(menu.container, 'Unlock Door', () => { reference.setBoolean('locked', false); reference.performUpdate(); });
-        else menu.createItem(menu.container, 'Lock Door', () => { reference.setBoolean('locked', true); reference.performUpdate(); });
+        if(reference.getBoolean('locked')) menu.createItem(null, 'Unlock Door', () => { reference.setBoolean('locked', false); reference.performUpdate(); });
+        else menu.createItem(null, 'Lock Door', () => { reference.setBoolean('locked', true); reference.performUpdate(); });
     }
 }, true, 500);
 
@@ -328,11 +328,11 @@ Events.on('entityMenu', event => {
     const reference = event.data.reference;
 
     if(event.data.isGM || reference.getBoolean("playersCanEnter")) {
-        menu.createItem(menu.container, 'Open', () => MessageService.send(new MovePlayerToMap(reference, ServerData.localProfile)));
+        menu.createItem(null, 'Open', () => MessageService.send(new MovePlayerToMap(reference, ServerData.localProfile)));
     }
     if(event.data.isGM) {
-        menu.createItem(menu.container, 'Move Players', () => MessageService.send(new MovePlayerToMap(reference)));
-        menu.createItem(menu.container, 'Reset FOW', () => MessageService.send(new UpdateFOW(reference, [], true)));
+        menu.createItem(null, 'Move Players', () => MessageService.send(new MovePlayerToMap(reference)));
+        menu.createItem(null, 'Reset FOW', () => MessageService.send(new UpdateFOW(reference, [], true)));
     }
 }, true, 500);
 
@@ -344,7 +344,7 @@ Events.on('entityMenu', event => {
     const reference = event.data.reference;
 
     if(event.data.isGM) {
-        menu.createItem(menu.container, 'Create Token', () => {
+        menu.createItem(null, 'Create Token', () => {
             const token = new Entity('token');
             token.setLong('actorID', reference.getID());
             token.setString('imagePath', reference.getString('tokenImagePath'));
@@ -358,7 +358,7 @@ Events.on('entityMenu', event => {
                 Events.trigger('updateModeState');
             }
         });
-        menu.createItem(menu.container, 'Set Default Token', () => {
+        menu.createItem(null, 'Set Default Token', () => {
             if(Client.getState().getMode() instanceof CanvasModeEntities && Client.getState().getMode().entityType == 'token') {
                 if(Client.getState().getMode().activeEntities.length == 1) {
                     const token = Client.getState().getMode().activeEntities[0].clone();
@@ -370,7 +370,7 @@ Events.on('entityMenu', event => {
                 }
             }
         });
-        menu.createItem(menu.container, 'Show Image', () => {
+        menu.createItem(null, 'Show Image', () => {
             const imagePath = reference.getString('imagePath');
             if(imagePath) MessageService.send(new ActionCommand('SHOW_IMAGE', 0, 0, 0, false, '/data/files'+imagePath));
         });

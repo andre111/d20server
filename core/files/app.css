@@ -17,6 +17,7 @@ CONTENTS:
         4.8 Tabs
         4.9 Dialogs
         4.10 Edit Window
+        4.11 Context Menu
     5. Library Overrides
 --------------------------------------------------------------
 */
@@ -1321,6 +1322,50 @@ div.chat-box-content th, div.chat-box-content td {
     height: calc(100% - 90px);
 }
 
+/* 
+---------------------------------------
+    4.11 Context Menu
+---------------------------------------
+*/
+.context-menu, 
+.context-menu ul {
+    position: fixed;
+    z-index: 2000;
+    margin: 0;
+    padding: 0;
+
+    box-shadow: var(--shadow-active);
+}
+.context-menu * {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+.context-menu li {
+    width: 180px;
+    height: 22px;
+    padding: 2px;
+    
+    white-space: nowrap;
+    overflow: hidden;
+
+    user-select: none;
+    cursor: pointer;
+
+    font-size: 16px;
+
+    background-color: var(--bg-transparent);
+}
+.context-menu li:hover {
+    background-color: var(--color-selected);
+}
+.context-menu-category::after {
+    content: '>';
+    position: relative;
+    top: -18px;
+    left: 165px;
+}
+
 
 /*
 --------------------------------------------------------------
@@ -1333,12 +1378,7 @@ div.chat-box-content th, div.chat-box-content td {
 }
 
 /* jQueryUI overrides */
-.ui-menu.ui-widget-content,
 fieldset.ui-widget-content {
     background: var(--bg-transparent) !important;
     border-color: black !important;
-}
-
-.ui-menu .ui-menu-item {
-    font-size: 10px !important;
 }

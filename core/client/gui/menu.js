@@ -1,68 +1,61 @@
+import { MenuCategory } from './menu-category.js';
+import { MenuItem } from './menu-item.js';
+
 export class Menu {
-    container;
-    closed;
-    closeListener;
+    #category;
+    #container;
+
+    #closed;
+    #closeListener;
 
     constructor(x, y) {
-        this.container = document.createElement('ul');
-        this.container.style.position = 'fixed';
-        this.container.style.width = '150px';
-        this.container.style.left = x+'px';
-        this.container.style.top = y+'px';
-        this.container.style.zIndex = 2000;
-        document.body.appendChild(this.container);
+        this.#category = new MenuCategory('');
+        this.#container = this.#category.getList();
+        this.#container.className = 'context-menu';
+        this.#container.style.left = x+'px';
+        this.#container.style.top = y+'px';
+        this.#container.style.visibility = 'hidden';
+        document.body.appendChild(this.#container);
 
-        this.closed = false;
-        this.closeListener = e => this.close();
+        this.#closed = false;
+        this.#closeListener = e => this.close();
     }
 
     open() {
-        if(this.closed) return;
+        if(this.#closed) return;
 
-        $(this.container).menu({
-            select: (event, ui) => {
-                if(event.currentTarget.menucallback) {
-                    event.currentTarget.menucallback();
-                    this.close();
-                }
-            }
-        });
+        this.#container.style.visibility = 'visible';
         setTimeout(() => {
-            document.body.addEventListener('click', this.closeListener);
-            document.body.addEventListener('contextmenu', this.closeListener);
+            document.body.addEventListener('click', this.#closeListener);
+            document.body.addEventListener('contextmenu', this.#closeListener);
         }, 1);
     }
 
     createItem(parent, name, callback) {
-        var item = document.createElement('li');
-        var div = document.createElement('div');
-        div.innerHTML = name;
-        item.appendChild(div);
-        item.menucallback = callback;
-        parent.appendChild(item);
+        parent = parent || this.#category;
+
+        const item = new MenuItem(name, callback);
+        parent.addItem(item);
     }
     
     createCategory(parent, name) {
-        parent = parent || this.container;
+        parent = parent || this.#category;
 
-        var category = document.createElement('li');
-        var div = document.createElement('div');
-        div.innerHTML = name;
-        category.appendChild(div);
-        var container = document.createElement('ul');
-        container.style.width = '180px';
-        category.appendChild(container);
+        const category = new MenuCategory(name);
+        parent.addItem(category);
         
-        parent.appendChild(category);
-        
-        return container;
+        return category;
     }
     
     close() {
-        if(this.closed) return;
-        this.closed = true;
-        document.body.removeChild(this.container);
-        document.body.removeEventListener('click', this.closeListener);
-        document.body.removeEventListener('contextmenu', this.closeListener);
+        if(this.#closed) return;
+        this.#closed = true;
+        document.body.removeChild(this.#container);
+        document.body.removeEventListener('click', this.#closeListener);
+        document.body.removeEventListener('contextmenu', this.#closeListener);
+    }
+
+    get closed() {
+        return this.#closed;
     }
 }
