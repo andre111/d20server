@@ -34,6 +34,7 @@ export class HTMLStringPropertyEditor extends PropertyEditor {
 
     createEditor() {
         if(this.editor) return;
+        if(this.window.isPopout()) return; // tinymce has issues in popout window
         this.editButton.style.display = 'none';
 
         tinymce.init({
