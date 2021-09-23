@@ -52,16 +52,13 @@ export const GuiUtils = {
     },
     
     //TODO: do not use? fieldsets seem to be annoying to layout, currently only uses left are for quick temporary implementation of basic states
-    createBorderedSet: function(label, fixedWidth, fixedHeight, useClass = true) {
+    createBorderedSet: function(label, fixedWidth, fixedHeight) {
         const fieldset = document.createElement('fieldset');
         if(fixedWidth) {
             fieldset.style.width = fixedWidth;
         }
         if(fixedHeight) {
             fieldset.style.height = fixedHeight;
-        }
-        if(useClass) {
-            fieldset.className = 'ui-widget-content';
         }
         
         const legend = document.createElement('legend');

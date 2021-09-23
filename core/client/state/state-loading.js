@@ -6,8 +6,9 @@ export class StateLoading extends State {
     lastUpdate;
     amount;
 
-    progressBar;
-    progressLabel;
+    #progressContainer;
+    #progressLabel;
+    #progressBar;
 
     constructor(amount) {
         super();
@@ -26,31 +27,18 @@ export class StateLoading extends State {
         const fieldset = GuiUtils.createBorderedSet('Loading', '400px', 'auto');
         div.appendChild(fieldset);
         
-        this.progressBar = document.createElement('div');
-        fieldset.appendChild(this.progressBar);
+        this.#progressContainer = document.createElement('div');
+        this.#progressContainer.className = 'progress-bar';
+        fieldset.appendChild(this.#progressContainer);
+
+        this.#progressBar = document.createElement('div');
+        this.#progressContainer.appendChild(this.#progressBar);
         
-        const labelContainer = document.createElement('div');
-        labelContainer.style.display = 'inline-flex';
-        labelContainer.style.justifyContent = 'center';
-        labelContainer.style.alignItems = 'center';
-        labelContainer.style.position = 'absolute';
-        labelContainer.style.top = '0';
-        labelContainer.style.left = '0';
-        labelContainer.style.width = '100%';
-        labelContainer.style.height = '100%';
-        this.progressBar.appendChild(labelContainer);
-        
-        this.progressLabel = document.createElement('div');
-        labelContainer.appendChild(this.progressLabel);
+        this.#progressLabel = document.createElement('p');
+        this.#progressContainer.appendChild(this.#progressLabel);
         
         this.current = 0;
         this.lastUpdate = 0;
-        $(this.progressBar).progressbar({
-            value: 0,
-            change: () => {
-                this.progressLabel.innerHTML = Math.round($(this.progressBar).progressbar('value'))+'%';
-            }
-        });
     }
 
     exit() {
@@ -61,12 +49,13 @@ export class StateLoading extends State {
     increaseCurrent() {
         this.current++;
 
-        // jQuery progressbar update is expensive -> only update once a new percentage is reached
-        //TODO: replace with something cheaper
-        if((this.current - this.lastUpdate) / this.amount >= 0.01) {
+        // update is expensive -> only update once a new percentage is reached
+        const progress = this.current / this.amount * 100;
+        if((this.current - this.lastUpdate) / this.amount >= 0.01 || progress > 0.99) {
             this.lastUpdate = this.current;
 
-            $(this.progressBar).progressbar('value', this.current / this.amount * 100);
+            this.#progressBar.style.width = Math.round(progress)+'%';
+            this.#progressLabel.innerText = Math.round(progress)+'%';
         }
     }
 }

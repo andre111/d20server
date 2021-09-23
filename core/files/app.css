@@ -18,6 +18,7 @@ CONTENTS:
         4.9 Dialogs
         4.10 Edit Window
         4.11 Context Menu
+        4.12 Progress Bar
     5. Library Overrides
 --------------------------------------------------------------
 */
@@ -153,6 +154,8 @@ fieldset {
     width: auto;
     height: auto;
     box-shadow: 0px 0px 8px 2px black;
+    border: none;
+    background: var(--bg-transparent);
 }
 
 fieldset legend {
@@ -1366,6 +1369,39 @@ div.chat-box-content th, div.chat-box-content td {
     left: 165px;
 }
 
+/* 
+---------------------------------------
+    4.12 Progress Bar
+---------------------------------------
+*/
+.progress-bar {
+    position: relative;
+    height: 32px;
+    overflow: hidden;
+    box-shadow: var(--shadow-active);
+    border-radius: 8px;
+}
+.progress-bar div {
+    width: 0%;
+    height: 100%;
+    background: var(--color-highlight);
+}
+.progress-bar p {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+
+    text-shadow: 0px 0px 3px black, 0px 0px 3px black;
+    font-weight: bold;
+    font-size: larger;
+    color: white;
+}
 
 /*
 --------------------------------------------------------------
@@ -1375,10 +1411,4 @@ div.chat-box-content th, div.chat-box-content td {
 /* TinyMCE Overrides */
 .tox-tinymce-inline {
     z-index:1000 !important; /* force editor toolbar in front of windows */
-}
-
-/* jQueryUI overrides */
-fieldset.ui-widget-content {
-    background: var(--bg-transparent) !important;
-    border-color: black !important;
 }
