@@ -4,16 +4,18 @@ var _nextID = 0;
 // for makeFancyBG (select and load random bg + source info)
 const bgMax = 4;
 const bgCurrent = Math.floor(Math.random() * (bgMax + 1));
-var bgSource = '';
+const bgSource = document.createElement('div');
+bgSource.innerHTML = 'Image Source: Loading...';
+
 const xhr = new XMLHttpRequest();
 xhr.onload = () => {
     if(xhr.status >= 200 && xhr.status < 300) {
-        bgSource = xhr.responseText;
+        bgSource.innerHTML = 'ImageSource: ' + xhr.responseText;
     } else {
-        bgSource = 'failed to load';
+        bgSource.innerHTML = 'ImageSource: failed to load';
     }
 };
-xhr.open('GET', `/core/files/img/bg/${bgCurrent}.txt`, false);
+xhr.open('GET', `/core/files/img/bg/${bgCurrent}.txt`, true);
 xhr.send();
 
 //TODO: rewrite this to export single functions
@@ -75,7 +77,8 @@ export const GuiUtils = {
         // create copyright div
         const copyrightDiv = document.createElement('div');
         copyrightDiv.className = 'copyright';
-        copyrightDiv.innerHTML = 'Copyright © 2021 André Schweiger<br>Image Source: '+bgSource;
+        copyrightDiv.appendChild(document.createTextNode('Copyright © 2021 André Schweiger'));
+        copyrightDiv.appendChild(bgSource);
         div.appendChild(copyrightDiv);
     },
     
