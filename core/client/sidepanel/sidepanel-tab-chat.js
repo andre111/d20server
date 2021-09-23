@@ -87,9 +87,13 @@ export class SidepanelTabChat extends SidepanelTab {
                 // find replace parent
                 if(this.entries.has(entry.getReplaceParent())) {
                     const container = this.entries.get(entry.getReplaceParent());
-                    
+
+                    // css requires escaping ids that start with a number -> all off these
+                    var escapedID = entry.getID() + '';
+                    escapedID = '\\3' + escapedID[0] + ' ' + escapedID.substring(1);
+
                     // find replaceable object and replace content
-                    $(container).find('#'+entry.getID()+'.replaceable').replaceWith(sanitizedText);
+                    container.querySelector('#'+escapedID+'.replaceable').outerHTML = sanitizedText;
                     GuiUtils.makeHoverable(container);
                 } else {
                     console.log('Ignoring replace with unknown parent');
@@ -102,7 +106,7 @@ export class SidepanelTabChat extends SidepanelTab {
                 container.innerHTML = sanitizedText;
                 
                 // add replaceable trigger
-                for(const element of $(container).find('.replaceable')) {
+                for(const element of container.querySelectorAll('.replaceable')) {
                     element.onclick = () => {
                         const msg = new SendChatMessage('/trigger '+entry.getID()+' '+element.id);
                         MessageService.send(msg);

@@ -73,7 +73,7 @@
 // a "map" function for an actual map somehow?
 
 //TODO: Get rid of rarely used libraries:
-// jquery (including jquery ui): still needs writing my own context menu system, search for "$.ajax(" (replace with fetch api usage) and "$(" to find remaining usages
+// jquery: search for "$.ajax(" (replace with fetch api usage) and "$(" to find remaining usages
 
 //TODO: Technical:
 // improve access management: Currently all tokens and walls are synched even for inaccessible maps, And maps require a forced sync for players (that may be a good thing?)

@@ -1,3 +1,4 @@
+import { Client } from '../../../core/client/client.js';
 import { DiceBox } from './dice-box.js';
 import { DiceColors } from './dice-colors.js';
 import { DiceFactory } from './dice-factory.js';
@@ -5,6 +6,9 @@ import { DiceFactory } from './dice-factory.js';
 const DICE_LIMIT = 50; //TODO: configurable somewhere?
 
 export class DiceRoller {
+    #opacity;
+    #fadeOut;
+
     constructor() {
         this.isReady = false;
         this.preloaded = false;
@@ -74,8 +78,10 @@ export class DiceRoller {
         }
         
         // cancel potential fadeout
-        $(this.canvas).stop();
-        $(this.canvas).show();
+        this.#fadeOut = false;
+        this.#opacity = 1;
+        this.canvas.style.display = null;
+        this.canvas.style.opacity = null;
         
         // create throw 
         return this.box.start_throw(t, () => {
@@ -84,15 +90,8 @@ export class DiceRoller {
             // and fadeout afterwards
             setTimeout(() => {
                 if (!this.box.rolling) {
-                    $(this.canvas).fadeOut({
-                        duration: 1000,
-                        complete: () => {
-                            this.box.clearAll();
-                        },
-                        fail: () => {
-                            $(this.canvas).fadeIn(0);
-                        }
-                    });
+                    this.#fadeOut = true;
+                    this.#opacity = 1;
                 }
             }, 2000);
         });
@@ -120,6 +119,19 @@ export class DiceRoller {
         // update
         if(this.box.shouldUpdateOnFrame) {
             this.box.animateThrow();
+        }
+
+        // fadeout
+        if(this.#fadeOut && this.#opacity > 0) {
+            this.#opacity -= 1 / Client.FPS;
+            if(this.#opacity <= 0) {
+                this.#opacity = 0;
+                this.canvas.style.display = 'none';
+                this.canvas.style.opacity = null;
+                this.box.clearAll();
+            } else {
+                this.canvas.style.opacity = this.#opacity+'';
+            }
         }
     }
 }

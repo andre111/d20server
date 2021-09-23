@@ -1,4 +1,5 @@
 import { I18N } from '../../../../../common/util/i18n.js';
+import { fetchDynamicJSON } from '../../../../util/fetchutil.js';
 import { CanvasWindowInput } from '../../canvas-window-input.js';
 import { FileAction } from './file-action.js';
 
@@ -15,26 +16,17 @@ export class FileActionRename extends FileAction {
         new CanvasWindowInput(this.window, I18N.get('filemanager.action.file.rename.title', 'Rename file'), I18N.get('filemanager.action.file.rename.prompt', 'Enter new file name: '), file.getName(), input => {
             if(!input || input.trim() == '') return;
 
-            const URL = '/fileman/rename';
-            $.ajax({
-                url: URL,
-                type: 'POST',
-                data: { f: file.getPath(), n: input, k: this.window.getKey() },
-                dataType: 'json',
-                cache: false,
-                success: data => {
-                    if(data.res == 'ok') {
-                        var path = file.getDirectory().getPath();
-                        if(path.charAt(path.length-1) != '/') path = path + '/';
+            fetchDynamicJSON('/fileman/rename', { f: file.getPath(), n: input, k: this.window.getKey() }, data => {
+                if(data.res == 'ok') {
+                    var path = file.getDirectory().getPath();
+                    if(path.charAt(path.length-1) != '/') path = path + '/';
 
-                        file.setPath(path + input);
-                        file.reloadElement();
-                        //TODO: notify window to update order / search?
-                    }
-                },
-                error: data => {
-                    console.log('Error renaming file', data);
+                    file.setPath(path + input);
+                    file.reloadElement();
+                    //TODO: notify window to update order / search?
                 }
+            }, error => {
+                console.log('Error renaming file', error);
             });
         });
     }

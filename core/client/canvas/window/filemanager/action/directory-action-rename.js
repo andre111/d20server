@@ -1,4 +1,5 @@
 import { I18N } from '../../../../../common/util/i18n.js';
+import { fetchDynamicJSON } from '../../../../util/fetchutil.js';
 import { CanvasWindowInput } from '../../canvas-window-input.js';
 import { DirectoryAction } from './directory-action.js';
 
@@ -17,22 +18,13 @@ export class DirectoryActionRename extends DirectoryAction {
         new CanvasWindowInput(this.window, I18N.get('filemanager.action.directory.rename.title', 'Rename directory'), I18N.get('filemanager.action.directory.rename.prompt', 'Enter new directory name: '), directory.getName(), input => {
             if(!input || input.trim() == '') return;
 
-            const URL = '/fileman/rename';
-            $.ajax({
-                url: URL,
-                type: 'POST',
-                data: { d: directory.getPath(), n: input, k: this.window.getKey() },
-                dataType: 'json',
-                cache: false,
-                success: data => {
-                    if(data.res == 'ok') {
-                        const selectedDirectoryPath = null; //TODO: determine new path of the directory
-                        this.window.loadDirectories(selectedDirectoryPath);
-                    }
-                },
-                error: data => {
-                    console.log('Error renaming directory', data);
+            fetchDynamicJSON('/fileman/rename', { d: directory.getPath(), n: input, k: this.window.getKey() }, data => {
+                if(data.res == 'ok') {
+                    const selectedDirectoryPath = null; //TODO: determine new path of the directory
+                    this.window.loadDirectories(selectedDirectoryPath);
                 }
+            }, error => {
+                console.log('Error renaming directory', error);
             });
         });
     }

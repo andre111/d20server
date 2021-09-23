@@ -1,5 +1,6 @@
 import { File } from './file.js';
 import { DirectoryMenu } from './directory-menu.js';
+import { fetchDynamicJSON } from '../../../util/fetchutil.js';
 
 export class Directory {
     window;
@@ -196,31 +197,22 @@ export class Directory {
             var newFiles = [];
             var newSelectedFile = null;
 
-            const fileListURL = '/fileman/fileslist';
-            $.ajax({
-                url: fileListURL,
-                type: 'POST',
-                data: { d: this.path },
-                dataType: 'json',
-                cache: false,
-                success: files => {
-                    // parse files
-                    for(const file of files) {
-                        const f = new File(this.window, this, file.p, file.s, file.t);
-                        newFiles.push(f);
-                        if(selectedFilePath && file.p == selectedFilePath) newSelectedFile = f;
-                    }
-
-                    this.sortFiles();
-
-                    // (re)store state and call callback
-                    this.files = newFiles;
-                    this.selectedFile = newSelectedFile;
-                    callback();
-                },
-                error: data => {
-                    console.log('Error loading files', data);
+            fetchDynamicJSON('/fileman/fileslist', { d: this.path }, data => {
+                // parse files
+                for(const file of data) {
+                    const f = new File(this.window, this, file.p, file.s, file.t);
+                    newFiles.push(f);
+                    if(selectedFilePath && file.p == selectedFilePath) newSelectedFile = f;
                 }
+
+                this.sortFiles();
+
+                // (re)store state and call callback
+                this.files = newFiles;
+                this.selectedFile = newSelectedFile;
+                callback();
+            }, error => {
+                console.log('Error loading files', error);
             });
         } else {
             this.sortFiles();
@@ -231,30 +223,21 @@ export class Directory {
     moveFile(filePath) {
         const fileName = filePath.substring(filePath.lastIndexOf('/'));
 
-        const URL = '/fileman/move';
-        $.ajax({
-            url: URL,
-            type: 'POST',
-            data: { f: filePath, n: this.path + fileName, k: this.window.getKey() },
-            dataType: 'json',
-            cache: false,
-            success: data => {
-                if(data.res == 'ok') {
-                    // determine next file (to select it)
-                    var selIndex = this.window.getSelectedDirectory().getFileIndex(filePath);
-                    var selPath = null;
-                    if(selIndex + 1 < this.window.getSelectedDirectory().getFiles().length) {
-                        selPath = this.window.getSelectedDirectory().getFiles()[selIndex+1].getPath();
-                    }
-
-                    // refresh window (by reloading the target directory reselecting the current directory)
-                    this.loadFiles(true, () => {});
-                    this.window.selectDirectory(this.window.getSelectedDirectory(), true, selPath);
+        fetchDynamicJSON('/fileman/move', { f: filePath, n: this.path + fileName, k: this.window.getKey() }, data => {
+            if(data.res == 'ok') {
+                // determine next file (to select it)
+                var selIndex = this.window.getSelectedDirectory().getFileIndex(filePath);
+                var selPath = null;
+                if(selIndex + 1 < this.window.getSelectedDirectory().getFiles().length) {
+                    selPath = this.window.getSelectedDirectory().getFiles()[selIndex+1].getPath();
                 }
-            },
-            error: data => {
-                console.log('Error moving file', data);
+
+                // refresh window (by reloading the target directory reselecting the current directory)
+                this.loadFiles(true, () => {});
+                this.window.selectDirectory(this.window.getSelectedDirectory(), true, selPath);
             }
+        }, error => {
+            console.log('Error moving file', error);
         });
     }
 

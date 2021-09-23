@@ -15,6 +15,7 @@ import { DirectoryActionCreate } from './filemanager/action/directory-action-cre
 import { DirectoryActionRename } from './filemanager/action/directory-action-rename.js';
 import { DirectoryActionDelete } from './filemanager/action/directory-action-delete.js';
 import { I18N } from '../../../common/util/i18n.js';
+import { fetchDynamicJSON } from '../../util/fetchutil.js';
 
 export function createDefaultFileManager(selectedPath, parentWindow = null) {
     return new CanvasWindowFilemanager(parentWindow, ServerData.isGM(), ServerData.editKey, ServerData.isGM() ? null : '/public', selectedPath);
@@ -226,39 +227,31 @@ export class CanvasWindowFilemanager extends CanvasWindow {
         this.directories = {};
 
         // start loading
-        const dirListURL = '/fileman/dirlist';
-        $.ajax({
-            url: dirListURL,
-            type: 'POST',
-            dataType: 'json',
-            cache: false,
-            success: dirs => {
-                // parse directories
-                for(const dir of dirs) {
-                    if(this.forcedRoot && !dir.p.startsWith(this.forcedRoot)) continue; // only include directories under forcedRoot if set
+        fetchDynamicJSON('/fileman/dirlist', {}, data => {
+            // parse directories
+            for(const dir of data) {
+                if(this.forcedRoot && !dir.p.startsWith(this.forcedRoot)) continue; // only include directories under forcedRoot if set
 
-                    this.directories[dir.p] = new Directory(this, dir.p, dir.d, dir.f);
-                }
-
-                // create html
-                for(const dir of Object.values(this.directories)) {
-                    const parent = this.directories[dir.getParentPath()];
-                    const parentElement = parent ? parent.getULChildren() : this.ulDirList;
-                    if(parentElement != this.ulDirList) dir.getElement().style.display = 'none';
-
-                    parentElement.appendChild(dir.getElement());
-                }
-                this.divDirLoading.style.display = 'none';
-
-                // restore selection
-                if(selectedDirectoryPath && this.directories[selectedDirectoryPath]) {
-                    this.selectDirectory(this.directories[selectedDirectoryPath], false, selectedFilePath);
-                }
-            },
-            error: data => {
-                console.log('Error loading directories', data);
+                this.directories[dir.p] = new Directory(this, dir.p, dir.d, dir.f);
             }
-        });
+
+            // create html
+            for(const dir of Object.values(this.directories)) {
+                const parent = this.directories[dir.getParentPath()];
+                const parentElement = parent ? parent.getULChildren() : this.ulDirList;
+                if(parentElement != this.ulDirList) dir.getElement().style.display = 'none';
+
+                parentElement.appendChild(dir.getElement());
+            }
+            this.divDirLoading.style.display = 'none';
+
+            // restore selection
+            if(selectedDirectoryPath && this.directories[selectedDirectoryPath]) {
+                this.selectDirectory(this.directories[selectedDirectoryPath], false, selectedFilePath);
+            }
+        }, error => {
+            console.log('Error loading directories', error);
+        })
     }
 
     filterFiles() {
