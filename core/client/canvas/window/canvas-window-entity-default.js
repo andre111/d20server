@@ -1,12 +1,11 @@
 import { CanvasWindow } from '../canvas-window.js';
-import { CanvasWindowEditEntityTab } from './canvas-window-edit-entity-tab.js';
-import { Tabs } from '../../gui/tabs.js';
 import { ServerData } from '../../server-data.js';
 
-import { Access } from '../../../common/constants.js';
 import { EntityReference } from '../../../common/entity/entity-reference.js';
 import { Events } from '../../../common/events.js';
 import { I18N } from '../../../common/util/i18n.js';
+import { createPropertyEditor } from '../../gui/property-editors.js';
+import { EditorList } from '../../gui/editor-list.js';
 
 // TODO: rename to EditEntity and simplify (no longer data driven layout definitions but just a list of properties)
 export class CanvasWindowEntityDefault extends CanvasWindow {
@@ -35,32 +34,30 @@ export class CanvasWindowEntityDefault extends CanvasWindow {
     }
     
     initTabs() {
-        this.tabs = [];
-
         const event = Events.trigger('editWindowCreateTabs', { window: this, reference: this.reference }, true);
 
-        // build default data driven tab layout
+        // build fallback property list
         if(!event.canceled) {
-            // create container
             const container = this.content;
-            container.style.paddingTop = '5px';
-            
-            // create tabs
-            const accessLevel = this.getAccessLevel();
-            for(const tabDefinition of this.reference.getDefinition().editorTabs) {
-                if(Access.matches(tabDefinition.access, accessLevel)) {
-                    this.tabs.push(new CanvasWindowEditEntityTab(this, container, tabDefinition));
-                }
+            container.classList.add('flexcol', 'flexnowrap');
+            container.style.overflow = 'auto';
+
+            const editorList = new EditorList(this.reference, this);
+            for(const [name, def] of Object.entries(this.reference.getDefinition().properties)) {
+                const editor = createPropertyEditor(def.type, name, name);
+                container.appendChild(editor.container);
+                editorList.registerEditor(editor, true); //TODO: should these all be set to true?
             }
             for(const extDef of this.reference.getActiveExtensions()) {
-                for(const tabDefinition of extDef.editorTabs) {
-                    if(Access.matches(tabDefinition.access, accessLevel)) {
-                        this.tabs.push(new CanvasWindowEditEntityTab(this, container, tabDefinition));
-                    }
+                for(const [name, def] of Object.entries(extDef.properties)) {
+                    const editor = createPropertyEditor(def.type, name, name);
+                    container.appendChild(editor.container);
+                    editorList.registerEditor(editor, true); //TODO: should these all be set to true?
                 }
             }
-            
-            if(this.tabs.length > 1) Tabs.init(container);
+            this.tabs.push(editorList);
+
+            this.setDimensions(300, 500);
         }
     }
     

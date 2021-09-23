@@ -1823,6 +1823,5 @@
         "Fertigkeiten/Zauberkunde": [
             "/template generic1 Zauberkunde Wurf;für |sActor.name|;Wurf;1d20+sActor.pf_skillSpellcraft;"
         ]
-    },
-    "editorTabs": []
+    }
 }

@@ -32,8 +32,6 @@
     ],
     "macros": {
     },
-    "editorTabs": [
-    ],
     "extensionPoints": [
         {
             "name": "base",

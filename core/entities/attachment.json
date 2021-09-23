@@ -56,57 +56,6 @@
     ],
     "macros": {
     },
-    "editorTabs": [
-        {
-            "name": "Main",
-            "access": "EVERYONE",
-            "layout": "BORDER",
-            "layoutParameters": [],
-            "layoutGlue": "true",
-            "components": [
-                {
-                    "type": "EDITOR",
-                    "property": "name",
-                    "text": "Name"
-                },
-                
-                
-                {
-                    "type": "EDITOR",
-                    "editorType": "IMAGE",
-                    "property": "imagePath",
-                    "text": "Icon",
-                    "w": 64,
-                    "h": 64
-                },
-                {
-                    "type": "EDITOR",
-                    "editorType": "MULTI_LINE_STRING",
-                    "property": "descShort",
-                    "text": "Short Description",
-                    "w": 724,
-                    "h": 64
-                },
-                {
-                    "type": "EDITOR",
-                    "editorType": "MULTI_LINE_STRING",
-                    "property": "tags",
-                    "text": "Tags",
-                    "w": 181,
-                    "h": 64
-                },
-                
-                {
-                    "type": "EDITOR",
-                    "editorType": "HTML_STRING",
-                    "property": "descFull",
-                    "text": "Full Description",
-                    "w": 790,
-                    "h": 260
-                }
-            ]
-        }
-    ],
     "extensionPoints": [
         {
             "name": "base",

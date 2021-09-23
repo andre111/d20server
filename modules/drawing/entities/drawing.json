@@ -98,57 +98,6 @@
     ],
     "macros": {
     },
-    "editorTabs": [
-        {
-            "name": "Main",
-            "access": "EVERYONE",
-            "layout": "GRID",
-            "layoutParameters": [ "4", "2" ],
-            "layoutGlue": "true",
-            "components": [
-                {
-                    "type": "LABEL",
-                    "text": "Color: "
-                },
-                {
-                    "type": "EDITOR",
-                    "property": "color",
-                    "text": ""
-                },
-                
-                {
-                    "type": "LABEL",
-                    "text": "Shape: "
-                },
-                {
-                    "type": "EDITOR",
-                    "property": "shape",
-                    "text": "",
-                    "disabled": "true"
-                },
-                
-                {
-                    "type": "LABEL",
-                    "text": "Layer: "
-                },
-                {
-                    "type": "EDITOR",
-                    "property": "layer",
-                    "text": ""
-                },
-                
-                {
-                    "type": "LABEL",
-                    "text": "Depth: "
-                },
-                {
-                    "type": "EDITOR",
-                    "property": "depth",
-                    "text": ""
-                }
-            ]
-        }
-    ],
     "extensionPoints": [
         {
             "name": "base",
