@@ -114,7 +114,8 @@
         "volume": {
             "global": "Gesammt Lautstärke",
             "weather": "Wetter Lautstärke"
-        }
+        },
+        "showcontrollsbar": "Zeige Steuerungshinweise"
     },
     "filemanager": {
         "title": "Dateimanager",

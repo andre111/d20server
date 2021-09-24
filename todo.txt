@@ -1,7 +1,7 @@
 //TODO: current plans:
 // finally realize the entities stored per map plan (see below)
+// apply i18n at all places, currently it is very sparse all over the place
 // custom editors for (in order of priority): Maps, Walls, Drawings
-// add a "tutorial/controll"bar at the bottom left of the screen (see newer blender versions)
 // implement an easy to use portals module (with one edit mode)
 // add a "zauber" tab to pathfinder actor (including spells per day, learned count, saves, ...) (or maybe add it as a "sidebar" to the Talente/Zauber tab)
 // (make inbuilt macros dynamically refer to the correct actor (by using find("actor", <id>) instead of sActor, or better use an inbuilt var called cActor) - do not forget case for local actors)
@@ -12,7 +12,6 @@
 // allow players to end turns of their tokens in battle
 // allow interacting with doors in CanvasModeEntities as long as a controllable entity is near it (toggle isOpen or play locked sound)
 // add motd (and maybe more? - maybe allow customizing the backgrounds) to login screen
-// language/translation support (including settings option)
 // make pf character sheet more complete (atleast: movementrates, ...)
 // support sending selected entities of other types
 // add doubleclicking to open stuff in more places

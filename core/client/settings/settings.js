@@ -3,11 +3,13 @@ import { CanvasWindowSettings } from '../canvas/window/canvas-window-settings.js
 import { ServerData } from '../server-data.js';
 import { ModuleSettings } from './module-settings.js';
 import { SettingsEntryNumberRange } from './settings-entry-number-range.js';
+import { SettingsEntryToggle } from './settings-entry-toggle.js';
 import { SettingsPage } from './settings-page.js';
 
 export class Settings {
     static #pages = {};
     static #loading = false;
+    static #loaded = false;
     static #window;
 
     static openWindow() {
@@ -23,6 +25,7 @@ export class Settings {
 
     static save() {
         if(Settings.#loading) return;
+        if(!Settings.#loaded) return;
 
         // get values as plain object
         var obj = {};
@@ -54,6 +57,7 @@ export class Settings {
         }
 
         Settings.#loading = false;
+        Settings.#loaded = true;
     }
 
     static get pages() {
@@ -79,6 +83,11 @@ export const SETTING_WEATHER_VOLUME = new SettingsEntryNumberRange('settings.vol
 export const SETTING_PAGE_AUDIO = Settings.createPage('audio', 'Audio');
 SETTING_PAGE_AUDIO.addEntry('volume', SETTING_GLOBAL_VOLUME);
 SETTING_PAGE_AUDIO.addEntry('weather_volume', SETTING_WEATHER_VOLUME);
+
+export const SETTING_SHOW_CONTROLLS_BAR = new SettingsEntryToggle('settings.showcontrollsbar', 'Show Controlls Bar', true);
+export const SETTING_PAGE_CLIENT = Settings.createPage('client', 'Client');
+SETTING_PAGE_CLIENT.addEntry('showcontrollsbar', SETTING_SHOW_CONTROLLS_BAR);
+
 Events.on('enterMainState', event => {
     if(ServerData.isGM()) ModuleSettings.init();
 });

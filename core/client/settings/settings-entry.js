@@ -44,6 +44,7 @@ export class SettingsEntry {
     }
 
     resetValue() {
+        console.log('reset '+this.#displayName);
         this.value = this.#defaultValue;
     }
 

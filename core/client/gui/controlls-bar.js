@@ -1,5 +1,6 @@
 import { I18N } from '../../common/util/i18n.js';
 import { isString } from '../../common/util/stringutil.js';
+import { SETTING_SHOW_CONTROLLS_BAR } from '../settings/settings.js';
 
 export class ControllsBar {
     #container;
@@ -8,6 +9,10 @@ export class ControllsBar {
         this.#container = document.createElement('div');
         this.#container.id = 'controllsbar';
         document.body.appendChild(this.#container);
+
+        // listen to setting
+        this.#setVisibility();
+        SETTING_SHOW_CONTROLLS_BAR.addListener(() => this.#setVisibility());
     }
 
     clearHints() {
@@ -61,5 +66,9 @@ export class ControllsBar {
 
     remove() {
         document.body.removeChild(this.#container);
+    }
+
+    #setVisibility() {
+        this.#container.style.visibility = SETTING_SHOW_CONTROLLS_BAR.value ? 'visible' : 'hidden';
     }
 }

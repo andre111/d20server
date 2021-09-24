@@ -114,7 +114,8 @@
         "volume": {
             "global": "Global Volume",
             "weather": "Weather Volume"
-        }
+        },
+        "showcontrollsbar": "Show Controlls Bar"
     },
     "filemanager": {
         "title": "File Manager",
