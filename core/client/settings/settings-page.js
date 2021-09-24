@@ -40,7 +40,7 @@ export class SettingsPage {
 
     fromObject(obj) {
         for(const [name, entry] of Object.entries(this.#entries)) {
-            if(entry.stored && obj[name]) entry.value = obj[name];
+            if(entry.stored && obj[name] != undefined) entry.value = obj[name];
         }
     }
 }
