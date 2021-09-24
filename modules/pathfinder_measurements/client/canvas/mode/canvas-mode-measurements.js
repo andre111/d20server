@@ -20,6 +20,10 @@ export class CanvasModeMeasurements extends CanvasMode {
     }
 
     exit() {
+        // remove own 'measurement' on exit if it only is a non fixated starting point
+        if(this.step == 0) {
+            this.deleteOwnMeasurement();
+        }
     }
 
     setLayer(layer) {
