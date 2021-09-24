@@ -1,0 +1,8 @@
+{
+    "controlls": {
+        "measurements": {
+            "apply": "Messung beginnen / fixieren",
+            "remove": "Messung zurücksetzen"
+        }
+    }
+}

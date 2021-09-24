@@ -7,6 +7,19 @@
         "cancel": "Abbrechen",
         "edit": "Bearbeiten"
     },
+    "controlls": {
+        "select": "Auswählen",
+        "contextmenu": "Kontext Menü",
+        "camera": {
+            "move": "Kamera bewegen",
+            "zoom": "Kamera zoomen",
+            "center": "Kamera zentrieren"
+        },
+        "disablesnap": "Raster deaktiviven",
+        "ping": "Ping",
+        "pinggm": "GM Ping",
+        "createwalls": "Wände erstellen"
+    },
     "input": {
         "value": "Wert: ",
         "relative": "Änderung: "

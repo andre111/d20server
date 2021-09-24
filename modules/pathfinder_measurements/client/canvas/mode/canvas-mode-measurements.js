@@ -1,4 +1,5 @@
 import { CanvasMode } from '../../../../../core/client/canvas/canvas-mode.js';
+import { Client } from '../../../../../core/client/client.js';
 import { ServerData } from '../../../../../core/client/server-data.js';
 import { MessageService } from '../../../../../core/client/service/message-service.js';
 import { MapUtils } from '../../../../../core/client/util/maputil.js';
@@ -17,6 +18,9 @@ export class CanvasModeMeasurements extends CanvasMode {
     }
 
     init() {
+        Client.getState().controllsBar.addHint('mouse-left', 'controlls.measurements.apply');
+        Client.getState().controllsBar.addHint('mouse-right', 'controlls.measurements.remove');
+        Client.getState().controllsBar.addHint('key-Ctrl', 'controlls.disablesnap');
     }
 
     exit() {

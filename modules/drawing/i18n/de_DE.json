@@ -1,0 +1,10 @@
+{
+    "controlls": {
+        "draw": {
+            "filled": "Form zeichnen",
+            "outline": "Umriss zeichnen",
+            "equal": "Seiten angleichen",
+            "text": "Text einfügen"
+        }
+    }
+}

@@ -20,6 +20,7 @@ import { EntityManagers } from '../../common/entity/entity-managers.js';
 import { NotificationManager } from '../gui/notification-manager.js';
 import { Tabs } from '../gui/tabs.js';
 import { CanvasWindowManager } from '../canvas/canvas-window-manager.js';
+import { ControllsBar } from '../gui/controlls-bar.js';
 
 export class StateMain extends State {
     active;
@@ -37,6 +38,7 @@ export class StateMain extends State {
     mode;
     view;
     #layer;
+    #controllsBar;
 
     renderLayers;
     entityRenderers;
@@ -61,6 +63,8 @@ export class StateMain extends State {
 
         this.notificationManager = new NotificationManager();
         document.body.appendChild(this.notificationManager.getContainer());
+
+        this.#controllsBar = new ControllsBar();
 
         // add global listener for internal links
         this.internalLinkListener = e => {
@@ -364,9 +368,18 @@ export class StateMain extends State {
     }
 
     setMode(mode) {
+        // exit current mode and reset controll hints
         if(this.mode) this.mode.exit();
+        this.#controllsBar.clearHints();
+
+        // enter new mode
         this.mode = mode;
         this.mode.init();
+
+        // add standard camera hints
+        this.#controllsBar.addHint([['mouse-middle'],['mouse-left', 'key-Alt']], 'controlls.camera.move');
+        this.#controllsBar.addHint('mouse-middle', 'controlls.camera.zoom');
+        this.#controllsBar.addHint('key-C', 'controlls.camera.center');
     }
 
     getView() {
@@ -389,6 +402,10 @@ export class StateMain extends State {
     setLayer(layer) {
         this.#layer = layer;
         if(this.mode) this.mode.onLayerChange();
+    }
+
+    get controllsBar() {
+        return this.#controllsBar;
     }
 
     getCamera() {

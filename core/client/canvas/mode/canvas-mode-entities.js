@@ -14,6 +14,7 @@ import { EntityReference } from '../../../common/entity/entity-reference.js';
 import { CanvasWindowConfirm } from '../window/canvas-window-confirm.js';
 import { EntityManagers } from '../../../common/entity/entity-managers.js';
 import { EntityActionCopy } from './entity-action-copy.js';
+import { ServerData } from '../../server-data.js';
 
 export class CanvasModeEntities extends CanvasMode {
     constructor(entityType) {
@@ -29,6 +30,12 @@ export class CanvasModeEntities extends CanvasMode {
         this.setAction(new EntityActionSelect(this));
         this.clearActiveEntities();
         this.sendSelectedEntities();
+
+        Client.getState().controllsBar.addHint('mouse-left', 'controlls.select');
+        Client.getState().controllsBar.addHint('mouse-right', 'controlls.contextmenu');
+        Client.getState().controllsBar.addHint('key-Ctrl', 'controlls.disablesnap');
+        Client.getState().controllsBar.addHint('key-P', 'controlls.ping');
+        if(ServerData.isGM()) Client.getState().controllsBar.addHint(['key-P', 'key-Shift'], 'controlls.pinggm');
     }
     
     exit() {

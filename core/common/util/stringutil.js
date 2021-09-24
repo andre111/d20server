@@ -39,3 +39,7 @@ export function splitArguments(line, limit = 0) {
 
     return split;
 }
+
+export function isString(s) {
+    return typeof(s) === 'string' || s instanceof String;
+}

@@ -1,6 +1,7 @@
 import { CanvasMode } from '../canvas-mode.js';
 import { WallActionCreateWall } from './wall-action-create-wall.js';
 import { MapUtils } from '../../util/maputil.js';
+import { Client } from '../../client.js';
 
 export { WallActionCreateWall } from './wall-action-create-wall.js';
 export { WallActionCreateOneSidedWall } from './wall-action-create-one-sided-wall.js';
@@ -15,6 +16,10 @@ export class CanvasModeWalls extends CanvasMode {
     
     init() {
         this.setAction(new WallActionCreateWall(this));
+
+        Client.getState().controllsBar.addHint('mouse-left', 'controlls.createwalls');
+        Client.getState().controllsBar.addHint('mouse-right', 'controlls.contextmenu');
+        Client.getState().controllsBar.addHint('key-Ctrl', 'controlls.disablesnap');
     }
     
     exit() {

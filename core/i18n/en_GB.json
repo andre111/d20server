@@ -7,6 +7,19 @@
         "cancel": "Cancel",
         "edit": "Edit"
     },
+    "controlls": {
+        "select": "Select",
+        "contextmenu": "Context Menu",
+        "camera": {
+            "move": "Move Camera",
+            "zoom": "Zoom Camera",
+            "center": "Center Camera"
+        },
+        "disablesnap": "Disable Grid Snap",
+        "ping": "Ping",
+        "pinggm": "GM Ping",
+        "createwalls": "Create Walls"
+    },
     "input": {
         "value": "Value: ",
         "relative": "Relative Change: "

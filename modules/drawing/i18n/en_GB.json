@@ -1,0 +1,10 @@
+{
+    "controlls": {
+        "draw": {
+            "filled": "Draw Shape",
+            "outline": "Draw Outline",
+            "equal": "Equal Sizes",
+            "text": "Insert Text"
+        }
+    }
+}
