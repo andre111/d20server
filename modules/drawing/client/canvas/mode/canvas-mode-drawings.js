@@ -27,12 +27,16 @@ export class CanvasModeDrawings extends CanvasMode {
     
     init() {
         if(this.action == 'WRITE_TEXT') {
-            Client.getState().controllsBar.addHint('mouse-left', 'controlls.draw.text');
+            Client.getState().setControllHints([
+                'mouse-left', 'controlls.draw.text'
+            ]);
         } else {
-            Client.getState().controllsBar.addHint('mouse-left', 'controlls.draw.filled');
-            Client.getState().controllsBar.addHint(['mouse-left', 'key-Shift'], 'controlls.draw.outline');
-            Client.getState().controllsBar.addHint(['mouse-left', 'key-Ctrl'], 'controlls.draw.equal');
-            Client.getState().controllsBar.addHint('mouse-right', 'global.cancel');
+            Client.getState().setControllHints([
+                'mouse-left', 'controlls.draw.filled',
+                ['mouse-left', 'key-Shift'], 'controlls.draw.outline',
+                ['mouse-left', 'key-Ctrl'], 'controlls.draw.equal',
+                'mouse-right', 'global.cancel'
+            ]);
         }
     }
 

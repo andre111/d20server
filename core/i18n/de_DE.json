@@ -18,7 +18,16 @@
         "disablesnap": "Raster deaktiviven",
         "ping": "Ping",
         "pinggm": "GM Ping",
-        "createwalls": "Wände erstellen"
+        "add": {
+            "token": "Token einfügen",
+            "wall": "Wände einfügen"
+        },
+        "move": "Bewegen",
+        "rotate": "Drehen",
+        "resize": "Skalieren",
+        "delete": "Löschen",
+        "copy": "Kopieren",
+        "paste": "Einfügen"
     },
     "input": {
         "value": "Wert: ",

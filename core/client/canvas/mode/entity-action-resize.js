@@ -2,6 +2,7 @@ import { EntityAction } from './entity-action.js';
 import { EntityActionSelect } from './entity-action-select.js';
 import { EntityUtils } from '../../util/entityutil.js';
 import { MapUtils } from '../../util/maputil.js';
+import { Client } from '../../client.js';
 
 export class EntityActionResize extends EntityAction {
     constructor(mode, mouseX, mouseY, widthMultiplier, heightMultiplier) {
@@ -17,6 +18,12 @@ export class EntityActionResize extends EntityAction {
         
         this.initialMouseX = mouseX;
         this.initialMouseY = mouseY;
+    }
+
+    init() {
+        Client.getState().setControllHints([
+            'mouse-left', 'controlls.resize'
+        ]);
     }
     
     renderOverlay(ctx) {

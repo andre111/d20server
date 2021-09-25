@@ -370,16 +370,11 @@ export class StateMain extends State {
     setMode(mode) {
         // exit current mode and reset controll hints
         if(this.mode) this.mode.exit();
-        this.#controllsBar.clearHints();
+        this.setControllHints([]);
 
         // enter new mode
         this.mode = mode;
         this.mode.init();
-
-        // add standard camera hints
-        this.#controllsBar.addHint([['mouse-middle'],['mouse-left', 'key-Alt']], 'controlls.camera.move');
-        this.#controllsBar.addHint('mouse-middle', 'controlls.camera.zoom');
-        this.#controllsBar.addHint('key-C', 'controlls.camera.center');
     }
 
     getView() {
@@ -406,6 +401,19 @@ export class StateMain extends State {
 
     get controllsBar() {
         return this.#controllsBar;
+    }
+
+    setControllHints(hints) {
+        this.#controllsBar.clearHints();
+
+        for(var i=0; i<hints.length; i+=2) {
+            this.#controllsBar.addHint(hints[i], hints[i+1]);
+        }
+
+        // add standard camera hints
+        this.#controllsBar.addHint([['mouse-middle'],['mouse-left', 'key-Alt']], 'controlls.camera.move');
+        this.#controllsBar.addHint('mouse-middle', 'controlls.camera.zoom');
+        this.#controllsBar.addHint('key-C', 'controlls.camera.center');
     }
 
     getCamera() {

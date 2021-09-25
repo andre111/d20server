@@ -18,7 +18,16 @@
         "disablesnap": "Disable Grid Snap",
         "ping": "Ping",
         "pinggm": "GM Ping",
-        "createwalls": "Create Walls"
+        "add": {
+            "token": "Create Token(s)",
+            "wall": "Create Wall(s)"
+        },
+        "move": "Move",
+        "rotate": "Rotate",
+        "resize": "Resize",
+        "delete": "Delete",
+        "copy": "Copy",
+        "paste": "Paste"
     },
     "input": {
         "value": "Value: ",

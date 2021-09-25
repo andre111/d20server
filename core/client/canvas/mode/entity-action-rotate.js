@@ -1,9 +1,16 @@
 import { EntityAction } from './entity-action.js';
 import { EntityActionSelect } from './entity-action-select.js';
+import { Client } from '../../client.js';
 
 export class EntityActionRotate extends EntityAction {
     constructor(mode) {
         super(mode);
+    }
+
+    init() {
+        Client.getState().setControllHints([
+            'mouse-left', 'controlls.rotate'
+        ]);
     }
     
     doRotation(xm, ym, snap) {

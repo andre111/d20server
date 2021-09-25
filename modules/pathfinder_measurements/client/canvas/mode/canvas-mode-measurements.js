@@ -18,9 +18,11 @@ export class CanvasModeMeasurements extends CanvasMode {
     }
 
     init() {
-        Client.getState().controllsBar.addHint('mouse-left', 'controlls.measurements.apply');
-        Client.getState().controllsBar.addHint('mouse-right', 'controlls.measurements.remove');
-        Client.getState().controllsBar.addHint('key-Ctrl', 'controlls.disablesnap');
+        Client.getState().setControllHints([
+            'mouse-left', 'controlls.measurements.apply',
+            'mouse-right', 'controlls.measurements.remove',
+            'key-Ctrl', 'controlls.disablesnap'
+        ]);
     }
 
     exit() {

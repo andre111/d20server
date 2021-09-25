@@ -1,5 +1,8 @@
 {
     "controlls": {
+        "add": {
+            "drawing": "Zeichnungen einfügen"
+        },
         "draw": {
             "filled": "Form zeichnen",
             "outline": "Umriss zeichnen",

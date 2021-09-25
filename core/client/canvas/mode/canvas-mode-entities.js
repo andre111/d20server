@@ -14,33 +14,30 @@ import { EntityReference } from '../../../common/entity/entity-reference.js';
 import { CanvasWindowConfirm } from '../window/canvas-window-confirm.js';
 import { EntityManagers } from '../../../common/entity/entity-managers.js';
 import { EntityActionCopy } from './entity-action-copy.js';
-import { ServerData } from '../../server-data.js';
 
 export class CanvasModeEntities extends CanvasMode {
+    #entityType;
+
+    #action;
+    #activeEntities;
+
     constructor(entityType) {
         super();
         
-        this.entityType = entityType;
+        this.#entityType = entityType;
         
-        this.action = new EntityActionSelect(this);
-        this.activeEntities = []; // mode registers listeners -> never modify activeEntities directly, use clearActiveEntities or verifyActiveEntities
+        this.#action = new EntityActionSelect(this);
+        this.#activeEntities = []; // mode registers listeners -> never modify activeEntities directly, use clearActiveEntities or verifyActiveEntities
     }
     
     init() {
         this.setAction(new EntityActionSelect(this));
         this.clearActiveEntities();
-        this.sendSelectedEntities();
-
-        Client.getState().controllsBar.addHint('mouse-left', 'controlls.select');
-        Client.getState().controllsBar.addHint('mouse-right', 'controlls.contextmenu');
-        Client.getState().controllsBar.addHint('key-Ctrl', 'controlls.disablesnap');
-        Client.getState().controllsBar.addHint('key-P', 'controlls.ping');
-        if(ServerData.isGM()) Client.getState().controllsBar.addHint(['key-P', 'key-Shift'], 'controlls.pinggm');
     }
     
     exit() {
         this.clearActiveEntities();
-        this.action.exit();
+        this.#action.exit();
     }
     
     onLayerChange() {
@@ -49,52 +46,52 @@ export class CanvasModeEntities extends CanvasMode {
     
     renderOverlay(ctx) {
         this.validateActiveEntities();
-        this.action.renderOverlay(ctx);
+        this.#action.renderOverlay(ctx);
     }
     
     mouseClicked(e) {
         this.validateActiveEntities();
-        this.action.mouseClicked(e);
+        this.#action.mouseClicked(e);
     }
     
     mouseDblClicked(e) {
         this.validateActiveEntities();
-        this.action.mouseDblClicked(e);
+        this.#action.mouseDblClicked(e);
     }
     
     mousePressed(e) {
         this.validateActiveEntities();
-        this.action.mousePressed(e);
+        this.#action.mousePressed(e);
     }
     
     mouseReleased(e) {
         this.validateActiveEntities();
-        this.action.mouseReleased(e);
+        this.#action.mouseReleased(e);
     }
     
     mouseEntered(e) {
         this.validateActiveEntities();
-        this.action.mouseEntered(e);
+        this.#action.mouseEntered(e);
     }
     
     mouseExited(e) {
         this.validateActiveEntities();
-        this.action.mouseExited(e);
+        this.#action.mouseExited(e);
     }
     
     mouseDragged(e) {
         this.validateActiveEntities();
-        this.action.mouseDragged(e);
+        this.#action.mouseDragged(e);
     }
     
     mouseMoved(e) {
         this.validateActiveEntities();
-        this.action.mouseMoved(e);
+        this.#action.mouseMoved(e);
     }
     
     mouseWheelMoved(e) {
         this.validateActiveEntities();
-        this.action.mouseWheelMoved(e);
+        this.#action.mouseWheelMoved(e);
     }
     
     actionPerformed(a) {
@@ -123,16 +120,16 @@ export class CanvasModeEntities extends CanvasMode {
             moveAction.finishMove(true);
         // rotating entities
         } else if(a == 'rotate_left') {
-            if(this.activeEntities.length == 1) {
-                var reference = this.activeEntities[0];
+            if(this.#activeEntities.length == 1) {
+                var reference = this.#activeEntities[0];
                 var rotation = reference.getDouble('rotation');
                 rotation = (rotation - 45) % 360;
 				reference.setDouble('rotation', rotation);
 				reference.performUpdate();
             }
         } else if(a == 'rotate_right') {
-            if(this.activeEntities.length == 1) {
-                var reference = this.activeEntities[0];
+            if(this.#activeEntities.length == 1) {
+                var reference = this.#activeEntities[0];
                 var rotation = reference.getDouble('rotation');
                 rotation = (rotation + 45) % 360;
 				reference.setDouble('rotation', rotation);
@@ -140,17 +137,17 @@ export class CanvasModeEntities extends CanvasMode {
             }
         // deleting entities
         } else if(a == 'delete') {
-            if(this.activeEntities.length > 0) {
+            if(this.#activeEntities.length > 0) {
                 new CanvasWindowConfirm(null, 'Delete Object(s)', 'Do you want to delete all selected objects?', () => {
-                    for(const reference of this.activeEntities) {
+                    for(const reference of this.#activeEntities) {
                         EntityManagers.get(reference.getManager()).remove(reference.getID());
                     }
-                    this.clearActiveEntities();
+                    this.resetAction();
                 });
             }
         // any other input -> pass along to action
         } else {
-            this.action.actionPerformed(a);
+            this.#action.actionPerformed(a);
         }
     }
     
@@ -159,7 +156,7 @@ export class CanvasModeEntities extends CanvasMode {
         if(!(entity instanceof Entity) && !(entity instanceof EntityReference)) return;
 
         const reference = entity instanceof EntityReference ? entity : new EntityReference(entity);
-        this.activeEntities.push(reference);
+        this.#activeEntities.push(reference);
         this.sendSelectedEntities();
 
         // add listener to update reference on changes 
@@ -169,7 +166,7 @@ export class CanvasModeEntities extends CanvasMode {
     }
     
     validateActiveEntities() {
-        this.activeEntities = this.activeEntities.filter(reference => {
+        this.#activeEntities = this.#activeEntities.filter(reference => {
             if(reference.isValid()) {
                 return true;
             } else {
@@ -182,23 +179,23 @@ export class CanvasModeEntities extends CanvasMode {
     
     clearActiveEntities() {
         // IMPORTANT: unregister all listeners to prevent memory leaks -> never modify activeEntities directly, use clearActiveEntities or validateActiveEntities
-        for(const activeEntity of this.activeEntities) {
+        for(const activeEntity of this.#activeEntities) {
             activeEntity.removeListener(this);
         }
 
-        this.activeEntities = [];
+        this.#activeEntities = [];
         this.sendSelectedEntities();
     }
     
     renderActiveEntities(ctx, drawNormal, drawSelectionOutline) {
-        for(const reference of this.activeEntities) {
+        for(const reference of this.#activeEntities) {
             var entity = reference.getModifiedEntity();
             if(entity == null || entity == undefined) continue;
             
             if(drawNormal) {
                 //TODO: entity renders should be better accessible?
-                if(Client.getState().entityRenderers[this.entityType]) {
-                    Client.getState().entityRenderers[this.entityType].render(ctx, Client.getState().getView(), entity);
+                if(Client.getState().entityRenderers[this.#entityType]) {
+                    Client.getState().entityRenderers[this.#entityType].render(ctx, Client.getState().getView(), entity);
                 }
             }
             
@@ -217,7 +214,7 @@ export class CanvasModeEntities extends CanvasMode {
     
     storeMouseOffsets(xm, ym) {
 		// remember offset from mouse
-        for(const reference of this.activeEntities) {
+        for(const reference of this.#activeEntities) {
             reference.mouseOffsetX = reference.getLong('x') - xm;
             reference.mouseOffsetY = reference.getLong('y') - ym;
         }
@@ -229,7 +226,7 @@ export class CanvasModeEntities extends CanvasMode {
         
 		var gridSize = map.getLong('gridSize');
         
-        for(const reference of this.activeEntities) {
+        for(const reference of this.#activeEntities) {
             // determine new position
 			var xp = xm + reference.mouseOffsetX;
 			var yp = ym + reference.mouseOffsetY;
@@ -275,21 +272,20 @@ export class CanvasModeEntities extends CanvasMode {
     
     resetAction() {
         this.clearActiveEntities();
-        this.sendSelectedEntities();
         
         this.setAction(new EntityActionSelect(this));
     }
     
     setAction(action) {
-        this.action.exit();
-        this.action = action;
-        this.action.init();
+        this.#action.exit();
+        this.#action = action;
+        this.#action.init();
     }
     
     setAddEntityAction(entity) {
 		const map = MapUtils.currentMap();
 		if(map == null) return;
-		if(entity.getType() != this.entityType) return;
+		if(entity.getType() != this.#entityType) return;
         
         entity = entity.clone();
         entity.id = 0;
@@ -297,7 +293,6 @@ export class CanvasModeEntities extends CanvasMode {
         entity.setLayer('layer', Client.getState().getLayer());
         
         this.clearActiveEntities();
-        this.sendSelectedEntities();
         
         this.addActiveEntity(entity);
         this.setAction(new EntityActionAdd(this));
@@ -307,10 +302,9 @@ export class CanvasModeEntities extends CanvasMode {
         if(map == null || map == undefined) return;
         
         this.clearActiveEntities();
-        this.sendSelectedEntities();
         
         for(const reference of references) {
-            if(reference.getType() == this.entityType) {
+            if(reference.getType() == this.#entityType) {
                 reference.setLong('map', map.id);
                 reference.setLayer('layer', Client.getState().getLayer());
                 this.addActiveEntity(reference);
@@ -320,9 +314,20 @@ export class CanvasModeEntities extends CanvasMode {
         this.setAction(new EntityActionCopy(this));
     }
 
-    
     sendSelectedEntities() {
-        const msg = new SelectedEntities(this.entityType, this.activeEntities.map(ref => ref.getID()));
+        const msg = new SelectedEntities(this.#entityType, this.#activeEntities.map(ref => ref.getID()));
         MessageService.send(msg);
+    }
+
+    get entityType() {
+        return this.#entityType;
+    }
+
+    get action() {
+        return this.#action;
+    }
+
+    get activeEntities() {
+        return this.#activeEntities; //TODO: should be read only
     }
 }

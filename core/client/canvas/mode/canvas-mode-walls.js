@@ -17,9 +17,11 @@ export class CanvasModeWalls extends CanvasMode {
     init() {
         this.setAction(new WallActionCreateWall(this));
 
-        Client.getState().controllsBar.addHint('mouse-left', 'controlls.createwalls');
-        Client.getState().controllsBar.addHint('mouse-right', 'controlls.contextmenu');
-        Client.getState().controllsBar.addHint('key-Ctrl', 'controlls.disablesnap');
+        Client.getState().setControllHints([
+            'mouse-left', 'controlls.add.wall',
+            'mouse-right', 'controlls.contextmenu',
+            'key-Ctrl', 'controlls.disablesnap'
+        ]);
     }
     
     exit() {

@@ -100,6 +100,7 @@ export class EntityActionSelect extends EntityAction {
     
     init() {
         this.selecting = false;
+        this.checkSelectionState();
     }
     
     exit() {
@@ -306,6 +307,7 @@ export class EntityActionSelect extends EntityAction {
                         }
                     });
                     this.mode.storeMouseOffsets(e.xm, e.ym);
+                    this.checkSelectionState();
                 } else {
                     //WEB CLIENT: moved from mouseClicked, because that has ordering issues
                     // special casing for tokens, can this be generalized?
@@ -393,6 +395,29 @@ export class EntityActionSelect extends EntityAction {
         if(toSelect != null && toSelect != undefined) {
             this.mode.addActiveEntity(toSelect);
         }
+        this.checkSelectionState();
+    }
+
+    checkSelectionState() {
+        // set controll hints depending on selection state
+        const hints = [];
+        if(this.mode.activeEntities.length > 0) {
+            hints.push([['key-\u2b60'],['key-\u2b62'],['key-\u2b61'],['key-\u2b63']], 'controlls.move');
+            if(this.mode.activeEntities.length == 1) {
+                hints.push([['key-\u2b60', 'key-Shift'],['key-\u2b62', 'key-Shift']], 'controlls.rotate');
+            }
+            if(ServerData.isGM()) hints.push('key-Del', 'controlls.delete');
+            if(ServerData.isGM()) hints.push(['key-Ctrl', 'key-C'], 'controlls.copy');
+        } else {
+            hints.push(
+                'mouse-left', 'controlls.select',
+                'mouse-right', 'controlls.contextmenu',
+                'key-P', 'controlls.ping'
+            );
+            if(ServerData.isGM()) hints.push(['key-P', 'key-Shift'], 'controlls.pinggm');
+            if(ServerData.isGM()) hints.push(['key-Ctrl', 'key-V'], 'controlls.paste');
+        }
+        Client.getState().setControllHints(hints);
     }
     
     openLongPropertySetDialog(reference, property, allowRelative, title, message) {

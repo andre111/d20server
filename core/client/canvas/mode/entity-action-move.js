@@ -1,12 +1,20 @@
 import { EntityAction } from './entity-action.js';
 import { EntityActionSelect } from './entity-action-select.js';
 import { ServerData } from '../../server-data.js';
+import { Client } from '../../client.js';
 
 export class EntityActionMove extends EntityAction {
     constructor(mode, mouseX, mouseY) {
         super(mode);
         
         this.mode.storeMouseOffsets(mouseX, mouseY);
+    }
+
+    init() {
+        Client.getState().setControllHints([
+            'mouse-left', 'controlls.move',
+            'key-Ctrl', 'controlls.disablesnap'
+        ]);
     }
     
     doMove(mouseX, mouseY, snap, collideWithWalls) {

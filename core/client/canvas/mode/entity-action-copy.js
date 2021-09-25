@@ -1,10 +1,19 @@
 import { EntityAction } from './entity-action.js';
 import { CopyEntity } from '../../../common/messages.js';
 import { MessageService } from '../../service/message-service.js';
+import { Client } from '../../client.js';
 
 export class EntityActionCopy extends EntityAction {
     constructor(mode) {
         super(mode);
+    }
+
+    init() {
+        Client.getState().setControllHints([
+            'mouse-left', 'controlls.add.'+this.mode.entityType,
+            'mouse-right', 'global.cancel',
+            'key-Ctrl', 'controlls.disablesnap'
+        ]);
     }
     
     renderOverlay(ctx) {

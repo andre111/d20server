@@ -1,5 +1,8 @@
 {
     "controlls": {
+        "add": {
+            "drawing": "Create Drawing(s)"
+        },
         "draw": {
             "filled": "Draw Shape",
             "outline": "Draw Outline",
