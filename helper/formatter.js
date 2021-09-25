@@ -93,5 +93,6 @@ function convertPrettyPrintedTableToHTML(table) {
         }
         tableBuilder += '</tr>';
     }
+    tableBuilder += '</table>';
     return tableBuilder;
 }
