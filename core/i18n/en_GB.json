@@ -5,7 +5,8 @@
         "ok": "Ok",
         "accept": "Accept",
         "cancel": "Cancel",
-        "edit": "Edit"
+        "edit": "Edit",
+        "search": "Search..."
     },
     "controlls": {
         "select": "Select",

@@ -1,3 +1,5 @@
+import { I18N } from '../../common/util/i18n.js';
+
 class DirectoryNode {
     tree;
 
@@ -218,6 +220,7 @@ export class SearchableIDTree {
         this.#filter = document.createElement('input');
         this.#filter.type = 'text';
         this.#filter.className = 'tree-search-input';
+        this.#filter.placeholder = I18N.get('global.search', 'Search...');;
         this.#filter.oninput = () => this._onFilter();
         this.#searchPanel.appendChild(this.#filter);
         this.#parent.appendChild(this.#searchPanel);

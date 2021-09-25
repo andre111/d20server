@@ -5,7 +5,8 @@
         "ok": "Ok",
         "accept": "Übernehmen",
         "cancel": "Abbrechen",
-        "edit": "Bearbeiten"
+        "edit": "Bearbeiten",
+        "search": "Suchen..."
     },
     "controlls": {
         "select": "Auswählen",
