@@ -9,7 +9,7 @@ import fs from 'fs-extra';
 import path from 'path';
 import { Access } from '../core/common/constants.js';
 
-const FULL_RESET = true;
+const FULL_RESET = false;
 const IGNORE_MISSING_IMAGES = false;
 
 //TODO: split this into more sensible parts

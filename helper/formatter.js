@@ -21,7 +21,7 @@ export function prettyTextToHTML(text, wrapLinesInParagraphs = false) {
 
             // force linebreak for empty lines
             if(line == '') {
-                lines[i] = '\n';
+                lines[i] = '<p>&nbsp;</p>';
                 continue;
             }
 
