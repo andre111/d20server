@@ -1,4 +1,5 @@
 import { EditorList } from '../../gui/editor-list.js';
+import { AccessPropertyEditor } from '../../gui/property-editor/access-property-editor.js';
 import { BooleanPropertyEditor } from '../../gui/property-editor/boolean-property-editor.js';
 import { ColorPropertyEditor } from '../../gui/property-editor/color-property-editor.js';
 import { DoublePropertyEditor } from '../../gui/property-editor/double-property-editor.js';
@@ -71,6 +72,14 @@ export class CanvasWindowEditCustom {
 
     createFileEditor(property, filetype, label, className = '') {
         const editor = new StringFilePropertyEditor(property, label, filetype);
+        this.#editorList.registerEditor(editor, true);
+
+        if(className) editor.container.className = className;
+        return editor.container;
+    }
+
+    createAccessEditor(property, allowedValues, label, className = '') {
+        const editor = new AccessPropertyEditor(property, label, allowedValues);
         this.#editorList.registerEditor(editor, true);
 
         if(className) editor.container.className = className;

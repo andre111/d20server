@@ -8,7 +8,7 @@ import { I18N } from '../../common/util/i18n.js';
 
 export class SidepanelTabChat extends SidepanelTab {
     constructor() {
-        super('chat', true);
+        super('chat', true, '💬');
         
         // create html elements
         this.tab.style.display = 'grid';

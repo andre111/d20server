@@ -12,8 +12,11 @@ export class Tabs {
             const tab = document.createElement('div');
             tab.className = 'tab-content';
             tab.name = c.name;
+            tab.title = c.title;
             tab.appendChild(c);
             tabs.push(tab);
+            
+            c.title = '';
         }
         container.classList.add('tabs');
         
@@ -28,8 +31,11 @@ export class Tabs {
             
             const button = document.createElement('button');
             button.innerText = tabs[i].name;
+            button.title = tabs[i].title;
             button.onclick = () => Tabs.select(container, index);
             buttonDiv.appendChild(button);
+
+            tabs[i].title = '';
             
             container.appendChild(tabs[i]);
         }

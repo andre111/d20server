@@ -38,6 +38,12 @@
             "name": "Name: "
         }
     },
+    "compendium": {
+        "edit": {
+            "access": "Access: ",
+            "path": "Path: "
+        }
+    },
     "token": {
         "edit": {
             "position": "Position: ",
@@ -81,7 +87,8 @@
             "players": "Players",
             "actors": "Actors",
             "attachments": "Attachments",
-            "maps": "Maps"
+            "maps": "Maps",
+            "compendium": "Compendium"
         },
         "chat": {
             "send": "Send"
@@ -111,6 +118,13 @@
                 "button": "New Map",
                 "title": "New Map",
                 "prompt": "Enter Map Name: "
+            }
+        },
+        "compendium": {
+            "new": {
+                "button": "New Compendium Entry",
+                "title": "New Compendium Entry",
+                "prompt": "Enter Compendium Entry Name: "
             }
         }
     },

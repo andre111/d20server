@@ -152,8 +152,9 @@ export class StateMain extends State {
         for(const tab of this.sidepanelTabs) {
             if(tab.isVisible()) {
                 // add panel tab
-                tab.getTab().name = tab.getName();
-                sidepanel.appendChild(tab.getTab());
+                tab.tab.name = tab.getIcon();
+                tab.tab.title = tab.getName();
+                sidepanel.appendChild(tab.tab);
             }
         }
         Tabs.init(sidepanel);

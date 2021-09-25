@@ -1,14 +1,44 @@
-export function prettyTextToHTML(text) {
+export function prettyTextToHTML(text, wrapLinesInParagraphs = false) {
     if(!text) return '';
 
+    // escape < >
     text = text.replace(/</g, '&lt;');
     text = text.replace(/>/g, '&gt;');
-    // convert char tables to use html formatting
     text = text.replace(/\\n/g, '\n');
+    text = text.replace(/\r/g, '');
+
+    // convert char tables to use html formatting
     for(const prettyTable of findPrettyPrintedTables(text)) {
         const htmlTable = convertPrettyPrintedTableToHTML(prettyTable);
         text = text.replace(prettyTable, htmlTable);
     }
+
+    // wrap lines in paragraphs
+    if(wrapLinesInParagraphs) {
+        const lines = text.split('\n');
+        for(var i=0; i<lines.length; i++) {
+            var line = lines[i];
+
+            // force linebreak for empty lines
+            if(line == '') {
+                lines[i] = '\n';
+                continue;
+            }
+
+            // count indentation
+            var indentation = 0;
+            while(line.length > indentation && line[indentation] == ' ') indentation++;
+
+            // add paragraph
+            if(indentation == 0) lines[i] = '<p>' + line + '</p>';
+            else lines[i] = `<p style="padding-left: ${Math.floor(indentation/4)*40}px;">` + line.substring(indentation) + '</p>';
+        }
+        text = lines.join('');
+    }
+
+    // replace **BOLD** formatting with <strong>BOLD</strong>
+    text = text.replace(/\*\*([^\*]+)\*\*/g, '<strong>$1</strong>');
+    // replace newlines with <br>
     text = text.replace(/\n/g, '<br>');
     return text;
 }
@@ -32,6 +62,7 @@ function findPrettyPrintedTables(text) {
 
                     // check if table does not continue
                     if(currentIndex == text.length || text.charAt(currentIndex) != '|') {
+                        while(currentIndex > 0 && /\s/.test(text.charAt(currentIndex-1))) currentIndex--; // do not eat newlines after a table
                         endIndex = currentIndex;
                         break;
                     }

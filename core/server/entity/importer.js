@@ -96,6 +96,9 @@ export function importData(directory, overwriteExisting) {
         adjustInternalLinks(actor, 'bio');
         adjustInternalLinks(actor, 'gmBio');
     });
+    
+    // import compendium
+    importEntities(directory, overwriteExisting, true, 'compendium', (originalID, compendium) => {});
 
     console.log('Import done');
 }

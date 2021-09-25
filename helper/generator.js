@@ -7,8 +7,9 @@ import { prettyTextToHTML } from './formatter.js';
 
 import fs from 'fs-extra';
 import path from 'path';
+import { Access } from '../core/common/constants.js';
 
-const FULL_RESET = false;
+const FULL_RESET = true;
 const IGNORE_MISSING_IMAGES = false;
 
 //TODO: split this into more sensible parts
@@ -36,7 +37,7 @@ function doGenerate() {
         const imageDirectory = '../d20helper/dataSRC/images/';
         fs.copySync(imageDirectory, path.join(directory, '/files/image/'));
     }
-
+    
     // generate attachments
     {
         // generic attachments
@@ -181,7 +182,7 @@ function doGenerate() {
     }
     saveJsonFile(path.join(directory, 'attachment.json'), attachmentMap);
 
-    //TODO: generate actors
+    // generate actors
     const actorMap = {};
     {
         const monsterData = getCombinedJsonData('../d20helper/dataFull/monster/');
@@ -425,6 +426,40 @@ function doGenerate() {
         console.log(`Monster with icon: ${monsterWithIcon}/${monsterData.length} (${monsterWithIcon/monsterData.length*100}%)`);
     }
     saveJsonFile(path.join(directory, 'actor.json'), actorMap);
+    
+    // generate compendium
+    const compendiumMap = {};
+    {
+        const basePath = '../d20helper/dataFull/compendium/';
+        const files = fs.readdirSync(basePath);
+        while(files.length > 0) {
+            const file = files.splice(files.length-1, 1)[0];
+            const stats = fs.lstatSync(basePath+file);
+
+            if(stats.isDirectory()) {
+                const newFiles = fs.readdirSync(basePath+file);
+                for(const newFile of newFiles) files.push(file + '/' + newFile);
+            } else if(stats.isFile()) {
+                // get basic info
+                const namePath = file.replace('.txt', '').replace('_', '');
+                const name = (namePath.includes('/') ? namePath.substring(namePath.lastIndexOf('/')+1) : namePath).replace('.txt', '');
+                const path = namePath.includes('/') ? namePath.substring(0, namePath.lastIndexOf('/')+1) : '';
+                const content = prettyTextToHTML(fs.readFileSync(basePath+file, { encoding: 'utf-8' }), true);
+                const access = file.includes('_') ? Access.GM : Access.EVERYONE;
+
+                // generate compendium entity
+                console.log(`Generating Compendium: ${name}`);
+                const compendium = new Entity('compendium');
+                compendium.setString('name', name);
+                compendium.setString('path', path);
+                compendium.setString('content', content);
+                compendium.setAccessValue('access', access);
+
+                compendiumMap[String(compendium.getID())] = compendium;
+            }
+        }
+    }
+    saveJsonFile(path.join(directory, 'compendium.json'), compendiumMap);
 }
 
 function getCombinedJsonData(directory) {

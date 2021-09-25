@@ -50,6 +50,8 @@ import { TokenUtil } from '../common/util/tokenutil.js';
 import { CanvasWindowEditToken } from './canvas/window/canvas-window-edit-token.js';
 import { StateMain } from './state/state-main.js';
 import { CanvasWindowEditAttachment } from './canvas/window/canvas-window-edit-attachment.js';
+import { SidepanelTabCompendium } from './sidepanel/sidepanel-tab-compendium.js';
+import { CanvasWindowEditCompendium } from './canvas/window/canvas-window-edit-compendium.js';
 
 // Initialize common code
 Common.init(new ClientIDProvider(), ClientEntityManager);
@@ -160,6 +162,7 @@ Events.on('addSidepanelTabs', event => {
     event.data.addSidepanelTab(new SidepanelTabActors());
     event.data.addSidepanelTab(new SidepanelTabAttachments());
     event.data.addSidepanelTab(new SidepanelTabMaps());
+    event.data.addSidepanelTab(new SidepanelTabCompendium());
 });
 
 Events.on('enterMainState', () => {
@@ -392,12 +395,16 @@ Events.on('openEntity', event => {
     event.cancel();
 }, false, 0);
 
+//    open custom windows (TODO: switch to using just openEntity instead)
 Events.on('editWindowCreateTabs', event => {
     if(event.data.reference.getType() === 'token') {    
         new CanvasWindowEditToken(event.data.window, event.data.reference);
         event.cancel();
     } else if(event.data.reference.getType() === 'attachment') {
         new CanvasWindowEditAttachment(event.data.window, event.data.reference);
+        event.cancel();
+    } else if(event.data.reference.getType() === 'compendium') {
+        new CanvasWindowEditCompendium(event.data.window, event.data.reference);
         event.cancel();
     }
 }, false);

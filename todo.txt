@@ -1,4 +1,5 @@
 //TODO: current plans:
+// implement "compendium" -> entries have name,path,visibility,content properties and can be force shown to players
 // finally realize the entities stored per map plan (see below)
 // apply i18n at all places, currently it is very sparse all over the place
 // custom editors for (in order of priority): Maps, Walls, Drawings

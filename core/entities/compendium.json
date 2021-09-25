@@ -1,0 +1,65 @@
+{
+    "displayName": "Compendium",
+    "settings": {
+        "synched": "true",
+        "global": "true",
+        "addRemoveAccess": "GM",
+        "control": {
+            "mode": "NONE"
+        },
+        "accessLevel": {
+            "mode": "DEFAULT"
+        },
+        "viewAccess": {
+            "mode": "PROPERTY",
+            "property": "access"
+        },
+        "editAccess": {
+            "mode": "PROPERTY",
+            "property": "access"
+        },
+        "containedEntities": []
+    },
+    "properties": {
+        "name": {
+            "type": "STRING",
+            "editAccess": "GM",
+            "viewAccess": "EVERYONE",
+            "value": ""
+        },
+        "path": {
+            "type": "STRING",
+            "editAccess": "GM",
+            "viewAccess": "EVERYONE",
+            "value": ""
+        },
+        "content": {
+            "type": "STRING",
+            "editAccess": "GM",
+            "viewAccess": "EVERYONE",
+            "value": ""
+        },
+        "access": {
+            "type": "ACCESS",
+            "editAccess": "GM",
+            "viewAccess": "EVERYONE",
+            "value": "GM"
+        },
+        "tags": {
+            "type": "STRING",
+            "editAccess": "GM",
+            "viewAccess": "EVERYONE",
+            "value": ""
+        }
+    },
+    "updateRules": [
+    ],
+    "macros": {
+    },
+    "extensionPoints": [
+        {
+            "name": "base",
+            "mode": "ALL"
+        }
+    ]
+}

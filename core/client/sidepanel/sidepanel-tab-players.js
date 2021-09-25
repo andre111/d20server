@@ -12,7 +12,7 @@ import { I18N } from '../../common/util/i18n.js';
 
 export class SidepanelTabPlayers extends SidepanelTab {
     constructor() {
-        super('players', true);
+        super('players', true, '👤');
         
         this.tab.style.display = 'grid';
         this.tab.style.gridTemplateRows = 'auto max-content';

@@ -2,8 +2,18 @@ import { PropertyEditor } from './property-editor.js';
 import { Type, Access } from '../../../common/constants.js';
 
 export class AccessPropertyEditor extends PropertyEditor {
-    constructor(name, label) {
+    constructor(name, label, allowedValues) {
         super(name, Type.ACCESS, label);
+
+        if(allowedValues) {
+            this.select.innerHTML = '';
+            for(const value of allowedValues) {
+                var option = document.createElement('option');
+                option.value = value;
+                option.innerHTML = value;
+                this.select.appendChild(option);
+            }
+        }
     }
     
     initContent(label) {

@@ -1,30 +1,37 @@
 import { I18N } from '../../common/util/i18n.js';
 
 export class SidepanelTab {
-    key;
-    visible;
-    tab;
+    #key;
+    #visible;
+    #icon;
 
-    constructor(key, visible) {
-        this.key = key;
-        this.visible = visible;
+    #tab;
 
-        this.tab = document.createElement('div');
+    constructor(key, visible, icon) {
+        this.#key = key;
+        this.#visible = visible;
+        this.#icon = icon;
+
+        this.#tab = document.createElement('div');
         // TODO: make this use a class and css
-        this.tab.style.height = '100%';
-        this.tab.style.padding = '4px'; 
-        this.tab.style.overflow = 'auto';
+        this.#tab.style.height = '100%';
+        this.#tab.style.padding = '4px'; 
+        this.#tab.style.overflow = 'auto';
     }
 
     getName() {
-        return I18N.get('sidepanel.tabs.'+this.key, this.key);
+        return I18N.get('sidepanel.tabs.'+this.#key, this.#key);
+    }
+
+    getIcon() {
+        return this.#icon ? this.#icon : this.getName();
     }
 
     isVisible() {
-        return this.visible;
+        return this.#visible;
     }
-
-    getTab() {
-        return this.tab;
+    
+    get tab() {
+        return this.#tab;
     }
 }

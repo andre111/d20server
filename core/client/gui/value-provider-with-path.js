@@ -1,8 +1,8 @@
 import { ValueProviderDefault } from './value-provider-default.js';
 
-export class ValueProviderActor extends ValueProviderDefault {
-    constructor() {
-        super('actor');
+export class ValueProviderWithPath extends ValueProviderDefault {
+    constructor(type) {
+        super(type);
     }
     
     getName(value) {

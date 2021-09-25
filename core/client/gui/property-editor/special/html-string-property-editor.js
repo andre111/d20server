@@ -40,7 +40,7 @@ export class HTMLStringPropertyEditor extends PropertyEditor {
         tinymce.init({
             target: this.textDiv,
             plugins: 'table,lists,hr,image',
-            toolbar: 'undo redo | bold italic | alignleft aligncenter alignright | bullist numlist table hr image',
+            toolbar: 'undo redo | bold italic | alignleft aligncenter alignright | indent outdent | bullist numlist table hr image',
             menubar: false,
             statusbar: false,
             inline: true,

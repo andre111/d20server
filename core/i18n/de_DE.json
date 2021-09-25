@@ -38,6 +38,12 @@
             "name": "Name: "
         }
     },
+    "compendium": {
+        "edit": {
+            "access": "Zugriff: ",
+            "path": "Pfad: "
+        }
+    },
     "token": {
         "edit": {
             "position": "Position: ",
@@ -81,7 +87,8 @@
             "players": "Spieler",
             "actors": "Akteure",
             "attachments": "Anhang",
-            "maps": "Karten"
+            "maps": "Karten",
+            "compendium": "Kompendium"
         },
         "chat": {
             "send": "Senden"
@@ -110,6 +117,13 @@
             "new": {
                 "button": "Neue Karte erstellen",
                 "title": "Neue Karte erstellen",
+                "prompt": "Name eingeben: "
+            }
+        },
+        "compendium": {
+            "new": {
+                "button": "Neuen Kompendium Eintrag erstellen",
+                "title": "Neuen Kompendium Eintrag erstellen",
                 "prompt": "Name eingeben: "
             }
         }
