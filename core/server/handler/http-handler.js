@@ -26,6 +26,11 @@ function createBaseServer() {
         options.key = fs.readFileSync(privateKeyPath);
         options.cert = fs.readFileSync(certificatePath);
         isHTTPS = true;
+    } else {
+        options.spdy = {
+            plain: true,
+            ssl: false
+        };
     }
     console.log('Starting server...');
     return spdy.createServer(options, server);
