@@ -14,9 +14,13 @@ class DirectoryNode {
     childElement;
     childElementStyle;
 
-    constructor(tree, name) {
+    className;
+
+    constructor(tree, name, className) {
         this.tree = tree;
         this.name = name;
+
+        this.className = className;
     }
 
     addDirectoryNode(directoryNode) {
@@ -48,7 +52,7 @@ class DirectoryNode {
         // sublist for children
         this.childElement = document.createElement('ul');
         this.childElementStyle = this.childElement.style;
-        this.childElement.className = 'tree-list';
+        this.childElement.className = 'tree-list '+this.className;
         this.element.appendChild(this.childElement);
 
         // children
@@ -152,10 +156,10 @@ class EntryNode {
         if(this.description) {
             this.divContainer.appendChild(document.createElement('br'));
 
-            const spanDesc = document.createElement('span');
-            spanDesc.className = 'tree-entry-desc';
-            spanDesc.textContent = this.description;
-            this.divContainer.appendChild(spanDesc);
+            const pDesc = document.createElement('p');
+            pDesc.className = 'tree-entry-desc';
+            pDesc.textContent = this.description;
+            this.divContainer.appendChild(pDesc);
         }
 
         return this.element;
@@ -280,7 +284,7 @@ export class SearchableIDTree {
 
         
         // rebuild tree
-        this.#rootDirectory = new DirectoryNode(this, '');
+        this.#rootDirectory = new DirectoryNode(this, '', '');
         this.#selectedEntry = null;
         this.#imageObserver.disconnect();
 
@@ -322,7 +326,7 @@ export class SearchableIDTree {
             if(!directoryNodes[dirPath]) {
                 const dirName = split[i];
                 
-                const dirNode = new DirectoryNode(this, dirName);
+                const dirNode = new DirectoryNode(this, dirName, i%2 == 0 ? 'tree-list-bg1' : 'tree-list-bg2');
                 parent.addDirectoryNode(dirNode);
 
                 directoryNodes[dirPath] = dirNode;

@@ -774,16 +774,26 @@ div.chat-box-content th, div.chat-box-content td {
 
     font-variant: initial;
 }
+.tree-list .tree-list { /* show background on nested lists/directories */
+    border: 1px solid black;
+    padding: 3px;
+    padding-bottom: 0;
+    margin-top: -4px;
+    margin-bottom: 4px;
+}
+.tree-list-bg1 {
+    background-color: var(--color-light);
+}
+.tree-list-bg2 {
+    background-color: var(--color-dark);
+}
 .tree-list li {
     width: 100%;
-
-    float: left;
     clear: both;
 }
 .tree-list div {
     width: 100%;
     
-    float: left;
     clear: both;
 
     margin-bottom: 3px;
@@ -811,10 +821,10 @@ div.chat-box-content th, div.chat-box-content td {
     line-height: 30px;
 }
 .tree-entry-desc {
-    float: left;
     clear: both;
 
-    margin: 0 0 0 10px;
+    margin: 0;
+    padding-left: 10px;
 
     font-size: 12px;
     line-height: normal;
