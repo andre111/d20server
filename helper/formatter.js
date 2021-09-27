@@ -24,6 +24,11 @@ export function prettyTextToHTML(text, wrapLinesInParagraphs = false) {
                 lines[i] = '<p>&nbsp;</p>';
                 continue;
             }
+            // add horizontal rules
+            if(line == '-----') {
+                lines[i] = '<hr>';
+                continue;
+            }
 
             // count indentation
             var indentation = 0;

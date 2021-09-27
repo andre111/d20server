@@ -430,6 +430,7 @@ function doGenerate() {
     // generate compendium
     const compendiumMap = {};
     {
+        // manual files
         const basePath = '../d20helper/dataFull/compendium/';
         const files = fs.readdirSync(basePath);
         while(files.length > 0) {
@@ -457,6 +458,72 @@ function doGenerate() {
 
                 compendiumMap[String(compendium.getID())] = compendium;
             }
+        }
+
+        // items
+        const itemData = getCombinedJsonData('../d20helper/dataFull/items/');
+        for(const entry of itemData) {
+            // get basic info
+            const name = entry['Name'].replace('/', '-');
+            const descShort = entry['Beschreibung'];
+            
+            var art = entry['Art'];
+            if(art.includes(',')) art = art.substring(0, art.indexOf(','));
+            const path = 'Gegenstände/' + art + '/';
+
+            // add 'default' values for missing entries
+            if(!entry['Gewicht']) entry['Gewicht'] = { Wert: 0, Anmerkung: '' };
+            if(!entry['Preis']) entry['Preis'] = { Wert: 0, Anmerkung: '' };
+            if(!entry['ZS']) entry['ZS'] = { Wert: 0, Anmerkung: '' };
+            if(!entry['Platz']) entry['Platz'] = '-';
+
+            // build full description
+            var content = '';
+            {
+                content += '<p>';
+                {
+                    // aura zs
+                    content += `<strong>Aura:</strong> ${entry['Aura']}; <strong>ZS</strong> ${getNullableStringWithNotes(entry['ZS'], '')}<br>`;
+                    
+                    // slot, weight
+                    content += `<strong>Ausrüstungsplatz:</strong> ${entry['Platz']}; <strong>Gewicht: </strong> ${getNullableStringWithNotes(entry['Gewicht'], ' Pfd')}<br>`;
+                    
+                    // cost
+                    content += `<strong>Marktpreis:</strong> ${getNullableStringWithNotes(entry['Preis'], ' GM')}<br>`;
+                }
+                content += '</p>';
+                content += '<p>&nbsp;</p>';
+                
+                // desc
+                content += '<hr><p><strong>BESCHREIBUNG:</strong></p><hr>';
+                content += prettyTextToHTML(descShort);
+                content += '<p>&nbsp;</p>';
+
+                // creation
+                if(entry['Erschaffung']) {
+                    content += '<p>&nbsp;</p>';
+                    content += '<hr><p><strong>ERSCHAFFUNG:</strong></p><hr>';
+                    if(entry['Erschaffung']['Kosten']) content += `<strong>Kosten:</strong> ${entry['Erschaffung']['Kosten']}<br>`;
+                    if(entry['Erschaffung']['Voraussetzungen']) {
+                        var voraussetzungenString = '';
+                        for(const voraussetzung of entry['Erschaffung']['Voraussetzungen']) {
+                            if(voraussetzungenString) voraussetzungenString += ', ';
+                            voraussetzungenString += voraussetzung;
+                        }
+                        content += `<strong>Voraussetzungen:</strong> ${voraussetzungenString}<br>`;
+                    }
+                }
+            }
+
+            // generate compendium entity
+            console.log(`Generating Item: ${name}`);
+            const compendium = new Entity('compendium');
+            compendium.setString('name', name);
+            compendium.setString('path', path);
+            compendium.setString('content', content);
+            compendium.setAccessValue('access', Access.GM);
+
+            compendiumMap[String(compendium.getID())] = compendium;
         }
     }
     saveJsonFile(path.join(directory, 'compendium.json'), compendiumMap);
@@ -552,6 +619,11 @@ function getStringWithNotes(string, notes, brackets) {
     }
 
     return sb;
+}
+
+function getNullableStringWithNotes(obj, postfix = '') {
+    if(obj['Wert'] == '0') return '-';
+    else return getStringWithNotes(obj['Wert']+postfix, obj['Anmerkung'], true);
 }
 
 function getSigned(value) {
