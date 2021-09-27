@@ -514,6 +514,12 @@ function doGenerate() {
                     }
                 }
 
+                // destruction
+                if(entry['Zerstörung']) {
+                    content += '<hr><p><strong>ZERSTÖRUNG:</strong></p><hr>';
+                    content += `${entry['Zerstörung']}`;
+                }
+
                 content += '<p>&nbsp;</p>';
                 content += `<p>${entry['Regelwerk']} - Seite ${entry['Seite']}</p>`;
             }
