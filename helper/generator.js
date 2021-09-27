@@ -460,22 +460,22 @@ function doGenerate() {
             }
         }
 
-        // items
+        // magical items
         const itemData = getCombinedJsonData('../d20helper/dataFull/items/');
         for(const entry of itemData) {
+            // add 'default' values for missing entries
+            if(!entry['Gewicht']) entry['Gewicht'] = { Wert: 0, Anmerkung: '' };
+            if(!entry['Preis']) entry['Preis'] = { Wert: 0, Anmerkung: '' };
+            if(!entry['ZS']) entry['ZS'] = { Wert: 0, Anmerkung: '' };
+            if(!entry['Platz']) entry['Platz'] = '-';
+
             // get basic info
             const name = entry['Name'].replace('/', '-');
             const descShort = entry['Beschreibung'];
             
             var art = entry['Art'];
             if(art.includes(',')) art = art.substring(0, art.indexOf(','));
-            const path = 'Gegenstände/' + art + '/';
-
-            // add 'default' values for missing entries
-            if(!entry['Gewicht']) entry['Gewicht'] = { Wert: 0, Anmerkung: '' };
-            if(!entry['Preis']) entry['Preis'] = { Wert: 0, Anmerkung: '' };
-            if(!entry['ZS']) entry['ZS'] = { Wert: 0, Anmerkung: '' };
-            if(!entry['Platz']) entry['Platz'] = '-';
+            const path = 'Gegenstände/Magisch/' + art + '/';
 
             // build full description
             var content = '';
@@ -513,10 +513,78 @@ function doGenerate() {
                         content += `<strong>Voraussetzungen:</strong> ${voraussetzungenString}<br>`;
                     }
                 }
+
+                content += '<p>&nbsp;</p>';
+                content += `<p>${entry['Regelwerk']} - Seite ${entry['Seite']}</p>`;
             }
 
             // generate compendium entity
             console.log(`Generating Item: ${name}`);
+            const compendium = new Entity('compendium');
+            compendium.setString('name', name);
+            compendium.setString('path', path);
+            compendium.setString('content', content);
+            compendium.setAccessValue('access', Access.GM);
+
+            compendiumMap[String(compendium.getID())] = compendium;
+        }
+
+        // enchantments
+        const enchantmentData = getCombinedJsonData('../d20helper/dataFull/enchantments/');
+        for(const entry of enchantmentData) {
+            // add 'default' values for missing entries
+            if(!entry['Preis']) entry['Preis'] = '-';
+            if(!entry['ZS']) entry['ZS'] = 0;
+            if(!entry['Platz']) entry['Platz'] = '-';
+
+            // get basic info
+            const name = entry['Name'].replace('/', '-');
+            const descShort = entry['Beschreibung'];
+            
+            var art = entry['Platz'];
+            //if(art.includes(',')) art = art.substring(0, art.indexOf(','));
+            const path = 'Gegenstände/Verzauberungen/' + art + '/';
+
+            // build full description
+            var content = '';
+            {
+                content += '<p>';
+                {
+                    // aura zs
+                    content += `<strong>Aura:</strong> ${entry['Aura']}; <strong>ZS</strong> ${entry['ZS']}<br>`;
+                    
+                    // slot
+                    content += `<strong>Platz:</strong> ${entry['Platz']}<br>`;
+                    
+                    // cost
+                    content += `<strong>Marktpreis:</strong> ${entry['Preis']}<br>`;
+                }
+                content += '</p>';
+                content += '<p>&nbsp;</p>';
+                
+                // desc
+                content += '<hr><p><strong>BESCHREIBUNG:</strong></p><hr>';
+                content += prettyTextToHTML(descShort);
+                content += '<p>&nbsp;</p>';
+
+                // creation
+                content += '<p>&nbsp;</p>';
+                content += '<hr><p><strong>ERSCHAFFUNG:</strong></p><hr>';
+                content += `<strong>Kosten:</strong> ${entry['Erschaffung']['Kosten']}<br>`;
+                
+                var voraussetzungenString = '';
+                for(const voraussetzung of entry['Erschaffung']['Voraussetzungen']) {
+                    if(voraussetzungenString) voraussetzungenString += ', ';
+                    voraussetzungenString += voraussetzung;
+                }
+                content += `<strong>Voraussetzungen:</strong> ${voraussetzungenString}<br>`;
+
+                content += '<p>&nbsp;</p>';
+                content += `<p>${entry['Regelwerk']} - Seite ${entry['Seite']}</p>`;
+            }
+
+            // generate compendium entity
+            console.log(`Generating Enchantment: ${name}`);
             const compendium = new Entity('compendium');
             compendium.setString('name', name);
             compendium.setString('path', path);
