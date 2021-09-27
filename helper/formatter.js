@@ -32,11 +32,11 @@ export function prettyTextToHTML(text, wrapLinesInParagraphs = false) {
 
             // replace * list formatting with <ul><li>...</li>...</ul>
             // -> needs to scan further lines
-            if(line.startsWith(' * ')) {
-                lines[i] = '<ul><li>' + line.substring(3) + '</li>';
+            if(line.startsWith('* ')) {
+                lines[i] = '<ul><li>' + line.substring(2) + '</li>';
                 i++;
-                while(i<lines.length && lines[i].startsWith(' * ')) {
-                    lines[i] = '<li>' + lines[i].substring(3) + '</li>';
+                while(i<lines.length && lines[i].startsWith('* ')) {
+                    lines[i] = '<li>' + lines[i].substring(2) + '</li>';
                     i++;
                 }
                 i--;

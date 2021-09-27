@@ -496,7 +496,7 @@ function doGenerate() {
                 
                 // desc
                 content += '<hr><p><strong>BESCHREIBUNG:</strong></p><hr>';
-                content += prettyTextToHTML(descShort);
+                content += prettyTextToHTML(descShort, true);
                 content += '<p>&nbsp;</p>';
 
                 // creation
@@ -570,7 +570,7 @@ function doGenerate() {
                 
                 // desc
                 content += '<hr><p><strong>BESCHREIBUNG:</strong></p><hr>';
-                content += prettyTextToHTML(descShort);
+                content += prettyTextToHTML(descShort, true);
                 content += '<p>&nbsp;</p>';
 
                 // creation
