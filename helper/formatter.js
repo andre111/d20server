@@ -30,6 +30,20 @@ export function prettyTextToHTML(text, wrapLinesInParagraphs = false) {
                 continue;
             }
 
+            // replace * list formatting with <ul><li>...</li>...</ul>
+            // -> needs to scan further lines
+            if(line.startsWith(' * ')) {
+                lines[i] = '<ul><li>' + line.substring(3) + '</li>';
+                i++;
+                while(i<lines.length && lines[i].startsWith(' * ')) {
+                    lines[i] = '<li>' + lines[i].substring(3) + '</li>';
+                    i++;
+                }
+                i--;
+                lines[i] += '</ul>';
+                continue;
+            }
+
             // count indentation
             var indentation = 0;
             while(line.length > indentation && line[indentation] == ' ') indentation++;
