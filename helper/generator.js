@@ -461,7 +461,7 @@ function doGenerate() {
         }
 
         // magical items
-        const itemData = getCombinedJsonData('../d20helper/dataFull/items/');
+        const itemData = getCombinedJsonData('../d20helper/dataFull/items/magical/');
         for(const entry of itemData) {
             // add 'default' values for missing entries
             if(!entry['Gewicht']) entry['Gewicht'] = { Wert: 0, Anmerkung: '' };
@@ -505,12 +505,7 @@ function doGenerate() {
                     content += '<hr><p><strong>ERSCHAFFUNG:</strong></p><hr>';
                     if(entry['Erschaffung']['Kosten']) content += `<strong>Kosten:</strong> ${entry['Erschaffung']['Kosten']}<br>`;
                     if(entry['Erschaffung']['Voraussetzungen']) {
-                        var voraussetzungenString = '';
-                        for(const voraussetzung of entry['Erschaffung']['Voraussetzungen']) {
-                            if(voraussetzungenString) voraussetzungenString += ', ';
-                            voraussetzungenString += voraussetzung;
-                        }
-                        content += `<strong>Voraussetzungen:</strong> ${voraussetzungenString}<br>`;
+                        content += `<strong>Voraussetzungen:</strong> ${getCombinedString(entry['Erschaffung']['Voraussetzungen'])}<br>`;
                     }
                 }
 
@@ -547,9 +542,7 @@ function doGenerate() {
             const name = entry['Name'].replace('/', '-');
             const descShort = entry['Beschreibung'];
             
-            var art = entry['Platz'];
-            //if(art.includes(',')) art = art.substring(0, art.indexOf(','));
-            const path = 'Gegenstände/Verzauberungen/' + art + '/';
+            const path = 'Gegenstände/Verzauberungen/' + entry['Platz'] + '/';
 
             // build full description
             var content = '';
@@ -578,12 +571,7 @@ function doGenerate() {
                 content += '<hr><p><strong>ERSCHAFFUNG:</strong></p><hr>';
                 content += `<strong>Kosten:</strong> ${entry['Erschaffung']['Kosten']}<br>`;
                 
-                var voraussetzungenString = '';
-                for(const voraussetzung of entry['Erschaffung']['Voraussetzungen']) {
-                    if(voraussetzungenString) voraussetzungenString += ', ';
-                    voraussetzungenString += voraussetzung;
-                }
-                content += `<strong>Voraussetzungen:</strong> ${voraussetzungenString}<br>`;
+                content += `<strong>Voraussetzungen:</strong> ${getCombinedString(entry['Erschaffung']['Voraussetzungen'])}<br>`;
 
                 content += '<p>&nbsp;</p>';
                 content += `<p>${entry['Regelwerk']} - Seite ${entry['Seite']}</p>`;
@@ -596,6 +584,109 @@ function doGenerate() {
             compendium.setString('path', path);
             compendium.setString('content', content);
             compendium.setAccessValue('access', Access.GM);
+
+            compendiumMap[String(compendium.getID())] = compendium;
+        }
+
+        // weapons
+        const weaponData = getCombinedJsonData('../d20helper/dataFull/items/weapons/');
+        for(const entry of weaponData) {
+            // get basic info
+            const name = entry['Name'].replace('/', '-');
+            const descShort = entry['Beschreibung'];
+            
+            const path = 'Gegenstände/Waffen/' + entry['Klasse'] + '/' + entry['Art'] + '/';
+
+            // build full description
+            var content = '';
+            {
+                content += '<p>';
+                {
+                    // damage
+                    content += `<strong>Schaden (Mittelgroß):</strong> ${entry['Schaden']['Mittelgroß']}<br>`;
+                    content += `<strong>Schaden (Klein):</strong> ${entry['Schaden']['Klein']}<br>`;
+                    content += `<strong>Kritisch:</strong> ${entry['Schaden']['Kritisch']}<br>`;
+                    content += `<strong>Art:</strong> ${entry['Schaden']['Art']}<br>`;
+
+                    // range
+                    if(entry['Grundreichweite']) {
+                        content += `<strong>Grundreichweite:</strong> ${entry['Grundreichweite']}<br>`;
+                    }
+
+                    // specials
+                    if(entry['Speziell'] && entry['Speziell'].length > 0) {
+                        content += `<strong>Speziell:</strong> ${getCombinedString(entry['Speziell'])}<br>`;
+                    }
+                    
+                    // cost weight
+                    content += `<strong>Preis:</strong> ${entry['Preis']} GM; <strong>Gewicht:</strong> ${entry['Gewicht']} Pfd<br>`;
+                }
+                content += '</p>';
+                content += '<p>&nbsp;</p>';
+                
+                // desc
+                content += '<hr><p><strong>BESCHREIBUNG:</strong></p><hr>';
+                content += prettyTextToHTML(descShort, true);
+                content += '<p>&nbsp;</p>';
+            }
+
+            // generate compendium entity
+            console.log(`Generating Weapon: ${name}`);
+            const compendium = new Entity('compendium');
+            compendium.setString('name', name);
+            compendium.setString('path', path);
+            compendium.setString('content', content);
+            compendium.setAccessValue('access', Access.EVERYONE);
+
+            compendiumMap[String(compendium.getID())] = compendium;
+        }
+
+        // armor
+        const armorData = getCombinedJsonData('../d20helper/dataFull/items/armor/');
+        for(const entry of armorData) {
+            // get basic info
+            const name = entry['Name'].replace('/', '-');
+            const descShort = entry['Beschreibung'];
+            
+            const path = 'Gegenstände/Rüstungen/' + entry['Art'] + '/';
+
+            // build full description
+            var content = '';
+            {
+                content += '<p>';
+                {
+                    // bonus
+                    content += `<strong>Rüstungsbonus:</strong> ${getSigned(entry['Bonus'])}<br>`;
+
+                    // mali
+                    if(entry['MaxGE'] != undefined) {
+                        content += `<strong>Maximaler GE-Bonus:</strong> ${getSigned(entry['MaxGE'])}<br>`;
+                    }
+                    content += `<strong>Rüstungsmalus:</strong> ${getSigned(entry['Rüstungsmalus'])}<br>`;
+                    if(entry['Zauberpatzer']) content += `<strong>Chance auf Arkane Zauberpatzer:</strong> ${entry['Zauberpatzer']}<br>`;
+                    if(entry['Bewegungsrate'] != undefined) {
+                        content += `<strong>Bewegungsrate (9m):</strong> ${entry['Bewegungsrate']['9m']}; <strong>Bewegungsrate (6m):</strong> ${entry['Bewegungsrate']['6m']}<br>`;
+                    }
+
+                    // cost weight
+                    content += `<strong>Preis:</strong> ${entry['Preis']} GM; <strong>Gewicht:</strong> ${entry['Gewicht']} Pfd<br>`;
+                }
+                content += '</p>';
+                content += '<p>&nbsp;</p>';
+                
+                // desc
+                content += '<hr><p><strong>BESCHREIBUNG:</strong></p><hr>';
+                content += prettyTextToHTML(descShort, true);
+                content += '<p>&nbsp;</p>';
+            }
+
+            // generate compendium entity
+            console.log(`Generating Armor: ${name}`);
+            const compendium = new Entity('compendium');
+            compendium.setString('name', name);
+            compendium.setString('path', path);
+            compendium.setString('content', content);
+            compendium.setAccessValue('access', Access.EVERYONE);
 
             compendiumMap[String(compendium.getID())] = compendium;
         }
@@ -668,7 +759,7 @@ function toUnifiedName(name, removeModifier) {
     return name.replace(/\s/g, '').replace(/-/g, '').trim();
 }
 
-function getCombinedString(array, brackets) {
+function getCombinedString(array, brackets = false) {
     if(array.length == 0) return '';
 
     var sb = array.join(', ');
@@ -677,7 +768,7 @@ function getCombinedString(array, brackets) {
     return sb;
 }
 
-function getStringWithNotes(string, notes, brackets) {
+function getStringWithNotes(string, notes, brackets = false) {
     var sb = string;
 
     var notesString = '';
