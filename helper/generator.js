@@ -321,7 +321,7 @@ function doGenerate() {
             gmBio += createValuesSection(entry) + '<p>&nbsp;</p>';
             gmBio += createEcologySection(entry) + '<p>&nbsp;</p>';
             gmBio += createSpecialAbilitiesSection(entry) + '<p>&nbsp;</p>';
-            gmBio += '<hr><p><strong>BESCHREIBUNG:</strong></p><hr>';
+            gmBio += '<h6>BESCHREIBUNG:</h6>';
             for(const descParagraph of entry['GMBeschreibung'].split('\n')) {
                 gmBio += '<p>';
                 gmBio += descParagraph;
@@ -495,14 +495,14 @@ function doGenerate() {
                 content += '<p>&nbsp;</p>';
                 
                 // desc
-                content += '<hr><p><strong>BESCHREIBUNG:</strong></p><hr>';
+                content += '<h6>BESCHREIBUNG:</h6>';
                 content += prettyTextToHTML(descShort, true);
                 content += '<p>&nbsp;</p>';
 
                 // creation
                 if(entry['Erschaffung']) {
                     content += '<p>&nbsp;</p>';
-                    content += '<hr><p><strong>ERSCHAFFUNG:</strong></p><hr>';
+                    content += '<h6>ERSCHAFFUNG:</h6>';
                     if(entry['Erschaffung']['Kosten']) content += `<strong>Kosten:</strong> ${entry['Erschaffung']['Kosten']}<br>`;
                     if(entry['Erschaffung']['Voraussetzungen']) {
                         content += `<strong>Voraussetzungen:</strong> ${getCombinedString(entry['Erschaffung']['Voraussetzungen'])}<br>`;
@@ -511,7 +511,7 @@ function doGenerate() {
 
                 // destruction
                 if(entry['Zerstörung']) {
-                    content += '<hr><p><strong>ZERSTÖRUNG:</strong></p><hr>';
+                    content += '<h6>ZERSTÖRUNG:</h6>';
                     content += `${entry['Zerstörung']}`;
                 }
 
@@ -562,13 +562,13 @@ function doGenerate() {
                 content += '<p>&nbsp;</p>';
                 
                 // desc
-                content += '<hr><p><strong>BESCHREIBUNG:</strong></p><hr>';
+                content += '<h6>BESCHREIBUNG:</h6>';
                 content += prettyTextToHTML(descShort, true);
                 content += '<p>&nbsp;</p>';
 
                 // creation
                 content += '<p>&nbsp;</p>';
-                content += '<hr><p><strong>ERSCHAFFUNG:</strong></p><hr>';
+                content += '<h6>ERSCHAFFUNG:</h6>';
                 content += `<strong>Kosten:</strong> ${entry['Erschaffung']['Kosten']}<br>`;
                 
                 content += `<strong>Voraussetzungen:</strong> ${getCombinedString(entry['Erschaffung']['Voraussetzungen'])}<br>`;
@@ -625,7 +625,7 @@ function doGenerate() {
                 content += '<p>&nbsp;</p>';
                 
                 // desc
-                content += '<hr><p><strong>BESCHREIBUNG:</strong></p><hr>';
+                content += '<h6>BESCHREIBUNG:</h6>';
                 content += prettyTextToHTML(descShort, true);
                 content += '<p>&nbsp;</p>';
             }
@@ -675,7 +675,7 @@ function doGenerate() {
                 content += '<p>&nbsp;</p>';
                 
                 // desc
-                content += '<hr><p><strong>BESCHREIBUNG:</strong></p><hr>';
+                content += '<h6>BESCHREIBUNG:</h6>';
                 content += prettyTextToHTML(descShort, true);
                 content += '<p>&nbsp;</p>';
             }
@@ -906,7 +906,7 @@ function createBaseSection(entry) {
 
 function createDefenseSection(entry) {
     // build string
-    var sb = '<hr><p><strong>VERTEIDIGUNG:</strong></p><hr>';
+    var sb = '<h6>VERTEIDIGUNG:</h6>';
     sb += '<p>';
 
     // RK <value>, Berührung <value>, auf dem falschen Fuß <value> (<modifiers>; <notes>)
@@ -980,7 +980,7 @@ function createDefenseSection(entry) {
 // [...]
 function createAttackSection(entry) {
     // build string
-    var sb = '<hr><p><strong>ANGRIFF:</strong></p><hr>';
+    var sb = '<h6>ANGRIFF:</h6>';
     sb += '<p>';
 
     // Bewegungsrate <annotatedValue>[, Fliegen <annotatedValue>][, Schwimmen <annotatedValue>][, Klettern <annotatedValue>][, Graben <annotatedValue>][; <movementAbilities>]
@@ -1080,7 +1080,7 @@ function createAttackSection(entry) {
 
 function createValuesSection(entry) {
     // build string
-    var sb = '<hr><p><strong>SPIELWERTE:</strong></p><hr>';
+    var sb = '<h6>SPIELWERTE:</h6>';
     sb += '<p>';
 
     // ST <value>, GE <value>, KO <value>, IN <value>, WE <value>, CH <value>
@@ -1143,7 +1143,7 @@ function createEcologySection(entry) {
     if(!entry['Lebensweise']) return '';
 
     // build string
-    var sb = '<hr><p><strong>LEBENSWEISE:</strong></p><hr>';
+    var sb = '<h6>LEBENSWEISE:</h6>';
     sb += '<p>';
 
     // Umgebung <value>
@@ -1163,7 +1163,7 @@ function createSpecialAbilitiesSection(entry) {
     if(entry['BesondereFähigkeiten'].length == 0) return '';
 
     // build string
-    var sb = '<hr><p><strong>BESONDERE FÄHIGKEITEN:</strong></p><hr>';
+    var sb = '<h6>BESONDERE FÄHIGKEITEN:</h6>';
     sb += '<p>';
 
     for(const specialAbility of entry['BesondereFähigkeiten']) {

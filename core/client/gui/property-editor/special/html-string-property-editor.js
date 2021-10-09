@@ -40,7 +40,10 @@ export class HTMLStringPropertyEditor extends PropertyEditor {
         tinymce.init({
             target: this.textDiv,
             plugins: 'table,lists,hr,image',
-            toolbar: 'undo redo | bold italic | alignleft aligncenter alignright | indent outdent | bullist numlist table hr image',
+            toolbar: [
+                'undo redo | bold italic | alignleft aligncenter alignright | indent outdent',
+                'h6 | bullist numlist | table hr image'
+            ],
             menubar: false,
             statusbar: false,
             inline: true,
@@ -52,6 +55,10 @@ export class HTMLStringPropertyEditor extends PropertyEditor {
                 'margin-left': 'auto',
                 'margin-right': 'auto'
             },
+            table_class_list: [
+                {title: 'Default', value: 'table-bg'},
+                {title: 'No Background', value: ''}
+            ],
             file_picker_types: 'image',
             file_picker_callback: (callback, value, meta) => this.doOpenFilePicker(callback, value, meta)
         }).then(result => {

@@ -55,6 +55,8 @@ export function prettyTextToHTML(text, wrapLinesInParagraphs = false) {
         text = lines.join('');
     }
 
+    // replace ***HEADER*** formatting with <h6>HEADER</h6>
+    text = text.replace(/\*\*\*([^\*]+)\*\*\*/g, '<h6>$1</h6>');
     // replace **BOLD** formatting with <strong>BOLD</strong>
     text = text.replace(/\*\*([^\*]+)\*\*/g, '<strong>$1</strong>');
     // replace newlines with <br>
@@ -133,7 +135,7 @@ function convertPrettyPrintedTableToHTML(table) {
     }
 
     // build html table
-    var tableBuilder = '<table>';
+    var tableBuilder = '<table class="table-bg">';
     for(const row of rows) {
         tableBuilder += '<tr>';
         for(const cell of row) {
