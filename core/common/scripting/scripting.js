@@ -36,11 +36,9 @@ export class Scripting {
     }
 
     popVariable(name) {
-        const old = this.#globalVars[name];
-        if(!old) return;
-        if(!old.pop()) {
-            delete this.#globalVars[name];
-        }
+        if(!this.#globalVars[name]) return;
+        this.#globalVars[name].pop();
+        if(this.#globalVars[name].length == 0) delete this.#globalVars[name];
     }
 
 
