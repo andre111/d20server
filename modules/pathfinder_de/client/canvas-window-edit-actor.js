@@ -19,8 +19,12 @@ import { ServerData } from '../../../core/client/server-data.js';
 import { Access } from '../../../core/common/constants.js';
 
 export class CanvasWindowEditActor extends CanvasWindowEditCustom {
+    #reference;
+
     constructor(w, reference) {
         super(w, reference);
+        this.#reference = reference;
+
         const container = w.content;
         container.className = 'edit-window-container cs-container';
 
@@ -393,7 +397,7 @@ export class CanvasWindowEditActor extends CanvasWindowEditCustom {
     }
 
     sendMacro(name) {
-        MessageService.send(new SendChatMessage('!!'+name));
+        MessageService.send(new SendChatMessage('!!'+name+'§'+this.#reference.getPath()));
     }
 
     // Complex Editor Structures

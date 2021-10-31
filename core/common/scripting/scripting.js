@@ -20,11 +20,29 @@ export class Scripting {
     
     #applyEntityChanges;
     #modifiedEntities;
+    #globalVars;
 
     constructor(applyEntityChanges = true) {
         this.#applyEntityChanges = applyEntityChanges;
         this.#modifiedEntities = new Set();
+        this.#globalVars = {};
     }
+
+    // Global Vars
+    //---------------------------------------------------------------
+    pushVariable(name, value) {
+        if(!this.#globalVars[name]) this.#globalVars[name] = [];
+        this.#globalVars[name].push(value);
+    }
+
+    popVariable(name) {
+        const old = this.#globalVars[name];
+        if(!old) return;
+        if(!old.pop()) {
+            delete this.#globalVars[name];
+        }
+    }
+
 
     // Programs
     //---------------------------------------------------------------
@@ -154,7 +172,7 @@ export class Scripting {
     #createInterpreter(profile, self) {
         const interpreter = new Interpreter(this, profile);
 
-        // define global functions
+        // define global functions (TODO: maybe just move this to variable defintions in the constructor)
         interpreter.defineGlobal('number', BUILTIN_NUMBER);
         interpreter.defineGlobal('ceil', BUILTIN_CEIL);
         interpreter.defineGlobal('floor', BUILTIN_FLOOR);
@@ -192,6 +210,11 @@ export class Scripting {
         DEBUG_PRINT.call = (interpreter, paren, name, args) => console.log(args[0].value);
         interpreter.defineGlobal('print', DEBUG_PRINT);
         interpreter.defineGlobal('testToken', new Value(new EntityReference(new Entity('token', 0)), Type.ENTITY, ''));
+
+        // define global variables (may override existing vars)
+        for(const [name, values] of Object.entries(this.#globalVars)) {
+            interpreter.defineGlobal(name, values[values.length-1]);
+        }
 
         // event for modifying the interpreter on one side
         Events.trigger('createInterpreter', { interpreter: interpreter }, false)

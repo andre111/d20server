@@ -1,8 +1,11 @@
 import { Role, Type } from '../../common/constants.js';
+import { EntityManagers } from '../../common/entity/entity-managers.js';
+import { EntityReference } from '../../common/entity/entity-reference.js';
 import { Events } from '../../common/events.js';
 import { ChatEntry } from '../../common/message/chat/chat-entry.js';
 import { ChatEntries } from '../../common/messages.js';
 import { Scripting } from '../../common/scripting/scripting.js';
+import { Value } from '../../common/scripting/value.js';
 import { TokenUtil } from '../../common/util/tokenutil.js';
 import { readJson, saveJson } from '../util/fileutil.js';
 import { RollFormatter } from '../util/roll-formatter.js';
@@ -56,17 +59,25 @@ Events.on('chatMessage', event => {
         event.cancel();
 
         // extract macro name
-        const macroName = message.substring(1);
+        var macroName = message.substring(1);
         
-        // find token and check access
-        const token = profile.getSelectedToken(true);
-        if(!token) {
-            ChatService.appendNote(profile, 'No (single) token selected');
-            return;
+        // find actor and check access
+        var actor = null;
+        if(macroName.includes('§')) {
+            const entityPath = macroName.substring(macroName.indexOf('§')+1);
+            macroName = macroName.substring(0, macroName.indexOf('§'));
+
+            actor = EntityManagers.findEntity(entityPath);
+        } else {
+            const token = profile.getSelectedToken(true);
+            if(!token) {
+                ChatService.appendNote(profile, 'No (single) token selected');
+                return;
+            }
+            actor = TokenUtil.getActor(token);
         }
-        const actor = TokenUtil.getActor(token);
-        if(!actor) {
-            ChatService.appendNote(profile, 'Token has no actor');
+        if(!actor || actor.getType() != 'actor') {
+            ChatService.appendNote(profile, 'Could not find actor');
             return;
         }
 
@@ -87,6 +98,7 @@ Events.on('chatMessage', event => {
         }
 
         // execute macro
+        SCRIPT.pushVariable('sActor', new Value(new EntityReference(actor), Type.ENTITY, ''));
         const scriptMarker = '?SCRIPT?\n';
         if(macro.startsWith(scriptMarker)) {
             SCRIPT.interpret(macro.substring('?SCRIPT?\n'.length), profile, null);
@@ -101,6 +113,7 @@ Events.on('chatMessage', event => {
                 ChatService.onMessage(profile, macroLine);
             }
         }
+        SCRIPT.popVariable('sActor');
     }
 });
 
