@@ -125,5 +125,14 @@ export const EntityManagers = {
             _entityManagers[name].onDelete();
             delete _entityManagers[name];
         }
+    },
+
+    findEntity(path) {
+        const managerName = path.substring(0, path.lastIndexOf('-'));
+        const entityID = path.substring(path.lastIndexOf('-')+1);
+
+        const manager = EntityManagers.get(managerName);
+        if(!manager) return null;
+        return manager.find(entityID);
     }
 }

@@ -58,6 +58,10 @@ export class Entity {
         else return this.type;
     }
 
+    getPath() {
+        return this.getManager() + '-' + this.getID();
+    }
+
     // DEFINITIONS
     getDefinition() {
         const def = getDefinitions().getEntityDefinition(this.getType());
