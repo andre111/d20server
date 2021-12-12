@@ -93,7 +93,7 @@ export class CodeEditor extends HTMLElement {
                 }
                 
                 // add error markers
-                //TODO: add them on other errors aswell
+                //TODO: add them on other errors aswell (SCRIPT.errors, but those are already formated strings without position info)
                 if(token.type == UNKNOWN) {
                     tokenClass = 'error';
                     tokenError = token.lexeme.startsWith('"') ? 'Unclosed string' : 'Unexpected character';

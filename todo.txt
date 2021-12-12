@@ -1,5 +1,5 @@
 //TODO: current plans:
-// implement "Rüstungsmalus" in pathfinder charactersheet (with automatically application to skills (str and dex based)
+// implement "Rüstungsmalus" in pathfinder charactersheet (with automatically application to skills (str and dex based) (move "Zauberresistenz to the side of Talente/Zauber tab, add "Rüstungsmalus" in its place)
 // implement compendium "force show" (may need explicit synching beforehand if players have no access normally)
 // finally realize the entities stored per map plan (see below)
 // apply i18n at all places, currently it is very sparse all over the place

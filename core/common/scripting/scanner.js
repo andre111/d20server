@@ -93,8 +93,17 @@ export class Scanner {
     }
 
     #string() {
+        var literal = '';
         while(this.#peek() != '"' && this.#peek() != '\n' && !this.#isAtEOF()) {
-            this.#advance();
+            // check (and skip) escape sequence
+            if(this.#peek() == '\\') {
+                if(this.#peekNext() != '\\' && this.#peekNext() != '"') {
+                    this.#scripting.error(this.#line, this.#column, 'Invalid escape sequence: \\'+this.#peekNext()); // note: this currently will not be shown by the editor
+                }
+                this.#advance();
+            }
+
+            literal += this.#advance();
         }
 
         if(this.#peek() != '"') {
@@ -105,7 +114,7 @@ export class Scanner {
         this.#advance();
 
         // get literal value (without quotes)
-        const literal = this.#source.substring(this.#start + 1, this.#current - 1);
+        //const literal = this.#source.substring(this.#start + 1, this.#current - 1);
         this.#addToken(STRING, literal);
     }
 
