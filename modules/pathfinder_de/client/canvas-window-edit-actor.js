@@ -213,9 +213,9 @@ export class CanvasWindowEditActor extends CanvasWindowEditCustom {
             valueCMD.appendChild(cmdSpan);
             otherValuesUL.appendChild(valueCMD);
 
-            // SR
-            const valueSR = this.createValueContainer('Zauberresistenz');
-            valueSR.appendChild(this.createLongEditor('pf_spellResistance'));
+            // Armor Check Penalty
+            const valueSR = this.createValueContainer('Rüstungsmalus');
+            valueSR.appendChild(this.createLongEditor('pf_armorCheckPenalty'));
             otherValuesUL.appendChild(valueSR);
             
             // Skills
@@ -284,6 +284,17 @@ export class CanvasWindowEditActor extends CanvasWindowEditCustom {
             tab.name = 'Talente/Zauber';
             tab.className = 'edit-window-area edit-window-full-area flexrow';
             tabs.appendChild(tab);
+
+            const valuesLI = document.createElement('li');
+            valuesLI.className = 'cs-content-sidebar';
+            tab.appendChild(valuesLI);
+            {
+                const valueSR = this.createValueContainer('Zauberresistenz');
+                valueSR.appendChild(this.createLongEditor('pf_spellResistance'));
+                valuesLI.appendChild(valueSR);
+
+                //TODO: other spell related values (saves (attribute selection), known spells, ...)
+            }
             
             const editor = new LongListPropertyEditor('attachments', '', 'attachment', false);
             tab.appendChild(editor.container);

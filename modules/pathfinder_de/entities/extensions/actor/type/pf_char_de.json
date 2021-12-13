@@ -247,6 +247,13 @@
             "viewAccess": "CONTROLLING_PLAYER",
             "value": "0"
         },
+
+        "pf_armorCheckPenalty": {
+            "type": "LONG",
+            "editAccess": "CONTROLLING_PLAYER",
+            "viewAccess": "CONTROLLING_PLAYER",
+            "value": "0"
+        },
         
         "pf_saveReflexBase": {
             "type": "LONG",
@@ -1490,7 +1497,7 @@
         
         {
             "property": "pf_skillAcrobatics",
-            "expression": "self.pf_dexMod + self.pf_skillAcrobaticsRanks + self.pf_skillAcrobaticsMisc + min(number(self.pf_skillAcrobaticsClass)*self.pf_skillAcrobaticsRanks, 1) * 3"
+            "expression": "self.pf_dexMod + self.pf_armorCheckPenalty + self.pf_skillAcrobaticsRanks + self.pf_skillAcrobaticsMisc + min(number(self.pf_skillAcrobaticsClass)*self.pf_skillAcrobaticsRanks, 1) * 3"
         },
         {
             "property": "pf_skillAppraise",
@@ -1502,7 +1509,7 @@
         },
         {
             "property": "pf_skillClimb",
-            "expression": "self.pf_strMod + self.pf_skillClimbRanks + self.pf_skillClimbMisc + min(number(self.pf_skillClimbClass)*self.pf_skillClimbRanks, 1) * 3"
+            "expression": "self.pf_strMod + self.pf_armorCheckPenalty + self.pf_skillClimbRanks + self.pf_skillClimbMisc + min(number(self.pf_skillClimbClass)*self.pf_skillClimbRanks, 1) * 3"
         },
         {
             "property": "pf_skillCraft1",
@@ -1522,7 +1529,7 @@
         },
         {
             "property": "pf_skillDisableDevice",
-            "expression": "self.pf_dexMod + self.pf_skillDisableDeviceRanks + self.pf_skillDisableDeviceMisc + min(number(self.pf_skillDisableDeviceClass)*self.pf_skillDisableDeviceRanks, 1) * 3"
+            "expression": "self.pf_dexMod + self.pf_armorCheckPenalty + self.pf_skillDisableDeviceRanks + self.pf_skillDisableDeviceMisc + min(number(self.pf_skillDisableDeviceClass)*self.pf_skillDisableDeviceRanks, 1) * 3"
         },
         {
             "property": "pf_skillDisguise",
@@ -1530,11 +1537,11 @@
         },
         {
             "property": "pf_skillEscapeArtist",
-            "expression": "self.pf_dexMod + self.pf_skillEscapeArtistRanks + self.pf_skillEscapeArtistMisc + min(number(self.pf_skillEscapeArtistClass)*self.pf_skillEscapeArtistRanks, 1) * 3"
+            "expression": "self.pf_dexMod + self.pf_armorCheckPenalty + self.pf_skillEscapeArtistRanks + self.pf_skillEscapeArtistMisc + min(number(self.pf_skillEscapeArtistClass)*self.pf_skillEscapeArtistRanks, 1) * 3"
         },
         {
             "property": "pf_skillFly",
-            "expression": "self.pf_dexMod + self.pf_skillFlyRanks + self.pf_skillFlyMisc + min(number(self.pf_skillFlyClass)*self.pf_skillFlyRanks, 1) * 3"
+            "expression": "self.pf_dexMod + self.pf_armorCheckPenalty + self.pf_skillFlyRanks + self.pf_skillFlyMisc + min(number(self.pf_skillFlyClass)*self.pf_skillFlyRanks, 1) * 3"
         },
         {
             "property": "pf_skillHandleAnimal",
@@ -1614,7 +1621,7 @@
         },
         {
             "property": "pf_skillRide",
-            "expression": "self.pf_dexMod + self.pf_skillRideRanks + self.pf_skillRideMisc + min(number(self.pf_skillRideClass)*self.pf_skillRideRanks, 1) * 3"
+            "expression": "self.pf_dexMod + self.pf_armorCheckPenalty + self.pf_skillRideRanks + self.pf_skillRideMisc + min(number(self.pf_skillRideClass)*self.pf_skillRideRanks, 1) * 3"
         },
         {
             "property": "pf_skillSenseMotive",
@@ -1622,7 +1629,7 @@
         },
         {
             "property": "pf_skillSleightOfHand",
-            "expression": "self.pf_dexMod + self.pf_skillSleightOfHandRanks + self.pf_skillSleightOfHandMisc + min(number(self.pf_skillSleightOfHandClass)*self.pf_skillSleightOfHandRanks, 1) * 3"
+            "expression": "self.pf_dexMod + self.pf_armorCheckPenalty + self.pf_skillSleightOfHandRanks + self.pf_skillSleightOfHandMisc + min(number(self.pf_skillSleightOfHandClass)*self.pf_skillSleightOfHandRanks, 1) * 3"
         },
         {
             "property": "pf_skillSpellcraft",
@@ -1630,7 +1637,7 @@
         },
         {
             "property": "pf_skillStealth",
-            "expression": "self.pf_dexMod + self.pf_skillStealthRanks + self.pf_skillStealthMisc + min(number(self.pf_skillStealthClass)*self.pf_skillStealthRanks, 1) * 3"
+            "expression": "self.pf_dexMod + self.pf_armorCheckPenalty + self.pf_skillStealthRanks + self.pf_skillStealthMisc + min(number(self.pf_skillStealthClass)*self.pf_skillStealthRanks, 1) * 3"
         },
         {
             "property": "pf_skillSurvival",
@@ -1638,7 +1645,7 @@
         },
         {
             "property": "pf_skillSwim",
-            "expression": "self.pf_strMod + self.pf_skillSwimRanks + self.pf_skillSwimMisc + min(number(self.pf_skillSwimClass)*self.pf_skillSwimRanks, 1) * 3"
+            "expression": "self.pf_strMod + self.pf_armorCheckPenalty + self.pf_skillSwimRanks + self.pf_skillSwimMisc + min(number(self.pf_skillSwimClass)*self.pf_skillSwimRanks, 1) * 3"
         },
         {
             "property": "pf_skillUseMagicDevice",
