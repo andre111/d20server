@@ -10,6 +10,50 @@ import { getFileType } from '../../common/util/datautil.js';
 /* TODO: verify this has enough validation so you cannot for example delete any file on the system */
 export const EDIT_KEY = Math.trunc(Math.random() * 1144185);
 
+//TODO: convert this to async / using promises too
+function getDirectories(srcpath, response) {
+    var info = {
+        p: srcpath.replace(/\\/g, '/'),
+        f: 0,
+        d: 0
+    };
+    response.push(info);
+    
+    fs.readdirSync(FileManager.serverRoot + srcpath).map(file => {
+        var pathDir = path.join(srcpath, file);
+        if(fs.statSync(FileManager.serverRoot + pathDir).isDirectory()) {
+            if(srcpath && srcpath != '/') info.d++;
+            getDirectories(pathDir, response);
+        } else {
+            info.f++;
+        }
+    });
+}
+
+function validatePath(inputPath) {
+    // find file/dir name
+    var inputName = inputPath;
+    if(inputName.includes(path.sep)) {
+        inputName = inputName.substring(inputName.lastIndexOf(path.sep)+1);
+    }
+    
+    // only allow files with known "good" endings
+    if(inputName.includes('.')) {
+        const fileType = getFileType(inputPath);
+        if(!fileType.allowsUpload()) {
+            return false;
+        }
+    }
+
+    /* TODO: Verify this is enough to limit user actions to inside the files directory */
+    // only allow relative paths that do not move upwards */
+    const relativePath = path.relative(FileManager.serverRoot, inputPath);
+    const isRoot = relativePath === '';
+    const isContained = relativePath && !relativePath.startsWith('..') && !path.isAbsolute(relativePath);
+
+    return isRoot || isContained;
+}
+
 export class FileManager {
     static router;
     static serverRoot;
@@ -185,49 +229,5 @@ export class FileManager {
                 }
             })  
         });
-    }
-
-    //TODO: convert this to async / using promises too
-    static getDirectories(srcpath, response) {
-        var info = {
-            p: srcpath.replace(/\\/g, '/'),
-            f: 0,
-            d: 0
-        };
-        response.push(info);
-        
-        fs.readdirSync(FileManager.serverRoot + srcpath).map(file => {
-            var pathDir = path.join(srcpath, file);
-            if(fs.statSync(FileManager.serverRoot + pathDir).isDirectory()) {
-                if(srcpath && srcpath != '/') info.d++;
-                getDirectories(pathDir, response);
-            } else {
-                info.f++;
-            }
-        });
-    }
-
-    static validatePath(inputPath) {
-        // find file/dir name
-        var inputName = inputPath;
-        if(inputName.includes(path.sep)) {
-            inputName = inputName.substring(inputName.lastIndexOf(path.sep)+1);
-        }
-        
-        // only allow files with known "good" endings
-        if(inputName.includes('.')) {
-            const fileType = getFileType(inputPath);
-            if(!fileType.allowsUpload()) {
-                return false;
-            }
-        }
-
-        /* TODO: Verify this is enough to limit user actions to inside the files directory */
-        // only allow relative paths that do not move upwards */
-        const relativePath = path.relative(FileManager.serverRoot, inputPath);
-        const isRoot = relativePath === '';
-        const isContained = relativePath && !relativePath.startsWith('..') && !path.isAbsolute(relativePath);
-
-        return isRoot || isContained;
     }
 }
