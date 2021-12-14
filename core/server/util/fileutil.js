@@ -1,6 +1,7 @@
 import path from 'path';
 import fs from 'fs-extra';
 
+import { PARAMETERS } from '../parameters.js';
 import { fromJson, toJson } from '../../common/util/datautil.js';
 
 // store functions
@@ -48,5 +49,5 @@ function nameToPath(name, ending) {
     name = name.replace('.', '/');
     name = name + ending;
 
-    return path.join(path.resolve(), '/data/'+name);
+    return path.join(path.resolve(), '/'+PARAMETERS.datadir+'/'+name);
 }

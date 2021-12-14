@@ -4,19 +4,16 @@ import morgan from 'morgan';
 import compression from 'compression';
 import fs from 'fs-extra';
 import spdy from 'spdy';
-import { router as filemanRouter } from './filemanager.js';
 
 import { ModuleService } from '../service/module-service.js';
-import { buildIndexPage, getIndexPage } from './index-page.js';
-import { WebsocketHandler } from './websocket-handler.js';
 import { buildLangJson, getLangJson } from './lang-json.js';
+import { buildIndexPage, getIndexPage } from './index-page.js';
+import { FileManager } from './filemanager.js';
+import { WebsocketHandler } from './websocket-handler.js';
 
-const port = 8082;
-const server = express();
-const baseServer = createBaseServer();
+var server = null;
 var isHTTPS = false;
-
-function createBaseServer() {
+function createBaseServer(server) {
     var options = {};
 
     const privateKeyPath = path.join(path.resolve(), '/config/privkey.pem');
@@ -37,7 +34,10 @@ function createBaseServer() {
 }
 
 export class HttpHandler {
-    static init() {
+    static init(port = 8082) {
+        server = express();
+        const baseServer = createBaseServer(server);
+
         server.use(morgan('dev'));
         server.use(compression());
         server.use(express.json());
@@ -68,9 +68,10 @@ export class HttpHandler {
         buildIndexPage();
         server.get('/', getIndexPage);
 
-        // file managers
-        server.use('/fileman', filemanRouter);
-        server.use('/data/files', express.static(path.join(path.resolve(), '/data/files')));
+        // file manager and access
+        FileManager.init();
+        server.use('/fileman', FileManager.router);
+        server.use('/data/files', express.static(path.join(path.resolve(), FileManager.serverRoot)));
 
         // websocket handler
         WebsocketHandler.init(baseServer);

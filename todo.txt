@@ -1,4 +1,5 @@
 //TODO: current plans:
+// make it work on current node lts (only runs on node 1.14 currently) - probably needs replacing spdy with node included http2 server
 // implement compendium "force show" (may need explicit synching beforehand if players have no access normally)
 // finally realize the entities stored per map plan (see below)
 // apply i18n at all places, currently it is very sparse all over the place

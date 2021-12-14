@@ -1,3 +1,6 @@
+// this NEEDS to be the first import to handle argument parsing before all other code
+import { PARAMETERS } from './parameters.js';
+
 import { Common } from '../common/common.js';
 import { EntityManagers } from '../common/entity/entity-managers.js';
 import { Events } from '../common/events.js';
@@ -11,12 +14,13 @@ import { ModuleService } from './service/module-service.js';
 import './handler/message-handler.js';
 import './scripting/func.js';
 
+// start server
 Common.init(new ServerIDProvider(), ServerEntityManager);
 ModuleService.init().then(() => { // locate and load module definitions and dynamically load server sided module code
     EntityManagers.createAll(() => { // create entity managers
         setupCascadingDeletes(); // sets up cascading entity deletes TODO: this is currently hardcoded, remove this!
         GameService.init(); // startup game service (only does optinal init stuff)
-        HttpHandler.init(); // startup http and websocket server
+        HttpHandler.init(PARAMETERS.port); // startup http and websocket server
         CommandLineService.init(); // startup command line service
         Events.trigger('serverInit');
     });
