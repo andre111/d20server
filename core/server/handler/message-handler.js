@@ -3,13 +3,15 @@ import { MessageService } from '../service/message-service.js';
 import { UserService } from '../service/user-service.js';
 
 import { EntityManagers } from '../../common/entity/entity-managers.js';
-import { ActionCommand, AddEntity, CopyEntity, EntityLoading, MakeActorLocal, MovePlayerToMap, Ping, PlayEffect, PlayerList, RemoveEntity, RequestAccounts, ResponseFail, ResponseOk, SelectedEntities, SendChatMessage, SendNotification, SetPlayerColor, SignIn, SignOut, ToggleModule, UpdateEntityProperties, UpdateFOW } from '../../common/messages.js';
+import { ActionCommand, AddEntity, ChangeConfig, CopyEntity, EntityLoading, MakeActorLocal, MovePlayerToMap, Ping, PlayEffect, PlayerList, RemoveEntity, RequestAccounts, ResponseFail, ResponseOk, SelectedEntities, SendChatMessage, SendNotification, SetPlayerColor, SignIn, SignOut, ToggleModule, UpdateEntityProperties, UpdateFOW } from '../../common/messages.js';
 import { Access, Role } from '../../common/constants.js';
 import { GameService } from '../service/game-service.js';
 import { VERSION } from '../version.js';
 import { Events } from '../../common/events.js';
 import { ModuleService } from '../service/module-service.js';
 import { EntityReference } from '../../common/entity/entity-reference.js';
+import { CONFIG } from '../config.js';
+import { I18N } from '../../common/util/i18n.js';
 
 function _handleRequestAccounts(ws, message) {
     MessageService._send(new PlayerList(UserService.getAllProfiles()), ws);
@@ -18,7 +20,7 @@ function _handleRequestAccounts(ws, message) {
 function _handleSignIn(ws, message) {
     // check version
     if(message.getAppVersion() != VERSION) {
-        MessageService._send(new ResponseFail('SignIn', 'Version not matching server.'), ws);
+        MessageService._send(new ResponseFail('SignIn', I18N.get('signin.error.version', 'Version not matching server.')), ws);
         return;
     }
 
@@ -30,7 +32,13 @@ function _handleSignIn(ws, message) {
     var profile = UserService.findByUsername(username);
     if(profile && !UserService.checkAccessKey(profile, accessKey)) profile = null;
     if(!profile) {
-        MessageService._send(new ResponseFail('SignIn', 'Incorrect Username or Access Key.'), ws);
+        MessageService._send(new ResponseFail('SignIn', I18N.get('signin.error.credentials', 'Incorrect Username or Access Key.')), ws);
+        return;
+    }
+
+    // check gm lockout
+    if(CONFIG.get().gmLockout && profile.getRole() != Role.GM) {
+        MessageService._send(new ResponseFail('SignIn', I18N.get('signin.error.lockout', 'Server is locked down for GM Access only.')), ws);
         return;
     }
 
@@ -225,6 +233,25 @@ function _handleToggleModule(profile, message) {
     }
 }
 
+function _handleChangeConfig(profile, message) {
+    if(profile.getRole() == Role.GM) {
+        // TODO: use actual config value definitions instead of hardcoded stuff
+        if(message.getKey() == 'gmLockout') {
+            CONFIG.get().gmLockout = message.getValue();
+            CONFIG.save();
+
+            // broadcast change to all clients
+            MessageService.broadcast(message);
+        } else if (message.getKey() == 'motd') {
+            CONFIG.get().motd = message.getValue();
+            CONFIG.save();
+
+            // broadcast change to all clients
+            MessageService.broadcast(message);
+        }
+    }
+}
+
 Events.on('recievedMessage', event => {
     const message = event.data.message;
 
@@ -290,6 +317,8 @@ Events.on('recievedMessage', event => {
         _handlePing(profile, message);
     } else if(message instanceof ToggleModule) {
         _handleToggleModule(profile, message);
+    } else if(message instanceof ChangeConfig) {
+        _handleChangeConfig(profile, message);
     } else if(message instanceof EntityLoading) {
         // discard client callbacks for now
     } else {

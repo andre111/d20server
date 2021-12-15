@@ -139,7 +139,11 @@
             "global": "Global Volume",
             "weather": "Weather Volume"
         },
-        "showcontrollsbar": "Show Controlls Bar"
+        "showcontrollsbar": "Show Controlls Bar",
+        "config": {
+            "gmLockout": "GM Lockout",
+            "motd": "Motd"
+        }
     },
     "filemanager": {
         "title": "File Manager",
@@ -206,5 +210,12 @@
     "window": {
         "fittogrid": "Fit to Grid (select a 7x7 cells area with left and right click)",
         "image": "Image"
+    },
+    "signin": {
+        "error": {
+            "version": "Version not matching server.",
+            "credentials": "Incorrect Username or Access Key.",
+            "lockout": "Server is locked down for GM Access only."
+        }
     }
 }

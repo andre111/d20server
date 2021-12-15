@@ -48,6 +48,10 @@ export class SettingsEntry {
         this.value = this.#defaultValue;
     }
 
+    changeValueNoNotify(value) {
+        this.#value = value;
+    }
+
     createName() {
         const nameP = document.createElement('p');
         nameP.innerText = I18N.get(this.#i18nKey, this.#displayName);

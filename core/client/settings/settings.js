@@ -2,6 +2,7 @@ import { Events } from '../../common/events.js';
 import { CanvasWindowSettings } from '../canvas/window/canvas-window-settings.js';
 import { ServerData } from '../server-data.js';
 import { ModuleSettings } from './module-settings.js';
+import { ServerConfigSettings } from './server-config-settings.js';
 import { SettingsEntryNumberRange } from './settings-entry-number-range.js';
 import { SettingsEntryToggle } from './settings-entry-toggle.js';
 import { SettingsPage } from './settings-page.js';
@@ -89,5 +90,8 @@ export const SETTING_PAGE_CLIENT = Settings.createPage('client', 'Client');
 SETTING_PAGE_CLIENT.addEntry('showcontrollsbar', SETTING_SHOW_CONTROLLS_BAR);
 
 Events.on('enterMainState', event => {
-    if(ServerData.isGM()) ModuleSettings.init();
+    if(ServerData.isGM()) {
+        ServerConfigSettings.init();
+        ModuleSettings.init();
+    }
 });

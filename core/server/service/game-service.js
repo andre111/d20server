@@ -7,9 +7,10 @@ import { UserService } from './user-service.js';
 import { Entity } from '../../common/common.js';
 import { Access, Role } from '../../common/constants.js';
 import { EntityManagers } from '../../common/entity/entity-managers.js';
-import { AddEntity, EnterGame, EnterMap, PlayerList } from '../../common/messages.js';
+import { AddEntity, ChangeConfig, EnterGame, EnterMap, PlayerList } from '../../common/messages.js';
 import { ModuleService } from './module-service.js';
 import { fromJson, toJson } from '../../common/util/datautil.js';
+import { CONFIG } from '../config.js';
 
 export class GameService {
     static init() {
@@ -45,6 +46,9 @@ export class GameService {
         GameService.reloadMaps(profile);
         ChatService.sendHistory(profile, 100);
         ModuleService.sendModuleDefinitions(profile);
+        //TODO: use config value definitions (with a synced flag)
+        MessageService.send(new ChangeConfig('gmLockout', CONFIG.get().gmLockout), profile);
+        MessageService.send(new ChangeConfig('motd', CONFIG.get().motd), profile);
     }
 
     static reloadMaps(profile) {

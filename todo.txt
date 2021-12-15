@@ -1,6 +1,7 @@
 //TODO: current plans:
 // implement "GM-Lockout" where the GM can use a settings toggle to disallow players from joining)
 // add motd (+lockout notice and maybe more? - maybe allow customizing the backgrounds) to login screen
+// refactor config system to use less hardcoding (use definitions that include value type, synced flag and automatic settings window input on client)
 
 // make it work on current node lts (only runs on node 1.14 currently) - probably needs replacing spdy with node included http2 server
 // implement compendium "force show" (may need explicit synching beforehand if players have no access normally)

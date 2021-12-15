@@ -139,7 +139,11 @@
             "global": "Gesammt Lautstärke",
             "weather": "Wetter Lautstärke"
         },
-        "showcontrollsbar": "Zeige Steuerungshinweise"
+        "showcontrollsbar": "Zeige Steuerungshinweise",
+        "config": {
+            "gmLockout": "Geschlossener GM Zugang",
+            "motd": "Motd"
+        }
     },
     "filemanager": {
         "title": "Dateimanager",
@@ -206,5 +210,12 @@
     "window": {
         "fittogrid": "An das Gitter anpassen (wähle mit Links- und Rechtsklick einen 7x7 Zellbereich aus)",
         "image": "Bild"
+    },
+    "signin": {
+        "error": {
+            "version": "Client Version und Server Version unterschiedlich.",
+            "credentials": "Falscher Spielername oder Zugangscode.",
+            "lockout": "Server befindet sich im geschlossenen GM Zugang."
+        }
     }
 }

@@ -1,4 +1,3 @@
-import { I18N } from '../../common/util/i18n.js';
 import { SettingsEntryModuleToggle } from './settings-entry-module-toggle.js';
 import { Settings } from './settings.js';
 

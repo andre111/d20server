@@ -35,3 +35,4 @@ export { ResponseFail } from './message/util/response-fail.js';
 export { ResponseOk } from './message/util/response-ok.js';
 export { ServerDefinitions } from './message/util/server-definitions.js';
 export { ToggleModule } from './message/util/toggle-module.js';
+export { ChangeConfig } from './message/util/change-config.js';

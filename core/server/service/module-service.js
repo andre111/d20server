@@ -46,8 +46,11 @@ var modules = [];
 export class ModuleService {
     static async init() {
         // "init" config
+        //TODO: move this to an actual "config option definition" system
         CONFIG.get().disabledModules = CONFIG.get().disabledModules ?? [];
         CONFIG.get().language = CONFIG.get().language ?? 'de_DE';
+        CONFIG.get().gmLockout = CONFIG.get().gmLockout ?? false;
+        CONFIG.get().motd = CONFIG.get().motd ?? '';
 
         // scan for modules
         fs.readdirSync(path.join(path.resolve(), '/modules/')).forEach(file => {

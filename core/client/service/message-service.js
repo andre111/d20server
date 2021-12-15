@@ -1,5 +1,5 @@
 import { Connection } from '../connection.js';
-import { ActionCommand, AddEntity, ChatEntries, ClearEntities, EnterGame, EnterMap, EntityLoading, ModuleDefinitions, PlayEffect, PlayerList, RemoveEntity, ResponseFail, ResponseOk, SendNotification, ServerDefinitions, UpdateEntityProperties } from '../../common/messages.js';
+import { ActionCommand, AddEntity, ChangeConfig, ChatEntries, ClearEntities, EnterGame, EnterMap, EntityLoading, ModuleDefinitions, PlayEffect, PlayerList, RemoveEntity, ResponseFail, ResponseOk, SendNotification, ServerDefinitions, UpdateEntityProperties } from '../../common/messages.js';
 import { Events } from '../../common/events.js';
 import { ServerData } from '../server-data.js';
 import { StateLoading } from '../state/state-loading.js';
@@ -10,6 +10,8 @@ import { StateMain } from '../state/state-main.js';
 import { CanvasWindowText } from '../canvas/window/canvas-window-text.js';
 import { EffectRenderer } from '../renderer/effect-renderer.js';
 import { ModuleSettings } from '../settings/module-settings.js';
+import { CONFIG } from '../config.js';
+import { ServerConfigSettings } from '../settings/server-config-settings.js';
 
 Events.on('recievedMessage', event => {
     const msg = event.data.message;
@@ -76,6 +78,9 @@ Events.on('recievedMessage', event => {
         }
     } else if(msg instanceof ModuleDefinitions) {
         ModuleSettings.onModuleDefinitions(msg.getModuleDefinitions(), msg.getDisabledModules());
+    } else if(msg instanceof ChangeConfig) {
+        CONFIG.get()[msg.getKey()] = msg.getValue();
+        ServerConfigSettings.onConfigChange(msg.getKey(), msg.getValue());
     } else {
         handled = false;
     }

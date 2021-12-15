@@ -1,10 +1,11 @@
+import { PARAMETERS } from './parameters.js';
 import { readJsonFile, saveJsonFile } from './util/fileutil.js';
 
 class Config {
     #data;
 
     constructor() {
-        this.#data = readJsonFile('./config/config.json') ?? {};
+        this.#data = readJsonFile('./'+PARAMETERS.datadir+'/config.json') ?? {};
     }
 
     get() {
@@ -12,7 +13,7 @@ class Config {
     }
 
     save() {
-        saveJsonFile('./config/config.json', this.#data, true);
+        saveJsonFile('./'+PARAMETERS.datadir+'/config.json', this.#data, true);
     }
 }
 export const CONFIG = new Config();
