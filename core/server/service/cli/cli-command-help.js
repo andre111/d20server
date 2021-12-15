@@ -15,7 +15,7 @@ export class CLICommandHelp extends CLICommand {
     }
 
     execute(args) { 
-        const splitter = '-'.repeat(process.stdout.columns);
+        const splitter = this.getSplitter();
         if(!args || args.length == 0) {
             // print general help
             console.log('');
