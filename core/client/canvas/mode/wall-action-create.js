@@ -105,14 +105,14 @@ export class WallActionCreate extends WallAction {
         if(snap) {
 			// snap to grid (set snap to true when control is NOT down)
             var map = MapUtils.currentMap();
-            if(map != null && map != undefined) {
+            if(map) {
                 x = Math.round(x / map.getLong('gridSize')) * map.getLong('gridSize');
                 y = Math.round(y / map.getLong('gridSize')) * map.getLong('gridSize');
             }
         } else {
             // just snap to nearby wall end points
             var map = MapUtils.currentMap();
-            if(map != null && map != undefined) {
+            if(map) {
                 var wallSnapDist = 4;
                 for(var wall of MapUtils.currentEntities('wall')) {
                     var dist1 = Math.abs(wall.getLong('x1') - x) + Math.abs(wall.getLong('y1') - y);
