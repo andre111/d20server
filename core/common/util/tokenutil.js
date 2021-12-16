@@ -2,6 +2,7 @@ import { Type } from '../constants.js';
 import { EntityManagers } from '../entity/entity-managers.js';
 import { Entity } from '../entity/entity.js';
 import { EntityReference } from '../entity/entity-reference.js';
+import { IntMathUtils } from './mathutil.js';
 
 export class TokenUtil {
     static getActor(token) {
@@ -84,5 +85,20 @@ export class TokenUtil {
         const reference = new EntityReference(TokenUtil.getActor(token));
         reference.setLong(propNameOrValue, newValue);
         reference.performUpdate();
+    }
+
+    static intersectsWall(mapID, x1, y1, x2, y2) {
+        var intersection = false;
+
+        EntityManagers.get('wall').all().forEach(wall => {
+            if(wall.getLong('map') == mapID && (!wall.getBoolean('door') || !wall.getBoolean('open'))) {
+                if(IntMathUtils.doLineSegmentsIntersect(x1, y1, x2, y2, 
+                    wall.getLong('x1'), wall.getLong('y1'), wall.getLong('x2'), wall.getLong('y2'))) {
+                    intersection = true;
+                }
+            }
+        });
+
+        return intersection;
     }
 }

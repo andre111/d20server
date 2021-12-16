@@ -21,9 +21,9 @@ export class EntityActionMove extends EntityAction {
         this.mode.adjustPositions(mouseX, mouseY, snap, collideWithWalls);
     }
     
-    finishMove(keepLocalChanges = false) {
+    finishMove() {
         for(const reference of this.mode.activeEntities) {
-            reference.performUpdate(keepLocalChanges);
+            reference.performUpdate();
         }
         this.mode.setAction(new EntityActionSelect(this.mode));
     }

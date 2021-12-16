@@ -9,6 +9,7 @@ import { fromJson, toJson } from '../../common/util/datautil.js';
 import nedb from '@rmanibus/nedb'; // NOTE: This uses a special 'updated' nedb fork (with updated dependencies)
 import fs from 'fs-extra';
 import { PARAMETERS } from '../parameters.js';
+import { Events } from '../../common/events.js';
 
 export class ServerEntityManager extends EntityManager {
     synched;
@@ -123,8 +124,29 @@ export class ServerEntityManager extends EntityManager {
         });
 
         // transfer properties respecting access settings and keeping track of which changed
-        var changedProperties = {};
+        // check properties first for any obviously invalid changes
+        var propertiesToChange = {};
         for(const [key, value] of Object.entries(map)) {
+            if(!entity.has(key)) continue; // server discards new/unknown properties from client
+            if(!entity.isValidValue(key, value)) continue; // server discards properties with invalid value
+
+            // transfer value
+            if(entity.canEditProperty(key, accessLevel)) {
+                propertiesToChange[key] = value;
+            }
+        }
+
+        // call event
+        const event = Events.trigger('modify_'+this.getType(), {
+            entity: entity,
+            propertiesToChange: propertiesToChange,
+            accessLevel: accessLevel
+        }, true);
+        if(event.isCanceled) return;
+
+        // apply changes (checking again for invalid changes made by event callbacks)
+        var changedProperties = {};
+        for(const [key, value] of Object.entries(propertiesToChange)) {
             if(!entity.has(key)) continue; // server discards new/unknown properties from client
             if(!entity.isValidValue(key, value)) continue; // server discards properties with invalid value
 

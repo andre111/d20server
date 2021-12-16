@@ -7,13 +7,14 @@ import { EntityUtils } from '../../util/entityutil.js';
 import { MessageService } from '../../service/message-service.js';
 import { Client } from '../../client.js';
 
-import { IntMathUtils } from '../../../common/util/mathutil.js';
 import { SelectedEntities } from '../../../common/messages.js';
 import { Entity } from '../../../common/common.js';
 import { EntityReference } from '../../../common/entity/entity-reference.js';
 import { CanvasWindowConfirm } from '../window/canvas-window-confirm.js';
 import { EntityManagers } from '../../../common/entity/entity-managers.js';
 import { EntityActionCopy } from './entity-action-copy.js';
+import { TokenUtil } from '../../../common/util/tokenutil.js';
+import { ServerData } from '../../server-data.js';
 
 export class CanvasModeEntities extends CanvasMode {
     #entityType;
@@ -105,19 +106,19 @@ export class CanvasModeEntities extends CanvasMode {
         if(a == 'move_left') {
             var moveAction = new EntityActionMove(this, 0, 0);
             moveAction.doMove(-gridSize, 0, false, true);
-            moveAction.finishMove(true);
+            moveAction.finishMove();
         } else if(a == 'move_right') {
             var moveAction = new EntityActionMove(this, 0, 0);
             moveAction.doMove(gridSize, 0, false, true);
-            moveAction.finishMove(true);
+            moveAction.finishMove();
         } else if(a == 'move_up') {
             var moveAction = new EntityActionMove(this, 0, 0);
             moveAction.doMove(0, -gridSize, false, true);
-            moveAction.finishMove(true);
+            moveAction.finishMove();
         } else if(a == 'move_down') {
             var moveAction = new EntityActionMove(this, 0, 0);
             moveAction.doMove(0, gridSize, false, true);
-            moveAction.finishMove(true);
+            moveAction.finishMove();
         // rotating entities
         } else if(a == 'rotate_left') {
             if(this.#activeEntities.length == 1) {
@@ -252,14 +253,7 @@ export class CanvasModeEntities extends CanvasMode {
             // collide with walls
 			var doMove = true;
 			if(collideWithWalls) {
-                MapUtils.currentEntities('wall').forEach(wall => {
-                    if(!wall.getBoolean('door') || !wall.getBoolean('open')) {
-                        if(IntMathUtils.doLineSegmentsIntersect(reference.getLong('x'), reference.getLong('y'), xp, yp, 
-                            wall.getLong('x1'), wall.getLong('y1'), wall.getLong('x2'), wall.getLong('y2'))) {
-                            doMove = false;
-                        }
-                    }
-                });
+                doMove = !TokenUtil.intersectsWall(ServerData.currentMap, reference.getLong('x'), reference.getLong('y'), xp, yp);
 			}
 			
 			// move temp token
