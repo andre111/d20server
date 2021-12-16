@@ -51,8 +51,10 @@ SERVER_BUILTIN_GETSELECTINGPLAYERS.call = (interpreter, paren, name, args) => {
     const array = new ScrArray();
     var index = 0;
     UserService.forEach(player => {
-        array.set(index, new Value(player, Type.PLAYER, ''));
-        index++;
+        if(player.getSelectedTokens().includes(args[0].value)) {
+            array.set(index, new Value(player, Type.PLAYER, ''));
+            index++;
+        }
     });
     return array;
 };
