@@ -1,0 +1,10 @@
+{
+    "controlls": {
+        "add": {
+            "portal": {
+                "entrance": "Portal Eingang erstellen",
+                "exit": "Portalziel festlegen"
+            }
+        }
+    }
+}

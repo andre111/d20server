@@ -1,0 +1,65 @@
+{
+    "displayName": "Portal",
+    "settings": {
+        "synched": "true",
+        "global": "true",
+        "addRemoveAccess": "GM",
+        "control": {
+            "mode": "NONE"
+        },
+        "accessLevel": {
+            "mode": "DEFAULT"
+        },
+        "viewAccess": {
+            "mode": "SET",
+            "value": "GM"
+        },
+        "editAccess": {
+            "mode": "SET",
+            "value": "GM"
+        },
+        "containedEntities": []
+    },
+    "properties": {
+        "map": {
+            "type": "LONG",
+            "editAccess": "SYSTEM",
+            "viewAccess": "GM",
+            "value": "-1"
+        },
+        "x1": {
+            "type": "LONG",
+            "editAccess": "GM",
+            "viewAccess": "GM",
+            "value": "0"
+        },
+        "y1": {
+            "type": "LONG",
+            "editAccess": "GM",
+            "viewAccess": "GM",
+            "value": "0"
+        },
+        "x2": {
+            "type": "LONG",
+            "editAccess": "GM",
+            "viewAccess": "GM",
+            "value": "0"
+        },
+        "y2": {
+            "type": "LONG",
+            "editAccess": "GM",
+            "viewAccess": "GM",
+            "value": "0"
+        }
+    },
+    "updateRules": [
+    ],
+    "macros": {
+    },
+    "extensionPoints": [
+        {
+            "name": "base",
+            "mode": "ALL"
+        }
+    ]
+}

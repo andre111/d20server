@@ -1,0 +1,5 @@
+{
+    "name": "Portal Module",
+    "version": "0.0.1",
+    "description": "Allows creation of 'portals' that automatically move tokens"
+}

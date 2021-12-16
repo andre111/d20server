@@ -1,0 +1,10 @@
+{
+    "controlls": {
+        "add": {
+            "portal": {
+                "entrance": "Create Portal Entrance",
+                "exit": "Set Portal Exit"
+            }
+        }
+    }
+}
