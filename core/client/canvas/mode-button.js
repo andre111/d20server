@@ -21,6 +21,8 @@ export class ModeButton {
         this.button.title = tooltip;
         this.button.onclick = () => this.onClick();
         this.icon = document.createElement('img');
+        this.icon.width = 24;
+        this.icon.height = 24;
         this.button.appendChild(this.icon);
     }
     
