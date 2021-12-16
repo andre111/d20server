@@ -119,6 +119,8 @@ Events.on('chatMessage', event => {
 
 export class ChatService {
     static onMessage(profile, message) {
+        console.log('Chat: '+profile.getUsername()+': '+message);
+        
         const event = Events.trigger('chatMessage', { message: message, profile: profile }, true);
         if(event.canceled) return;
 
