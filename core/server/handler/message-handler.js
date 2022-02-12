@@ -3,7 +3,7 @@ import { MessageService } from '../service/message-service.js';
 import { UserService } from '../service/user-service.js';
 
 import { EntityManagers } from '../../common/entity/entity-managers.js';
-import { ActionCommand, AddEntity, ChangeConfig, CopyEntity, EntityLoading, MakeActorLocal, MovePlayerToMap, Ping, PlayEffect, PlayerList, RemoveEntity, RequestAccounts, ResponseFail, ResponseOk, SelectedEntities, SendChatMessage, SendNotification, SetPlayerColor, SignIn, SignOut, ToggleModule, UpdateEntityProperties, UpdateFOW } from '../../common/messages.js';
+import { ActionCommand, AddEntities, ChangeConfig, CopyEntity, EntityLoading, MakeActorLocal, MovePlayerToMap, Ping, PlayEffect, PlayerList, RemoveEntity, RequestAccounts, ResponseFail, ResponseOk, SelectedEntities, SendChatMessage, SendNotification, SetPlayerColor, SignIn, SignOut, ToggleModule, UpdateEntityProperties, UpdateFOW } from '../../common/messages.js';
 import { Access, Role } from '../../common/constants.js';
 import { GameService } from '../service/game-service.js';
 import { VERSION } from '../version.js';
@@ -114,14 +114,15 @@ function _handleSetPlayerColor(profile, message) {
     MessageService.broadcast(new PlayerList(UserService.getAllProfiles()));
 }
 
-function _handleAddEntity(profile, message) {
+function _handleAddEntities(profile, message) {
     // search for manager, check access and reset id before adding if valid request
-    const manager = EntityManagers.get(message.getEntity().getManager());
+    const manager = EntityManagers.get(message.getEntities()[0].getManager());
     if(manager) {
-        const entity = message.getEntity();
-        if(manager.canAddRemove(profile, entity)) {
-            entity.resetID();
-            manager.add(entity);
+        for(const entity of message.getEntities()) {
+            if(manager.canAddRemove(profile, entity)) {
+                entity.resetID();
+                manager.add(entity);
+            }
         }
     }
 }
@@ -299,8 +300,8 @@ Events.on('recievedMessage', event => {
         _handlePlayEffect(profile, map, message);
     } else if(message instanceof SetPlayerColor) {
         _handleSetPlayerColor(profile, message);
-    } else if(message instanceof AddEntity) {
-        _handleAddEntity(profile, message);
+    } else if(message instanceof AddEntities) {
+        _handleAddEntities(profile, message);
     } else if(message instanceof RemoveEntity) {
         _handleRemoveEntity(profile, message);
     } else if(message instanceof UpdateEntityProperties) {

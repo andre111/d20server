@@ -7,7 +7,7 @@ import { UserService } from './user-service.js';
 import { Entity } from '../../common/common.js';
 import { Access, Role } from '../../common/constants.js';
 import { EntityManagers } from '../../common/entity/entity-managers.js';
-import { AddEntity, ChangeConfig, EnterGame, EnterMap, PlayerList } from '../../common/messages.js';
+import { AddEntities, ChangeConfig, EnterGame, EnterMap, PlayerList } from '../../common/messages.js';
 import { ModuleService } from './module-service.js';
 import { fromJson, toJson } from '../../common/util/datautil.js';
 import { CONFIG } from '../config.js';
@@ -56,7 +56,7 @@ export class GameService {
         if(profile) {
             const map = EntityManagers.get('map').find(profile.getCurrentMap());
             if(map) {
-                MessageService.send(new AddEntity(map), profile); // send map because client could have no independent access
+                MessageService.send(new AddEntities([map]), profile); // send map because client could have no independent access
                 MessageService.send(new EnterMap(map, GameService.getFOW(map, profile)), profile);
             }
         } else {

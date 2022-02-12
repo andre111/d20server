@@ -1,5 +1,5 @@
 import { Connection } from '../connection.js';
-import { ActionCommand, AddEntity, ChangeConfig, ChatEntries, ClearEntities, EnterGame, EnterMap, EntityLoading, ModuleDefinitions, PlayEffect, PlayerList, RemoveEntity, ResponseFail, ResponseOk, SendNotification, ServerDefinitions, UpdateEntityProperties } from '../../common/messages.js';
+import { ActionCommand, AddEntities, ChangeConfig, ChatEntries, ClearEntities, EnterGame, EnterMap, EntityLoading, ModuleDefinitions, PlayEffect, PlayerList, RemoveEntity, ResponseFail, ResponseOk, SendNotification, ServerDefinitions, UpdateEntityProperties } from '../../common/messages.js';
 import { Events } from '../../common/events.js';
 import { ServerData } from '../server-data.js';
 import { StateLoading } from '../state/state-loading.js';
@@ -30,9 +30,12 @@ Events.on('recievedMessage', event => {
         setDefinitions(msg.getDefinitions());
     } else if(msg instanceof ClearEntities) {
        EntityManagers.getOrCreate(msg.getManager(), msg.getType()).serverClearEntities();
-    } else if(msg instanceof AddEntity) {
-        if(Client.getState() instanceof StateLoading) Client.getState().increaseCurrent();
-        EntityManagers.getOrCreate(msg.getEntity().getManager(), msg.getEntity().getType()).serverAddEntity(msg.getEntity());
+    } else if(msg instanceof AddEntities) {
+        const manager = EntityManagers.getOrCreate(msg.getEntities()[0].getManager(), msg.getEntities()[0].getType());
+        for(const entity of msg.getEntities()) {
+            manager.serverAddEntity(entity);
+        }
+        if(Client.getState() instanceof StateLoading) Client.getState().increaseCurrent(msg.getEntities().length);
     } else if(msg instanceof RemoveEntity) {
         const manager = EntityManagers.get(msg.getManager());
         if(manager) manager.serverRemoveEntity(msg.getID());

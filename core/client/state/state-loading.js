@@ -37,6 +37,9 @@ export class StateLoading extends State {
         this.#progressLabel = document.createElement('p');
         this.#progressContainer.appendChild(this.#progressLabel);
         
+        this.#progressBar.style.width = '0%';
+        this.#progressLabel.innerText = '0%';
+        
         this.current = 0;
         this.lastUpdate = 0;
     }
@@ -46,8 +49,8 @@ export class StateLoading extends State {
         div.parentElement.removeChild(div);
     }
 
-    increaseCurrent() {
-        this.current++;
+    increaseCurrent(by = 1) {
+        this.current += by;
 
         // update is expensive -> only update once a new percentage is reached
         const progress = this.current / this.amount * 100;

@@ -13,7 +13,7 @@ const FULL_RESET = false;
 const IGNORE_MISSING_IMAGES = false;
 
 //TODO: split this into more sensible parts
-Common.init(new GeneratorIDProvider(), null);
+Common.init(true, new GeneratorIDProvider(), null);
 ModuleService.init().then(() => doGenerate());
 
 // Data / ID Map Storage

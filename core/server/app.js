@@ -15,7 +15,7 @@ import './handler/message-handler.js';
 import './scripting/func.js';
 
 // start server
-Common.init(new ServerIDProvider(), ServerEntityManager);
+Common.init(true, new ServerIDProvider(), ServerEntityManager);
 ModuleService.init().then(() => { // locate and load module definitions and dynamically load server sided module code
     EntityManagers.createAll(() => { // create entity managers
         setupCascadingDeletes(); // sets up cascading entity deletes TODO: this is currently hardcoded, remove this!

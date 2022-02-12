@@ -1,7 +1,7 @@
 import { EntityManager, EntityManagers } from '../../common/entity/entity-managers.js';
 import { Entity } from '../../common/common.js';
 import { Access } from '../../common/constants.js';
-import { AddEntity, ClearEntities, RemoveEntity, UpdateEntityProperties } from '../../common/messages.js';
+import { AddEntities, ClearEntities, RemoveEntity, UpdateEntityProperties } from '../../common/messages.js';
 import { MessageService } from '../service/message-service.js';
 import { UserService } from '../service/user-service.js';
 
@@ -212,13 +212,29 @@ export class ServerEntityManager extends EntityManager {
 
     fullSync(profile) {
         MessageService.send(new ClearEntities(this.getName(), this.getType()), profile);
+
+        // collect entities
+        var entitiesToSync = [];
         for(const entity of Object.values(this.entities)) {
-            if(entity.canView(profile)) this.syncEntity(profile, entity);
+            if(entity.canView(profile)) entitiesToSync.push(entity);
+        }
+        if(entitiesToSync.length == 0) return;
+
+        // send them in ONE message
+        // TODO: maybe splitting them up into batches of X would be better -> try to find a good balance
+        MessageService.send(new AddEntities(entitiesToSync), profile);
+
+        // iterate contained managers and perform full sync
+        for(const containedEntityType of entitiesToSync[0].getDefinition().settings.containedEntities) {
+            for(const entity of entitiesToSync) {
+                const manager = EntityManagers.get(entity.getContainedEntityManagerName(containedEntityType));
+                if(manager) manager.fullSync(profile);
+            }
         }
     }
 
     syncEntity(profile, entity) {
-        MessageService.send(new AddEntity(entity), profile);
+        MessageService.send(new AddEntities([entity]), profile);
 
         // iterate contained managers and perform full sync
         for(const containedEntityType of entity.getDefinition().settings.containedEntities) {

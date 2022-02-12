@@ -54,7 +54,7 @@ import { SidepanelTabCompendium } from './sidepanel/sidepanel-tab-compendium.js'
 import { CanvasWindowEditCompendium } from './canvas/window/canvas-window-edit-compendium.js';
 
 // Initialize common code
-Common.init(new ClientIDProvider(), ClientEntityManager);
+Common.init(false, new ClientIDProvider(), ClientEntityManager);
 
 // apply "catching" contextmenu listener to body
 document.body.oncontextmenu = () => false;

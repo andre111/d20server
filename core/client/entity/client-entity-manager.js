@@ -1,6 +1,6 @@
 import { EntityManager } from '../../common/entity/entity-managers.js'
 import { Entity } from '../../common/entity/entity.js';
-import { AddEntity, RemoveEntity, UpdateEntityProperties } from '../../common/messages.js';
+import { AddEntities, RemoveEntity, UpdateEntityProperties } from '../../common/messages.js';
 import { MessageService } from '../service/message-service.js';
 
 export class ClientEntityManager extends EntityManager {
@@ -35,7 +35,7 @@ export class ClientEntityManager extends EntityManager {
         if(!(entity instanceof Entity)) throw new Error('Object is no entity');
         if(entity.getType() !== this.getType()) throw new Error('Entity is of wrong type');
 
-        const msg = new AddEntity(entity);
+        const msg = new AddEntities([entity]);
         MessageService.send(msg);
     }
 

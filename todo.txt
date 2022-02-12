@@ -1,16 +1,15 @@
 //TODO: current plans:
-// implement "GM-Lockout" where the GM can use a settings toggle to disallow players from joining)
 // add motd (+lockout notice and maybe more? - maybe allow customizing the backgrounds) to login screen
 // refactor config system to use less hardcoding (use definitions that include value type, synced flag and automatic settings window input on client)
+// the compendium "Schablonen" entries are missing the ones from "Anhang 2" in the mhbs (note: some books contain refreshed versions of the olders + ignore changes in mhb3)
+// replace icons with svgs, so color schemes can affect them
 
 // make it work on current node lts (only runs on node 1.14 currently) - probably needs replacing spdy with node included http2 server
 // implement compendium "force show" (may need explicit synching beforehand if players have no access normally)
 // finally realize the entities stored per map plan (see below)
 // apply i18n at all places, currently it is very sparse all over the place
 // custom editors for (in order of priority): Maps, Walls, Drawings
-// implement an easy to use portals module (with one edit mode)
 // add a "zauber" tab to pathfinder actor (including spells per day, learned count, saves, ...) (or maybe add it as a "sidebar" to the Talente/Zauber tab)
-// (make inbuilt macros dynamically refer to the correct actor (by using find("actor", <id>) instead of sActor, or better use an inbuilt var called cActor) - do not forget case for local actors)
 // document all currently used Events (and switch more stuff to using events)
 // implement (a custom plugin for?) adding internal links in TinyMCE editors
 // webrtc settings (input devices)
@@ -21,7 +20,6 @@
 // support sending selected entities of other types
 // add doubleclicking to open stuff in more places
 // create real "import" command line functionality on server (+ other commands?)
-// You could "glitch" through walls with diagonal movements because of server sync delays (not reseting local changes should "fix" that, but cause potential server desync issues when the server denies the changes -> maybe make server send back unchanged value on desync)
 
 //TODO: scripting system extensions:
 // a system for server scripts
@@ -49,33 +47,24 @@
 //               first idea: "no weather/indoor" areas where the WeatherRenderer does not spawn particles)
 
 //TODO: dice/template/scripting rework
-//    not as important: (using a string property as part of the expression (cheap solution would be replacing before parsing, but that can be done better...))
-//    storing a evaluated expression and reusing that (multiple times) as part of other expressions (so not just the resulting value, but also the full "result" object)
 //    better display of eval results (calculations for dice sides/count/... are not show at all currently)
 
 //TODO: Current Priorities:
-// journal: entity with a single (html) string, that can be shown/viewed
 // more keyboard shortcuts (camera moving, ...)
 // Add optional "attachment" macros
 
 //TODO: And the completely insane next plan:
-//    Rework the entity system (the current one always needs to transmit and iterate all for everything -> performance degradation with many maps)
+// Rework the entity system (the current one always needs to transmit and iterate all for everything -> performance degradation with many maps)
 //      Maps, Actors and Attachments remain the only "global" entities
 //      Tokens, Walls, Drawings, ... are stored in the maps (not as properties, a sepparate system that can allow gradual loading of map content)
 //
-// Convert ALL entities to be FULLY data defined/driven
-//    Add remaining data defined stuff: cascading deletes
-//    Verify entity type on entitymanager add / other locations
+// Verify entity type on entitymanager add / other locations
 // 
 // split attachments into more logical separate things:
 //    items
 //    features
 //    spells
-//    journal entries
 
 //TODO: Nice to haves:
 // more "Effects" for use with the effect command (-> i.e. attack animations and magic)
 // a "map" function for an actual map somehow?
-
-//TODO: Technical:
-// improve access management: Currently all tokens and walls are synched even for inaccessible maps, And maps require a forced sync for players (that may be a good thing?)

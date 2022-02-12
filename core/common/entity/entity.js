@@ -4,6 +4,7 @@ import { registerType } from '../util/datautil.js';
 import { Access, Type, Role } from '../constants.js';
 import { getDefinitions } from '../definitions.js';
 import { Events } from '../events.js';
+import { Common } from '../common.js';
 
 export class Entity {
     type;
@@ -25,7 +26,9 @@ export class Entity {
     }
 
     postLoad() {
-        this.addDefaultProperties();
+        // add default properties after load from data (for potentially outdated entities)
+        // but only do so on the server - the client only recieves full entities and would only waste time here
+        if(Common.isServer()) this.addDefaultProperties();
     }
 
     onAdd() {

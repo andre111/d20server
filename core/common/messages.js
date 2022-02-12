@@ -9,7 +9,7 @@ export { ChatEntries } from './message/chat/chat-entries.js';
 export { SendChatMessage } from './message/chat/send-chat-message.js';
 
 // Entity Messages
-export { AddEntity } from './message/entity/add-entity.js';
+export { AddEntities } from './message/entity/add-entities.js';
 export { ClearEntities } from './message/entity/clear-entities.js';
 export { CopyEntity } from './message/entity/copy-entity.js';
 export { EntityLoading } from './message/entity/entity-loading.js';

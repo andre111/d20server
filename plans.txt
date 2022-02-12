@@ -27,7 +27,7 @@ SHARED:
 	tags
 -----------------------------------------------------
 ITEMS:
-(should this include all the pf rule stuff, so proficiences,ac effects,attack rools,consumables,equipment slot...?)
+(should this include all the pf rule stuff, so proficiences,ac effects,attack rolls,consumables,equipment slot...?)
 -----------------------------------------------------
 	type
 	rarity
@@ -48,6 +48,3 @@ SPELLS:
 	components (boolean toggles?)
 	materials (String?)
 	ruleSource
------------------------------------------------------
-JOURNAL ENTRIES:
------------------------------------------------------

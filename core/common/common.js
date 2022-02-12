@@ -1,10 +1,16 @@
 import { EntityManagers } from './entity/entity-managers.js';
 import { ID } from './entity/id.js';
 
+var server = true;
 export const Common = {
-    init: function(idProvider, entityManagerClass) {
+    init: function(isServer, idProvider, entityManagerClass) {
+        server = isServer;
         ID.init(idProvider);
         EntityManagers.init(entityManagerClass);
+    },
+
+    isServer: function() {
+        return server;
     }
 }
 
