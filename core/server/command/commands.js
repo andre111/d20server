@@ -1,3 +1,4 @@
+import { Role } from '../../common/constants.js';
 import { Events } from '../../common/events.js';
 
 import { ChatService } from '../service/chat-service.js';
