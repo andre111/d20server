@@ -1,14 +1,11 @@
 {
     "displayName": "Wall",
     "settings": {
-        "synched": "true",
-        "global": "true",
+        "synched": true,
+        "global": false,
         "addRemoveAccess": "GM",
         "control": {
             "mode": "NONE"
-        },
-        "accessLevel": {
-            "mode": "DEFAULT"
         },
         "viewAccess": {
             "mode": "SET",
@@ -21,12 +18,6 @@
         "containedEntities": []
     },
     "properties": {
-        "map": {
-            "type": "LONG",
-            "editAccess": "SYSTEM",
-            "viewAccess": "EVERYONE",
-            "value": "-1"
-        },
         "x1": {
             "type": "LONG",
             "editAccess": "GM",

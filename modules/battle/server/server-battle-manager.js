@@ -1,5 +1,3 @@
-import { token } from 'morgan';
-import { EntityManagers } from '../../../core/common/entity/entity-managers.js';
 import { EntityReference } from '../../../core/common/entity/entity-reference.js';
 import { SendNotification } from '../../../core/common/messages.js';
 import { TokenUtil } from '../../../core/common/util/tokenutil.js';
@@ -51,7 +49,7 @@ export class ServerBattleManager {
         var next = null;
         var references = [];
         for(const tokenID of tokenIDs) {
-            const token = EntityManagers.get('token').find(tokenID);
+            const token = map.getContainedEntityManager('token').find(tokenID);
             if(token) {
                 const ref = new EntityReference(token);
                 references.push(ref);
@@ -99,27 +97,25 @@ export class ServerBattleManager {
     static resetTokens(map) {
         if(!map) return;
 
-        for(const token of EntityManagers.get('token').all()) {
-            if(token.getLong('map') == map.getID()) {
-                const tokenRef = new EntityReference(token);
-                tokenRef.setBoolean('battle_active', false);
-                tokenRef.setBoolean('battle_turnStarted', false);
-                tokenRef.setBoolean('battle_turnEnded', false);
-                tokenRef.performUpdate();
-            }
+        for(const token of map.getContainedEntityManager('token').all()) {
+            const tokenRef = new EntityReference(token);
+            tokenRef.setBoolean('battle_active', false);
+            tokenRef.setBoolean('battle_turnStarted', false);
+            tokenRef.setBoolean('battle_turnEnded', false);
+            tokenRef.performUpdate();
         }
     }
 
     static onTurnStart(map, tokenRef) {
+        const actor = TokenUtil.getActor(tokenRef);
+
         // send out notification of turn (important: to everybody on the map BUT respect name visibility)
         UserService.forEach(profile => {
             if(profile.getCurrentMap() == map.getID()) {
-                const actor = TokenUtil.getActor(tokenRef);
-                
                 var content = `???s Turn`
                 if(actor) {
                     const accessLevel = actor.getAccessLevel(profile);
-                    if(actor.canViewWithAccess(accessLevel) && actor.canViewProperty('name', accessLevel) && actor.getString('name')) {
+                    if(actor.canView(profile) && actor.canViewProperty('name', accessLevel) && actor.getString('name')) {
                         content = `${actor.getString('name')}s Turn`;
                     }
                 }

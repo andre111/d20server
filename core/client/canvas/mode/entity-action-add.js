@@ -1,6 +1,6 @@
 import { EntityAction } from './entity-action.js';
-import { EntityManagers } from '../../../common/entity/entity-managers.js';
 import { Client } from '../../client.js';
+import { MapUtils } from '../../util/maputil.js';
 
 export class EntityActionAdd extends EntityAction {
     constructor(mode) {
@@ -21,8 +21,11 @@ export class EntityActionAdd extends EntityAction {
     
     mouseClicked(e) {
         if(e.which == 1) {
-            for(const reference of this.mode.activeEntities) {
-                EntityManagers.get(this.mode.entityType).add(reference.getModifiedEntity());
+            const map = MapUtils.currentMap();
+            if(map) {
+                for(const reference of this.mode.activeEntities) {
+                    map.getContainedEntityManager(this.mode.entityType).add(reference.getModifiedEntity());
+                }
             }
             this.mode.resetAction();
         } else if(e.which == 3) {

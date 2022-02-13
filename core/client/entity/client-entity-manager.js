@@ -35,7 +35,7 @@ export class ClientEntityManager extends EntityManager {
         if(!(entity instanceof Entity)) throw new Error('Object is no entity');
         if(entity.getType() !== this.getType()) throw new Error('Entity is of wrong type');
 
-        const msg = new AddEntities([entity]);
+        const msg = new AddEntities(this.getName(), [entity]);
         MessageService.send(msg);
     }
 
@@ -53,26 +53,20 @@ export class ClientEntityManager extends EntityManager {
     serverClearEntities() {
         this.entities = {};
 
-        this.notifyListeners();
+        //TODO: this had a notifyListeners call, is a replacement needed?
     }
 
     serverAddEntity(entity) {
         this.entities[String(entity.getID())] = entity;
         
-        this.notifyListeners();
-        for(const entityListener of this.entityListeners) {
-            entityListener(entity);
-        }
+        this.triggerEvent('added', entity);
     }
 
     serverRemoveEntity(id) {
         const entity = this.entities[String(id)];
         delete this.entities[String(id)];
 
-        this.notifyListeners();
-        for(const removalListener of this.removalListeners) {
-            removalListener(id, entity);
-        }
+        this.triggerEvent('removed', entity);
     }
 
     serverUpdateProperties(id, map) {
@@ -86,9 +80,6 @@ export class ClientEntityManager extends EntityManager {
             entity.setInternal(key, value);
         }
         
-        this.notifyListeners();
-        for(const entityListener of this.entityListeners) {
-            entityListener(entity);
-        }
+        this.triggerEvent('modified', entity);
     }
 }

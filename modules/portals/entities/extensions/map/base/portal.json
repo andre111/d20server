@@ -1,0 +1,11 @@
+{
+    "displayName": "Portals",
+    "settings": {
+        "containedEntities": [
+            "portal"
+        ]
+    },
+    "properties": {},
+    "updateRules": [],
+    "macros": {}
+}

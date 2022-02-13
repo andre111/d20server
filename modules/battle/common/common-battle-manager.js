@@ -1,16 +1,12 @@
-import { EntityManagers } from '../../../core/common/entity/entity-managers.js';
-
 export class CommonBattleManager {
     static getParticipatingTokens(map) {
         if(!map) return [];
 
         // find all participating tokens
         var tokens = [];
-        for(const token of EntityManagers.get('token').all()) {
-            if(token.getLong('map') == map.getID()) {
-                if(token.getBoolean('battle_active')) {
-                    tokens.push(token);
-                }
+        for(const token of map.getContainedEntityManager('token').all()) {
+            if(token.getBoolean('battle_active')) {
+                tokens.push(token);
             }
         }
 
@@ -31,10 +27,12 @@ export class CommonBattleManager {
     }
 
     static getActiveToken(map) {
+        if(!map) return null;
+        
         const tokenIDs = CommonBattleManager.getParticipatingTokens(map);
 
         for(const tokenID of tokenIDs) {
-            const token = EntityManagers.get('token').find(tokenID);
+            const token = map.getContainedEntityManager('token').find(tokenID);
             if(token && !token.getBoolean('battle_turnEnded')) {
                 return token;
             }

@@ -1,11 +1,11 @@
-import { EntityManager, EntityManagers } from '../../common/entity/entity-managers.js';
+import { EntityManager } from '../../common/entity/entity-managers.js';
 import { Entity } from '../../common/common.js';
 import { Access } from '../../common/constants.js';
 import { AddEntities, ClearEntities, RemoveEntity, UpdateEntityProperties } from '../../common/messages.js';
 import { MessageService } from '../service/message-service.js';
 import { UserService } from '../service/user-service.js';
 
-import { fromJson, toJson } from '../../common/util/datautil.js';
+import { chunk, fromJson, toJson } from '../../common/util/datautil.js';
 import nedb from '@rmanibus/nedb'; // NOTE: This uses a special 'updated' nedb fork (with updated dependencies)
 import fs from 'fs-extra';
 import { PARAMETERS } from '../parameters.js';
@@ -34,6 +34,7 @@ export class ServerEntityManager extends EntityManager {
         this.db.find({}, (err, docs) => {
             for(const doc of docs) {
                 this.entities[doc._id] = fromJson(doc.json);
+                this.entities[doc._id].manager = this.getName();
                 this.entities[doc._id].onAdd();
             }
             if(cb) cb();
@@ -82,10 +83,7 @@ export class ServerEntityManager extends EntityManager {
             if(entity.canView(profile)) this.syncEntity(profile, entity);
         });
 
-        this.notifyListeners();
-        for(const entityListener of this.entityListeners) {
-            entityListener(entity);
-        }
+        this.triggerEvent('added', entity);
     }
 
     remove(id) {
@@ -107,10 +105,7 @@ export class ServerEntityManager extends EntityManager {
             MessageService.send(new RemoveEntity(this.getName(), id), profile);
         });
 
-        this.notifyListeners();
-        for(const removalListener of this.removalListeners) {
-            removalListener(id, entity);
-        }
+        this.triggerEvent('removed', entity);
     }
 
     updateProperties(id, map, accessLevel) {
@@ -140,7 +135,8 @@ export class ServerEntityManager extends EntityManager {
         const event = Events.trigger('modify_'+this.getType(), {
             entity: entity,
             propertiesToChange: propertiesToChange,
-            accessLevel: accessLevel
+            accessLevel: accessLevel,
+            manager: this
         }, true);
         if(event.isCanceled) return;
 
@@ -191,10 +187,12 @@ export class ServerEntityManager extends EntityManager {
             }
         });
 
-        this.notifyListeners();
-        for(const entityListener of this.entityListeners) {
-            entityListener(entity);
-        }
+        this.triggerEvent('modified', entity);
+    }
+
+    canView(profile) {
+        // global always true, contained return parentEntity.canView(profile)
+        return this.parentEntity ? this.parentEntity.canView(profile) : true;
     }
 
     canAddRemove(profile, entity) {
@@ -203,6 +201,8 @@ export class ServerEntityManager extends EntityManager {
     }
 
     getAccessibleCount(profile) {
+        if(!this.canView(profile)) return 0;
+
         var count = 0;
         for(const entity of Object.values(this.entities)) {
             if(entity.canView(profile)) count++;
@@ -211,6 +211,8 @@ export class ServerEntityManager extends EntityManager {
     }
 
     fullSync(profile) {
+        if(!this.canView(profile)) return;
+
         MessageService.send(new ClearEntities(this.getName(), this.getType()), profile);
 
         // collect entities
@@ -222,23 +224,26 @@ export class ServerEntityManager extends EntityManager {
 
         // send them in ONE message
         // TODO: maybe splitting them up into batches of X would be better -> try to find a good balance
-        MessageService.send(new AddEntities(entitiesToSync), profile);
+        //MessageService.send(new AddEntities(this.getName(), entitiesToSync), profile);
+        for(const split of chunk(entitiesToSync, 20)) {
+            MessageService.send(new AddEntities(this.getName(), split), profile);
+        }
 
         // iterate contained managers and perform full sync
         for(const containedEntityType of entitiesToSync[0].getDefinition().settings.containedEntities) {
             for(const entity of entitiesToSync) {
-                const manager = EntityManagers.get(entity.getContainedEntityManagerName(containedEntityType));
+                const manager = entity.getContainedEntityManager(containedEntityType);
                 if(manager) manager.fullSync(profile);
             }
         }
     }
 
     syncEntity(profile, entity) {
-        MessageService.send(new AddEntities([entity]), profile);
+        MessageService.send(new AddEntities(this.getName(), [entity]), profile);
 
         // iterate contained managers and perform full sync
         for(const containedEntityType of entity.getDefinition().settings.containedEntities) {
-            const manager = EntityManagers.get(entity.getContainedEntityManagerName(containedEntityType));
+            const manager = entity.getContainedEntityManager(containedEntityType);
             if(manager) manager.fullSync(profile);
         }
     }

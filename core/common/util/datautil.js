@@ -97,7 +97,16 @@ export function toFormatedSize(value) {
     return new Number(value).toFixed(2) + ' ' + suffix;
 }
 
-// General Object Helpers
+// General Object + Array Helpers
+export function chunk(arr, chunkSize) {
+    if (chunkSize <= 0) throw new Error('Invalid chunk size');
+    
+    var r = [];
+    for (var i = 0, len = arr.length; i < len; i += chunkSize)
+        r.push(arr.slice(i, i + chunkSize));
+    return r;
+}
+
 /**
  * Performs a deep merge of objects and returns new object. Does not modify
  * objects (immutable) and merges arrays via concatenation.

@@ -1,6 +1,6 @@
 import { RenderUtils } from '../util/renderutil.js';
 import { IntMathUtils } from '../../common/util/mathutil.js';
-import { EntityManagers } from '../../common/entity/entity-managers.js';
+import { Events } from '../../common/events.js';
 
 class ViewerWallCache {
     constructor(pwr, x, y, viewport) {
@@ -18,7 +18,7 @@ class ViewerWallCache {
 const cpr = new ClipperLib.Clipper();
 export const WallRenderer = {
 	init() {
-		EntityManagers.get('wall').addListener(() => WallRenderer.invalidateCache());
+		Events.on('any_wall', event => WallRenderer.invalidateCache());
 	},
 
     calculateWalls: function(walls, viewport, viewers) {

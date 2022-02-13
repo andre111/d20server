@@ -1,15 +1,12 @@
 {
     "displayName": "Actor",
     "settings": {
-        "synched": "true",
-        "global": "true",
+        "synched": true,
+        "global": true,
         "addRemoveAccess": "GM",
         "control": {
             "mode": "PROPERTY",
             "property": "controllingPlayers"
-        },
-        "accessLevel": {
-            "mode": "DEFAULT"
         },
         "viewAccess": {
             "mode": "PROPERTY",

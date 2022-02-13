@@ -1,14 +1,11 @@
 {
     "displayName": "Map",
     "settings": {
-        "synched": "true",
-        "global": "true",
+        "synched": true,
+        "global": true,
         "addRemoveAccess": "GM",
         "control": {
             "mode": "NONE"
-        },
-        "accessLevel": {
-            "mode": "CURRENT_MAP_ID_MATCH"
         },
         "viewAccess": {
             "mode": "PROPERTY_TOGGLE",
@@ -19,7 +16,9 @@
             "value": "GM"
         },
         "containedEntities": [
-            "fow"
+            "fow",
+            "token",
+            "wall"
         ]
     },
     "properties": {

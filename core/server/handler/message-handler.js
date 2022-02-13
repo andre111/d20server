@@ -74,8 +74,10 @@ function _handleMovePlayerToMap(profile, message) {
                 const otherProfile = UserService.getProfile(profileID);
                 if(otherProfile) {
                     otherProfile.setCurrentMap(mapID);
-                    GameService.reloadMaps(otherProfile);
                     UserService.addAndSave(otherProfile);
+
+                    // (re)load maps for client
+                    GameService.reloadMaps(otherProfile);
                 }
             }
         }
@@ -116,7 +118,7 @@ function _handleSetPlayerColor(profile, message) {
 
 function _handleAddEntities(profile, message) {
     // search for manager, check access and reset id before adding if valid request
-    const manager = EntityManagers.get(message.getEntities()[0].getManager());
+    const manager = EntityManagers.get(message.getManager());
     if(manager) {
         for(const entity of message.getEntities()) {
             if(manager.canAddRemove(profile, entity)) {
@@ -162,12 +164,12 @@ function _handleCopyEntity(profile, message) {
             targetManager.add(copiedEntity);
 
             // apply modified properties
-            targetManager.updateProperties(copiedEntity.getID(), message.getModifiedProperties(), Access.SYSTEM); //TODO: currently using SYSTEM access here to allow changing mapID
+            targetManager.updateProperties(copiedEntity.getID(), message.getModifiedProperties(), copiedEntity.getAccessLevel(profile));
             
             // copy contained entities
             for(const containedEntityType of entity.getDefinition().settings.containedEntities) {
-                const containedSourceManager = EntityManagers.get(entity.getContainedEntityManagerName(containedEntityType));
-                const containedTargetManager = EntityManagers.get(copiedEntity.getContainedEntityManagerName(containedEntityType));
+                const containedSourceManager = entity.getContainedEntityManager(containedEntityType);
+                const containedTargetManager = copiedEntity.getContainedEntityManager(containedEntityType);
                 for(const containedEntity of containedSourceManager.all()) {
                     containedTargetManager.add(containedEntity.clone());
                 }
@@ -192,7 +194,7 @@ function _handleMakeActorLocal(profile, message) {
         if(!actor) return;
 
         // store actor locally
-        const localManager = EntityManagers.get(token.getContainedEntityManagerName('actor'));
+        const localManager = token.getContainedEntityManager('actor');
         const clonedActor = actor.clone();
         clonedActor.id = 1;
         localManager.add(clonedActor);

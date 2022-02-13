@@ -30,14 +30,13 @@ export class UniversalVTTImporter {
 
         // add background image token
         const bgToken = new Entity('token');
-        bgToken.setLong('map', map.getID());
         bgToken.setString('imagePath', '/image/imported/'+name+'.png');
         bgToken.setLayer('layer', Layer.BACKGROUND);
         bgToken.setLong('width', w * s);
         bgToken.setLong('height', h * s);
         bgToken.setLong('x', w * s / 2);
         bgToken.setLong('y', h * s / 2);
-        EntityManagers.get('token').add(bgToken);
+        map.getContainedEntityManager('token').add(bgToken);
 
         // add walls
         for(const los of data.line_of_sight) {
@@ -68,7 +67,6 @@ export class UniversalVTTImporter {
             }
             for(const light of data.lights) {
                 const lightToken = new Entity('token');
-                lightToken.setLong('map', map.getID());
                 lightToken.setString('imagePath', '/image/imported/light.png');
                 lightToken.setLayer('layer', Layer.GMOVERLAY);
                 lightToken.setLong('width', s);
@@ -79,20 +77,19 @@ export class UniversalVTTImporter {
                 lightToken.setDouble('lightDim', light.range * 2);
                 lightToken.setColor('lightColor', '#'+light.color.substring(2));
                 //TODO: light intensity?
-                EntityManagers.get('token').add(lightToken);
+                map.getContainedEntityManager('token').add(lightToken);
             }
         }
     }
 
     static createWall(map, x1, y1, x2, y2, seeThrough, door) {
         const wall = new Entity('wall');
-        wall.setLong('map', map.getID());
         wall.setLong('x1', x1);
         wall.setLong('y1', y1);
         wall.setLong('x2', x2);
         wall.setLong('y2', y2);
         wall.setBoolean('seeThrough', seeThrough);
         wall.setBoolean('door', door);
-        EntityManagers.get('wall').add(wall);
+        map.getContainedEntityManager('wall').add(wall);
     }
 }

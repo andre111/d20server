@@ -231,22 +231,22 @@ export class Scripting {
     checkReadAccess(profile, entity, property) {
         if(!(entity instanceof Entity)) return false;
 
-        const accessLevel = entity.getAccessLevel(profile);
-        if(!entity.canViewWithAccess(accessLevel)) return false;
+        if(!entity.canView(profile)) return false;
 
         // special cased "properties"
         if(property == 'id') return true;
         if(property == 'manager') return true;
 
+        const accessLevel = entity.getAccessLevel(profile);
         return entity.canViewProperty(property, accessLevel);
     }
 
     checkWriteAccess(profile, entity, property) {
         if(!(entity instanceof Entity)) return false;
 
-        const accessLevel = entity.getAccessLevel(profile);
-        if(!entity.canEditWithAccess(accessLevel)) return false;
+        if(!entity.canEdit(profile)) return false;
 
+        const accessLevel = entity.getAccessLevel(profile);
         return entity.canEditProperty(property, accessLevel);
     }
 

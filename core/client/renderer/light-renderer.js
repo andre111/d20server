@@ -3,11 +3,11 @@ import { RenderUtils } from '../util/renderutil.js';
 import { FOWRenderer } from './fow-renderer.js';
 import { WallRenderer } from './wall-renderer.js';
 
-import { Light, Infinite } from '../../common/constants.js';
+import { Light } from '../../common/constants.js';
 import { Rect } from '../../common/util/rect.js';
 import { IntMathUtils } from '../../common/util/mathutil.js';
-import { EntityManagers } from '../../common/entity/entity-managers.js';
 import { TokenUtil } from '../../common/util/tokenutil.js';
+import { Events } from '../../common/events.js';
 
 let {applyToPoint} = window.TransformationMatrix;
 
@@ -42,7 +42,7 @@ export const LightRenderer = {
         LightRenderer._lightCtx1 = LightRenderer._lightBuffer1.getContext('2d', { alpha: false });
         LightRenderer._lightCtx2 = LightRenderer._lightBuffer2.getContext('2d', { alpha: false });
 
-        EntityManagers.get('wall').addListener(() => LightRenderer.invalidateCache());
+        Events.on('any_wall', event => LightRenderer.invalidateCache());
     },
     
     renderLight: function(ctx, screenWidth, screenHeight, transform, viewport, map, viewers, tokens) {

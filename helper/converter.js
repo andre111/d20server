@@ -103,7 +103,31 @@ function setStringMap(value) {
     return string;
 }
 
-//*
+function moveToPerMapStorage(type) {
+    console.log('Moving '+type+' to per map storage');
+    const sourceDB = new nedb({ filename: './data/entity/'+type+'.db', autoload: true });
+    const targetDBS = {};
+    const getTargetDB = function(mapID) {
+        if(!targetDBS[mapID]) targetDBS[mapID] = new nedb({ filename: './data/entity/map/'+mapID+'-'+type+'.db', autoload: true });
+        return targetDBS[mapID];
+    }
+
+    // for every entity
+    sourceDB.find({}, (err, docs) => {
+        for(const doc of docs) {
+            const entity = fromJson(doc.json);
+            const mapID = Number(entity.properties['map']);
+
+            // store in per map db (which only gets loaded once!)
+            const targetDB = getTargetDB(mapID);
+            targetDB.update({ _id: doc._id }, doc, { upsert: true }, (err) => {
+                if(err) console.log(err);
+            });
+        }
+    });
+}
+
+/*
 convert('actor');
 convert('attachment');
 convert('drawing');
@@ -114,3 +138,10 @@ convert('wall');
 
 //TODO: never call this directly with convert, as these functions DO NOT block until done but return instantly -> conflicts!
 //moveMacros();
+
+//*
+moveToPerMapStorage('token');
+moveToPerMapStorage('wall');
+moveToPerMapStorage('drawing');
+moveToPerMapStorage('portal');
+//*/

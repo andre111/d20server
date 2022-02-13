@@ -1,5 +1,8 @@
 {
     "displayName": "Ambient Audio",
+    "settings": {
+        "containedEntities": []
+    },
     "properties": {
         "audioPath": {
             "type": "STRING",

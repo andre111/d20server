@@ -1,12 +1,11 @@
 import { getDefinitions } from '../definitions.js';
+import { Entity } from '../common.js';
+import { Events } from '../events.js';
 
 export class EntityManager {
     #name;
     #type;
-
-    listeners = [];
-    entityListeners = [];
-    removalListeners = [];
+    #parentEntity;
 
     constructor(name, type) {
         this.#name = name;
@@ -30,40 +29,29 @@ export class EntityManager {
     remove(id) { throw new Error('Cannot call abstract function'); }
     updateProperties(id, map, accessLevel) { throw new Error('Cannot call abstract function'); }
 
+    canView(profile) { return true; }
+
     onDelete() {};
-    
-    // Listener Methods
-    addListener(listener) {
-        this.listeners.push(listener);
+
+    // parent entity
+    set parentEntity(e) {
+        if(!(e instanceof Entity)) throw new Error('Invalid parent entity');
+        this.#parentEntity = e;
     }
 
-    removeListener(listener) {
-        const index = this.listeners.indexOf(listener);
-        if(index >= 0) this.listeners.splice(index, 1);
+    get parentEntity() {
+        return this.#parentEntity;
     }
 
-    addEntityListener(entityListener) {
-        this.entityListeners.push(entityListener);
-    }
+    // event methods
+    triggerEvent(name, entity) {
+        const data = {
+            entity: entity,
+            manager: this
+        };
 
-    removeEntityListener(entityListener) {
-        const index = this.entityListeners.indexOf(entityListener);
-        if(index >= 0) this.entityListeners.splice(index, 1);
-    }
-
-    addRemovalListener(removalListener) {
-        this.removalListeners.push(removalListener);
-    }
-
-    removeRemovalListener(removalListener) {
-        const index = this.removalListeners.indexOf(removalListener);
-        if(index >= 0) this.removalListeners.splice(index, 1);
-    }
-
-    notifyListeners() {
-        for(const listener of this.listeners) {
-            listener();
-        }
+        Events.trigger(name+'_'+this.getType(), data);
+        Events.trigger('any_'+this.getType(), data);
     }
 }
 

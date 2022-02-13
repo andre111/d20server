@@ -70,18 +70,21 @@ export class Profile {
     }
 
     getSelectedToken(forceSingle) {
-        if(!this._notransfer_selectedTokens) return null;
         if(forceSingle && this._notransfer_selectedTokens.length != 1) return null;
 
-        const token = EntityManagers.get('token').find(this._notransfer_selectedTokens[0]);
-        return token;
+        const tokens = this.getSelectedTokens();
+        return tokens.length > 0 ? tokens[0] : null;
     }
 
     getSelectedTokens() {
         if(!this._notransfer_selectedTokens) return [];
 
-        const manager = EntityManagers.get('token');
-        return this._notransfer_selectedTokens.map(id => manager.find(id));
+        const map = EntityManagers.get('map').find(this.currentMap);
+        if(map) {
+            const manager = map.getContainedEntityManager('token');
+            if(manager) return this._notransfer_selectedTokens.map(id => manager.find(id)).filter(t => t);
+        } 
+        return [];
     }
 
     setSelectedTokens(selectedTokens) {

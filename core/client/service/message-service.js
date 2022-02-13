@@ -31,7 +31,7 @@ Events.on('recievedMessage', event => {
     } else if(msg instanceof ClearEntities) {
        EntityManagers.getOrCreate(msg.getManager(), msg.getType()).serverClearEntities();
     } else if(msg instanceof AddEntities) {
-        const manager = EntityManagers.getOrCreate(msg.getEntities()[0].getManager(), msg.getEntities()[0].getType());
+        const manager = EntityManagers.getOrCreate(msg.getManager(), msg.getEntities()[0].getType());
         for(const entity of msg.getEntities()) {
             manager.serverAddEntity(entity);
         }

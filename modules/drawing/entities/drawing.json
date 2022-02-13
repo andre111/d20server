@@ -1,18 +1,12 @@
 {
     "displayName": "Drawing",
     "settings": {
-        "synched": "true",
-        "global": "true",
+        "synched": true,
+        "global": false,
         "addRemoveAccess": "CONTROLLING_PLAYER",
         "control": {
             "mode": "PROPERTY",
             "property": "creator"
-        },
-        "accessLevel": {
-            "mode": "REFERENCED_ENTITY_PROPERTY_TOGGLE",
-            "referenceProperty": "map",
-            "referenceType": "map",
-            "property": "playersCanDraw"
         },
         "viewAccess": {
             "mode": "SET",
@@ -26,12 +20,6 @@
     },
     "properties": {
         "creator": {
-            "type": "LONG",
-            "editAccess": "SYSTEM",
-            "viewAccess": "EVERYONE",
-            "value": "-1"
-        },
-        "map": {
             "type": "LONG",
             "editAccess": "SYSTEM",
             "viewAccess": "EVERYONE",

@@ -16,12 +16,16 @@ Events.on('modify_token', event => {
 
     // only act on changes
     if(oldX != newX || oldY != newY) {
-        const mapID = event.data.entity.getLong('map');
+        const map = EntityManagers.get(event.data.entity.getManager()).parentEntity;
+        if(!map) {
+            console.log('Could not get map for modified token?');
+            return;
+        }
 
         // find portal at current location
         var portal = null;
-        EntityManagers.get('portal').all().forEach(p => {
-            if(p.getLong('map') == mapID && p.getLong('x1') == newX && p.getLong('y1') == newY) {
+        map.getContainedEntityManager('portal').all().forEach(p => {
+            if(p.getLong('x1') == newX && p.getLong('y1') == newY) {
                 portal = p;
             }
         });

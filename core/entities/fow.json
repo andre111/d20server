@@ -1,14 +1,11 @@
 {
     "displayName": "FOW",
     "settings": {
-        "synched": "false",
-        "global": "false",
+        "synched": false,
+        "global": false,
         "addRemoveAccess": "SYSTEM",
         "control": {
             "mode": "NONE"
-        },
-        "accessLevel": {
-            "mode": "DEFAULT"
         },
         "viewAccess": {
             "mode": "SET",

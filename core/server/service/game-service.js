@@ -7,7 +7,7 @@ import { UserService } from './user-service.js';
 import { Entity } from '../../common/common.js';
 import { Access, Role } from '../../common/constants.js';
 import { EntityManagers } from '../../common/entity/entity-managers.js';
-import { AddEntities, ChangeConfig, EnterGame, EnterMap, PlayerList } from '../../common/messages.js';
+import { ChangeConfig, EnterGame, EnterMap, PlayerList } from '../../common/messages.js';
 import { ModuleService } from './module-service.js';
 import { fromJson, toJson } from '../../common/util/datautil.js';
 import { CONFIG } from '../config.js';
@@ -56,7 +56,7 @@ export class GameService {
         if(profile) {
             const map = EntityManagers.get('map').find(profile.getCurrentMap());
             if(map) {
-                MessageService.send(new AddEntities([map]), profile); // send map because client could have no independent access
+                EntityManagers.get('map').syncEntity(profile, map); // send map and contained entities because client could have no previous access
                 MessageService.send(new EnterMap(map, GameService.getFOW(map, profile)), profile);
             }
         } else {
@@ -66,7 +66,7 @@ export class GameService {
 
     static getFOW(map, profile) {
         if(!map || !profile) return [];
-        const manager = EntityManagers.get(map.getContainedEntityManagerName('fow'));
+        const manager = map.getContainedEntityManager('fow');
         if(!manager) return [];
         const fowEntity = manager.find(profile.getID());
         if(!fowEntity) return [];
@@ -76,7 +76,7 @@ export class GameService {
 
     static setFOW(map, profile, fow) {
         if(!map || !profile || !fow) throw new Error('Missing required parameter');
-        const manager = EntityManagers.get(map.getContainedEntityManagerName('fow'));
+        const manager = map.getContainedEntityManager('fow');
         if(!manager.has(profile.getID())) {
             manager.add(new Entity('fow', profile.getID()));
         }
@@ -86,7 +86,7 @@ export class GameService {
 
     static resetFOW(map) {
         if(!map) throw new Error('Missing required parameter');
-        const manager = EntityManagers.get(map.getContainedEntityManagerName('fow'));
+        const manager = map.getContainedEntityManager('fow');
         for(const fowEntity of manager.all()) {
             manager.remove(fowEntity.getID());
         }

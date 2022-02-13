@@ -10,8 +10,13 @@ export const MapUtils =  {
     },
     
     currentEntities: function(type) {
-        const currentMap = ServerData.currentMap;
-        return EntityManagers.get(type).all().filter(e => e.getLong('map') == currentMap); 
+        const currentMap = MapUtils.currentMap();
+        if(currentMap) {
+            const manager = currentMap.getContainedEntityManager(type);
+            return manager ? manager.all() : []; 
+        } else {
+            return [];
+        }
     },
     
     currentEntitiesInLayer: function(type, l) {

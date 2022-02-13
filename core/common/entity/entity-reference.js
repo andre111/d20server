@@ -2,7 +2,82 @@ import { Access } from '../constants.js';
 import { Entity } from './entity.js';
 import { EntityManagers } from './entity-managers.js';
 import { deepMerge } from '../util/datautil.js';
+import { Events } from '../events.js';
 
+// INTERNAL EVENT LISTENER MANAGERS
+const EVENT_LISTENERS = {};
+class EventListener {
+    #type;
+    #modifyListener;
+    #removeListener;
+
+    #listeningReferences = [];
+
+    constructor(type) {
+        this.#type = type;
+
+        this.#modifyListener = Events.on('modified_'+this.#type, event => this.onModified(event));
+        this.#removeListener = Events.on('removed_'+this.#type, event => this.onRemoved(event));
+    }
+
+    unregister() {
+        Events.remove('modified_'+this.#type, this.#modifyListener);
+        Events.remove('removed_'+this.#type, this.#removeListener);
+    }
+
+    onModified(event) {
+        const id = event.data.entity.getID();
+        const manager = event.data.manager.getName();
+
+        for(const reference of this.#listeningReferences) {
+            if(id == reference.getBackingEntity().getID() && manager == reference.getBackingEntity().getManager()) reference.entityChanged(event.data.entity);
+        }
+    }
+
+    onRemoved(event) {
+        const id = event.data.entity.getID();
+        const manager = event.data.manager.getName();
+        
+        for(const reference of this.#listeningReferences) {
+            if(id == reference.getBackingEntity().getID() && manager == reference.getBackingEntity().getManager()) reference.entityRemoved();
+        }
+    }
+
+    addReference(reference) {
+        this.#listeningReferences.push(reference);
+    }
+
+    removeReference(reference) {
+        const index = this.#listeningReferences.indexOf(reference);
+        if(index >= 0) this.#listeningReferences.splice(index, 1);
+    }
+
+    isEmpty() {
+        return this.#listeningReferences.length == 0;
+    }
+}
+function registerListeners(reference) {
+    const type = reference.getType();
+    if(!EVENT_LISTENERS[type]) EVENT_LISTENERS[type] = new EventListener(type);
+
+    // add reference to listener
+    EVENT_LISTENERS[type].addReference(reference);
+}
+function unregisterListeners(reference) {
+    const type = reference.getType();
+    if(!EVENT_LISTENERS[type]) return;
+
+    // remove reference from listener
+    EVENT_LISTENERS[type].removeReference(reference);
+
+    // unregister and destroy listener if no references remain
+    if(EVENT_LISTENERS[type].isEmpty()) {
+        EVENT_LISTENERS[type].unregister();
+        delete EVENT_LISTENERS[type];
+    }
+}
+
+// ACTUAL CLASS
 export class EntityReference extends Entity {
     backingEntity;
     changedProperties = {};
@@ -11,21 +86,11 @@ export class EntityReference extends Entity {
     mouseOffsetY = 0;
 
     listeners = [];
-    entityListener;
-    removalListener;
 
     constructor(entity) {
         super(entity.getType(), entity.getID());
 
         this.backingEntity = entity;
-
-        // prepare listeners (will only be registered when a listener is registered on this reference)
-        this.entityListener = (e) => {
-            if(e.getID() == this.getBackingEntity().getID()) this.entityChanged(e);
-        };
-        this.removalListener = (id, e) => {
-            if(id == this.getBackingEntity().getID()) this.entityRemoved();
-        }
     }
 
     getManager() {
@@ -93,10 +158,9 @@ export class EntityReference extends Entity {
 
     //NOTE: When registering a listener we ALWAYS need to unregister the listeners again or the EntityReference will be leaked
     addListener(listener) {
-        // register with entitymanager
+        // register with events manager
         if(this.listeners.length == 0) {
-            EntityManagers.get(this.getManager()).addEntityListener(this.entityListener);
-            EntityManagers.get(this.getManager()).addRemovalListener(this.removalListener);
+            registerListeners(this);
         }
 
         this.listeners.push(listener);
@@ -106,10 +170,9 @@ export class EntityReference extends Entity {
         const index = this.listeners.indexOf(listener);
         if(index >= 0) this.listeners.splice(index, 1);
 
-        // unregister with entitymanager
+        // unregister with events manager
         if(this.listeners.length == 0) {
-            EntityManagers.get(this.getManager()).removeEntityListener(this.entityListener);
-            EntityManagers.get(this.getManager()).removeRemovalListener(this.removalListener);
+            unregisterListeners(this);
         }
     }
 
@@ -131,6 +194,12 @@ export class EntityReference extends Entity {
 
     getModifiedProperties() {
         return this.changedProperties;
+    }
+
+    performRemove() {
+        if(!this.backingEntity) return;
+
+        EntityManagers.get(this.getManager()).remove(this.getID());
     }
 
     isValid() {

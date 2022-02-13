@@ -12,6 +12,7 @@ import { EntityReference } from '../../common/entity/entity-reference.js';
 import { MovePlayerToMap } from '../../common/messages.js';
 import { EntityMenu } from '../canvas/mode/entity-menu.js';
 import { I18N } from '../../common/util/i18n.js';
+import { Events } from '../../common/events.js';
 
 export class SidepanelTabMaps extends SidepanelTab {
     constructor() {
@@ -24,7 +25,7 @@ export class SidepanelTabMaps extends SidepanelTab {
         treePanel.style.overflow = 'auto';
         this.tab.appendChild(treePanel);
         this.tree = new SearchableIDTree(treePanel, 'sidepanel-tab-maps', getValueProvider('map'), () => this.doOpenMap(), (id, x, y) => this.doOpenMenu(x, y));
-        EntityManagers.get('map').addListener(() => this.tree.reload());
+        Events.on('any_map', event => this.tree.reload());
         
         if(ServerData.isGM()) {
             const buttonPanel = document.createElement('div');

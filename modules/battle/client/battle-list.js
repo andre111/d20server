@@ -1,4 +1,4 @@
-import { EntityManagers } from '../../../core/common/entity/entity-managers.js';
+import { MapUtils } from '../../../core/client/util/maputil.js';
 import { BattleEntry } from './battle-entry.js';
 
 export class BattleList {
@@ -42,7 +42,7 @@ export class BattleList {
             this.#subEntries[i].reloadValues(tokenID, false, false);
             
             // find first token that has not ended its turn
-            const token = EntityManagers.get('token').find(tokenID);
+            const token = MapUtils.currentEntities('token').find(t => t.getID() == tokenID);
             if(token && !token.getBoolean('battle_turnEnded')) {
                 first = false;
             }

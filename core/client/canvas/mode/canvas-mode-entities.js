@@ -283,7 +283,6 @@ export class CanvasModeEntities extends CanvasMode {
         
         entity = entity.clone();
         entity.id = 0;
-        entity.setLong('map', map.id);
         entity.setLayer('layer', Client.getState().getLayer());
         
         this.clearActiveEntities();
@@ -299,7 +298,6 @@ export class CanvasModeEntities extends CanvasMode {
         
         for(const reference of references) {
             if(reference.getType() == this.#entityType) {
-                reference.setLong('map', map.id);
                 reference.setLayer('layer', Client.getState().getLayer());
                 this.addActiveEntity(reference);
             }

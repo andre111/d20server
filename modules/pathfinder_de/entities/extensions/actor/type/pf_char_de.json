@@ -1,5 +1,8 @@
 {
     "displayName": "PF Charakter (DE)",
+    "settings": {
+        "containedEntities": []
+    },
     "properties": {
         "pf_alignment": {
             "type": "STRING",

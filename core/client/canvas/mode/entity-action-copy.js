@@ -2,6 +2,7 @@ import { EntityAction } from './entity-action.js';
 import { CopyEntity } from '../../../common/messages.js';
 import { MessageService } from '../../service/message-service.js';
 import { Client } from '../../client.js';
+import { MapUtils } from '../../util/maputil.js';
 
 export class EntityActionCopy extends EntityAction {
     constructor(mode) {
@@ -22,9 +23,14 @@ export class EntityActionCopy extends EntityAction {
     
     mouseClicked(e) {
         if(e.which == 1) {
-            for(const reference of this.mode.activeEntities) {
-                const msg = new CopyEntity(reference.getManager(), reference.getID(), reference.getManager(), reference.getModifiedProperties());
-                MessageService.send(msg);
+            const map = MapUtils.currentMap();
+            if(map) {
+                const targetManager = map.getContainedEntityManager(this.mode.entityType).getName();
+
+                for(const reference of this.mode.activeEntities) {
+                    const msg = new CopyEntity(reference.getManager(), reference.getID(), targetManager, reference.getModifiedProperties());
+                    MessageService.send(msg);
+                }
             }
             this.mode.resetAction();
         } else if(e.which == 3) {

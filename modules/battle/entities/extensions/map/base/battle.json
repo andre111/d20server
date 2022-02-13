@@ -1,5 +1,8 @@
 {
     "displayName": "Battle System",
+    "settings": {
+        "containedEntities": []
+    },
     "properties": {
         "battle_active": {
             "type": "BOOLEAN",

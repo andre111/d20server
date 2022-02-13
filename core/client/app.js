@@ -222,7 +222,7 @@ Events.on('entityMenu', event => {
     const menu = event.data.menu;
     menu.createItem(null, 'Delete', () => {
         new CanvasWindowConfirm(null, 'Confirm removal', 'Are you sure you want to remove the '+event.data.entityType+': '+event.data.reference.getName()+'?', () => {
-            EntityManagers.get(event.data.reference.getManager()).remove(event.data.reference.getID());
+            event.data.reference.performRemove();
             if(menu.mode && menu.mode.clearActiveEntities) menu.mode.clearActiveEntities();
         });
     });
@@ -234,7 +234,6 @@ Events.on('entityMenu', event => {
 
     const menu = event.data.menu;
     const reference = event.data.reference;
-    const accessLevel = event.data.accessLevel;
 
     const actor = TokenUtil.getActor(reference);
 
@@ -364,7 +363,7 @@ Events.on('entityMenu', event => {
         menu.createItem(null, 'Set Default Token', () => {
             if(Client.getState().getMode() instanceof CanvasModeEntities && Client.getState().getMode().entityType == 'token') {
                 if(Client.getState().getMode().activeEntities.length == 1) {
-                    const token = Client.getState().getMode().activeEntities[0].clone();
+                    const token = Client.getState().getMode().activeEntities[0];
 
                     reference.setString('tokenImagePath', token.getString('imagePath'));
                     reference.setLong('tokenWidth', token.getLong('width'));

@@ -2,7 +2,7 @@ import { CanvasMode } from '../../../../../core/client/canvas/canvas-mode.js';
 import { Client } from '../../../../../core/client/client.js';
 import { MapUtils } from '../../../../../core/client/util/maputil.js';
 import { Entity } from '../../../../../core/common/common.js';
-import { EntityManagers } from '../../../../../core/common/entity/entity-managers.js';
+import { EntityReference } from '../../../../../core/common/entity/entity-reference.js';
 import { IntMathUtils } from '../../../../../core/common/util/mathutil.js';
 
 
@@ -61,18 +61,19 @@ export class CanvasModePortals extends CanvasMode {
                 
                 // delete
 				if(clickedPortal) {
-                    EntityManagers.get('portal').remove(clickedPortal.getID());
+                    const reference = new EntityReference(clickedPortal);
+                    reference.performRemove();
 				}
             }
         } else {
-            if(e.which == 1 && MapUtils.currentMap()) {
+            const map = MapUtils.currentMap();
+            if(e.which == 1 && map) {
                 var newPortal = new Entity('portal');
-                newPortal.setLong('map', MapUtils.currentMap().id);
 				newPortal.setLong('x1', this.#startX);
 				newPortal.setLong('y1', this.#startY);
 				newPortal.setLong('x2', this.#currentX);
 				newPortal.setLong('y2', this.#currentY);
-                EntityManagers.get('portal').add(newPortal);
+                map.getContainedEntityManager('portal').add(newPortal);
                 
                 this.#active = false;
             }

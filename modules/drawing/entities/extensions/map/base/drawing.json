@@ -1,0 +1,11 @@
+{
+    "displayName": "Drawings",
+    "settings": {
+        "containedEntities": [
+            "drawing"
+        ]
+    },
+    "properties": {},
+    "updateRules": [],
+    "macros": {}
+}

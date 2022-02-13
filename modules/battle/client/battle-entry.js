@@ -1,7 +1,7 @@
 import { Client } from '../../../core/client/client.js';
 import { TokenRenderer } from '../../../core/client/renderer/token-renderer.js';
 import { ServerData } from '../../../core/client/server-data.js';
-import { EntityManagers } from '../../../core/common/entity/entity-managers.js';
+import { MapUtils } from '../../../core/client/util/maputil.js';
 import { TokenUtil } from '../../../core/common/util/tokenutil.js';
 
 export class BattleEntry {
@@ -65,7 +65,7 @@ export class BattleEntry {
         this.#tokenID = tokenID;
 
         // find token
-        const token = EntityManagers.get('token').find(this.#tokenID);
+        const token = MapUtils.currentEntities('token').find(t => t.getID() == this.#tokenID);
         if(!token) {
             this.changeValue('display', 'none', v => this.#containerEl.style.display = v);
             if(tokenID > 0) console.log('Token for BattleEntry not found!');

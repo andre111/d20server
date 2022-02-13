@@ -48,9 +48,10 @@ Events.on('entityMenu', event => {
 }, true, 300);
 
 // listen for any change that could cause the battle state to change
-Events.on('mapChange', event => ClientBattleManager.scanState());
 Events.on('enterMainState', event => {
-    EntityManagers.get('map').addListener(() => ClientBattleManager.scanState());
-    EntityManagers.get('token').addListener(() => ClientBattleManager.scanState());
-    EntityManagers.get('actor').addListener(() => ClientBattleManager.scanState());
+    ClientBattleManager.scanState();
+    Events.on('mapChange', event => ClientBattleManager.scanState());
+    Events.on('any_map', event => ClientBattleManager.scanState());
+    Events.on('any_token', event => ClientBattleManager.scanState());
+    Events.on('any_actor', event => ClientBattleManager.scanState());
 });

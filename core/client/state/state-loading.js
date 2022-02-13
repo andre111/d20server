@@ -53,7 +53,7 @@ export class StateLoading extends State {
         this.current += by;
 
         // update is expensive -> only update once a new percentage is reached
-        const progress = this.current / this.amount * 100;
+        const progress = Math.min(this.current / this.amount * 100, 100);
         if((this.current - this.lastUpdate) / this.amount >= 0.01 || progress > 0.99) {
             this.lastUpdate = this.current;
 

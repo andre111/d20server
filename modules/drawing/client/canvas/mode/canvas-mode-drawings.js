@@ -6,9 +6,9 @@ import { ServerData } from '../../../../../core/client/server-data.js';
 import { MapUtils } from '../../../../../core/client/util/maputil.js';
 
 import { Entity } from '../../../../../core/common/common.js';
-import { EntityManagers } from '../../../../../core/common/entity/entity-managers.js';
 
 import { DrawingRenderer } from '../../renderer/drawing-renderer.js';
+import { EntityReference } from '../../../../../core/common/entity/entity-reference.js';
 
 export const CanvasModeDrawingsGlobals = {
     color: '#FFFFFF'
@@ -71,7 +71,7 @@ export class CanvasModeDrawings extends CanvasMode {
             case 'WRITE_TEXT':
                 new CanvasWindowInput(null, 'Add Text', 'Enter Text: ', '', text => {
                     if(text != null && text != undefined && text != '') {
-                        EntityManagers.get('drawing').add(this.newDrawing(ServerData.localProfile, map, this.xStart-16, this.yStart-16, DrawingRenderer.getTextWidth(text)+8, 40, 0, 'text:'+text, CanvasModeDrawingsGlobals.color));
+                        this.addDrawing(this.newDrawing(ServerData.localProfile, map, this.xStart-16, this.yStart-16, DrawingRenderer.getTextWidth(text)+8, 40, 0, 'text:'+text, CanvasModeDrawingsGlobals.color));
                     }
                 });
                 break;
@@ -90,7 +90,6 @@ export class CanvasModeDrawings extends CanvasMode {
         var drawing = new Entity('drawing');
         
         drawing.setLong('creator', creator.id);
-		drawing.setLong('map', map.id);
 		
 		drawing.setLong('x', x);
 		drawing.setLong('y', y);
@@ -104,12 +103,19 @@ export class CanvasModeDrawings extends CanvasMode {
 		
 		return drawing;
     }
+
+    addDrawing(drawing) {
+        const map = MapUtils.currentMap();
+        if(map) {
+            map.getContainedEntityManager('drawing').add(drawing);
+        }
+    }
     
     mouseReleased(e) {
         if(e.which == 1) {
             this.updateCurrentDrawing(e.xm, e.ym, e.ctrlKey, e.shiftKey);
             if(this.currentDrawing != null) {
-                EntityManagers.get('drawing').add(this.currentDrawing);
+                this.addDrawing(this.currentDrawing);
                 this.currentDrawing = null;
             }
         }
@@ -168,7 +174,8 @@ export class CanvasModeDrawings extends CanvasMode {
         new CanvasWindowConfirm(null, 'Delete Drawings', 'Delete all (accessible) drawings on the current layer?', () => {
             const drawings = MapUtils.currentEntitiesInLayer('drawing', Client.getState().getLayer()).filter(drawing => drawing.canEdit(ServerData.localProfile));
             for(const drawing of drawings) {
-                EntityManagers.get('drawing').remove(drawing.id);
+                const reference = new EntityReference(drawing);
+                reference.performRemove();
             }
         });
     }

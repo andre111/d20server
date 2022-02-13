@@ -132,18 +132,39 @@ export class Entity {
         }
     }
 
+    getContainedEntityManager(containedEntityType) {
+        return EntityManagers.get(this.getContainedEntityManagerName(containedEntityType));
+    }
+
     getContainedEntityManagerName(containedEntityType) {
+        if(!this.getContainedEntityTypes().includes(containedEntityType)) throw new Error('Tried to access undefined contained entity manager for '+containedEntityType+' in '+this.getType());
+
         return this.getType()+'/'+this.getID()+'-'+containedEntityType;
     }
 
-    createContainedEntityManagers() {
+    getContainedEntityTypes() {
+        //TODO: this should probably be cached in definition
+        var types = [];
         for(const containedEntityType of this.getDefinition().settings.containedEntities) {
-            EntityManagers.getOrCreate(this.getContainedEntityManagerName(containedEntityType), containedEntityType);
+            types.push(containedEntityType);
+        }
+        for(const extDef of this.getActiveExtensions()) {
+            for(const containedEntityType of extDef.settings.containedEntities) {
+                types.push(containedEntityType);
+            }
+        }
+        return types;
+    }
+
+    createContainedEntityManagers() {
+        for(const containedEntityType of this.getContainedEntityTypes()) {
+            const manager = EntityManagers.getOrCreate(this.getContainedEntityManagerName(containedEntityType), containedEntityType);
+            manager.parentEntity = this;
         }
     }
 
     removeContainedEntityManagers() {
-        for(const containedEntityType of this.getDefinition().settings.containedEntities) {
+        for(const containedEntityType of this.getContainedEntityTypes()) {
             EntityManagers.delete(this.getContainedEntityManagerName(containedEntityType));
         }
     }
@@ -385,35 +406,19 @@ export class Entity {
         else if(profile.role == Role.GM) accessLevel = Access.GM;
         else if(this.getControllingPlayers().includes(profile.id)) accessLevel = Access.CONTROLLING_PLAYER;
         
-        const als = this.getDefinition().settings.accessLevel;
-        switch(als.mode) {
-        case 'DEFAULT':
-            return accessLevel;
-        case 'CURRENT_MAP_ID_MATCH':
+        //TODO: remove this hacky hardcoding by actually implementing custom listeners for the getControllingPlayers event
+        if(this.getType() == 'map') {
             return (accessLevel == Access.EVERYONE && profile.currentMap == this.id) ? Access.CONTROLLING_PLAYER : accessLevel;
-        case 'REFERENCED_ENTITY_PROPERTY_TOGGLE':
-            if(!Access.matches(Access.GM, accessLevel)) {
-                const entity = EntityManagers.get(als.referenceType).find(this.getLong(als.referenceProperty));
-                if(!entity || !entity.getBoolean(als.property)) return Access.EVERYONE;
-            }
-            return accessLevel;
         }
+        return accessLevel;
     }
 
     canView(profile) {
-        return this.canViewWithAccess(this.getAccessLevel(profile));
+        return EntityManagers.get(this.getManager()).canView(profile) && Access.matches(this.getViewAccess(), this.getAccessLevel(profile));
     }
 
     canEdit(profile) {
-        return this.canEditWithAccess(this.getAccessLevel(profile));
-    }
-
-    canViewWithAccess(accessLevel) {
-        return Access.matches(this.getViewAccess(), accessLevel);
-    }
-
-    canEditWithAccess(accessLevel) {
-        return Access.matches(this.getEditAccess(), accessLevel);
+        return EntityManagers.get(this.getManager()).canView(profile) && Access.matches(this.getEditAccess(), this.getAccessLevel(profile));
     }
 
     getControllingPlayers() {
@@ -423,6 +428,7 @@ export class Entity {
 
     clone() {
         const clone = new Entity(this.getType(), this.getID());
+        clone.manager = this.manager;
         clone.clonePropertiesFrom(this);
         return clone;
     }

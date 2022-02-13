@@ -273,7 +273,7 @@ export class StateMain extends State {
         // ...which are potentially overridden
         var forceNormalLimitedView = false;
         if(this.viewToken > 0) {
-            const forcedViewer = EntityManagers.get('token').find(this.viewToken);
+            const forcedViewer = MapUtils.currentEntities('token').find(t => t.getID() == this.viewToken);
             if(forcedViewer && (ServerData.isGM() || viewers.includes(forcedViewer))) {
                 viewers = [forcedViewer];
                 forceNormalLimitedView = true;

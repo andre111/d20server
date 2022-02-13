@@ -25,17 +25,6 @@ export function fullSync(profile) {
     }
 }
 
-// add cascading deletes
-//TODO: remove and make this datadriven OR make this obsolete by going ahead with the plan to store tokens,... per map (and directly in actor property)
-export function setupCascadingDeletes() {
-    // remove tokens and walls (and drawings => module!) on map remove
-    EntityManagers.get('map').addRemovalListener((id, map) => {
-        EntityManagers.get('token').removeAll(token => token.getLong('map') == id);
-        EntityManagers.get('wall').removeAll(wall => wall.getLong('map') == id);
-        EntityManagers.get('drawing').removeAll(drawing => drawing.getLong('map') == id);
-    });
-}
-
 //TODO: this really needs a better place
 Events.on('modify_token', event => {
     // get old and "new" position
@@ -50,8 +39,8 @@ Events.on('modify_token', event => {
     if(oldX != newX || oldY != newY) {
         // check for wall collisions if access level is not GM or above
         if(!Access.matches(Access.GM, event.data.accessLevel)) {
-            const mapID = event.data.entity.getLong('map');
-            var doMove = !TokenUtil.intersectsWall(mapID, oldX, oldY, newX, newY);
+            const map = EntityManagers.get(event.data.entity.getManager()).parentEntity;
+            var doMove = !TokenUtil.intersectsWall(map.getID(), oldX, oldY, newX, newY);
 
             // prevent illegal moves by removing the property changes
             if(!doMove) {

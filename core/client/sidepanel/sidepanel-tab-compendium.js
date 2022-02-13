@@ -23,7 +23,7 @@ export class SidepanelTabCompendium extends SidepanelTab {
         treePanel.style.overflow = 'auto';
         this.tab.appendChild(treePanel);
         this.tree = new SearchableIDTree(treePanel, 'sidepanel-tab-compendium', getValueProvider('compendium'), () => this.doOpen(), (id, x, y) => this.doOpenMenu(x, y));
-        EntityManagers.get('compendium').addListener(() => this.tree.reload());
+        Events.on('any_compendium', events => this.tree.reload());
         
         if(ServerData.isGM()) {
             const buttonPanel = document.createElement('div');

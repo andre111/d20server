@@ -9,7 +9,7 @@ export class TokenUtil {
         if(!token || !(token instanceof Entity) || token.getType() !== 'token') throw new Error('Provided object is not a token');
 
         if(token.getBoolean('actorLocal')) {
-            const manager = EntityManagers.get('token/'+token.getID()+'-actor');
+            const manager = token.getContainedEntityManager('actor');
             if(!manager) return null; // avoid crashing on race conditions where the entitymanager has not been synched/created on client yet
 
             return manager.find(1);
@@ -88,17 +88,15 @@ export class TokenUtil {
     }
 
     static intersectsWall(mapID, x1, y1, x2, y2) {
-        var intersection = false;
+        const map = EntityManagers.get('map').find(mapID);
+        if(!map) return false;
 
-        EntityManagers.get('wall').all().forEach(wall => {
-            if(wall.getLong('map') == mapID && (!wall.getBoolean('door') || !wall.getBoolean('open'))) {
-                if(IntMathUtils.doLineSegmentsIntersect(x1, y1, x2, y2, 
-                    wall.getLong('x1'), wall.getLong('y1'), wall.getLong('x2'), wall.getLong('y2'))) {
-                    intersection = true;
-                }
+        return map.getContainedEntityManager('wall').all().find(wall => {
+            if(!wall.getBoolean('door') || !wall.getBoolean('open')) {
+                return IntMathUtils.doLineSegmentsIntersect(x1, y1, x2, y2, 
+                    wall.getLong('x1'), wall.getLong('y1'), wall.getLong('x2'), wall.getLong('y2'));
             }
-        });
-
-        return intersection;
+            return false;
+        }) != undefined;
     }
 }

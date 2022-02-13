@@ -4,7 +4,6 @@ import { ServerData } from '../../server-data.js';
 import { EntityMenu } from './entity-menu.js';
 
 import { Entity } from '../../../common/common.js';
-import { EntityManagers } from '../../../common/entity/entity-managers.js';
 import { EntityReference } from '../../../common/entity/entity-reference.js';
 import { IntMathUtils } from '../../../common/util/mathutil.js';
 
@@ -77,7 +76,6 @@ export class WallActionCreate extends WallAction {
         } else {
             if(e.which == 1 && MapUtils.currentMap() != null) {
                 var newWall = new Entity('wall');
-                newWall.setLong('map', MapUtils.currentMap().id);
 				newWall.setLong('x1', this.startX);
 				newWall.setLong('y1', this.startY);
 				newWall.setLong('x2', this.currentX);
@@ -85,7 +83,7 @@ export class WallActionCreate extends WallAction {
 				newWall.setBoolean('seeThrough', this.seeThrough);
                 newWall.setBoolean('door', this.door);
                 newWall.setBoolean('oneSided', this.oneSided);
-                EntityManagers.get('wall').add(newWall);
+                MapUtils.currentMap().getContainedEntityManager('wall').add(newWall);
                 
                 this.startX = this.currentX;
                 this.startY = this.currentY;
