@@ -9,7 +9,20 @@ export class WebsocketHandler {
     static init(server) {
         wss = new websocket.Server({ 
             server: server, 
-            path: '/ws'
+            path: '/ws',
+            perMessageDeflate: {
+                zlibDeflateOptions: {
+                  // See zlib defaults.
+                  chunkSize: 1024,
+                  memLevel: 7,
+                  level: 3
+                },
+                zlibInflateOptions: {
+                  chunkSize: 10 * 1024
+                },
+                concurrencyLimit: 5, // Limits zlib concurrency for perf.
+                threshold: 1024 // Size (in bytes) below which messages should not be compressed if context takeover is disabled.
+            }
         });
         wss.on('connection', WebsocketHandler.connected);
 
@@ -22,7 +35,7 @@ export class WebsocketHandler {
                 ws.isAlive = false;
                 ws.ping(null, false, true);
             });
-        }, 2 * 60 * 1000);
+        }, 1 * 60 * 1000);
     }
 
     static connected(ws) {
