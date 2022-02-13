@@ -55,7 +55,7 @@ export class CanvasWindowUVTTImport extends CanvasWindow {
     }
 
     doImport() {
-        const msg = new SendChatMessage(`/uvttimport "${this.#file}" "${this.#nameInput.value}" ${this.#importLightsInput.checked}`);
+        const msg = new SendChatMessage(`/uvttimport '${this.#file}' '${this.#nameInput.value}' ${this.#importLightsInput.checked}`);
         MessageService.send(msg);
     }
 }
