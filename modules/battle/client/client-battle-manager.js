@@ -15,7 +15,7 @@ export class ClientBattleManager {
 
     static scanState() {
         // rebuild gui (scheduled on frame to group closely related changes into one update)
-        if(ClientBattleManager.#guiCallback == null) ClientBattleManager.#guiCallback = () => ClientBattleManager.updateGui();
+        if (ClientBattleManager.#guiCallback == null) ClientBattleManager.#guiCallback = () => ClientBattleManager.updateGui();
         requestAnimationFrame(ClientBattleManager.#guiCallback);
     }
 
@@ -24,7 +24,7 @@ export class ClientBattleManager {
     //----------------------------------------------------
     static updateGui() {
         // create container
-        if(ClientBattleManager.#container == null) {
+        if (ClientBattleManager.#container == null) {
             const container = document.createElement('div');
             container.className = 'battle-panel';
             document.body.appendChild(container);
@@ -35,7 +35,7 @@ export class ClientBattleManager {
             battleInfo.className = 'battle-info';
             ClientBattleManager.#infoRoundEl = document.createElement('span');
             battleInfo.appendChild(ClientBattleManager.#infoRoundEl);
-            if(ServerData.isGM()) {
+            if (ServerData.isGM()) {
                 // controll buttons
                 const nextTurnButton = document.createElement('button');
                 nextTurnButton.innerText = 'Next Turn';
@@ -69,8 +69,8 @@ export class ClientBattleManager {
         container.style.visibility = active ? 'visible' : 'hidden';
 
         //
-        if(active) {
-            ClientBattleManager.#infoRoundEl.innerHTML = 'Battle<br>Round '+map.getLong('battle_round');
+        if (active) {
+            ClientBattleManager.#infoRoundEl.innerHTML = 'Battle<br>Round ' + map.getLong('battle_round');
             ClientBattleManager.#entryList.reload(CommonBattleManager.getParticipatingTokens(map));
         }
     }

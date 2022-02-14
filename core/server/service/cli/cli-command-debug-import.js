@@ -6,15 +6,15 @@ export class CLICommandDebugImport extends CLICommand {
         super('debugImport');
     }
 
-    getDescription() { 
+    getDescription() {
         return 'Internal Dev Command - DO NOT USE';
     }
 
-    getHelp() { 
+    getHelp() {
         return 'Internal Dev Command - DO NOT USE';
     }
 
-    execute(args) { 
+    execute(args) {
         //TODO: generalize with an actual good importer
         importData('./generated/', true);
     }

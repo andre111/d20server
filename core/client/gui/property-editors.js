@@ -12,28 +12,28 @@ import { AccessPropertyEditor } from './property-editor/access-property-editor.j
 import { Type } from '../../common/constants.js';
 
 export function createPropertyEditor(type, name, label) {
-    switch(type) {
-    case Type.STRING:
-        return new StringPropertyEditor(name, label);
-    case Type.LONG:
-        return new LongPropertyEditor(name, label);
-    case Type.BOOLEAN:
-        return new BooleanPropertyEditor(name, label);
-    case Type.DOUBLE:
-        return new DoublePropertyEditor(name, label);
-    case Type.STRING_MAP:
-        return new StringMapPropertyEditor(name, label);
-    case Type.LAYER:
-        return new LayerPropertyEditor(name, label);
-    case Type.LIGHT:
-        return new LightPropertyEditor(name, label);
-    case Type.EFFECT:
-        return new EffectPropertyEditor(name, label);
-    case Type.COLOR:
-        return new ColorPropertyEditor(name, label);
-    case Type.ACCESS:
-        return new AccessPropertyEditor(name, label);
-    default:
-        throw new Error('No PropertyEditor Implementation for type: '+type);
+    switch (type) {
+        case Type.STRING:
+            return new StringPropertyEditor(name, label);
+        case Type.LONG:
+            return new LongPropertyEditor(name, label);
+        case Type.BOOLEAN:
+            return new BooleanPropertyEditor(name, label);
+        case Type.DOUBLE:
+            return new DoublePropertyEditor(name, label);
+        case Type.STRING_MAP:
+            return new StringMapPropertyEditor(name, label);
+        case Type.LAYER:
+            return new LayerPropertyEditor(name, label);
+        case Type.LIGHT:
+            return new LightPropertyEditor(name, label);
+        case Type.EFFECT:
+            return new EffectPropertyEditor(name, label);
+        case Type.COLOR:
+            return new ColorPropertyEditor(name, label);
+        case Type.ACCESS:
+            return new AccessPropertyEditor(name, label);
+        default:
+            throw new Error('No PropertyEditor Implementation for type: ' + type);
     }
 }

@@ -17,7 +17,7 @@ export class ScrArray extends Value {
     }
 
     get(index) {
-        if(this.#array[index]) return this.#array[index];
+        if (this.#array[index]) return this.#array[index];
         return Value.NULL;
     }
 

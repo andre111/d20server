@@ -19,7 +19,7 @@ export class Event {
     }
 
     cancel() {
-        if(!this.#cancelable) throw new Error('Event cannot be canceled');
+        if (!this.#cancelable) throw new Error('Event cannot be canceled');
         this.#canceled = true;
     }
 }

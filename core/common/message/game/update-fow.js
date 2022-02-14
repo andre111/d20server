@@ -7,7 +7,7 @@ export class UpdateFOW extends Message {
 
     constructor(map, fow, reset = false) {
         super();
-        if(map) {
+        if (map) {
             this.mapID = map.getID();
             this.fow = fow;
             this.reset = reset;

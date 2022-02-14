@@ -7,7 +7,7 @@ export class SendNotification extends Message {
 
     constructor(content, time) {
         super();
-        
+
         this.content = content;
         this.time = time;
     }

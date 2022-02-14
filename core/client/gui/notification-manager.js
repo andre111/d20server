@@ -21,9 +21,9 @@ export class NotificationManager {
     }
 
     update() {
-        for(var i=this.#notifications.length-1; i>=0; i--) {
+        for (var i = this.#notifications.length - 1; i >= 0; i--) {
             const notification = this.#notifications[i];
-            if(!notification.update()) {
+            if (!notification.update()) {
                 notification.getElement().parentElement.removeChild(notification.getElement());
                 this.#notifications.splice(i, 1);
             }

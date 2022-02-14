@@ -11,7 +11,7 @@ import { WebRTCEntry } from './webrtc-entry.js';
 //TODO: Maybe replace with TURN server that can catch these cases as well
 const peerConnectionConfig = {
     'iceServers': [
-        { 'url': 'stun:'+location.hostname+':3478' },
+        { 'url': 'stun:' + location.hostname + ':3478' },
         //{ 'url': 'turn:'+location.hostname+':3478' },
         //{ 'urls': 'stun:stun.stunprotocol.org:3478' }
     ]
@@ -27,7 +27,7 @@ function setupPeer(profileID, initCall = false) {
     profileID = String(profileID);
 
     removePeerConnection(profileID);
-    
+
     const entry = new WebRTCEntry(Number(profileID));
     videoContainer.appendChild(entry.getContainer());
 
@@ -37,7 +37,7 @@ function setupPeer(profileID, initCall = false) {
     peerConnections[profileID].pc.oniceconnectionstatechange = event => checkPeerDisconnect(event, profileID);
     localStream.getTracks().forEach(track => peerConnections[profileID].pc.addTrack(track, localStream));
 
-    if(initCall) {
+    if (initCall) {
         peerConnections[profileID].pc.createOffer({ offerToReceiveAudio: true, offerToReceiveVideo: true }).then(description => createdDescription(description, profileID)).catch(errorHandler);
     }
 }
@@ -47,30 +47,30 @@ function onMessage(message) {
     const dest = message.dest;
 
     // ignore our own messages
-    if(sender == ServerData.localProfile.getID()) return;
+    if (sender == ServerData.localProfile.getID()) return;
     // ignore messages not targeted to us or broadcasted
-    if(dest != ServerData.localProfile.getID() && dest != 'broadcast') return;
+    if (dest != ServerData.localProfile.getID() && dest != 'broadcast') return;
 
-    if(message.type == 'joined') {
+    if (message.type == 'joined') {
         setupPeer(sender);
 
         MessageService.send(new WebRTCMessage('existing', sender));
-    } else if(message.type == 'existing') {
+    } else if (message.type == 'existing') {
         setupPeer(sender, true);
-    } else if(message.sdp) {
+    } else if (message.sdp) {
         peerConnections[String(sender)].pc.setRemoteDescription(new RTCSessionDescription(message.sdp)).then(() => {
             // create answers to offers
-            if(message.sdp.type == 'offer') {
+            if (message.sdp.type == 'offer') {
                 peerConnections[String(sender)].pc.createAnswer().then(description => createdDescription(description, String(sender))).catch(errorHandler);
             }
         }).catch(errorHandler);
-    } else if(message.ice) {
+    } else if (message.ice) {
         peerConnections[String(sender)].pc.addIceCandidate(new RTCIceCandidate(message.ice)).catch(errorHandler);
     }
 }
 
 function gotIceCandidate(event, profileID) {
-    if(event.candidate != null) {
+    if (event.candidate != null) {
         MessageService.send(new WebRTCMessage('ice', Number(profileID), null, event.candidate));
     }
 }
@@ -81,7 +81,7 @@ function gotRemoteStream(event, profileID) {
 
 function checkPeerDisconnect(event, profileID) {
     const state = peerConnections[profileID].pc.iceConnectionState;
-    if(state == 'failed' || state == 'closed' || state == 'disconnected') {
+    if (state == 'failed' || state == 'closed' || state == 'disconnected') {
         removePeerConnection(profileID);
     }
 }
@@ -93,7 +93,7 @@ function createdDescription(description, profileID) {
 }
 
 function removePeerConnection(profileID) {
-    if(!peerConnections[profileID]) return;
+    if (!peerConnections[profileID]) return;
 
     peerConnections[profileID].pc.onicecandidate = null;
     peerConnections[profileID].pc.ontrack = null;
@@ -101,7 +101,7 @@ function removePeerConnection(profileID) {
 
     peerConnections[profileID].entry.onDestroy();
     videoContainer.removeChild(peerConnections[profileID].entry.getContainer());
-    
+
     delete peerConnections[profileID];
 }
 
@@ -111,7 +111,7 @@ function reconnect() {
 }
 
 // create event listeners (to startup local stream/messaging)
-if(location.protocol == 'https:') {
+if (location.protocol == 'https:') {
     Events.on('enterMainState', event => {
         videoContainer = document.createElement('div');
         videoContainer.className = 'webrtc-container';
@@ -124,12 +124,12 @@ if(location.protocol == 'https:') {
             var hasVideo = false;
             var hasAudio = false;
             devices.forEach(device => {
-                if(device.kind == 'videoinput') hasVideo = true;
-                if(device.kind == 'audioinput') hasAudio = true;
+                if (device.kind == 'videoinput') hasVideo = true;
+                if (device.kind == 'audioinput') hasAudio = true;
             });
 
             // create user media with determined constraints
-            const videoConstraints = hasVideo ? { width: 320, height: 180, exposureMode: 'continous', focuesMode: 'continuous', whiteBalanceMode: 'continuous' } : false;
+            const videoConstraints = hasVideo ? { width: 320, height: 180, exposureMode: 'continous', focusMode: 'continuous', whiteBalanceMode: 'continuous' } : false;
             const audioConstraints = hasAudio ? { echoCancellation: true, autoGainControl: true, noiseSuppression: true } : false;
             navigator.mediaDevices.getUserMedia({ video: videoConstraints, audio: audioConstraints }).then(stream => {
                 localStream = stream;
@@ -137,14 +137,14 @@ if(location.protocol == 'https:') {
                 const localEntry = new WebRTCEntry(ServerData.localProfile.getID(), true, localStream, () => reconnect());
                 localEntry.setStreams(stream);
                 videoContainer.appendChild(localEntry.getContainer());
-        
+
                 MessageService.send(new WebRTCMessage('joined', 'broadcast'));
             }).catch(errorHandler);
         }).catch(errorHandler);
     });
 
     Events.on('recievedMessage', event => {
-        if(event.data.message instanceof WebRTCMessage) {
+        if (event.data.message instanceof WebRTCMessage) {
             onMessage(event.data.message);
 
             event.cancel();
@@ -152,7 +152,7 @@ if(location.protocol == 'https:') {
     });
 } else {
     Events.on('recievedMessage', event => {
-        if(event.data.message instanceof WebRTCMessage) {
+        if (event.data.message instanceof WebRTCMessage) {
             event.cancel();
         }
     });

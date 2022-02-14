@@ -25,11 +25,11 @@ export class Command {
 
     buildRecipents(sender, showPublic, showSelf) {
         var recipents = null;
-        if(!showPublic) {
-            if(showSelf) {
-                recipents = [ sender.getID() ];
+        if (!showPublic) {
+            if (showSelf) {
+                recipents = [sender.getID()];
             } else {
-                recipents = [ -1 ];
+                recipents = [-1];
             }
         }
         return recipents;

@@ -24,14 +24,14 @@ export class ServerConfigSettings {
     }
 
     static onConfigDefinitions(configDefinitions) {
-        if(ServerConfigSettings.#PAGE) {
+        if (ServerConfigSettings.#PAGE) {
             //TODO: implement
         }
     }
 
     static onConfigChange(key, value) {
-        if(ServerConfigSettings.#PAGE) {
-            if(key == 'gmLockout') {
+        if (ServerConfigSettings.#PAGE) {
+            if (key == 'gmLockout') {
                 ServerConfigSettings.#gmLockout.changeValueNoNotify(value);
             }
         }

@@ -5,7 +5,7 @@ import { MapUtils } from '../../util/maputil.js';
 export class CanvasRenderLayerTokens extends CanvasRenderLayer {
     constructor(level, layer, grayscale, renderInfo, alpha, requireGM) {
         super();
-        
+
         this.level = level;
         this.layer = layer;
         this.grayscale = grayscale;
@@ -13,14 +13,14 @@ export class CanvasRenderLayerTokens extends CanvasRenderLayer {
         this.alpha = alpha;
         this.requireGM = requireGM;
     }
-    
+
     render(ctx, state, view, viewers, camera, viewport, map) {
-        if(this.requireGM && view.isPlayerView()) return;
-        if(this.alpha && this.alpha != 1) ctx.globalAlpha = this.alpha;
+        if (this.requireGM && view.isPlayerView()) return;
+        if (this.alpha && this.alpha != 1) ctx.globalAlpha = this.alpha;
         TokenRenderer.renderTokens(ctx, MapUtils.currentEntitiesSorted('token', this.layer), view.getProfile(), state.getHighlightToken(), this.grayscale, this.renderInfo);
-        if(this.alpha && this.alpha != 1) ctx.globalAlpha = 1;
+        if (this.alpha && this.alpha != 1) ctx.globalAlpha = 1;
     }
-    
+
     getLevel() {
         return this.level;
     }

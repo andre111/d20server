@@ -7,7 +7,7 @@ export class MakeActorLocal extends Message {
 
     constructor(token) {
         super();
-        if(token) {
+        if (token) {
             this.manager = token.getManager();
             this.tokenID = token.getID();
         }

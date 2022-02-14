@@ -14,8 +14,8 @@ import { CONFIG } from '../config.js';
 
 export class GameService {
     static init() {
-		// add atleast one map
-        if(EntityManagers.get('map').all().length == 0) {
+        // add atleast one map
+        if (EntityManagers.get('map').all().length == 0) {
             const map = new Entity('map');
             map.setString('name', 'New Map');
             EntityManagers.get('map').add(map);
@@ -53,9 +53,9 @@ export class GameService {
 
     static reloadMaps(profile) {
         // profile can be null => reload for all
-        if(profile) {
+        if (profile) {
             const map = EntityManagers.get('map').find(profile.getCurrentMap());
-            if(map) {
+            if (map) {
                 EntityManagers.get('map').syncEntity(profile, map); // send map and contained entities because client could have no previous access
                 MessageService.send(new EnterMap(map, GameService.getFOW(map, profile)), profile);
             }
@@ -65,19 +65,19 @@ export class GameService {
     }
 
     static getFOW(map, profile) {
-        if(!map || !profile) return [];
+        if (!map || !profile) return [];
         const manager = map.getContainedEntityManager('fow');
-        if(!manager) return [];
+        if (!manager) return [];
         const fowEntity = manager.find(profile.getID());
-        if(!fowEntity) return [];
+        if (!fowEntity) return [];
 
         return fromJson(fowEntity.getString('area'));
     }
 
     static setFOW(map, profile, fow) {
-        if(!map || !profile || !fow) throw new Error('Missing required parameter');
+        if (!map || !profile || !fow) throw new Error('Missing required parameter');
         const manager = map.getContainedEntityManager('fow');
-        if(!manager.has(profile.getID())) {
+        if (!manager.has(profile.getID())) {
             manager.add(new Entity('fow', profile.getID()));
         }
 
@@ -85,9 +85,9 @@ export class GameService {
     }
 
     static resetFOW(map) {
-        if(!map) throw new Error('Missing required parameter');
+        if (!map) throw new Error('Missing required parameter');
         const manager = map.getContainedEntityManager('fow');
-        for(const fowEntity of manager.all()) {
+        for (const fowEntity of manager.all()) {
             manager.remove(fowEntity.getID());
         }
 

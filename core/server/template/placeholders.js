@@ -9,7 +9,7 @@ PLACEHOLDERS.set('roll-inline-triggered', new PlaceholderRollInlineTriggered());
 
 export class Placeholders {
     static get(name) {
-        if(!PLACEHOLDERS.has(name)) throw new Error(`Unknown placeholder: ${name}`);
+        if (!PLACEHOLDERS.has(name)) throw new Error(`Unknown placeholder: ${name}`);
         return PLACEHOLDERS.get(name);
     }
 }

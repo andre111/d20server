@@ -15,36 +15,36 @@ import { Events } from '../../common/events.js';
 export class SidepanelTabCompendium extends SidepanelTab {
     constructor() {
         super('compendium', true, '📓');
-        
+
         this.tab.style.display = 'grid';
         this.tab.style.gridTemplateRows = 'auto max-content max-content';
-        
+
         const treePanel = document.createElement('div');
         treePanel.style.overflow = 'auto';
         this.tab.appendChild(treePanel);
         this.tree = new SearchableIDTree(treePanel, 'sidepanel-tab-compendium', getValueProvider('compendium'), () => this.doOpen(), (id, x, y) => this.doOpenMenu(x, y));
         Events.on('any_compendium', events => this.tree.reload());
-        
-        if(ServerData.isGM()) {
+
+        if (ServerData.isGM()) {
             const buttonPanel = document.createElement('div');
             this.tab.appendChild(buttonPanel);
             GuiUtils.createButton(buttonPanel, I18N.get('sidepanel.compendium.new.button', 'New Compendium Entry'), () => this.doAdd()).className = 'sidepanel-button';
         }
     }
-    
+
     doOpen() {
         const compendium = EntityManagers.get('compendium').find(this.tree.getSelectedValue());
-        if(compendium) Events.trigger('openEntity', { entity: compendium }, true);
+        if (compendium) Events.trigger('openEntity', { entity: compendium }, true);
     }
 
     doOpenMenu(x, y) {
         const compendium = EntityManagers.get('compendium').find(this.tree.getSelectedValue());
-        if(compendium) new EntityMenu(null, new EntityReference(compendium), ServerData.isGM(), x, y);
+        if (compendium) new EntityMenu(null, new EntityReference(compendium), ServerData.isGM(), x, y);
     }
-    
+
     doAdd() {
         new CanvasWindowInput(null, I18N.get('sidepanel.compendium.new.title', 'New Compendium Entry'), I18N.get('sidepanel.compendium.new.prompt', 'Enter Compendium Entry Name:'), '', name => {
-            if(name) {
+            if (name) {
                 const compendium = new Entity('compendium');
                 compendium.setString('name', name);
                 EntityManagers.get('compendium').add(compendium);

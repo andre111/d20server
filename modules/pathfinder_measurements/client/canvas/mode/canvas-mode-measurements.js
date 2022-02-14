@@ -9,10 +9,10 @@ import { ActionCommand } from '../../../../../core/common/messages.js';
 export class CanvasModeMeasurements extends CanvasMode {
     constructor(type, reset, step) {
         super();
-        
+
         this.type = type;
         this.step = step | 0;
-        if(reset) {
+        if (reset) {
             this.deleteOwnMeasurement();
         }
     }
@@ -27,7 +27,7 @@ export class CanvasModeMeasurements extends CanvasMode {
 
     exit() {
         // remove own 'measurement' on exit if it only is a non fixated starting point
-        if(this.step == 0) {
+        if (this.step == 0) {
             this.deleteOwnMeasurement();
         }
     }
@@ -40,48 +40,48 @@ export class CanvasModeMeasurements extends CanvasMode {
 
     actionPerformed(action) {
     }
-    
+
     mouseReleased(e) {
-		// left click
-        if(e.which == 1) {
-            if(this.step < 2) this.step++;
+        // left click
+        if (e.which == 1) {
+            if (this.step < 2) this.step++;
         }
-        
+
         // right click
-        if(e.which == 3) {
+        if (e.which == 3) {
             this.deleteOwnMeasurement();
         }
     }
-    
+
     mouseMoved(e) {
         var x = e.xm;
         var y = e.ym;
         var snap = !e.ctrlKey;
-        if(snap) {
-			// snap to grid (and corners) (set snap to true when control is NOT down)
+        if (snap) {
+            // snap to grid (and corners) (set snap to true when control is NOT down)
             var map = MapUtils.currentMap();
-            if(map != null && map != undefined) {
-                x = Math.round(x / (map.getLong('gridSize')/2)) * (map.getLong('gridSize')/2);
-                y = Math.round(y / (map.getLong('gridSize')/2)) * (map.getLong('gridSize')/2);
+            if (map != null && map != undefined) {
+                x = Math.round(x / (map.getLong('gridSize') / 2)) * (map.getLong('gridSize') / 2);
+                y = Math.round(y / (map.getLong('gridSize') / 2)) * (map.getLong('gridSize') / 2);
             }
         }
-        
-		// update measurement
-        if(this.step == 0) {
+
+        // update measurement
+        if (this.step == 0) {
             const msg = new ActionCommand('PF_MEASUREMENT', ServerData.currentMap, x, y, true, this.type);
             MessageService.send(msg);
-        } else if(this.step == 1) {
+        } else if (this.step == 1) {
             const msg = new ActionCommand('PF_MEASUREMENT', ServerData.currentMap, x, y, false, this.type);
             MessageService.send(msg);
         }
     }
-    
+
     deleteOwnMeasurement() {
         const msg = new ActionCommand('PF_MEASUREMENT_RESET');
         MessageService.send(msg);
         this.step = 0;
     }
-    
+
     deleteAllMeasurements() {
         const msg = new ActionCommand('PF_MEASUREMENT_RESET', 0, 0, 0, true);
         MessageService.send(msg);

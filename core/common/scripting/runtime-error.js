@@ -5,7 +5,7 @@ export class RuntimeError extends Error {
         super(message);
         this.#token = token;
     }
-    
+
     get token() {
         return this.#token;
     }

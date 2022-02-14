@@ -6,18 +6,18 @@ export class CLICommandStop extends CLICommand {
         super('stop');
     }
 
-    getDescription() { 
+    getDescription() {
         return 'Savely stops the Server';
     }
 
-    getHelp() { 
+    getHelp() {
         return 'Savely stops the Server';
     }
 
-    execute(args) { 
+    execute(args) {
         // very important: check if all "Datastores" are ready to shutdown
-        for(const manager of EntityManagers.getAll()) {
-            if(manager.isSaving()) {
+        for (const manager of EntityManagers.getAll()) {
+            if (manager.isSaving()) {
                 console.log('Saving in progress, please wait a few seconds and try again...');
                 return;
             }

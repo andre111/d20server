@@ -9,7 +9,7 @@ CONTENTS:
     4. Component Definitions
         4.1 ModePanel styles
         4.2 Chat
-        4.3 List Window
+        ---
         4.4 Settings
         4.5 Notifications
         4.6 Tree Lists
@@ -726,26 +726,6 @@ div.chat-box-content th, div.chat-box-content td {
 .hoverable:hover .onhover {
     visibility: visible;
     opacity: 1;
-}
-
-/* 
----------------------------------------
-        4.3 List Window 
----------------------------------------
-*/
-.list-window-entry {
-    width: calc(100% - 6px);
-    display: flex;
-    padding: 3px; /* includes the border size that would be present when active */
-}
-.list-window-entry-active {
-    width: calc(100% - 6px);
-    display: flex;
-    padding: 2px;
-    background-color: var(--color-light);
-    border: solid 1px var(--color-dark);
-    border-radius: 6px;
-    box-shadow: var(--shadow-active);
 }
 
 /* 

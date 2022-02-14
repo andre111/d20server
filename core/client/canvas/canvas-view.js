@@ -27,23 +27,23 @@ export class CanvasView {
     isPlayerView() {
         return this.#playerView;
     }
-    
+
     doRenderLights() {
         return this.#renderLights || this.#forceLights;
     }
-    
+
     doRenderWallOcclusion() {
         return this.#renderWallOcclusion || this.#forceWallOcclusion;
     }
-    
+
     doRenderWallLines() {
         return this.#renderWallLines;
     }
-    
+
     setForceWallOcclusion(forceWallOcclusion) {
         this.#forceWallOcclusion = forceWallOcclusion;
     }
-    
+
     setForceLights(forceLights) {
         this.#forceLights = forceLights;
     }

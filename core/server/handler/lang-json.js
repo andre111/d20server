@@ -7,7 +7,7 @@ export function buildLangJson() {
 }
 
 export function getLangJson(req, res, next) {
-    if(req.path == '/lang.json') {
+    if (req.path == '/lang.json') {
         res.send(text);
     } else {
         next();

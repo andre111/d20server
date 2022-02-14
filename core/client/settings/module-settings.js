@@ -11,9 +11,9 @@ export class ModuleSettings {
     }
 
     static onModuleDefinitions(moduleDefinitions, disabledModules) {
-        if(ModuleSettings.#PAGE) {
-            for(const [identifier, definition] of Object.entries(moduleDefinitions)) {
-                if(!ModuleSettings.#MODULE_ENTRIES[identifier]) {
+        if (ModuleSettings.#PAGE) {
+            for (const [identifier, definition] of Object.entries(moduleDefinitions)) {
+                if (!ModuleSettings.#MODULE_ENTRIES[identifier]) {
                     ModuleSettings.#MODULE_ENTRIES[identifier] = new SettingsEntryModuleToggle(identifier, definition.name, definition.version, definition.description);
                     ModuleSettings.#PAGE.addEntry(identifier, ModuleSettings.#MODULE_ENTRIES[identifier]);
                 }

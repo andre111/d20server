@@ -2,7 +2,7 @@ import { Command } from './command.js';
 import { RollFormatter } from '../util/roll-formatter.js';
 import { ChatService } from '../service/chat-service.js';
 
-import { ChatEntry } from '../../common/message/chat/chat-entry.js'; 
+import { ChatEntry } from '../../common/message/chat/chat-entry.js';
 import { Scripting } from '../../common/scripting/scripting.js';
 
 const SCRIPT = new Scripting();
@@ -25,16 +25,16 @@ export class RollCommand extends Command {
         // parse roll and execute
         const result = SCRIPT.interpretExpression(ChatService.unescape(args), profile, null);
         const diceRolls = SCRIPT.diceRolls;
-        if(SCRIPT.errors.length != 0) {
+        if (SCRIPT.errors.length != 0) {
             var error = SCRIPT.errors[0];
-            if(SCRIPT.errors.length > 1) {
-                error = error + `\nand ${SCRIPT.errors.length-1} more`
+            if (SCRIPT.errors.length > 1) {
+                error = error + `\nand ${SCRIPT.errors.length - 1} more`
             }
             ChatService.appendError(profile, error);
             return;
         }
-        
-        if(this.#sendMessage) {
+
+        if (this.#sendMessage) {
             const rollAppendix = this.#showPublic ? '' : (this.#showGM ? ' (to GM)' : ' (to Self)');
             const rollMessage = RollFormatter.formatDiceRoll(profile, args, result, rollAppendix);
 

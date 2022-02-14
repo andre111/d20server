@@ -11,16 +11,16 @@ import { TokenUtil } from '../../common/util/tokenutil.js';
 export function fullSync(profile) {
     // count and send loading info
     var count = 0;
-    for(const manager of EntityManagers.getAll()) {
+    for (const manager of EntityManagers.getAll()) {
         count += manager.getAccessibleCount(profile);
     }
     MessageService.send(new EntityLoading(count), profile);
 
     // TODO: weird place, but sync definitions here
     MessageService.send(new ServerDefinitions(getDefinitions()), profile);
-    
+
     // send actual data
-    for(const manager of EntityManagers.getAll()) {
+    for (const manager of EntityManagers.getAll()) {
         manager.fullSync(profile);
     }
 }
@@ -32,18 +32,18 @@ Events.on('modify_token', event => {
     const oldY = event.data.entity.getLong('y');
     var newX = oldX;
     var newY = oldY;
-    if(event.data.propertiesToChange.hasOwnProperty('x')) newX = event.data.propertiesToChange['x'];
-    if(event.data.propertiesToChange.hasOwnProperty('y')) newY = event.data.propertiesToChange['y'];
+    if (event.data.propertiesToChange.hasOwnProperty('x')) newX = event.data.propertiesToChange['x'];
+    if (event.data.propertiesToChange.hasOwnProperty('y')) newY = event.data.propertiesToChange['y'];
 
     // only act on changes
-    if(oldX != newX || oldY != newY) {
+    if (oldX != newX || oldY != newY) {
         // check for wall collisions if access level is not GM or above
-        if(!Access.matches(Access.GM, event.data.accessLevel)) {
+        if (!Access.matches(Access.GM, event.data.accessLevel)) {
             const map = EntityManagers.get(event.data.entity.getManager()).parentEntity;
             var doMove = !TokenUtil.intersectsWall(map.getID(), oldX, oldY, newX, newY);
 
             // prevent illegal moves by removing the property changes
-            if(!doMove) {
+            if (!doMove) {
                 delete event.data.propertiesToChange['x'];
                 delete event.data.propertiesToChange['y'];
             }

@@ -11,17 +11,17 @@ export function buildIndexPage() {
     var moduleLibraries = '';
     ModuleService.forEnabledModules(module => {
         const commonJSFile = path.join(module.getDirectory(), '/common/module.js');
-        if(fs.existsSync(commonJSFile)) {
+        if (fs.existsSync(commonJSFile)) {
             moduleScripts = moduleScripts + `        <script src="/modules/${module.getIdentifier()}/common/module.js" type="module"></script>\n`;
         }
         const clientJSFile = path.join(module.getDirectory(), '/client/module.js');
-        if(fs.existsSync(clientJSFile)) {
+        if (fs.existsSync(clientJSFile)) {
             moduleScripts = moduleScripts + `        <script src="/modules/${module.getIdentifier()}/client/module.js" type="module"></script>\n`;
         }
-        
+
         moduleStyles = moduleStyles + `        <link rel="stylesheet" href="/modules/${module.getIdentifier()}/files/module.css">\n`;
-        if(module.getDefinition().libraries) {
-            for(const library of module.getDefinition().libraries) {
+        if (module.getDefinition().libraries) {
+            for (const library of module.getDefinition().libraries) {
                 moduleLibraries = moduleLibraries + `        <script src="/modules/${module.getIdentifier()}/files${library}" defer></script>\n`;
             }
         }
@@ -36,7 +36,7 @@ export function buildIndexPage() {
 }
 
 export function getIndexPage(req, res, next) {
-    if(!req.path || req.path == '' || req.path == '/') {
+    if (!req.path || req.path == '' || req.path == '/') {
         res.send(text);
     } else {
         next();

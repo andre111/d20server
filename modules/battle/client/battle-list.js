@@ -23,7 +23,7 @@ export class BattleList {
 
     reload(tokenIDs) {
         // add entries if not enough exist already
-        while(this.#mainEntries.length < tokenIDs.length) {
+        while (this.#mainEntries.length < tokenIDs.length) {
             const mainEntry = new BattleEntry(1);
             this.#mainEntries.push(mainEntry);
             this.#listEl.insertBefore(mainEntry.getContainer(), this.#roundMarker1El);
@@ -35,15 +35,15 @@ export class BattleList {
 
         // (re)load values
         var first = true;
-        for(var i=0; i<this.#mainEntries.length; i++) {
-            const tokenID = i<tokenIDs.length ? tokenIDs[i] : -1;
+        for (var i = 0; i < this.#mainEntries.length; i++) {
+            const tokenID = i < tokenIDs.length ? tokenIDs[i] : -1;
 
             this.#mainEntries[i].reloadValues(tokenID, first, true);
             this.#subEntries[i].reloadValues(tokenID, false, false);
-            
+
             // find first token that has not ended its turn
             const token = MapUtils.currentEntities('token').find(t => t.getID() == tokenID);
-            if(token && !token.getBoolean('battle_turnEnded')) {
+            if (token && !token.getBoolean('battle_turnEnded')) {
                 first = false;
             }
         }

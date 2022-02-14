@@ -7,7 +7,7 @@ export class MovePlayerToMap extends Message {
 
     constructor(map, profile) {
         super();
-        if(map) {
+        if (map) {
             this.playerID = profile ? profile.getID() : 0;
             this.mapID = map.getID();
         }

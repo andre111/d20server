@@ -13,22 +13,22 @@ Events.on('enterMainState', event => {
 });
 
 Events.on('chatMessage', event => {
-    if(!SETTING_3DDICE_ENABLE.value) return;
-    
+    if (!SETTING_3DDICE_ENABLE.value) return;
+
     // catch chat entries with rolls and that are not in the past
-    if(event.data.historical) return;
-    if(!event.data.entry.getRolls()) return;
-    if(event.data.entry.getRolls().length == 0) return;
-    
+    if (event.data.historical) return;
+    if (!event.data.entry.getRolls()) return;
+    if (event.data.entry.getRolls().length == 0) return;
+
     // cancel the event to avoid showing the result instantly
     event.cancel();
-    
+
     // throw dice and only add chat entry once they are done
     const t = [
         {
             dice: event.data.entry.getRolls(),
             done: () => {
-                if(Client.getState() instanceof StateMain) {
+                if (Client.getState() instanceof StateMain) {
                     Client.getState().getTab('Chat').add([event.data.entry]);
                 }
             }

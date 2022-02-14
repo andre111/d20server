@@ -12,25 +12,25 @@ export class NotificationCommand extends Command {
 
     execute(profile, args) {
         const split = splitArguments(args, 2);
-        if(split.length < 2) throw new Error('Usage: /notification <all/map/player:name> <message>');
+        if (split.length < 2) throw new Error('Usage: /notification <all/map/player:name> <message>');
 
         const target = split[0].toLowerCase();
         const message = split[1];
         const msg = new SendNotification(message, 5);
 
-        if(target == 'all') {
+        if (target == 'all') {
             MessageService.broadcast(msg, null);
-        } else if(target == 'map') {
+        } else if (target == 'map') {
             const map = EntityManagers.get('map').find(profile.getCurrentMap());
-            if(!map) throw new Error('You do not have a map loaded');
-            
+            if (!map) throw new Error('You do not have a map loaded');
+
             MessageService.broadcast(msg, map);
-        } else if(target.startsWith('player:')) {
+        } else if (target.startsWith('player:')) {
             const name = target.substring('player:'.length);
 
             // find receiver
             const reciever = UserService.findByUsername(name, true);
-            if(!reciever) throw new Error(`Unknown player: ${name}`);
+            if (!reciever) throw new Error(`Unknown player: ${name}`);
 
             MessageService.send(msg, reciever);
         }

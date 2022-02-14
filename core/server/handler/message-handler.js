@@ -19,7 +19,7 @@ function _handleRequestAccounts(ws, message) {
 
 function _handleSignIn(ws, message) {
     // check version
-    if(message.getAppVersion() != VERSION) {
+    if (message.getAppVersion() != VERSION) {
         MessageService._send(new ResponseFail('SignIn', I18N.get('signin.error.version', 'Version not matching server.')), ws);
         return;
     }
@@ -30,14 +30,14 @@ function _handleSignIn(ws, message) {
 
     // find profile and verify access key
     var profile = UserService.findByUsername(username);
-    if(profile && !UserService.checkAccessKey(profile, accessKey)) profile = null;
-    if(!profile) {
+    if (profile && !UserService.checkAccessKey(profile, accessKey)) profile = null;
+    if (!profile) {
         MessageService._send(new ResponseFail('SignIn', I18N.get('signin.error.credentials', 'Incorrect Username or Access Key.')), ws);
         return;
     }
 
     // check gm lockout
-    if(CONFIG.get().gmLockout && profile.getRole() != Role.GM) {
+    if (CONFIG.get().gmLockout && profile.getRole() != Role.GM) {
         MessageService._send(new ResponseFail('SignIn', I18N.get('signin.error.lockout', 'Server is locked down for GM Access only.')), ws);
         return;
     }
@@ -54,25 +54,25 @@ function _handleSignOut(profile, message) {
 function _handleMovePlayerToMap(profile, message) {
     const mapID = message.getMapID();
     const profileID = message.getPlayerID();
-    if(EntityManagers.get('map').has(mapID)) {
-        if(profileID == 0) {
-            if(profile.getRole() != Role.GM) return;
+    if (EntityManagers.get('map').has(mapID)) {
+        if (profileID == 0) {
+            if (profile.getRole() != Role.GM) return;
 
             // set player map id and reset overridden values for all non gms
             UserService.forEach(otherProfile => {
-                if(otherProfile.getRole() != Role.GM) {
+                if (otherProfile.getRole() != Role.GM) {
                     otherProfile.setCurrentMap(mapID);
                     UserService.addAndSave(otherProfile);
                 }
             });
-            
+
             // (re)load maps for clients
             GameService.reloadMaps();
         } else {
-            if(profile.getRole() == Role.GM || (profileID == profile.getID() && EntityManagers.get('map').find(mapID).getBoolean('playersCanEnter'))) {
+            if (profile.getRole() == Role.GM || (profileID == profile.getID() && EntityManagers.get('map').find(mapID).getBoolean('playersCanEnter'))) {
                 // set player override map id and (re)load map
                 const otherProfile = UserService.getProfile(profileID);
-                if(otherProfile) {
+                if (otherProfile) {
                     otherProfile.setCurrentMap(mapID);
                     UserService.addAndSave(otherProfile);
 
@@ -85,10 +85,10 @@ function _handleMovePlayerToMap(profile, message) {
 }
 
 function _handleSelectedEntities(profile, message) {
-    if(message.getType() != 'token') return; //TODO: handle other types
+    if (message.getType() != 'token') return; //TODO: handle other types
 
     var selectedTokens = message.getEntities();
-    if(!selectedTokens) selectedTokens = [];
+    if (!selectedTokens) selectedTokens = [];
 
     profile.setSelectedTokens(selectedTokens);
 }
@@ -119,9 +119,9 @@ function _handleSetPlayerColor(profile, message) {
 function _handleAddEntities(profile, message) {
     // search for manager, check access and reset id before adding if valid request
     const manager = EntityManagers.get(message.getManager());
-    if(manager) {
-        for(const entity of message.getEntities()) {
-            if(manager.canAddRemove(profile, entity)) {
+    if (manager) {
+        for (const entity of message.getEntities()) {
+            if (manager.canAddRemove(profile, entity)) {
                 entity.resetID();
                 manager.add(entity);
             }
@@ -132,9 +132,9 @@ function _handleAddEntities(profile, message) {
 function _handleRemoveEntity(profile, message) {
     // search for entity, check access and delete if valid request
     const manager = EntityManagers.get(message.getManager());
-    if(manager) {
+    if (manager) {
         const entity = manager.find(message.getID());
-        if(entity && entity.canEdit(profile) && manager.canAddRemove(profile, entity)) {
+        if (entity && entity.canEdit(profile) && manager.canAddRemove(profile, entity)) {
             manager.remove(entity.getID());
         }
     }
@@ -143,9 +143,9 @@ function _handleRemoveEntity(profile, message) {
 function _handleUpdateEntityProperties(profile, message) {
     // search for entity, check access and update if valid request
     const manager = EntityManagers.get(message.getManager());
-    if(manager) {
+    if (manager) {
         const entity = manager.find(message.getID());
-        if(entity && entity.canEdit(profile)) {
+        if (entity && entity.canEdit(profile)) {
             manager.updateProperties(entity.getID(), message.getProperties(), entity.getAccessLevel(profile));
         }
     }
@@ -155,22 +155,22 @@ function _handleCopyEntity(profile, message) {
     // search for entity, check access and copy if valid request
     const manager = EntityManagers.get(message.getManager());
     const targetManager = EntityManagers.get(message.getTargetManager());
-    if(manager && targetManager) {
+    if (manager && targetManager) {
         const entity = manager.find(message.getID());
-        if(entity && entity.canEdit(profile) && targetManager.canAddRemove(profile, entity)) {
+        if (entity && entity.canEdit(profile) && targetManager.canAddRemove(profile, entity)) {
             // copy entity
             const copiedEntity = entity.clone();
-            copiedEntity.resetID(); 
+            copiedEntity.resetID();
             targetManager.add(copiedEntity);
 
             // apply modified properties
             targetManager.updateProperties(copiedEntity.getID(), message.getModifiedProperties(), copiedEntity.getAccessLevel(profile));
-            
+
             // copy contained entities
-            for(const containedEntityType of entity.getDefinition().settings.containedEntities) {
+            for (const containedEntityType of entity.getDefinition().settings.containedEntities) {
                 const containedSourceManager = entity.getContainedEntityManager(containedEntityType);
                 const containedTargetManager = copiedEntity.getContainedEntityManager(containedEntityType);
-                for(const containedEntity of containedSourceManager.all()) {
+                for (const containedEntity of containedSourceManager.all()) {
                     containedTargetManager.add(containedEntity.clone());
                 }
             }
@@ -180,18 +180,18 @@ function _handleCopyEntity(profile, message) {
 
 function _handleMakeActorLocal(profile, message) {
     // only allow gms
-    if(profile.getRole() != Role.GM) return;
+    if (profile.getRole() != Role.GM) return;
 
     // find token
     const manager = EntityManagers.get(message.getManager());
-    if(manager) {
+    if (manager) {
         const token = manager.find(message.getTokenID());
-        if(token.getType() != 'token') return;
+        if (token.getType() != 'token') return;
 
         // find actor
-        if(token.getBoolean('actorLocal')) return;
+        if (token.getBoolean('actorLocal')) return;
         const actor = EntityManagers.get('actor').find(token.getLong('actorID'));
-        if(!actor) return;
+        if (!actor) return;
 
         // store actor locally
         const localManager = token.getContainedEntityManager('actor');
@@ -208,14 +208,14 @@ function _handleMakeActorLocal(profile, message) {
 
 function _handleUpdateFOW(profile, message) {
     const map = EntityManagers.get('map').find(message.getMapID());
-    if(!map) return;
+    if (!map) return;
 
-    if(message.getReset()) {
-        if(profile.getRole() == Role.GM) {
+    if (message.getReset()) {
+        if (profile.getRole() == Role.GM) {
             GameService.resetFOW(map);
         }
     } else {
-        if(profile.getCurrentMap() == map.getID()) {
+        if (profile.getCurrentMap() == map.getID()) {
             GameService.setFOW(map, profile, message.getFOW());
         }
     }
@@ -230,16 +230,16 @@ function _handlePing(profile, message) {
 }
 
 function _handleToggleModule(profile, message) {
-    if(profile.getRole() == Role.GM) {
+    if (profile.getRole() == Role.GM) {
         ModuleService.toggleModule(message.getIdentifier(), message.getDisabled());
         MessageService.send(new SendNotification('Server Restart Required!', 10), profile);
     }
 }
 
 function _handleChangeConfig(profile, message) {
-    if(profile.getRole() == Role.GM) {
+    if (profile.getRole() == Role.GM) {
         // TODO: use actual config value definitions instead of hardcoded stuff
-        if(message.getKey() == 'gmLockout') {
+        if (message.getKey() == 'gmLockout') {
             CONFIG.get().gmLockout = message.getValue();
             CONFIG.save();
 
@@ -260,17 +260,17 @@ Events.on('recievedMessage', event => {
 
     // get profile
     var profile = null;
-    if(message.requiresAuthentication()) {
+    if (message.requiresAuthentication()) {
         profile = UserService.getProfileFor(event.data.ws);
-        if(!profile) throw new Error('Not authenticated');
+        if (!profile) throw new Error('Not authenticated');
     }
     event.data.profile = profile;
 
     // get map
     var map = null;
-    if(message.requiresMap()) {
+    if (message.requiresMap()) {
         map = EntityManagers.get('map').find(profile.getCurrentMap());
-        if(!map) throw new Error('No map loaded');
+        if (!map) throw new Error('No map loaded');
     }
     event.data.map = map;
 }, false, 1000000);
@@ -284,49 +284,49 @@ Events.on('recievedMessage', event => {
     // handle message
     var handled = true;
     // Basic / Login Messages
-    if(message instanceof RequestAccounts) {
+    if (message instanceof RequestAccounts) {
         _handleRequestAccounts(ws, message);
-    } else if(message instanceof SignIn) {
+    } else if (message instanceof SignIn) {
         _handleSignIn(ws, message);
-    } else if(message instanceof SignOut) {
+    } else if (message instanceof SignOut) {
         _handleSignOut(profile, message);
     }
     // In Game Messages
-    else if(message instanceof MovePlayerToMap) {
+    else if (message instanceof MovePlayerToMap) {
         _handleMovePlayerToMap(profile, message);
-    } else if(message instanceof SelectedEntities) {
+    } else if (message instanceof SelectedEntities) {
         _handleSelectedEntities(profile, message);
-    } else if(message instanceof ActionCommand) {
+    } else if (message instanceof ActionCommand) {
         _handleActionCommand(profile, message);
-    } else if(message instanceof PlayEffect) {
+    } else if (message instanceof PlayEffect) {
         _handlePlayEffect(profile, map, message);
-    } else if(message instanceof SetPlayerColor) {
+    } else if (message instanceof SetPlayerColor) {
         _handleSetPlayerColor(profile, message);
-    } else if(message instanceof AddEntities) {
+    } else if (message instanceof AddEntities) {
         _handleAddEntities(profile, message);
-    } else if(message instanceof RemoveEntity) {
+    } else if (message instanceof RemoveEntity) {
         _handleRemoveEntity(profile, message);
-    } else if(message instanceof UpdateEntityProperties) {
+    } else if (message instanceof UpdateEntityProperties) {
         _handleUpdateEntityProperties(profile, message);
-    } else if(message instanceof CopyEntity) {
+    } else if (message instanceof CopyEntity) {
         _handleCopyEntity(profile, message);
-    } else if(message instanceof MakeActorLocal) {
+    } else if (message instanceof MakeActorLocal) {
         _handleMakeActorLocal(profile, message);
-    } else if(message instanceof UpdateFOW) {
+    } else if (message instanceof UpdateFOW) {
         _handleUpdateFOW(profile, message);
-    } else if(message instanceof SendChatMessage) {
+    } else if (message instanceof SendChatMessage) {
         _handleSendChatMessage(profile, message);
-    } else if(message instanceof Ping) {
+    } else if (message instanceof Ping) {
         _handlePing(profile, message);
-    } else if(message instanceof ToggleModule) {
+    } else if (message instanceof ToggleModule) {
         _handleToggleModule(profile, message);
-    } else if(message instanceof ChangeConfig) {
+    } else if (message instanceof ChangeConfig) {
         _handleChangeConfig(profile, message);
-    } else if(message instanceof EntityLoading) {
+    } else if (message instanceof EntityLoading) {
         // discard client callbacks for now
     } else {
         handled = false;
     }
 
-    if(handled) event.cancel();
+    if (handled) event.cancel();
 }, false, 1000);

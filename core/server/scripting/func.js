@@ -11,7 +11,7 @@ import { MessageService } from '../service/message-service.js';
 import { UserService } from '../service/user-service.js';
 
 function checkPlayerAccess(interpreter, player, paren) {
-    if(interpreter.getProfile() && interpreter.getProfile() != player && interpreter.getProfile().getRole() != Role.GM) {
+    if (interpreter.getProfile() && interpreter.getProfile() != player && interpreter.getProfile().getRole() != Role.GM) {
         throw new RuntimeError(paren, 'Only the GM/Server is allowed to access another player');
     }
 }
@@ -22,7 +22,7 @@ SERVER_BUILTIN_GETCONTROLLINGPLAYERS.call = (interpreter, paren, name, args) => 
 
     const array = new ScrArray();
     var index = 0;
-    for(const playerID of args[0].value.getControllingPlayers()) {
+    for (const playerID of args[0].value.getControllingPlayers()) {
         array.set(index, new Value(UserService.getProfile(playerID), Type.PLAYER, ''));
         index++;
     }
@@ -36,7 +36,7 @@ SERVER_BUILTIN_GETSELECTEDTOKENS.call = (interpreter, paren, name, args) => {
 
     const array = new ScrArray();
     var index = 0;
-    for(const entity of args[0].value.getSelectedTokens()) {
+    for (const entity of args[0].value.getSelectedTokens()) {
         array.set(index, new Value(new EntityReference(entity), Type.ENTITY, ''));
         index++;
     }
@@ -46,12 +46,12 @@ SERVER_BUILTIN_GETSELECTEDTOKENS.call = (interpreter, paren, name, args) => {
 const SERVER_BUILTIN_GETSELECTINGPLAYERS = new Func(1);
 SERVER_BUILTIN_GETSELECTINGPLAYERS.call = (interpreter, paren, name, args) => {
     interpreter.checkOperandType(paren, args[0], Type.ENTITY);
-    if(args[0].value.type != 'token') throw new RuntimeError(paren, 'Can only get selecting players on a token');
+    if (args[0].value.type != 'token') throw new RuntimeError(paren, 'Can only get selecting players on a token');
 
     const array = new ScrArray();
     var index = 0;
     UserService.forEach(player => {
-        if(player.getSelectedTokens().includes(args[0].value)) {
+        if (player.getSelectedTokens().includes(args[0].value)) {
             array.set(index, new Value(player, Type.PLAYER, ''));
             index++;
         }
@@ -76,7 +76,7 @@ SERVER_BUILTIN_SENDCHAT.call = (interpreter, paren, name, args) => {
     interpreter.checkOperandType(paren, args[0], Type.STRING);
 
     const profile = interpreter.getProfile();
-    if(!profile) throw new RuntimeError(paren, 'No player to send this message in the current context');
+    if (!profile) throw new RuntimeError(paren, 'No player to send this message in the current context');
 
     ChatService.onMessage(profile, args[0].value);
     return Value.NULL;

@@ -15,13 +15,13 @@ export class CanvasWindowSettings extends CanvasWindow {
     initTabs() {
         // create container
         const container = this.content;
-        
+
         // create tabs
         var id = 0;
-        for(const page of Settings.pages) {
+        for (const page of Settings.pages) {
             // create tab panel
             const panel = document.createElement('div');
-            panel.name = I18N.get('settings.page.'+page.internalName, page.displayName);
+            panel.name = I18N.get('settings.page.' + page.internalName, page.displayName);
             panel.className = 'edit-window-area'; //TODO: generalize this css class + move the code below to css
             panel.style.width = 'auto';
             panel.style.height = 'auto';
@@ -32,7 +32,7 @@ export class CanvasWindowSettings extends CanvasWindow {
             container.appendChild(panel);
 
             // create entries
-            for(const entry of page.entries) {
+            for (const entry of page.entries) {
                 panel.appendChild(entry.createName());
                 panel.appendChild(entry.createEditor());
             }

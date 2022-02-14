@@ -16,7 +16,7 @@ Events.on('editTokenWindowCreateTabs', event => {
     tab.className = 'edit-window-area edit-window-full-area edit-window-grid';
     event.data.tabs.appendChild(tab);
 
-    
+
     tab.appendChild(document.createTextNode(I18N.get('token.edit.audio.path', 'File:')));
     tab.appendChild(event.data.w.createFileEditor('audioPath', 'audio'));
 
@@ -55,7 +55,7 @@ Events.on('addModeButtonsGM', event => {
 });
 
 Events.on('fileManagerSelect', event => {
-    if(event.data.file.getType() == FILE_TYPE_AUDIO) {
+    if (event.data.file.getType() == FILE_TYPE_AUDIO) {
         getMusicPlayer().load('/data/files' + event.data.file.getPath());
         event.data.manager.close();
         event.cancel();

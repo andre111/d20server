@@ -21,26 +21,26 @@ function importEntities(directory, overwriteExisting, nameBased, type, modifier)
         entityManager.setSaveEnabled(false);
 
         // TODO: import entities
-        const file = path.join(directory, type+'.json');
-        if(!existsSync(file)) return idMap;
+        const file = path.join(directory, type + '.json');
+        if (!existsSync(file)) return idMap;
 
         const entitiesToImport = readJsonFile(file);
-        for(const entityToImport of Object.values(entitiesToImport)) {
-            if(!(entityToImport instanceof Entity)) throw new Error('Imported object is not an instance of Entity');
-            if(entityToImport.getType() != type) throw new Error('Imported entity is of wrong type');
+        for (const entityToImport of Object.values(entitiesToImport)) {
+            if (!(entityToImport instanceof Entity)) throw new Error('Imported object is not an instance of Entity');
+            if (entityToImport.getType() != type) throw new Error('Imported entity is of wrong type');
 
             const originalID = entityToImport.getID();
 
             // check for existing entity
             var existingEntity = entityMap[entityToImport.getName()];
-            if(!existingEntity && entityToImport.has('path') && entityMap[entityToImport.getString('path') + entityToImport.getName()]) {
+            if (!existingEntity && entityToImport.has('path') && entityMap[entityToImport.getString('path') + entityToImport.getName()]) {
                 existingEntity = entityMap[entityToImport.getString('path') + entityToImport.getName()];
             }
 
             // import entity
             var importedEntity = null;
-            if(nameBased && existingEntity) {
-                if(overwriteExisting) {
+            if (nameBased && existingEntity) {
+                if (overwriteExisting) {
                     entityToImport.transferIDFrom(existingEntity);
                     modifier(originalID, entityToImport);
                     entityManager.add(entityToImport);
@@ -74,13 +74,13 @@ export function importData(directory, overwriteExisting) {
     fs.copySync(path.join(directory, '/files/'), path.join(path.resolve(), '/data/files/'));
 
     // import attachments
-    const attachmentIDMap = importEntities(directory, overwriteExisting, true, 'attachment', (originalID, attachment) => {});
+    const attachmentIDMap = importEntities(directory, overwriteExisting, true, 'attachment', (originalID, attachment) => { });
 
     // import actors
     const adjustInternalLinks = (entity, property) => {
         var text = entity.getString(property);
         text = text.replace(/data-target="attachment:\d+"/g, (match) => {
-            const oldID = match.substring(24, match.length-1);
+            const oldID = match.substring(24, match.length - 1);
             const newID = String(attachmentIDMap[oldID]);
             return match.replace(oldID, newID);
         });
@@ -89,16 +89,16 @@ export function importData(directory, overwriteExisting) {
     importEntities(directory, overwriteExisting, true, 'actor', (originalID, actor) => {
         // adjust attachments
         var attachmentIDs = actor.getLongList('attachments');
-        for(var i=0; i<attachmentIDs.length; i++) attachmentIDs[i] = Number(attachmentIDMap[String(attachmentIDs[i])]);
+        for (var i = 0; i < attachmentIDs.length; i++) attachmentIDs[i] = Number(attachmentIDMap[String(attachmentIDs[i])]);
         actor.setLongList('attachments', attachmentIDs);
 
         // adjust internal links in bios
         adjustInternalLinks(actor, 'bio');
         adjustInternalLinks(actor, 'gmBio');
     });
-    
+
     // import compendium
-    importEntities(directory, overwriteExisting, true, 'compendium', (originalID, compendium) => {});
+    importEntities(directory, overwriteExisting, true, 'compendium', (originalID, compendium) => { });
 
     console.log('Import done');
 }

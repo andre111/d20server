@@ -14,12 +14,12 @@ export class FileActionRename extends FileAction {
 
     applyTo(file) {
         new CanvasWindowInput(this.window, I18N.get('filemanager.action.file.rename.title', 'Rename file'), I18N.get('filemanager.action.file.rename.prompt', 'Enter new file name: '), file.getName(), input => {
-            if(!input || input.trim() == '') return;
+            if (!input || input.trim() == '') return;
 
             fetchDynamicJSON('/fileman/rename', { f: file.getPath(), n: input, k: this.window.getKey() }, data => {
-                if(data.res == 'ok') {
+                if (data.res == 'ok') {
                     var path = file.getDirectory().getPath();
-                    if(path.charAt(path.length-1) != '/') path = path + '/';
+                    if (path.charAt(path.length - 1) != '/') path = path + '/';
 
                     file.setPath(path + input);
                     file.reloadElement();

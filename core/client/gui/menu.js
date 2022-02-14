@@ -12,8 +12,8 @@ export class Menu {
         this.#category = new MenuCategory('');
         this.#container = this.#category.getList();
         this.#container.className = 'context-menu';
-        this.#container.style.left = x+'px';
-        this.#container.style.top = y+'px';
+        this.#container.style.left = x + 'px';
+        this.#container.style.top = y + 'px';
         this.#container.style.visibility = 'hidden';
         document.body.appendChild(this.#container);
 
@@ -22,7 +22,7 @@ export class Menu {
     }
 
     open() {
-        if(this.#closed) return;
+        if (this.#closed) return;
 
         this.#container.style.visibility = 'visible';
         setTimeout(() => {
@@ -37,18 +37,18 @@ export class Menu {
         const item = new MenuItem(name, callback);
         parent.addItem(item);
     }
-    
+
     createCategory(parent, name) {
         parent = parent || this.#category;
 
         const category = new MenuCategory(name);
         parent.addItem(category);
-        
+
         return category;
     }
-    
+
     close() {
-        if(this.#closed) return;
+        if (this.#closed) return;
         this.#closed = true;
         document.body.removeChild(this.#container);
         document.body.removeEventListener('click', this.#closeListener);

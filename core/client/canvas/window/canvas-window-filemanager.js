@@ -42,7 +42,7 @@ export class CanvasWindowFilemanager extends CanvasWindow {
     divFilesEmpty;
     divFilesSearchEmpty;
     ulFileList;
-    
+
     inputOrder;
     inputSearch;
 
@@ -63,7 +63,7 @@ export class CanvasWindowFilemanager extends CanvasWindow {
         this.directoryActions = [];
 
         // register default actions
-        if(editable) {
+        if (editable) {
             this.registerEditActions();
         } else {
             this.registerBasicActions();
@@ -76,7 +76,7 @@ export class CanvasWindowFilemanager extends CanvasWindow {
         this.selectionCallback = selectionCallback;
 
         var startupDir = '';
-        if(this.startupPath && this.startupPath.trim() != '') {
+        if (this.startupPath && this.startupPath.trim() != '') {
             startupDir = this.startupPath.indexOf('/') >= 0 ? this.startupPath.substring(0, this.startupPath.lastIndexOf('/')) : this.startupPath;
         }
 
@@ -146,10 +146,10 @@ export class CanvasWindowFilemanager extends CanvasWindow {
     }
 
     createDirActionHTML(dirActionPane) {
-        for(const action of this.directoryActions) {
+        for (const action of this.directoryActions) {
             dirActionPane.appendChild(action.getButton());
             action.getButton().onclick = e => {
-                if(this.getSelectedDirectory()) action.applyTo(this.getSelectedDirectory());
+                if (this.getSelectedDirectory()) action.applyTo(this.getSelectedDirectory());
             };
         }
     }
@@ -157,7 +157,7 @@ export class CanvasWindowFilemanager extends CanvasWindow {
     createDirHTML(dirPane) {
         // loading notice
         dirPane.appendChild(this.divDirLoading = document.createElement('div'));
-        this.divDirLoading.innerHTML = '<span>'+I18N.get('filemanager.loaddirs', 'Loading directories...')+'</span><br><img src="/core/files/img/fileman/loading.gif" title="'+I18N.get('filemanager.loaddirs', 'Loading directories...')+'">';
+        this.divDirLoading.innerHTML = '<span>' + I18N.get('filemanager.loaddirs', 'Loading directories...') + '</span><br><img src="/core/files/img/fileman/loading.gif" title="' + I18N.get('filemanager.loaddirs', 'Loading directories...') + '">';
 
         // actual directory list
         dirPane.appendChild(this.ulDirList = document.createElement('ul'));
@@ -165,13 +165,13 @@ export class CanvasWindowFilemanager extends CanvasWindow {
     }
 
     createFileActionHTML(fileActionPane) {
-        for(const action of this.fileActions) {
+        for (const action of this.fileActions) {
             fileActionPane.appendChild(action.getButton());
             action.getButton().onclick = e => {
-                if(this.getSelectedFile() || action.showWithoutFile()) action.applyTo(this.getSelectedFile());
+                if (this.getSelectedFile() || action.showWithoutFile()) action.applyTo(this.getSelectedFile());
             };
         }
-        
+
         fileActionPane.appendChild(document.createElement('br'));
 
         const orderSpan = document.createElement('span');
@@ -180,12 +180,12 @@ export class CanvasWindowFilemanager extends CanvasWindow {
         fileActionPane.appendChild(orderSpan);
         this.inputOrder = document.createElement('select');
         const addOption = (value, name) => { const option = document.createElement('option'); option.value = value; option.innerHTML = name; this.inputOrder.appendChild(option); };
-        addOption('nameASC', '&uarr;&nbsp;&nbsp;'+I18N.get('filemanager.order.name', 'Name'));
-        addOption('nameDESC', '&darr;&nbsp;&nbsp;'+I18N.get('filemanager.order.name', 'Name'));
-        addOption('sizeASC', '&uarr;&nbsp;&nbsp;'+I18N.get('filemanager.order.size', 'Size'));
-        addOption('sizeDESC', '&darr;&nbsp;&nbsp;'+I18N.get('filemanager.order.size', 'Size'));
-        addOption('timeASC', '&uarr;&nbsp;&nbsp;'+I18N.get('filemanager.order.modified', 'Last Modified'));
-        addOption('timeDESC', '&darr;&nbsp;&nbsp;'+I18N.get('filemanager.order.modified', 'Last Modified'));
+        addOption('nameASC', '&uarr;&nbsp;&nbsp;' + I18N.get('filemanager.order.name', 'Name'));
+        addOption('nameDESC', '&darr;&nbsp;&nbsp;' + I18N.get('filemanager.order.name', 'Name'));
+        addOption('sizeASC', '&uarr;&nbsp;&nbsp;' + I18N.get('filemanager.order.size', 'Size'));
+        addOption('sizeDESC', '&darr;&nbsp;&nbsp;' + I18N.get('filemanager.order.size', 'Size'));
+        addOption('timeASC', '&uarr;&nbsp;&nbsp;' + I18N.get('filemanager.order.modified', 'Last Modified'));
+        addOption('timeDESC', '&darr;&nbsp;&nbsp;' + I18N.get('filemanager.order.modified', 'Last Modified'));
         this.inputOrder.onchange = () => this.selectDirectory(this.getSelectedDirectory(), false);
         fileActionPane.appendChild(this.inputOrder);
 
@@ -202,7 +202,7 @@ export class CanvasWindowFilemanager extends CanvasWindow {
     createFileHTML(filePane) {
         // loading notice
         filePane.appendChild(this.divFilesLoading = document.createElement('div'));
-        this.divFilesLoading.innerHTML = '<span>'+I18N.get('filemanager.loadfiles', 'Loading files...')+'</span><br><img src="/core/files/img/fileman/loading.gif" title="'+I18N.get('filemanager.loadfiles', 'Loading files...')+'">';
+        this.divFilesLoading.innerHTML = '<span>' + I18N.get('filemanager.loadfiles', 'Loading files...') + '</span><br><img src="/core/files/img/fileman/loading.gif" title="' + I18N.get('filemanager.loadfiles', 'Loading files...') + '">';
         this.divFilesLoading.style.display = 'none';
 
         // directory empty notice
@@ -214,7 +214,7 @@ export class CanvasWindowFilemanager extends CanvasWindow {
         filePane.appendChild(this.divFilesSearchEmpty = document.createElement('div'));
         this.divFilesSearchEmpty.innerHTML = I18N.get('filemanager.status.nomatch', 'No files matching search');
         this.divFilesSearchEmpty.style.display = 'none';
-        
+
         // actual file list
         filePane.appendChild(this.ulFileList = document.createElement('ul'));
         this.ulFileList.className = 'fileman-filelist';
@@ -229,24 +229,24 @@ export class CanvasWindowFilemanager extends CanvasWindow {
         // start loading
         fetchDynamicJSON('/fileman/dirlist', {}, data => {
             // parse directories
-            for(const dir of data) {
-                if(this.forcedRoot && !dir.p.startsWith(this.forcedRoot)) continue; // only include directories under forcedRoot if set
+            for (const dir of data) {
+                if (this.forcedRoot && !dir.p.startsWith(this.forcedRoot)) continue; // only include directories under forcedRoot if set
 
                 this.directories[dir.p] = new Directory(this, dir.p, dir.d, dir.f);
             }
 
             // create html
-            for(const dir of Object.values(this.directories)) {
+            for (const dir of Object.values(this.directories)) {
                 const parent = this.directories[dir.getParentPath()];
                 const parentElement = parent ? parent.getULChildren() : this.ulDirList;
-                if(parentElement != this.ulDirList) dir.getElement().style.display = 'none';
+                if (parentElement != this.ulDirList) dir.getElement().style.display = 'none';
 
                 parentElement.appendChild(dir.getElement());
             }
             this.divDirLoading.style.display = 'none';
 
             // restore selection
-            if(selectedDirectoryPath && this.directories[selectedDirectoryPath]) {
+            if (selectedDirectoryPath && this.directories[selectedDirectoryPath]) {
                 this.selectDirectory(this.directories[selectedDirectoryPath], false, selectedFilePath);
             }
         }, error => {
@@ -256,21 +256,21 @@ export class CanvasWindowFilemanager extends CanvasWindow {
 
     filterFiles() {
         const directory = this.getSelectedDirectory();
-        if(!directory) return;
-        if(directory.getFiles().length == 0) return;
+        if (!directory) return;
+        if (directory.getFiles().length == 0) return;
 
         const selectedFile = this.getSelectedFile();
 
         // apply search
         const search = this.inputSearch.value.toLowerCase();
         var hadFile = false;
-        for(const file of directory.getFiles()) {
-            if(!search || search == '' || file.getName().toLowerCase().indexOf(search) >= 0) {
+        for (const file of directory.getFiles()) {
+            if (!search || search == '' || file.getName().toLowerCase().indexOf(search) >= 0) {
                 file.getElementStyle().display = 'list-item';
                 hadFile = true;
             } else {
                 file.getElementStyle().display = 'none';
-                if(selectedFile == file) this.selectFile(null);
+                if (selectedFile == file) this.selectFile(null);
             }
         }
 
@@ -281,14 +281,14 @@ export class CanvasWindowFilemanager extends CanvasWindow {
     updateButtons() {
         // update directory buttons
         const directory = this.getSelectedDirectory();
-        for(const action of this.directoryActions) {
+        for (const action of this.directoryActions) {
             const enabled = directory && action.shouldShowFor(directory);
             action.getButton().disabled = !enabled;
         }
 
         // update file buttons
         const file = this.getSelectedFile();
-        for(const action of this.fileActions) {
+        for (const action of this.fileActions) {
             const enabled = (file && action.shouldShowFor(file)) || action.showWithoutFile();
             action.getButton().disabled = !enabled;
         }
@@ -321,7 +321,7 @@ export class CanvasWindowFilemanager extends CanvasWindow {
     }
 
     registerDirectoryAction(action) {
-        if(!(action instanceof DirectoryAction)) throw new Error('Can only register instances of DirectoryAction');
+        if (!(action instanceof DirectoryAction)) throw new Error('Can only register instances of DirectoryAction');
         this.directoryActions.push(action);
     }
 
@@ -330,7 +330,7 @@ export class CanvasWindowFilemanager extends CanvasWindow {
     }
 
     registerFileAction(action) {
-        if(!(action instanceof FileAction)) throw new Error('Can only register instances of FileAction');
+        if (!(action instanceof FileAction)) throw new Error('Can only register instances of FileAction');
         this.fileActions.push(action);
     }
 
@@ -340,27 +340,27 @@ export class CanvasWindowFilemanager extends CanvasWindow {
 
     // selection
     selectDirectory(directory, forceReload, selectedFilePath) {
-        if(!(directory instanceof Directory)) return;
-        if(directory.getWindow() != this) return;
-        if(this.directories[directory.getPath()] != directory) return;
+        if (!(directory instanceof Directory)) return;
+        if (directory.getWindow() != this) return;
+        if (this.directories[directory.getPath()] != directory) return;
 
         // change style (and revert old selected style)
-        if(this.selectedDirectory) {
+        if (this.selectedDirectory) {
             this.selectedDirectory.getDIVContainer().className = '';
         }
         directory.getDIVContainer().className = 'selected';
-        
+
         // expand parents
         var parent = this.directories[directory.getParentPath()];
-        while(parent) {
+        while (parent) {
             parent.setExpanded(true);
             parent = this.directories[parent.getParentPath()];
         }
 
         // change status
-        this.setStatus(I18N.get('filemanager.status.directory.path', 'Directory: ')+directory.getPath() + ' - '
-            + I18N.get('filemanager.status.directory.dircount', 'Directories: ')+directory.getDirectoryCount() + ' '
-            + I18N.get('filemanager.status.directory.filecount', 'Files: ')+directory.getFileCount());
+        this.setStatus(I18N.get('filemanager.status.directory.path', 'Directory: ') + directory.getPath() + ' - '
+            + I18N.get('filemanager.status.directory.dircount', 'Directories: ') + directory.getDirectoryCount() + ' '
+            + I18N.get('filemanager.status.directory.filecount', 'Files: ') + directory.getFileCount());
         this.selectedDirectory = directory;
         this.updateButtons();
 
@@ -368,25 +368,25 @@ export class CanvasWindowFilemanager extends CanvasWindow {
         this.ulFileList.innerHTML = '';
         this.divFilesLoading.style.display = 'block';
         directory.loadFiles(forceReload, () => {
-            if(this.selectedDirectory != directory) return; // selection changed before loading was done
+            if (this.selectedDirectory != directory) return; // selection changed before loading was done
 
             this.divFilesLoading.style.display = 'none';
 
             var selectedFile = directory.getSelectedFile();
 
             // create file elements
-            if(directory.getFiles().length == 0) {
+            if (directory.getFiles().length == 0) {
                 this.divFilesEmpty.style.display = 'block';
             } else {
                 this.divFilesEmpty.style.display = 'none';
-                for(const file of directory.getFiles()) {
+                for (const file of directory.getFiles()) {
                     this.ulFileList.append(file.getElement());
-                    if(selectedFilePath && file.getPath() == selectedFilePath) selectedFile = file;
+                    if (selectedFilePath && file.getPath() == selectedFilePath) selectedFile = file;
                 }
             }
 
             // restore file selection + search and order
-            if(selectedFile) {
+            if (selectedFile) {
                 this.selectFile(selectedFile, true);
             }
             this.filterFiles();
@@ -398,27 +398,27 @@ export class CanvasWindowFilemanager extends CanvasWindow {
     }
 
     selectFile(file, scrollIntoView) {
-        if(file && !(file instanceof File)) return;
-        if(file && file.getWindow() != this) return;
-        if(file && file.getDirectory() != this.selectedDirectory) return;
-        if(!this.selectedDirectory) return;
+        if (file && !(file instanceof File)) return;
+        if (file && file.getWindow() != this) return;
+        if (file && file.getDirectory() != this.selectedDirectory) return;
+        if (!this.selectedDirectory) return;
 
         // change style (and revert old selected style)
-        if(this.getSelectedFile()) {
+        if (this.getSelectedFile()) {
             this.getSelectedFile().getElement().className = '';
         }
-        if(file) file.getElement().className = 'selected';
+        if (file) file.getElement().className = 'selected';
 
         // change status
-        if(file) this.setStatus(I18N.get('filemanager.status.file.path', 'File: ')+file.getPath() + ' - '
-            + I18N.get('filemanager.status.file.size', 'Size: ')+toFormatedSize(file.getSize()) + ' - '
-            + I18N.get('filemanager.status.file.modified', 'Last Modified: ')+dayjs.unix(file.getModified()).format('lll'));
+        if (file) this.setStatus(I18N.get('filemanager.status.file.path', 'File: ') + file.getPath() + ' - '
+            + I18N.get('filemanager.status.file.size', 'Size: ') + toFormatedSize(file.getSize()) + ' - '
+            + I18N.get('filemanager.status.file.modified', 'Last Modified: ') + dayjs.unix(file.getModified()).format('lll'));
         else this.setStatus('');
 
         // store selection, update buttons and make file visible
         this.selectedDirectory.setSelectedFile(file);
         this.updateButtons();
-        if(file && scrollIntoView) file.getElement().scrollIntoView();
+        if (file && scrollIntoView) file.getElement().scrollIntoView();
     }
 
     getSelectedFile() {
@@ -426,7 +426,7 @@ export class CanvasWindowFilemanager extends CanvasWindow {
     }
 
     confirmSelection() {
-        if(this.selectionCallback) {
+        if (this.selectionCallback) {
             this.selectionCallback(this.getSelectedFile());
         }
     }

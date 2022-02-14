@@ -16,7 +16,7 @@ export class FileActionUpload extends FileAction {
     }
 
     applyTo(file) {
-        if(this.window.getSelectedDirectory()) {
+        if (this.window.getSelectedDirectory()) {
             new CanvasWindowFilemanagerUpload(this.window, this.window.getSelectedDirectory());
         }
     }

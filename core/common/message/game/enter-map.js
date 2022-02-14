@@ -7,7 +7,7 @@ export class EnterMap extends Message {
 
     constructor(map, fow) {
         super();
-        if(map) {
+        if (map) {
             this.mapID = map.getID();
             this.fow = fow;
         }

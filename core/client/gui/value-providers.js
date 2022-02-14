@@ -5,20 +5,20 @@ import { ValueProviderDefault } from './value-provider-default.js';
 import { ValueProviderWithPath } from './value-provider-with-path.js';
 
 export function getValueProvider(type) {
-    switch(type) {
-    case 'actor':
-        return new ValueProviderWithPath('actor');
-    case 'attachment':
-        return new ValueProviderAttachment();
-    case 'image':
-        return new ValueProviderImage();
-    case 'profile':
-        return new ValueProviderProfile(false);
-    case 'profile-with-status':
-        return new ValueProviderProfile(true);
-    case 'compendium':
-        return new ValueProviderWithPath('compendium');
-    default:
-        return new ValueProviderDefault(type);
+    switch (type) {
+        case 'actor':
+            return new ValueProviderWithPath('actor');
+        case 'attachment':
+            return new ValueProviderAttachment();
+        case 'image':
+            return new ValueProviderImage();
+        case 'profile':
+            return new ValueProviderProfile(false);
+        case 'profile-with-status':
+            return new ValueProviderProfile(true);
+        case 'compendium':
+            return new ValueProviderWithPath('compendium');
+        default:
+            return new ValueProviderDefault(type);
     }
 }

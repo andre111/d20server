@@ -9,7 +9,7 @@ export class ServerIDProvider extends IDProvider {
         super();
 
         this.nextID = readJson('id');
-        if(!this.nextID) this.nextID = 1;
+        if (!this.nextID) this.nextID = 1;
     }
 
     next() {

@@ -6,7 +6,7 @@ export const ServerData = {
     profiles: new Map(),
     currentMap: 0,
 
-    isGM: function() {
+    isGM: function () {
         return ServerData.localProfile && ServerData.localProfile.getRole() == Role.GM;
     }
 }

@@ -21,8 +21,8 @@ export class SettingsEntryNumberRange extends SettingsEntry {
 
         editor.onchange = () => {
             var value = editor.valueAsNumber;
-            if(value < this.#minValue) value = this.#minValue;
-            if(value > this.#maxValue) value = this.#maxValue;
+            if (value < this.#minValue) value = this.#minValue;
+            if (value > this.#maxValue) value = this.#maxValue;
             this.value = value;
         }
 

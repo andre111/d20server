@@ -60,7 +60,7 @@ export class CanvasWindowFilemanagerUpload extends CanvasWindow {
         this.inputFiles.files = null; //TODO: how to actually reset this
 
         // append to internal list
-        for(var i=0; i<files.length; i++) {
+        for (var i = 0; i < files.length; i++) {
             this.uploadFileList.push({
                 file: files[i]
             });
@@ -68,7 +68,7 @@ export class CanvasWindowFilemanagerUpload extends CanvasWindow {
 
         // update gui
         this.divFileList.innerHTML = '';
-        for(var i=0; i<this.uploadFileList.length; i++) {
+        for (var i = 0; i < this.uploadFileList.length; i++) {
             const div = document.createElement('div');
             div.className = 'fileman-fileupload';
             this.divFileList.appendChild(div);
@@ -92,9 +92,9 @@ export class CanvasWindowFilemanagerUpload extends CanvasWindow {
     }
 
     doUpload() {
-        for(var i=0; i<this.uploadFileList.length; i++) {
+        for (var i = 0; i < this.uploadFileList.length; i++) {
             const fileEntry = this.uploadFileList[i];
-            if(fileEntry.started) continue;
+            if (fileEntry.started) continue;
             fileEntry.started = true;
 
             // create form data
@@ -126,9 +126,9 @@ export class CanvasWindowFilemanagerUpload extends CanvasWindow {
 
     onUploadProgress(fileEntry, event) {
         var percent = 99;
-        if(event.lengthComputable) {
+        if (event.lengthComputable) {
             percent = Math.floor((event.loaded / event.total) * 100);
-            if(percent > 99) percent = 99;
+            if (percent > 99) percent = 99;
         }
 
         fileEntry.progressDiv.style.width = String(percent) + '%';
@@ -139,7 +139,7 @@ export class CanvasWindowFilemanagerUpload extends CanvasWindow {
         var response = null;
         try {
             response = JSON.parse(event.target.responseText);
-        } catch(error) {}
+        } catch (error) { }
 
         // check success status
         const success = !(response && response.res == 'error') && result == 'ok';
@@ -147,7 +147,7 @@ export class CanvasWindowFilemanagerUpload extends CanvasWindow {
         // update gui
         fileEntry.progressDiv.style.width = '100%';
         fileEntry.progressDiv.innerHTML = '';
-        if(success) {
+        if (success) {
             fileEntry.progressDiv.className += ' fileman-fileupload-done';
             fileEntry.done = true;
         } else {
@@ -155,7 +155,7 @@ export class CanvasWindowFilemanagerUpload extends CanvasWindow {
         }
 
         // refresh window (by reselecting the current directory)
-        if(success) {
+        if (success) {
             this.window.selectDirectory(this.window.getSelectedDirectory(), true);
         }
     }

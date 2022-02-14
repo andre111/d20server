@@ -10,7 +10,7 @@ export class ClientEntityManager extends EntityManager {
         super(name, type);
 
         this.entities = {};
-        if(cb) cb();
+        if (cb) cb();
     }
 
     find(id) {
@@ -22,7 +22,7 @@ export class ClientEntityManager extends EntityManager {
         return entity != null && entity != undefined;
     }
 
-    all() { 
+    all() {
         return Object.values(this.entities); //TODO: might need the readOnlyAll system from old client
     }
 
@@ -30,21 +30,21 @@ export class ClientEntityManager extends EntityManager {
         return this.entities; //TODO: should be an unmodifiable view
     }
 
-    add(entity) { 
-        if(!entity) return;
-        if(!(entity instanceof Entity)) throw new Error('Object is no entity');
-        if(entity.getType() !== this.getType()) throw new Error('Entity is of wrong type');
+    add(entity) {
+        if (!entity) return;
+        if (!(entity instanceof Entity)) throw new Error('Object is no entity');
+        if (entity.getType() !== this.getType()) throw new Error('Entity is of wrong type');
 
         const msg = new AddEntities(this.getName(), [entity]);
         MessageService.send(msg);
     }
 
-    remove(id) { 
+    remove(id) {
         const msg = new RemoveEntity(this.getName(), id);
         MessageService.send(msg);
     }
 
-    updateProperties(id, map, accessLevel) { 
+    updateProperties(id, map, accessLevel) {
         const msg = new UpdateEntityProperties(this.getName(), id, map);
         MessageService.send(msg);
     }
@@ -58,7 +58,7 @@ export class ClientEntityManager extends EntityManager {
 
     serverAddEntity(entity) {
         this.entities[String(entity.getID())] = entity;
-        
+
         this.triggerEvent('added', entity);
     }
 
@@ -71,15 +71,15 @@ export class ClientEntityManager extends EntityManager {
 
     serverUpdateProperties(id, map) {
         const entity = this.find(id);
-        if(!entity) return;
+        if (!entity) return;
 
-        for(const [key, value] of Object.entries(map)) {
+        for (const [key, value] of Object.entries(map)) {
             entity.addPropertyIfAbsentOrWrong(key, value);
-            
+
             // transfer value
             entity.setInternal(key, value);
         }
-        
+
         this.triggerEvent('modified', entity);
     }
 }

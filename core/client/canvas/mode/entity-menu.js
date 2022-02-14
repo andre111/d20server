@@ -9,15 +9,15 @@ export class EntityMenu extends Menu {
 
         this.mode = mode;
 
-        const event = Events.trigger('entityMenu', { 
-            menu: this, 
-            entityType: reference.getType(), 
-            reference: reference, 
+        const event = Events.trigger('entityMenu', {
+            menu: this,
+            entityType: reference.getType(),
+            reference: reference,
             accessLevel: reference.getAccessLevel(ServerData.localProfile),
-            isGM: isGM 
+            isGM: isGM
         }, true);
 
-        if(event.canceled) {
+        if (event.canceled) {
             this.close();
         } else {
             this.open();

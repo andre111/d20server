@@ -10,15 +10,15 @@ export class MessageService {
 
     static broadcast(message, map) {
         UserService.forEach(profile => {
-            if(map && map.getID() != profile.getCurrentMap()) return; // check for map or broadcast to all if non specified
+            if (map && map.getID() != profile.getCurrentMap()) return; // check for map or broadcast to all if non specified
 
             MessageService.send(message, profile);
         });
     }
 
     static _send(message, ws) {
-        if(!message || !ws) return;
-        if(!(message instanceof Message)) throw new Error('Can only send instances of message');
+        if (!message || !ws) return;
+        if (!(message instanceof Message)) throw new Error('Can only send instances of message');
 
         ws.send(toJson(message, true));
     }

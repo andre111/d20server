@@ -36,25 +36,25 @@ export class WebRTCEntry {
 
         this.#icon = document.createElement('img');
         this.#textContainer.appendChild(this.#icon);
-        
+
         const name = document.createElement('p');
         name.innerText = ServerData.profiles.get(profileID).getUsername();
         this.#textContainer.appendChild(name);
 
-        if(this.#localStream) {
+        if (this.#localStream) {
             // controlls for local input
             this.#toggleMic = document.createElement('img');
             this.#toggleMic.src = '/modules/webrtc/files/img/mic-on.svg';
             this.#toggleMic.title = 'Toggle Microphone';
             this.#toggleMic.onclick = () => this.toggleMic();
             this.#textContainer.appendChild(this.#toggleMic);
-            
+
             this.#toggleCam = document.createElement('img');
             this.#toggleCam.src = '/modules/webrtc/files/img/cam-on.svg';
             this.#toggleCam.title = 'Toggle Camera';
             this.#toggleCam.onclick = () => this.toggleCam();
             this.#textContainer.appendChild(this.#toggleCam);
-            
+
             this.#reconnect = document.createElement('img');
             this.#reconnect.src = '/modules/webrtc/files/img/reconnect.svg';
             this.#reconnect.title = 'Reconnect';
@@ -84,11 +84,11 @@ export class WebRTCEntry {
 
     updateIcons() {
         this.#icon.src = PROFILE_VALUE_PROVIDER.getIcon(PROFILE_VALUE_PROVIDER.getValue(this.#profileID));
-        
-        if(this.#localStream) {
+
+        if (this.#localStream) {
             const audioTrack = this.#localStream.getAudioTracks()[0];
             this.#toggleMic.src = `/modules/webrtc/files/img/mic-${audioTrack && audioTrack.enabled ? 'on' : 'off'}.svg`;
-            
+
             const videoTrack = this.#localStream.getVideoTracks()[0];
             this.#toggleCam.src = `/modules/webrtc/files/img/cam-${videoTrack && videoTrack.enabled ? 'on' : 'off'}.svg`;
         }
@@ -96,13 +96,13 @@ export class WebRTCEntry {
 
     toggleMic() {
         const track = this.#localStream.getAudioTracks()[0];
-        if(track) track.enabled = !track.enabled;
+        if (track) track.enabled = !track.enabled;
         this.updateIcons();
     }
 
     toggleCam() {
         const track = this.#localStream.getVideoTracks()[0];
-        if(track) track.enabled = !track.enabled;
+        if (track) track.enabled = !track.enabled;
         this.updateIcons();
     }
 

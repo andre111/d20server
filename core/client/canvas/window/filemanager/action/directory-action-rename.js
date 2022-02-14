@@ -13,13 +13,13 @@ export class DirectoryActionRename extends DirectoryAction {
     }
 
     applyTo(directory) {
-        if(!this.shouldShowFor(directory)) return;
-        
+        if (!this.shouldShowFor(directory)) return;
+
         new CanvasWindowInput(this.window, I18N.get('filemanager.action.directory.rename.title', 'Rename directory'), I18N.get('filemanager.action.directory.rename.prompt', 'Enter new directory name: '), directory.getName(), input => {
-            if(!input || input.trim() == '') return;
+            if (!input || input.trim() == '') return;
 
             fetchDynamicJSON('/fileman/rename', { d: directory.getPath(), n: input, k: this.window.getKey() }, data => {
-                if(data.res == 'ok') {
+                if (data.res == 'ok') {
                     const selectedDirectoryPath = null; //TODO: determine new path of the directory
                     this.window.loadDirectories(selectedDirectoryPath);
                 }

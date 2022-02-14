@@ -14,7 +14,7 @@ export class IfCommand extends Command {
     execute(profile, args) {
         // parse components
         const split = splitArguments(args, 2);
-        if(split.length < 2) throw new Error('Wrong arguments: <expression> ...');
+        if (split.length < 2) throw new Error('Wrong arguments: <expression> ...');
 
         const expression = split[0];
         const message = split[1];
@@ -24,7 +24,7 @@ export class IfCommand extends Command {
         SCRIPT.throwIfErrored();
 
         // send message/command if isTrue
-        if(result.isTruthy()) {
+        if (result.isTruthy()) {
             ChatService.onMessage(profile, message);
         }
     }

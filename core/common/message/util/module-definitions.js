@@ -14,7 +14,7 @@ export class ModuleDefinitions extends Message {
     getModuleDefinitions() {
         return this.moduleDefinitions;
     }
-    
+
     getDisabledModules() {
         return this.disabledModules;
     }

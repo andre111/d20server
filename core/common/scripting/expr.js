@@ -297,7 +297,7 @@ export class Set extends Expr {
 export class Unary extends Expr {
     #operator;
     #right;
-    
+
     constructor(operator, right) {
         super();
         this.#operator = operator;

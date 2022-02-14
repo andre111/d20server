@@ -18,7 +18,7 @@ function createBaseServer(server) {
 
     const privateKeyPath = path.join(path.resolve(), '/config/privkey.pem');
     const certificatePath = path.join(path.resolve(), '/config/fullchain.pem');
-    if(fs.existsSync(privateKeyPath) && fs.existsSync(certificatePath)) {
+    if (fs.existsSync(privateKeyPath) && fs.existsSync(certificatePath)) {
         console.log('Enabling encryption...');
         options.key = fs.readFileSync(privateKeyPath);
         options.cert = fs.readFileSync(certificatePath);
@@ -45,7 +45,7 @@ export class HttpHandler {
 
         // set csp settings for all following handlers
         //TODO: remove all inline styling (->template coloring, tinymce/htmlproperties) so I can limit style-src to self as well
-        server.use(function(req, res, next) {
+        server.use(function (req, res, next) {
             res.setHeader('Content-Security-Policy', 'default-src \'self\'; img-src \'self\' data:; style-src \'self\' \'unsafe-inline\'');
             return next();
         });
@@ -55,9 +55,9 @@ export class HttpHandler {
         server.use('/core/client', express.static(path.join(path.resolve(), '/core/client')));
         server.use('/core/files', express.static(path.join(path.resolve(), '/core/files')));
         ModuleService.forEnabledModules(module => {
-            server.use('/modules/'+module.getIdentifier()+'/common', express.static(path.join(module.getDirectory(), '/common')));
-            server.use('/modules/'+module.getIdentifier()+'/client', express.static(path.join(module.getDirectory(), '/client')));
-            server.use('/modules/'+module.getIdentifier()+'/files', express.static(path.join(module.getDirectory(), '/files')));
+            server.use('/modules/' + module.getIdentifier() + '/common', express.static(path.join(module.getDirectory(), '/common')));
+            server.use('/modules/' + module.getIdentifier() + '/client', express.static(path.join(module.getDirectory(), '/client')));
+            server.use('/modules/' + module.getIdentifier() + '/files', express.static(path.join(module.getDirectory(), '/files')));
         });
 
         // language json
@@ -77,13 +77,13 @@ export class HttpHandler {
         WebsocketHandler.init(baseServer);
 
         // catch 404 and forward to error handler
-        server.use(function(req, res, next) {
+        server.use(function (req, res, next) {
             res.status(404).send('Not found');
         });
 
         // start server
         baseServer.listen(port, (error) => {
-            if(error) {
+            if (error) {
                 console.error(error);
             } else {
                 console.log(`Server listening on port ${port}`);

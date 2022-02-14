@@ -18,18 +18,18 @@ Events.on('addModeButtonsGM', event => {
 });
 
 Events.on('entityMenu', event => {
-    if(event.data.entityType != 'token') return;
-    if(!CommonBattleManager.isBattleActive(MapUtils.currentMap())) return;
+    if (event.data.entityType != 'token') return;
+    if (!CommonBattleManager.isBattleActive(MapUtils.currentMap())) return;
 
     const category = event.data.menu.createCategory(null, 'Battle');
 
-    if(event.data.reference.getBoolean('battle_active')) {
+    if (event.data.reference.getBoolean('battle_active')) {
         event.data.menu.createItem(category, 'Set Initiative', () => {
             new CanvasWindowInput(null, 'Set Initiative', 'Enter initiative for selected token: ', event.data.reference.getDouble('battle_initiative'), value => {
-                if(value == null || value == undefined || value == '') return;
-            
+                if (value == null || value == undefined || value == '') return;
+
                 const newValue = Number(value);
-                if(newValue != NaN) {
+                if (newValue != NaN) {
                     event.data.reference.setDouble('battle_initiative', newValue);
                     event.data.reference.performUpdate();
                 }

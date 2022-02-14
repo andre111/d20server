@@ -6,7 +6,7 @@ export class MultiLineStringPropertyEditor extends PropertyEditor {
     constructor(name, label) {
         super(name, Type.STRING, label);
     }
-    
+
     initContent(label) {
         this.textArea = document.createElement('textarea');
         this.textArea.style.width = '100%';
@@ -15,16 +15,16 @@ export class MultiLineStringPropertyEditor extends PropertyEditor {
         this.textArea.style.resize = 'none';
         this.textArea.style.fontFamily = 'monospace';
         this.container.appendChild(this.textArea);
-        
+
         this.textArea.onchange = () => this.onChange();
-        
+
         return this.textArea;
     }
-    
+
     reloadValue(reference, name) {
         this.textArea.value = reference.getString(name);
     }
-    
+
     applyValue(reference, name) {
         reference.setString(name, this.textArea.value);
     }

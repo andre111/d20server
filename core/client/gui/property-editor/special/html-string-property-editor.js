@@ -9,7 +9,7 @@ export class HTMLStringPropertyEditor extends PropertyEditor {
     constructor(name, label) {
         super(name, Type.STRING, label);
     }
-    
+
     initContent(label) {
         this.container.classList.add('html-editor');
         this.form = document.createElement('form');
@@ -28,13 +28,13 @@ export class HTMLStringPropertyEditor extends PropertyEditor {
         this.editButton.innerText = I18N.get('global.edit', 'Edit');
         this.editButton.onclick = () => this.createEditor();
         this.container.appendChild(this.editButton);
-        
+
         return this.editButton;
     }
 
     createEditor() {
-        if(this.editor) return;
-        if(this.window.isPopout()) return; // tinymce has issues in popout window
+        if (this.editor) return;
+        if (this.window.isPopout()) return; // tinymce has issues in popout window
         this.editButton.style.display = 'none';
 
         tinymce.init({
@@ -50,14 +50,14 @@ export class HTMLStringPropertyEditor extends PropertyEditor {
             table_style_by_css: true,
             table_default_styles: {
                 'border': 'solid 1px gray',
-                'border-collapse': 'collapse', 
+                'border-collapse': 'collapse',
                 'padding': '5px',
                 'margin-left': 'auto',
                 'margin-right': 'auto'
             },
             table_class_list: [
-                {title: 'Default', value: 'table-bg'},
-                {title: 'No Background', value: ''}
+                { title: 'Default', value: 'table-bg' },
+                { title: 'No Background', value: '' }
             ],
             file_picker_types: 'image',
             file_picker_callback: (callback, value, meta) => this.doOpenFilePicker(callback, value, meta)
@@ -67,23 +67,23 @@ export class HTMLStringPropertyEditor extends PropertyEditor {
             this.editor.on('blur', () => this.doSubmit());
         });
     }
-    
+
     reloadValue(reference, name) {
         const newValue = reference.getString(name);
-        if(newValue != this.value) {
+        if (newValue != this.value) {
             this.value = newValue;
             this.setHTMLValue();
         }
     }
-    
+
     applyValue(reference, name) {
         reference.setString(name, this.value);
     }
-    
+
     setHTMLValue() {
-        this.textDiv.innerHTML = DOMPurify.sanitize(this.value, {USE_PROFILES: {html: true}}); 
+        this.textDiv.innerHTML = DOMPurify.sanitize(this.value, { USE_PROFILES: { html: true } });
     }
-    
+
     doSubmit() {
         this.value = this.editor.getContent();
 
@@ -97,8 +97,8 @@ export class HTMLStringPropertyEditor extends PropertyEditor {
     doOpenFilePicker(callback, value, meta) {
         const manager = createDefaultFileManager(value.replace('data/files', ''), this.window);
         manager.init(file => {
-            if(!file) return;
-            if(meta.filetype == 'image' && file.getType() == FILE_TYPE_IMAGE) {
+            if (!file) return;
+            if (meta.filetype == 'image' && file.getType() == FILE_TYPE_IMAGE) {
                 callback('/data/files' + file.getPath(), { alt: file.getName() });
                 manager.close();
             }
@@ -106,9 +106,9 @@ export class HTMLStringPropertyEditor extends PropertyEditor {
         // force the manager over top of tinyMCE dialogs (TODO: is there a cleaner way?)
         manager.zIndex = 1400;
     }
-    
+
     onDestroy() {
-        if(this.editor) {
+        if (this.editor) {
             tinymce.remove(this.editor);
         }
     }

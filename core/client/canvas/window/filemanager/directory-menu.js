@@ -8,8 +8,8 @@ export class DirectoryMenu extends Menu {
 
         this.directory = directory;
 
-        for(const action of directory.getWindow().getDirectoryActions()) {
-            if(action.shouldShowFor(directory)) {
+        for (const action of directory.getWindow().getDirectoryActions()) {
+            if (action.shouldShowFor(directory)) {
                 this.createItem(this.container, action.getName(), () => {
                     action.applyTo(directory);
                     this.close();

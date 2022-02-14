@@ -23,7 +23,7 @@ export class StateDisconnected extends State {
         document.body.appendChild(div);
 
         // create elements
-        if(this.#error) {
+        if (this.#error) {
             const fieldset = GuiUtils.createBorderedSet('Error', '400px', 'auto');
             fieldset.appendChild(document.createTextNode('Encountered an error, please report the trace below and reload...'));
             const errorP = document.createElement('p');

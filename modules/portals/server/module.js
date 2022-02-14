@@ -11,13 +11,13 @@ Events.on('modify_token', event => {
     const oldY = event.data.entity.getLong('y');
     var newX = oldX;
     var newY = oldY;
-    if(event.data.propertiesToChange.hasOwnProperty('x')) newX = event.data.propertiesToChange['x'];
-    if(event.data.propertiesToChange.hasOwnProperty('y')) newY = event.data.propertiesToChange['y'];
+    if (event.data.propertiesToChange.hasOwnProperty('x')) newX = event.data.propertiesToChange['x'];
+    if (event.data.propertiesToChange.hasOwnProperty('y')) newY = event.data.propertiesToChange['y'];
 
     // only act on changes
-    if(oldX != newX || oldY != newY) {
+    if (oldX != newX || oldY != newY) {
         const map = EntityManagers.get(event.data.entity.getManager()).parentEntity;
-        if(!map) {
+        if (!map) {
             console.log('Could not get map for modified token?');
             return;
         }
@@ -25,12 +25,12 @@ Events.on('modify_token', event => {
         // find portal at current location
         var portal = null;
         map.getContainedEntityManager('portal').all().forEach(p => {
-            if(p.getLong('x1') == newX && p.getLong('y1') == newY) {
+            if (p.getLong('x1') == newX && p.getLong('y1') == newY) {
                 portal = p;
             }
         });
 
-        if(portal) {
+        if (portal) {
             // change movement target to portal 
             event.data.propertiesToChange['x'] = portal.getLong('x2');
             event.data.propertiesToChange['y'] = portal.getLong('y2');
@@ -38,7 +38,7 @@ Events.on('modify_token', event => {
             // move camera of players currently selecting this token
             const msg = new PlayEffect('NONE', portal.getLong('x2'), portal.getLong('y2'), 0, 1, false, true, '');
             UserService.forEach(player => {
-                if(player.getSelectedTokens().includes(event.data.entity)) {
+                if (player.getSelectedTokens().includes(event.data.entity)) {
                     MessageService.send(msg, player);
                 }
             });

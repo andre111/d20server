@@ -52,17 +52,17 @@ class DirectoryNode {
         // sublist for children
         this.childElement = document.createElement('ul');
         this.childElementStyle = this.childElement.style;
-        this.childElement.className = 'tree-list '+this.className;
+        this.childElement.className = 'tree-list ' + this.className;
         this.element.appendChild(this.childElement);
 
         // children
-        for(const directory of this.directories) {
-           this.childElement.appendChild(directory.createElement());
+        for (const directory of this.directories) {
+            this.childElement.appendChild(directory.createElement());
         }
-        for(const entry of this.entries) {
+        for (const entry of this.entries) {
             this.childElement.appendChild(entry.createElement());
         }
-        
+
         this.setExpanded(false);
 
         return this.element;
@@ -70,15 +70,15 @@ class DirectoryNode {
 
     setExpanded(expanded, recursive) {
         // recurse to children
-        if(recursive) {
-            for(const directory of this.directories) {
+        if (recursive) {
+            for (const directory of this.directories) {
                 directory.setExpanded(expanded, true);
             }
         }
 
         // update own state
-        if(expanded == this.expanded) return;
-        if(!this.name) return; // do not expand or hide root
+        if (expanded == this.expanded) return;
+        if (!this.name) return; // do not expand or hide root
 
         this.childElementStyle.display = expanded ? 'block' : 'none';
         this.expanded = expanded;
@@ -87,21 +87,21 @@ class DirectoryNode {
     search(searchText) {
         // search children and track match state
         var hadMatch = false;
-        for(const directory of this.directories) {
+        for (const directory of this.directories) {
             hadMatch = directory.search(searchText) || hadMatch;
         }
-        for(const entry of this.entries) {
+        for (const entry of this.entries) {
             hadMatch = entry.search(searchText) || hadMatch;
         }
 
         // update gui
-        if(hadMatch) {
+        if (hadMatch) {
             this.elementStyle.display = 'list-item';
-            if(searchText) this.setExpanded(true);
+            if (searchText) this.setExpanded(true);
         } else {
             this.elementStyle.display = 'none';
         }
-        if(!searchText) this.setExpanded(false);
+        if (!searchText) this.setExpanded(false);
         return hadMatch;
     }
 }
@@ -140,7 +140,7 @@ class EntryNode {
         this.divContainer.oncontextmenu = (event) => this.tree._onRightClick(this, event.clientX, event.clientY);
         this.element.appendChild(this.divContainer);
 
-        if(this.icon) {
+        if (this.icon) {
             const entryIcon = document.createElement('img');
             entryIcon.className = 'tree-list-icon';
             entryIcon.dataset.src = this.icon;
@@ -153,7 +153,7 @@ class EntryNode {
         spanName.textContent = this.name;
         this.divContainer.appendChild(spanName);
 
-        if(this.description) {
+        if (this.description) {
             this.divContainer.appendChild(document.createElement('br'));
 
             const pDesc = document.createElement('p');
@@ -168,12 +168,12 @@ class EntryNode {
     search(searchText) {
         // perform search
         var hadMatch = false;
-        if(searchText.startsWith('?')) {
+        if (searchText.startsWith('?')) {
             // tag based search
-            if(searchText.length > 1) {
+            if (searchText.length > 1) {
                 searchText = searchText.substring(1);
-                for(const tag of this.tags) {
-                    if(tag.startsWith(searchText)) hadMatch = true;
+                for (const tag of this.tags) {
+                    if (tag.startsWith(searchText)) hadMatch = true;
                 }
             }
         } else {
@@ -183,12 +183,12 @@ class EntryNode {
 
         // update gui
         this.setVisible(hadMatch);
-        if(!hadMatch && this.tree._getSelectedEntry() == this) this.tree._onSelect(null);
+        if (!hadMatch && this.tree._getSelectedEntry() == this) this.tree._onSelect(null);
         return hadMatch;
     }
 
     setVisible(visible) {
-        if(visible == this.visible) return;
+        if (visible == this.visible) return;
         this.elementStyle.display = visible ? 'list-item' : 'none';
         this.visible = visible;
     }
@@ -219,7 +219,7 @@ export class SearchableIDTree {
 
     constructor(parent, identifier, valueProvider, selectionCallback, rightclickCallback) {
         this.#parent = parent;
-        
+
         this.#searchPanel = document.createElement('div');
         this.#filter = document.createElement('input');
         this.#filter.type = 'text';
@@ -228,61 +228,61 @@ export class SearchableIDTree {
         this.#filter.oninput = () => this._onFilter();
         this.#searchPanel.appendChild(this.#filter);
         this.#parent.appendChild(this.#searchPanel);
-        
+
         this.#container = document.createElement('div');
         this.#parent.appendChild(this.#container);
-        
+
         this.#valueProvider = valueProvider;
         this.#selectionCallback = selectionCallback;
         this.#rightclickCallback = rightclickCallback;
-        
+
         // observer for lazy loading images (using loading=lazy does not work because chrome is too eager to load these list images for some reason)
         this.#imageObserver = new IntersectionObserver((entries, observer) => {
             entries.forEach(entry => {
-                if(entry.isIntersecting) {
+                if (entry.isIntersecting) {
                     const image = entry.target;
                     image.src = image.dataset.src;
                     this.#imageObserver.unobserve(image);
                 }
             });
         });
-        
+
         this.reload();
     }
-    
+
     reload(map) {
-        if(map == null || map == undefined) map = this.#valueProvider.getData();
-        
+        if (map == null || map == undefined) map = this.#valueProvider.getData();
+
         // sort keys by value names
         const sorted = Array.from(Object.keys(map));
         const paths = {};
-        for(const k of sorted) paths[k] = this.#valueProvider.getName(map[k]).split('/');
+        for (const k of sorted) paths[k] = this.#valueProvider.getName(map[k]).split('/');
         sorted.sort((o1, o2) => {
             const p1 = paths[o1];
             const p2 = paths[o2];
-            
+
             // skip all equal parts
             var i1 = 0;
             var i2 = 0;
-            while(i1 < p1.length && i2 < p2.length && p1[i1] == p2[i2]) {
+            while (i1 < p1.length && i2 < p2.length && p1[i1] == p2[i2]) {
                 i1++;
                 i2++;
             }
-            
+
             // if we reached the end of one path, but not the other, sort directories before files
-            if(i1 == p1.length && i2 == p2.length) {
+            if (i1 == p1.length && i2 == p2.length) {
                 return 0;
-            } else if(i1 == p1.length-1 && i2 != p2.length-1) {
+            } else if (i1 == p1.length - 1 && i2 != p2.length - 1) {
                 return 1;
-            } else if(i2 == p2.length-1 && i1 != p1.length-1) {
+            } else if (i2 == p2.length - 1 && i1 != p1.length - 1) {
                 return -1;
             }
-            
+
             // else just compare the current name
             return p1[i1] < p2[i2] ? -1 : p1[i1] > p2[i2]; // seemingly way more efficient than localCompare
         });
 
-        
+
         // rebuild tree
         this.#rootDirectory = new DirectoryNode(this, '', '');
         this.#selectedEntry = null;
@@ -290,19 +290,19 @@ export class SearchableIDTree {
 
         var directoryNodes = {};
         directoryNodes[''] = this.#rootDirectory;
-        for(const key of sorted) {
+        for (const key of sorted) {
             var entry = map[key];
-            
+
             var fullPath = this.#valueProvider.getName(entry);
             this._addDirectories(directoryNodes, fullPath);
-            
-            const parentPath = fullPath.includes('/') ? fullPath.substring(0, fullPath.lastIndexOf('/')+1) : '';
+
+            const parentPath = fullPath.includes('/') ? fullPath.substring(0, fullPath.lastIndexOf('/') + 1) : '';
             const parent = directoryNodes[parentPath];
-            
-            const name = fullPath.includes('/') ? fullPath.substring(fullPath.lastIndexOf('/')+1) : fullPath;
+
+            const name = fullPath.includes('/') ? fullPath.substring(fullPath.lastIndexOf('/') + 1) : fullPath;
             const text = this.#valueProvider.getSubText(entry);
             //text = (text != null && text != undefined) ? '<br><p class="tree-entry-text">'+text+'</p>' : '';
-            
+
             const tags = this.#valueProvider.getTags(entry);
             const icon = this.#valueProvider.getIcon(entry);
 
@@ -319,36 +319,36 @@ export class SearchableIDTree {
     _addDirectories(directoryNodes, path) {
         var split = path.split('/', -1);
         var dirPath = '';
-        for(var i=0; i<split.length-1; i++) {
+        for (var i = 0; i < split.length - 1; i++) {
             const parent = directoryNodes[dirPath];
-            
+
             dirPath = dirPath + split[i] + '/';
-            if(!directoryNodes[dirPath]) {
+            if (!directoryNodes[dirPath]) {
                 const dirName = split[i];
-                
-                const dirNode = new DirectoryNode(this, dirName, i%2 == 0 ? 'tree-list-bg1' : 'tree-list-bg2');
+
+                const dirNode = new DirectoryNode(this, dirName, i % 2 == 0 ? 'tree-list-bg1' : 'tree-list-bg2');
                 parent.addDirectoryNode(dirNode);
 
                 directoryNodes[dirPath] = dirNode;
             }
         }
     }
-    
+
     _onFilter() {
         this.#rootDirectory.search(this.#filter.value.toLowerCase());
     }
 
     _onSelect(entry, confirm = false) {
-        if(this.#selectedEntry) this.#selectedEntry._onDeselect();
+        if (this.#selectedEntry) this.#selectedEntry._onDeselect();
         this.#selectedEntry = entry;
-        if(this.#selectedEntry) this.#selectedEntry._onSelect();
+        if (this.#selectedEntry) this.#selectedEntry._onSelect();
 
-        if(this.#selectedEntry && confirm && this.#selectionCallback) this.#selectionCallback(this.#selectedEntry.id);
+        if (this.#selectedEntry && confirm && this.#selectionCallback) this.#selectionCallback(this.#selectedEntry.id);
     }
 
     _onRightClick(entry, x, y) {
         this._onSelect(entry, false);
-        if(this.#selectedEntry && this.#rightclickCallback) this.#rightclickCallback(this.#selectedEntry.id, x, y);
+        if (this.#selectedEntry && this.#rightclickCallback) this.#rightclickCallback(this.#selectedEntry.id, x, y);
     }
 
     _getSelectedEntry() {
@@ -358,11 +358,11 @@ export class SearchableIDTree {
     _getImageObserver() {
         return this.#imageObserver;
     }
-    
+
     expandAll() {
         this.#rootDirectory.setExpanded(true, true);
     }
-    
+
     getSearchPanel() {
         return this.#searchPanel;
     }
@@ -370,9 +370,9 @@ export class SearchableIDTree {
     getContainer() {
         return this.#container;
     }
-    
+
     getSelectedValue() {
-        if(this.#selectedEntry) return this.#selectedEntry.id;
+        if (this.#selectedEntry) return this.#selectedEntry.id;
         return null;
     }
 }

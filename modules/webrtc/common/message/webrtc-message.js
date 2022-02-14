@@ -3,7 +3,7 @@ import { registerType } from '../../../../core/common/util/datautil.js';
 
 export class WebRTCMessage extends Message {
     sender;
-    
+
     type;
     dest;
     sdp;

@@ -4,11 +4,11 @@ export class IDProvider {
 
 var _idProvider = null;
 export const ID = {
-    init: function(idProvider) {
+    init: function (idProvider) {
         _idProvider = idProvider;
     },
 
-    next: function() {
+    next: function () {
         return _idProvider.next();
     }
 }

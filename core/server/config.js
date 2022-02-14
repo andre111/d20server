@@ -5,7 +5,7 @@ class Config {
     #data;
 
     constructor() {
-        this.#data = readJsonFile('./'+PARAMETERS.datadir+'/config.json') ?? {};
+        this.#data = readJsonFile('./' + PARAMETERS.datadir + '/config.json') ?? {};
     }
 
     get() {
@@ -13,7 +13,7 @@ class Config {
     }
 
     save() {
-        saveJsonFile('./'+PARAMETERS.datadir+'/config.json', this.#data, true);
+        saveJsonFile('./' + PARAMETERS.datadir + '/config.json', this.#data, true);
     }
 }
 export const CONFIG = new Config();

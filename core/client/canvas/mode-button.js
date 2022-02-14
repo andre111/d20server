@@ -14,7 +14,7 @@ export class ModeButton {
         this.tooltip = tooltip;
         this.activeCheck = activeCheck;
         this.action = action;
-        
+
         // init html elements
         this.button = document.createElement('button');
         this.button.className = 'mode-button';
@@ -25,22 +25,22 @@ export class ModeButton {
         this.icon.height = 24;
         this.button.appendChild(this.icon);
     }
-    
+
     onClick() {
         this.action();
         Events.trigger('updateModeState');
     }
-    
+
     shrink() {
         this.button.className = 'mode-button mode-sub-button'
     }
-    
+
     updateState() {
-        if(this.activeCheck(this)) {
-            this.icon.src = this.iconName+'Active.png';
+        if (this.activeCheck(this)) {
+            this.icon.src = this.iconName + 'Active.png';
             return true;
         } else {
-            this.icon.src = this.iconName+'.png';
+            this.icon.src = this.iconName + '.png';
             return false;
         }
     }

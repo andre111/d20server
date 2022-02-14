@@ -8,7 +8,7 @@ import { Command } from './command.js';
 
 const SCRIPT = new Scripting(false);
 export class EffectCommand extends Command {
-    static EFFECTS = [ 'PING' ];
+    static EFFECTS = ['PING'];
 
     parser;
 
@@ -18,12 +18,12 @@ export class EffectCommand extends Command {
 
     execute(profile, args) {
         const split = splitArguments(args);
-        if(split.length != 6) throw new Error('Wrong argument count: <type> <x:expression> <y:expression> <rotation:expression> <scale:expression> <aboveOcc:expression>');
+        if (split.length != 6) throw new Error('Wrong argument count: <type> <x:expression> <y:expression> <rotation:expression> <scale:expression> <aboveOcc:expression>');
 
         const map = EntityManagers.get('map').find(profile.getCurrentMap());
 
         const type = split[0];
-        if(!EffectCommand.EFFECTS.includes(type)) throw new Error(`Unknown effect type: ${type}`);
+        if (!EffectCommand.EFFECTS.includes(type)) throw new Error(`Unknown effect type: ${type}`);
 
         const x = SCRIPT.interpretExpression(ChatService.unescape(split[1]), profile, null);
         SCRIPT.throwIfErrored();

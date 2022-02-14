@@ -14,7 +14,7 @@ export class RollFormatter {
 
         // result
         text = text + '<div class="chat-message">';
-        if(result) {
+        if (result) {
             text = text + result.expr + '<br>';
             text = text + ' = ' + RollFormatter.getResultValue(result);
         } else {
@@ -29,24 +29,24 @@ export class RollFormatter {
         // check crits
         var hadCriticalFailure = false;
         var hadCriticalSuccess = false;
-        for(const roll of diceRolls) {
-            if(roll.cf) hadCriticalFailure = true;
-            if(roll.cs) hadCriticalSuccess = true;
+        for (const roll of diceRolls) {
+            if (roll.cf) hadCriticalFailure = true;
+            if (roll.cs) hadCriticalSuccess = true;
         }
 
         // color format
         var color = '#000000';
-        if(hadCriticalFailure && hadCriticalSuccess) {
+        if (hadCriticalFailure && hadCriticalSuccess) {
             color = '#0000FF';
-        } else if(hadCriticalFailure) {
+        } else if (hadCriticalFailure) {
             color = '#FF0000';
-        } else if(hadCriticalSuccess) {
+        } else if (hadCriticalSuccess) {
             color = '#008800';
         }
 
         // total value
         var text = `<span style="color:${color}" class="chat-dice-inline hoverable">`;
-        if(result) {
+        if (result) {
             text = text + this.getResultValue(result);
         } else {
             text = text + '?';
@@ -65,7 +65,7 @@ export class RollFormatter {
     }
 
     static getResultValue(result) {
-        if(Math.trunc(result.value) == result.value) {
+        if (Math.trunc(result.value) == result.value) {
             return String(Math.trunc(result.value));
         } else {
             return String(result.value);
@@ -77,13 +77,13 @@ export class RollFormatter {
         expression = ChatService.unescape(expression);
 
         expression = expression.replace(/\+/g, ' + ');
-		expression = expression.replace(/-/g, ' - ');
-		expression = expression.replace(/\*/g, ' * ');
-		expression = expression.replace(/\//g, ' / ');
-		expression = expression.replace(/\(/g, '( ');
-		expression = expression.replace(/,/g, ', ');
-		expression = expression.replace(/\)/g, ' )');
-		expression = expression.replace(/ +/g, ' ');
-		return expression;
+        expression = expression.replace(/-/g, ' - ');
+        expression = expression.replace(/\*/g, ' * ');
+        expression = expression.replace(/\//g, ' / ');
+        expression = expression.replace(/\(/g, '( ');
+        expression = expression.replace(/,/g, ', ');
+        expression = expression.replace(/\)/g, ' )');
+        expression = expression.replace(/ +/g, ' ');
+        return expression;
     }
 }

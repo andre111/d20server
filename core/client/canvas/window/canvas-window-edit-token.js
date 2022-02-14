@@ -13,7 +13,7 @@ export class CanvasWindowEditToken extends CanvasWindowEditCustom {
         super(w, reference);
         const container = w.content;
         container.className = 'edit-window-container edit-token-container flexcol';
-        
+
         // build content
         // Header
         const header = document.createElement('div');
@@ -24,7 +24,7 @@ export class CanvasWindowEditToken extends CanvasWindowEditCustom {
             imageEditor.container.className = 'edit-token-image';
             header.appendChild(imageEditor.container);
             this.registerEditor(imageEditor);
-            
+
             const headerSide = document.createElement('div');
             headerSide.className = 'cs-header-side flexrow';
 
@@ -32,7 +32,7 @@ export class CanvasWindowEditToken extends CanvasWindowEditCustom {
             actorEditor.container.className = 'edit-token-actor flexrow';
             headerSide.appendChild(actorEditor.container);
             this.registerEditor(actorEditor, true);
-            
+
             const headerRow1 = document.createElement('ul');
             headerRow1.className = 'edit-window-header-row flexrow';
             const posLI = document.createElement('li');
@@ -48,7 +48,7 @@ export class CanvasWindowEditToken extends CanvasWindowEditCustom {
             sizeLI.appendChild(this.createLongEditor('height'));
             headerRow1.appendChild(sizeLI);
             headerSide.appendChild(headerRow1);
-            
+
             const headerRow2 = document.createElement('ul');
             headerRow2.className = 'edit-window-header-row flexrow';
             const rotationLI = document.createElement('li');
@@ -86,12 +86,12 @@ export class CanvasWindowEditToken extends CanvasWindowEditCustom {
             tab.appendChild(editBoxesValue);
         }
         //    GM-Notes
-        if(ServerData.isGM()) {
+        if (ServerData.isGM()) {
             const tab = document.createElement('div');
             tab.name = I18N.get('token.edit.tabs.gmnotes', 'GM-Notes');
             tab.className = 'edit-window-area edit-window-full-area';
             tabs.appendChild(tab);
-            
+
             const editor = new MultiLineStringPropertyEditor('gmNotes', '');
             editor.container.style.width = 'calc(100% - 10px)';
             editor.container.style.height = 'calc(100% - 10px)';
@@ -118,22 +118,22 @@ export class CanvasWindowEditToken extends CanvasWindowEditCustom {
             tab.appendChild(this.createBooleanEditor('lightFlicker'));
             tab.appendChild(document.createTextNode(I18N.get('token.edit.light.color', 'Colour:')));
             tab.appendChild(this.createColorEditor('lightColor'));
-        } 
+        }
         //TODO: replace with something a little less hacky
         Events.trigger('editTokenWindowCreateTabs', { w: this, tabs: tabs, reference: reference });
 
         Tabs.init(tabs);
-        w.setDimensions(420+2, 400+35);
+        w.setDimensions(420 + 2, 400 + 35);
     }
 
     createBarSettingsEditor(number) {
-        const barValue = this.createValueContainer(I18N.get('token.edit.gui.bars.'+number, 'Bar '+number));
+        const barValue = this.createValueContainer(I18N.get('token.edit.gui.bars.' + number, 'Bar ' + number));
         const span = document.createElement('span');
         span.className = 'edit-window-row flexrow';
         span.appendChild(document.createTextNode(I18N.get('token.edit.gui.bars.value', 'Value:')));
-        span.appendChild(this.createStringEditor('bar'+number+'Current'));
+        span.appendChild(this.createStringEditor('bar' + number + 'Current'));
         span.appendChild(document.createTextNode(I18N.get('token.edit.gui.bars.max', 'Maximum:')));
-        span.appendChild(this.createStringEditor('bar'+number+'Max'));
+        span.appendChild(this.createStringEditor('bar' + number + 'Max'));
         barValue.appendChild(span);
         return barValue;
     }

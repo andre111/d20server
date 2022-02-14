@@ -14,10 +14,10 @@ export class DirectoryActionCreate extends DirectoryAction {
 
     applyTo(directory) {
         new CanvasWindowInput(this.window, I18N.get('filemanager.action.directory.create.title', 'Create directory'), I18N.get('filemanager.action.directory.create.prompt', 'Enter directory name: '), '', input => {
-            if(!input || input.trim() == '') return;
+            if (!input || input.trim() == '') return;
 
             fetchDynamicJSON('/fileman/createdir', { d: directory.getPath(), n: input, k: this.window.getKey() }, data => {
-                if(data.res == 'ok') {
+                if (data.res == 'ok') {
                     const selectedDirectoryPath = this.window.getSelectedDirectory() ? this.window.getSelectedDirectory().getPath() : null;
                     this.window.loadDirectories(selectedDirectoryPath);
                 }

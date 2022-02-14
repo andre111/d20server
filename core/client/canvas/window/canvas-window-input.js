@@ -9,15 +9,15 @@ export class CanvasWindowInput extends CanvasWindow {
         super(parent, title, true);
 
         this.#callback = callback;
-        
+
         // create html elements
         const textDiv = document.createElement('div');
         textDiv.innerText = text;
         this.content.appendChild(textDiv);
         this.content.classList.add('flexcol', 'flexnowrap');
-        
+
         this.addInput('text', value, 'input.value', 'Value: ', true);
-        
+
         this.addButton(I18N.get('global.ok', 'Ok'), () => {
             this.onConfirm();
         });
@@ -26,11 +26,11 @@ export class CanvasWindowInput extends CanvasWindow {
         });
         this.setDimensions(300, 100);
         this.center();
-        
+
         // focus main input
         requestAnimationFrame(() => {
-            this.#inputs[this.#inputs.length-1].focus();
-            this.#inputs[this.#inputs.length-1].select();
+            this.#inputs[this.#inputs.length - 1].focus();
+            this.#inputs[this.#inputs.length - 1].select();
         });
     }
 
@@ -38,7 +38,7 @@ export class CanvasWindowInput extends CanvasWindow {
         const div = document.createElement('div');
         div.style.display = 'grid';
         div.style.gridTemplateColumns = '120px 170px';
-        
+
         div.appendChild(document.createTextNode(I18N.get(i18nKey, text)));
 
         const input = document.createElement('input');
@@ -46,18 +46,18 @@ export class CanvasWindowInput extends CanvasWindow {
         input.value = value;
         div.appendChild(input);
         this.#inputs.push(input);
-        
+
         this.content.appendChild(div);
 
-        if(confirmOnEnter) {
+        if (confirmOnEnter) {
             input.onkeydown = e => {
-                if(e.keyCode == 13) this.onConfirm();
+                if (e.keyCode == 13) this.onConfirm();
             };
         }
     }
 
     onConfirm() {
-        this.#callback(this.#inputs[0].value); 
+        this.#callback(this.#inputs[0].value);
         this.close();
     }
 

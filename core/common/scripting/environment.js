@@ -9,17 +9,17 @@ export class Environment {
     }
 
     assign(name, value) {
-        if(this.#values.hasOwnProperty(name.lexeme)) {
+        if (this.#values.hasOwnProperty(name.lexeme)) {
             this.#values[name.lexeme] = value;
             return;
         }
 
-        if(this.#enclosing) {
+        if (this.#enclosing) {
             this.#enclosing.assign(name, value);
             return;
         }
 
-        throw new RuntimeError(name, 'Undefined variable '+name.lexeme);
+        throw new RuntimeError(name, 'Undefined variable ' + name.lexeme);
     }
 
     define(name, value) {
@@ -27,14 +27,14 @@ export class Environment {
     }
 
     get(name) {
-        if(this.#values.hasOwnProperty(name.lexeme)) {
+        if (this.#values.hasOwnProperty(name.lexeme)) {
             return this.#values[name.lexeme];
         }
 
-        if(this.#enclosing) {
+        if (this.#enclosing) {
             return this.#enclosing.get(name);
         }
-        
-        throw new RuntimeError(name, 'Undefined variable '+name.lexeme);
+
+        throw new RuntimeError(name, 'Undefined variable ' + name.lexeme);
     }
 }

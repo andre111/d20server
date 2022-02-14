@@ -17,7 +17,7 @@ export class Scripting {
     #lines;
     #errors;
     #diceRolls;
-    
+
     #applyEntityChanges;
     #modifiedEntities;
     #globalVars;
@@ -31,14 +31,14 @@ export class Scripting {
     // Global Vars
     //---------------------------------------------------------------
     pushVariable(name, value) {
-        if(!this.#globalVars[name]) this.#globalVars[name] = [];
+        if (!this.#globalVars[name]) this.#globalVars[name] = [];
         this.#globalVars[name].push(value);
     }
 
     popVariable(name) {
-        if(!this.#globalVars[name]) return;
+        if (!this.#globalVars[name]) return;
         this.#globalVars[name].pop();
-        if(this.#globalVars[name].length == 0) delete this.#globalVars[name];
+        if (this.#globalVars[name].length == 0) delete this.#globalVars[name];
     }
 
 
@@ -65,19 +65,19 @@ export class Scripting {
         this.#lines = program.lines;
 
         // check for parse errors
-        if(program.errors.length != 0) {
+        if (program.errors.length != 0) {
             this.#errors = program.errors;
             return;
         }
 
         // run interpreter
         const interpreter = this.#createInterpreter(profile, self);
-        if(interpreterCallback) interpreterCallback(interpreter);
+        if (interpreterCallback) interpreterCallback(interpreter);
         interpreter.interpret(program.statements);
 
         // update entities
-        if(this.#applyEntityChanges) {
-            for(const modifiedEntity of this.#modifiedEntities) {
+        if (this.#applyEntityChanges) {
+            for (const modifiedEntity of this.#modifiedEntities) {
                 modifiedEntity.performUpdate();
             }
         }
@@ -106,19 +106,19 @@ export class Scripting {
         this.#lines = expression.lines;
 
         // check for parse errors
-        if(expression.errors.length != 0) {
+        if (expression.errors.length != 0) {
             this.#errors = expression.errors;
             return;
         }
 
         // run interpreter
         const interpreter = this.#createInterpreter(profile, self);
-        if(interpreterCallback) interpreterCallback(interpreter);
+        if (interpreterCallback) interpreterCallback(interpreter);
         const result = interpreter.interpretExpression(expression.expr);
 
         // update entities
-        if(this.#applyEntityChanges) {
-            for(const modifiedEntity of this.#modifiedEntities) {
+        if (this.#applyEntityChanges) {
+            for (const modifiedEntity of this.#modifiedEntities) {
                 modifiedEntity.performUpdate();
             }
         }
@@ -131,7 +131,7 @@ export class Scripting {
         this.#lines = source.split('\n');
         this.#errors = [];
         const tokens = new Scanner(this, source, keepAll).tokens;
-        if(fullparse) {
+        if (fullparse) {
             // perform full parse for error detection (TODO: needs some better way to skip the otherwise not included tokens)
             new Parser(this, tokens.filter(t => (t.type != UNKNOWN && t.type != COMMENT && t.type != WHITESPACE && t.type != NEWLINE))).program();
         }
@@ -152,7 +152,7 @@ export class Scripting {
     }
 
     throwIfErrored() {
-        if(this.#errors.length != 0) {
+        if (this.#errors.length != 0) {
             throw new Error(this.#errors.join('\n'));
         }
     }
@@ -183,23 +183,23 @@ export class Scripting {
         interpreter.defineGlobal('list', BUILTIN_LIST);
 
         // define player, sToken, sActor, cMap and self variables when applicable
-        if(profile) {
+        if (profile) {
             interpreter.defineGlobal('player', new Value(profile, Type.PLAYER, ''));
 
             const sToken = profile.getSelectedToken(true);
-            if(sToken) {
+            if (sToken) {
                 interpreter.defineGlobal('sToken', new Value(new EntityReference(sToken), Type.ENTITY, ''));
                 const sActor = TokenUtil.getActor(sToken);
-                if(sActor) interpreter.defineGlobal('sActor', new Value(new EntityReference(sActor), Type.ENTITY, ''));
+                if (sActor) interpreter.defineGlobal('sActor', new Value(new EntityReference(sActor), Type.ENTITY, ''));
             }
 
             const cMap = EntityManagers.get('map').find(profile.getCurrentMap());
-            if(cMap) interpreter.defineGlobal('cMap', new Value(new EntityReference(cMap), Type.ENTITY, ''));
+            if (cMap) interpreter.defineGlobal('cMap', new Value(new EntityReference(cMap), Type.ENTITY, ''));
         }
-        if(self instanceof Entity && !(self instanceof EntityReference)) {
+        if (self instanceof Entity && !(self instanceof EntityReference)) {
             self = new EntityReference(self);
         }
-        if(self instanceof EntityReference) {
+        if (self instanceof EntityReference) {
             interpreter.defineGlobal('self', new Value(self, Type.ENTITY, ''));
         }
 
@@ -210,8 +210,8 @@ export class Scripting {
         interpreter.defineGlobal('testToken', new Value(new EntityReference(new Entity('token', 0)), Type.ENTITY, ''));
 
         // define global variables (may override existing vars)
-        for(const [name, values] of Object.entries(this.#globalVars)) {
-            interpreter.defineGlobal(name, values[values.length-1]);
+        for (const [name, values] of Object.entries(this.#globalVars)) {
+            interpreter.defineGlobal(name, values[values.length - 1]);
         }
 
         // event for modifying the interpreter on one side
@@ -229,22 +229,22 @@ export class Scripting {
     }
 
     checkReadAccess(profile, entity, property) {
-        if(!(entity instanceof Entity)) return false;
+        if (!(entity instanceof Entity)) return false;
 
-        if(!entity.canView(profile)) return false;
+        if (!entity.canView(profile)) return false;
 
         // special cased "properties"
-        if(property == 'id') return true;
-        if(property == 'manager') return true;
+        if (property == 'id') return true;
+        if (property == 'manager') return true;
 
         const accessLevel = entity.getAccessLevel(profile);
         return entity.canViewProperty(property, accessLevel);
     }
 
     checkWriteAccess(profile, entity, property) {
-        if(!(entity instanceof Entity)) return false;
+        if (!(entity instanceof Entity)) return false;
 
-        if(!entity.canEdit(profile)) return false;
+        if (!entity.canEdit(profile)) return false;
 
         const accessLevel = entity.getAccessLevel(profile);
         return entity.canEditProperty(property, accessLevel);

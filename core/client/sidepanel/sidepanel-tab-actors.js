@@ -15,36 +15,36 @@ import { Events } from '../../common/events.js';
 export class SidepanelTabActors extends SidepanelTab {
     constructor() {
         super('actors', true);
-        
+
         this.tab.style.display = 'grid';
         this.tab.style.gridTemplateRows = 'auto max-content max-content';
-        
+
         const treePanel = document.createElement('div');
         treePanel.style.overflow = 'auto';
         this.tab.appendChild(treePanel);
         this.tree = new SearchableIDTree(treePanel, 'sidepanel-tab-actors', getValueProvider('actor'), () => this.doOpen(), (id, x, y) => this.doOpenMenu(x, y));
         Events.on('any_actor', event => this.tree.reload());
-        
-        if(ServerData.isGM()) {
+
+        if (ServerData.isGM()) {
             const buttonPanel = document.createElement('div');
             this.tab.appendChild(buttonPanel);
             GuiUtils.createButton(buttonPanel, I18N.get('sidepanel.actors.new.button', 'New Actor'), () => this.doAdd()).className = 'sidepanel-button';
         }
     }
-    
+
     doOpen() {
         const actor = EntityManagers.get('actor').find(this.tree.getSelectedValue());
-        if(actor) Events.trigger('openEntity', { entity: actor }, true);
+        if (actor) Events.trigger('openEntity', { entity: actor }, true);
     }
 
     doOpenMenu(x, y) {
         const actor = EntityManagers.get('actor').find(this.tree.getSelectedValue());
-        if(actor) new EntityMenu(null, new EntityReference(actor), ServerData.isGM(), x, y);
+        if (actor) new EntityMenu(null, new EntityReference(actor), ServerData.isGM(), x, y);
     }
-    
+
     doAdd() {
         new CanvasWindowInput(null, I18N.get('sidepanel.actors.new.title', 'New Actor'), I18N.get('sidepanel.actors.new.prompt', 'Enter Actor Name:'), '', name => {
-            if(name) {
+            if (name) {
                 const actor = new Entity('actor');
                 actor.setString('name', name);
                 EntityManagers.get('actor').add(actor);

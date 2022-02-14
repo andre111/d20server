@@ -5,14 +5,14 @@ export class CLICommand {
         this.name = name;
     }
 
-    getName() { 
-        return this.name; 
+    getName() {
+        return this.name;
     }
-    
+
     getSplitter() {
         return '-'.repeat(process.stdout.columns);
     }
-    
+
     getDescription() { throw new Error('Cannot call abstract function'); }
     getHelp() { throw new Error('Cannot call abstract function'); }
 

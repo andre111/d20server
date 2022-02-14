@@ -7,18 +7,18 @@ import { UserService } from '../service/user-service.js';
 var wss = null;
 export class WebsocketHandler {
     static init(server) {
-        wss = new websocket.Server({ 
-            server: server, 
+        wss = new websocket.Server({
+            server: server,
             path: '/ws',
             perMessageDeflate: {
                 zlibDeflateOptions: {
-                  // See zlib defaults.
-                  chunkSize: 1024,
-                  memLevel: 7,
-                  level: 3
+                    // See zlib defaults.
+                    chunkSize: 1024,
+                    memLevel: 7,
+                    level: 3
                 },
                 zlibInflateOptions: {
-                  chunkSize: 10 * 1024
+                    chunkSize: 10 * 1024
                 },
                 concurrencyLimit: 5, // Limits zlib concurrency for perf.
                 threshold: 1024 // Size (in bytes) below which messages should not be compressed if context takeover is disabled.
@@ -31,7 +31,7 @@ export class WebsocketHandler {
         setInterval(() => {
             wss.clients.forEach(ws => {
                 if (!ws.isAlive) return ws.terminate();
-                
+
                 ws.isAlive = false;
                 ws.ping(null, false, true);
             });
@@ -50,12 +50,12 @@ export class WebsocketHandler {
             try {
                 const msg = fromJson(message);
                 const event = Events.trigger('recievedMessage', { message: msg, ws: ws, profile: null, map: null }, true);
-                if(!event.canceled) {
+                if (!event.canceled) {
                     throw new Error(`Recieved unhandled message: ${message}`);
                 }
-            } catch(error) {
+            } catch (error) {
                 console.log(`Error during message recieve: ${error}`);
-                if(error instanceof Error) console.log(error.stack);
+                if (error instanceof Error) console.log(error.stack);
             }
         });
 

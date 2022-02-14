@@ -5,7 +5,7 @@ export class MenuCategory extends MenuItem {
     #list;
 
     constructor(name) {
-        super(name, () => {});
+        super(name, () => { });
 
         this.#list = document.createElement('ul');
         this.#list.style.visibility = 'hidden';
@@ -19,7 +19,7 @@ export class MenuCategory extends MenuItem {
     }
 
     addItem(item) {
-        if(!(item instanceof MenuItem)) throw new Error('Can only add instances of MenuItem');
+        if (!(item instanceof MenuItem)) throw new Error('Can only add instances of MenuItem');
 
         this.#list.appendChild(item.container);
         this.#items.push(item);
@@ -27,13 +27,13 @@ export class MenuCategory extends MenuItem {
     }
 
     open() {
-        if(this.parent instanceof MenuCategory) this.parent.closeAllChildren();
-        
+        if (this.parent instanceof MenuCategory) this.parent.closeAllChildren();
+
         const br = this.container.getBoundingClientRect();
         var left = br.right;
         var top = br.top;
         var height = this.#items.length * 22;
-        if(top + height > window.visualViewport.height) {
+        if (top + height > window.visualViewport.height) {
             top = window.visualViewport.height - height;
         }
 
@@ -48,8 +48,8 @@ export class MenuCategory extends MenuItem {
     }
 
     closeAllChildren() {
-        for(const item of this.#items) {
-            if(item instanceof MenuCategory) {
+        for (const item of this.#items) {
+            if (item instanceof MenuCategory) {
                 item.close();
             }
         }

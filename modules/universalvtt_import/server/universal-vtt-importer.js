@@ -17,8 +17,8 @@ export class UniversalVTTImporter {
 
         // extract image
         const buffer = Buffer.from(data.image, 'base64');
-        if(!fs.existsSync(UniversalVTTImporter.imageDir)) fs.mkdirsSync(UniversalVTTImporter.imageDir);
-        fs.writeFileSync(path.join(UniversalVTTImporter.imageDir, name+'.png'), buffer);
+        if (!fs.existsSync(UniversalVTTImporter.imageDir)) fs.mkdirsSync(UniversalVTTImporter.imageDir);
+        fs.writeFileSync(path.join(UniversalVTTImporter.imageDir, name + '.png'), buffer);
 
         // create base map
         const map = new Entity('map');
@@ -30,7 +30,7 @@ export class UniversalVTTImporter {
 
         // add background image token
         const bgToken = new Entity('token');
-        bgToken.setString('imagePath', '/image/imported/'+name+'.png');
+        bgToken.setString('imagePath', '/image/imported/' + name + '.png');
         bgToken.setLayer('layer', Layer.BACKGROUND);
         bgToken.setLong('width', w * s);
         bgToken.setLong('height', h * s);
@@ -39,18 +39,18 @@ export class UniversalVTTImporter {
         map.getContainedEntityManager('token').add(bgToken);
 
         // add walls
-        for(const los of data.line_of_sight) {
-            for(var i=0; los[i+1]; i++) {
+        for (const los of data.line_of_sight) {
+            for (var i = 0; los[i + 1]; i++) {
                 const x1 = los[i].x * s;
                 const y1 = los[i].y * s;
-                const x2 = los[i+1].x * s;
-                const y2 = los[i+1].y * s;
+                const x2 = los[i + 1].x * s;
+                const y2 = los[i + 1].y * s;
                 UniversalVTTImporter.createWall(map, x1, y1, x2, y2, false, false);
             }
         }
 
         // add doors and windows (portals)
-        for(const portal of data.portals) {
+        for (const portal of data.portals) {
             const x1 = portal.bounds[0].x * s;
             const y1 = portal.bounds[0].y * s;
             const x2 = portal.bounds[1].x * s;
@@ -61,11 +61,11 @@ export class UniversalVTTImporter {
         }
 
         // add lights
-        if(importLights) {
-            if(!fs.existsSync(path.join(UniversalVTTImporter.imageDir, 'light.png'))) {
-                fs.copyFileSync(UniversalVTTImporter.lightFile, path.join(UniversalVTTImporter.imageDir, 'light.png')); 
+        if (importLights) {
+            if (!fs.existsSync(path.join(UniversalVTTImporter.imageDir, 'light.png'))) {
+                fs.copyFileSync(UniversalVTTImporter.lightFile, path.join(UniversalVTTImporter.imageDir, 'light.png'));
             }
-            for(const light of data.lights) {
+            for (const light of data.lights) {
                 const lightToken = new Entity('token');
                 lightToken.setString('imagePath', '/image/imported/light.png');
                 lightToken.setLayer('layer', Layer.GMOVERLAY);
@@ -75,7 +75,7 @@ export class UniversalVTTImporter {
                 lightToken.setLong('y', light.position.y * s);
                 lightToken.setDouble('lightBright', light.range);
                 lightToken.setDouble('lightDim', light.range * 2);
-                lightToken.setColor('lightColor', '#'+light.color.substring(2));
+                lightToken.setColor('lightColor', '#' + light.color.substring(2));
                 //TODO: light intensity?
                 map.getContainedEntityManager('token').add(lightToken);
             }

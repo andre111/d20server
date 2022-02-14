@@ -24,13 +24,13 @@ export class Value {
     }
 
     isEqual(other) {
-        if(this.type != other.type) return false;
+        if (this.type != other.type) return false;
         return this.value == other.value;
     }
 
     isTruthy() {
-        if(this.type == Type.NULL) return false;
-        if(this.type == Type.BOOLEAN) return this.value;
+        if (this.type == Type.NULL) return false;
+        if (this.type == Type.BOOLEAN) return this.value;
         return true;
     }
 

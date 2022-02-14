@@ -16,30 +16,30 @@ class EventListener {
     constructor(type) {
         this.#type = type;
 
-        this.#modifyListener = Events.on('modified_'+this.#type, event => this.onModified(event));
-        this.#removeListener = Events.on('removed_'+this.#type, event => this.onRemoved(event));
+        this.#modifyListener = Events.on('modified_' + this.#type, event => this.onModified(event));
+        this.#removeListener = Events.on('removed_' + this.#type, event => this.onRemoved(event));
     }
 
     unregister() {
-        Events.remove('modified_'+this.#type, this.#modifyListener);
-        Events.remove('removed_'+this.#type, this.#removeListener);
+        Events.remove('modified_' + this.#type, this.#modifyListener);
+        Events.remove('removed_' + this.#type, this.#removeListener);
     }
 
     onModified(event) {
         const id = event.data.entity.getID();
         const manager = event.data.manager.getName();
 
-        for(const reference of this.#listeningReferences) {
-            if(id == reference.getBackingEntity().getID() && manager == reference.getBackingEntity().getManager()) reference.entityChanged(event.data.entity);
+        for (const reference of this.#listeningReferences) {
+            if (id == reference.getBackingEntity().getID() && manager == reference.getBackingEntity().getManager()) reference.entityChanged(event.data.entity);
         }
     }
 
     onRemoved(event) {
         const id = event.data.entity.getID();
         const manager = event.data.manager.getName();
-        
-        for(const reference of this.#listeningReferences) {
-            if(id == reference.getBackingEntity().getID() && manager == reference.getBackingEntity().getManager()) reference.entityRemoved();
+
+        for (const reference of this.#listeningReferences) {
+            if (id == reference.getBackingEntity().getID() && manager == reference.getBackingEntity().getManager()) reference.entityRemoved();
         }
     }
 
@@ -49,7 +49,7 @@ class EventListener {
 
     removeReference(reference) {
         const index = this.#listeningReferences.indexOf(reference);
-        if(index >= 0) this.#listeningReferences.splice(index, 1);
+        if (index >= 0) this.#listeningReferences.splice(index, 1);
     }
 
     isEmpty() {
@@ -58,20 +58,20 @@ class EventListener {
 }
 function registerListeners(reference) {
     const type = reference.getType();
-    if(!EVENT_LISTENERS[type]) EVENT_LISTENERS[type] = new EventListener(type);
+    if (!EVENT_LISTENERS[type]) EVENT_LISTENERS[type] = new EventListener(type);
 
     // add reference to listener
     EVENT_LISTENERS[type].addReference(reference);
 }
 function unregisterListeners(reference) {
     const type = reference.getType();
-    if(!EVENT_LISTENERS[type]) return;
+    if (!EVENT_LISTENERS[type]) return;
 
     // remove reference from listener
     EVENT_LISTENERS[type].removeReference(reference);
 
     // unregister and destroy listener if no references remain
-    if(EVENT_LISTENERS[type].isEmpty()) {
+    if (EVENT_LISTENERS[type].isEmpty()) {
         EVENT_LISTENERS[type].unregister();
         delete EVENT_LISTENERS[type];
     }
@@ -107,32 +107,32 @@ export class EntityReference extends Entity {
     }
 
     has(name) {
-        if(!this.backingEntity) return false;
+        if (!this.backingEntity) return false;
         return this.getBackingEntity().has(name);
     }
 
     getInternal(name) {
-        if(this.changedProperties[name]) return this.changedProperties[name];
+        if (this.changedProperties[name]) return this.changedProperties[name];
         return this.getBackingEntity().getInternal(name);
     }
     setInternal(name, value) {
-        if(value === this.getBackingEntity().getInternal(name)) delete this.changedProperties[name];
+        if (value === this.getBackingEntity().getInternal(name)) delete this.changedProperties[name];
         else this.changedProperties[name] = value;
         this.onPropertyChange(name);
     }
 
     getViewAccess() {
-        if(!this.backingEntity) return Access.SYSTEM;
+        if (!this.backingEntity) return Access.SYSTEM;
         return this.backingEntity.getViewAccess();
     }
 
     getEditAccess() {
-        if(!this.backingEntity) return Access.SYSTEM;
+        if (!this.backingEntity) return Access.SYSTEM;
         return this.backingEntity.getEditAccess();
     }
 
     getAccessLevel(profile) {
-        if(!this.backingEntity) return Access.EVERYONE;
+        if (!this.backingEntity) return Access.EVERYONE;
         return this.backingEntity.getAccessLevel(profile);
     }
 
@@ -159,7 +159,7 @@ export class EntityReference extends Entity {
     //NOTE: When registering a listener we ALWAYS need to unregister the listeners again or the EntityReference will be leaked
     addListener(listener) {
         // register with events manager
-        if(this.listeners.length == 0) {
+        if (this.listeners.length == 0) {
             registerListeners(this);
         }
 
@@ -168,21 +168,21 @@ export class EntityReference extends Entity {
 
     removeListener(listener) {
         const index = this.listeners.indexOf(listener);
-        if(index >= 0) this.listeners.splice(index, 1);
+        if (index >= 0) this.listeners.splice(index, 1);
 
         // unregister with events manager
-        if(this.listeners.length == 0) {
+        if (this.listeners.length == 0) {
             unregisterListeners(this);
         }
     }
 
     performUpdate(keepLocalChanges = false) {
-        if(!this.backingEntity) return;
-        
-		// update properties (and clear changes)
-        if(Object.keys(this.changedProperties).length > 0) {
+        if (!this.backingEntity) return;
+
+        // update properties (and clear changes)
+        if (Object.keys(this.changedProperties).length > 0) {
             EntityManagers.get(this.getManager()).updateProperties(this.getID(), this.changedProperties, Access.SYSTEM);
-            if(!keepLocalChanges) this.changedProperties = {};
+            if (!keepLocalChanges) this.changedProperties = {};
         }
     }
 
@@ -197,7 +197,7 @@ export class EntityReference extends Entity {
     }
 
     performRemove() {
-        if(!this.backingEntity) return;
+        if (!this.backingEntity) return;
 
         EntityManagers.get(this.getManager()).remove(this.getID());
     }
@@ -209,7 +209,7 @@ export class EntityReference extends Entity {
 
     entityChanged(entity) {
         // update mouse offset
-        if(entity.has('x') && entity.has('y')) {
+        if (entity.has('x') && entity.has('y')) {
             const xdiff = entity.getLong('x') - this.getBackingEntity().getLong('x');
             const ydiff = entity.getLong('y') - this.getBackingEntity().getLong('y');
             this.mouseOffsetX += xdiff;
@@ -218,14 +218,14 @@ export class EntityReference extends Entity {
 
         // update backingEntity and notify listeners
         this.backingEntity = entity;
-        for(const listener of this.listeners) {
-            if(listener.entityChanged) listener.entityChanged(this);
+        for (const listener of this.listeners) {
+            if (listener.entityChanged) listener.entityChanged(this);
         }
     }
 
     entityRemoved() {
-        for(const listener of this.listeners) {
-            if(listener.entityRemoved) listener.entityRemoved(this);
+        for (const listener of this.listeners) {
+            if (listener.entityRemoved) listener.entityRemoved(this);
         }
         this.backingEntity = null;
     }

@@ -16,11 +16,11 @@ export class ActorPropertyEditor extends PropertyEditor {
 
     constructor(reference) {
         super('actorID', Type.LONG, '');
-        
+
         this.#reference = reference;
         this.#currentActorID = -1;
     }
-    
+
     initContent(label) {
         this.addLabel(I18N.get('token.edit.represents', 'represents '));
         this.button = document.createElement('button');
@@ -31,8 +31,8 @@ export class ActorPropertyEditor extends PropertyEditor {
         this.openButton.innerText = 'Open';
         this.openButton.onclick = () => this.doOpenActor();
         this.container.appendChild(this.openButton);
-        
-        if(ServerData.isGM()) {
+
+        if (ServerData.isGM()) {
             this.makeLocalButton = document.createElement('button');
             this.makeLocalButton.innerText = 'Make Local';
             this.makeLocalButton.onclick = () => this.doMakeLocal();
@@ -41,27 +41,27 @@ export class ActorPropertyEditor extends PropertyEditor {
 
         return this.button;
     }
-    
+
     reloadValue(reference, name) {
         this.#currentActorID = reference.getLong(name);
         this.updateButtons();
     }
-    
+
     applyValue(reference, name) {
         reference.setLong(name, this.#currentActorID);
     }
-    
+
     updateButtons() {
         const actor = TokenUtil.getActor(this.#reference);
         this.button.innerText = actor ? actor.getName() : '<none>';
 
-        if(this.makeLocalButton) {
+        if (this.makeLocalButton) {
             this.makeLocalButton.disabled = this.#reference.getBoolean('actorLocal');
         }
     }
-    
+
     doSelectActor() {
-        if(this.#reference.getBoolean('actorLocal')) return;
+        if (this.#reference.getBoolean('actorLocal')) return;
 
         new CanvasWindowChoose(this.window, 'actor', id => {
             this.#currentActorID = id;
@@ -71,13 +71,13 @@ export class ActorPropertyEditor extends PropertyEditor {
 
     doOpenActor() {
         const actor = TokenUtil.getActor(this.#reference);
-        if(actor && actor.canView(ServerData.localProfile)) {
+        if (actor && actor.canView(ServerData.localProfile)) {
             Events.trigger('openEntity', { entity: actor, parentWindow: this.window }, true)
         }
     }
 
     doMakeLocal() {
-        if(this.#reference.getBoolean('actorLocal')) return;
+        if (this.#reference.getBoolean('actorLocal')) return;
 
         new CanvasWindowConfirm(this.window, 'Make Actor Local', 'Do you want to make the actor local to this token? Changes to the global actor will no longer be reflected in this tokens actor and vice versa. This cannot be undone.', () => {
             MessageService.send(new MakeActorLocal(this.#reference));

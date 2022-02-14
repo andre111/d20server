@@ -25,7 +25,7 @@ export class CanvasWindow {
         this.#closed = false;
 
         // create and add modal pane
-        if(modal) {
+        if (modal) {
             this.#modalPane = document.createElement('div');
             this.#modalPane.className = 'dialog-modal-pane';
             document.body.appendChild(this.#modalPane);
@@ -35,18 +35,18 @@ export class CanvasWindow {
         this.#frame = document.createElement('div');
         this.#frame.className = 'dialog' + (modal ? ' modal' : '');
         this.#frame.onmousedown = () => {
-            if(this.#popout) return;
+            if (this.#popout) return;
 
             const maxZIndex = CanvasWindowManager.getMaxZIndex();
-            if(maxZIndex > this.zIndex) this.zIndex = maxZIndex + 1;
+            if (maxZIndex > this.zIndex) this.zIndex = maxZIndex + 1;
         };
         document.body.appendChild(this.#frame);
-        
+
         // title bar
         const titleBar = this.#frame.ownerDocument.createElement('div');
         titleBar.className = 'dialog-title';
         titleBar.onmousedown = e => {
-            if(this.#popout) return;
+            if (this.#popout) return;
 
             CanvasWindowManager.dragInit(this, e.clientX, e.clientY);
         };
@@ -74,7 +74,7 @@ export class CanvasWindow {
         this.zIndex = CanvasWindowManager.getMaxZIndex() + 1;
         CanvasWindowManager.onWindowOpen(this);
 
-        if(parent && parent instanceof CanvasWindow) {
+        if (parent && parent instanceof CanvasWindow) {
             parent.#children.push(this);
             //TODO: this runs into the chrome popup blocker
             //if(parent.isPopout()) this.togglePopout();
@@ -88,7 +88,7 @@ export class CanvasWindow {
     set zIndex(value) {
         this.#zIndex = value;
 
-        if(this.#modalPane) this.#modalPane.style.zIndex = value;
+        if (this.#modalPane) this.#modalPane.style.zIndex = value;
         this.#frame.style.zIndex = value;
     }
 
@@ -108,10 +108,10 @@ export class CanvasWindow {
         return this.#content;
     }
 
-    onClose() {}
+    onClose() { }
 
     addButton(name, callback) {
-        if(!this.#buttons) {
+        if (!this.#buttons) {
             this.#buttons = this.#frame.ownerDocument.createElement('div');
             this.#buttons.className = 'dialog-buttons';
             this.#frame.appendChild(this.#buttons);
@@ -148,7 +148,7 @@ export class CanvasWindow {
             height: this.#frame.offsetHeight
         };
     }
-    
+
     setLocation(loc) {
         this.#frame.style.left = loc.x + 'px';
         this.#frame.style.top = loc.y + 'px';
@@ -183,7 +183,7 @@ export class CanvasWindow {
     }
 
     togglePopout() {
-        if(!this.#popout) {
+        if (!this.#popout) {
             // create popout
             this.#popout = window.open('', '_blank', `width=${this.#frame.offsetWidth},height=${this.#frame.offsetHeight},status=no,toolbar=no,menubar=no,location=no,resizable=no,titlebar=no`);
             // create base for relative links
@@ -191,8 +191,8 @@ export class CanvasWindow {
             base.href = window.origin;
             this.#popout.document.head.appendChild(base);
             // transfer stylesheets
-            for(const styleTag of document.getElementsByTagName('link')) {
-                if(styleTag.rel == 'stylesheet') {
+            for (const styleTag of document.getElementsByTagName('link')) {
+                if (styleTag.rel == 'stylesheet') {
                     const newStyleTag = this.#popout.document.createElement('link');
                     newStyleTag.rel = 'stylesheet';
                     newStyleTag.href = styleTag.href;
@@ -209,12 +209,12 @@ export class CanvasWindow {
 
             // move window contents to popout
             this.#popout.document.body.appendChild(this.#frame);
-            if(this.#modalPane) this.#modalPane.ownerDocument.body.removeChild(this.#modalPane);
+            if (this.#modalPane) this.#modalPane.ownerDocument.body.removeChild(this.#modalPane);
             this.#modalPane = null;
             this.setPosition(0, 0);
         } else {
             // move content back
-            if(this.#modal) {
+            if (this.#modal) {
                 this.#modalPane = document.createElement('div');
                 this.#modalPane.className = 'dialog-modal-pane';
                 document.body.appendChild(this.#modalPane);
@@ -233,13 +233,13 @@ export class CanvasWindow {
     isPopout() {
         return this.#popout != null;
     }
-    
+
     close() {
-        if(this.#closed) return;
+        if (this.#closed) return;
         this.#closed = true;
-        
+
         // close all children
-        for(const child of this.#children) {
+        for (const child of this.#children) {
             child.close();
         }
 
@@ -247,9 +247,9 @@ export class CanvasWindow {
         this.onClose();
 
         // remove from document
-        if(this.#modalPane) this.#modalPane.ownerDocument.body.removeChild(this.#modalPane);
+        if (this.#modalPane) this.#modalPane.ownerDocument.body.removeChild(this.#modalPane);
         this.#frame.ownerDocument.body.removeChild(this.#frame);
-        if(this.#popout) this.#popout.close();
+        if (this.#popout) this.#popout.close();
 
         // remove from manager
         CanvasWindowManager.onWindowClose(this);

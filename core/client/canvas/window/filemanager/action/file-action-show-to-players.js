@@ -14,6 +14,6 @@ export class FileActionShowToPlayers extends FileAction {
     }
 
     applyTo(file) {
-        MessageService.send(new ActionCommand('SHOW_IMAGE', 0, 0, 0, false, '/data/files'+file.getPath()));
+        MessageService.send(new ActionCommand('SHOW_IMAGE', 0, 0, 0, false, '/data/files' + file.getPath()));
     }
 }

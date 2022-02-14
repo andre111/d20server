@@ -7,27 +7,27 @@ export function registerType(type) {
 // automatically store 'type' of registered types as object property
 // also calls preSave on any object where it is present
 function storeType(object) {
-    if(object && typeof(object) === 'object') {
+    if (object && typeof (object) === 'object') {
         storeTypeRecursion(object);
     }
 }
 function storeTypeRecursion(object) {
-    if(Array.isArray(object)) {
-        for(var i=0; i<object.length; i++) {
+    if (Array.isArray(object)) {
+        for (var i = 0; i < object.length; i++) {
             storeType(object[i]);
         }
     } else {
-        for(const key in object) {
-            if(object.hasOwnProperty(key) && !key.startsWith('_transient_')) {
+        for (const key in object) {
+            if (object.hasOwnProperty(key) && !key.startsWith('_transient_')) {
                 storeType(object[key]);
             }
         }
 
-        if(object.constructor.name !== 'Object') {
+        if (object.constructor.name !== 'Object') {
             object.__type = object.constructor.name;
         }
 
-        if(typeof(object.preSave) === 'function') {
+        if (typeof (object.preSave) === 'function') {
             object.preSave();
         }
     }
@@ -36,29 +36,29 @@ function storeTypeRecursion(object) {
 // automatically assign stored 'type' from object property
 // also calls postLoad on any object where it is present
 function assignType(object) {
-    if(object && typeof(object) === 'object') {
+    if (object && typeof (object) === 'object') {
         object = assignTypeRecursion(object);
     }
     return object;
 }
 function assignTypeRecursion(object) {
-    if(Array.isArray(object)) {
-        for(var i=0; i<object.length; i++) {
+    if (Array.isArray(object)) {
+        for (var i = 0; i < object.length; i++) {
             object[i] = assignType(object[i]);
         }
     } else {
-        for(const key in object) {
-            if(object.hasOwnProperty(key)) {
+        for (const key in object) {
+            if (object.hasOwnProperty(key)) {
                 object[key] = assignType(object[key]);
             }
         }
 
-        if(nameToTypeMap.has(object.__type)) {
+        if (nameToTypeMap.has(object.__type)) {
             var base = new (nameToTypeMap.get(object.__type))();
             object = Object.assign(base, object);
         }
 
-        if(typeof(object.postLoad) === 'function') {
+        if (typeof (object.postLoad) === 'function') {
             object.postLoad();
         }
     }
@@ -68,18 +68,18 @@ function assignTypeRecursion(object) {
 
 // json functions with automatic type assignment and calling preSave/postLoad
 function jsonReplacer(key, value) {
-    if(key.startsWith('_transient_')) return undefined;
+    if (key.startsWith('_transient_')) return undefined;
     else return value;
 }
 function jsonReplacerTransfer(key, value) {
-    if(key.startsWith('_transient_')) return undefined;
-    if(key.startsWith('_notransfer_')) return undefined;
+    if (key.startsWith('_transient_')) return undefined;
+    if (key.startsWith('_notransfer_')) return undefined;
     else return value;
 }
 
 export function toJson(object, forTransfer, pretty = false) {
     storeType(object);
-    if(forTransfer) return JSON.stringify(object, jsonReplacerTransfer, pretty ? 4 : null);
+    if (forTransfer) return JSON.stringify(object, jsonReplacerTransfer, pretty ? 4 : null);
     else return JSON.stringify(object, jsonReplacer, pretty ? 4 : null);
 }
 
@@ -91,16 +91,16 @@ export function fromJson(text) {
 export function toFormatedSize(value) {
     value = value || 0;
     var suffix = 'B';
-    if(value > 1024) { value = value / 1024; suffix = 'KiB'; }
-    if(value > 1024) { value = value / 1024; suffix = 'MiB'; }
-    if(value > 1024) { value = value / 1024; suffix = 'GiB'; }
+    if (value > 1024) { value = value / 1024; suffix = 'KiB'; }
+    if (value > 1024) { value = value / 1024; suffix = 'MiB'; }
+    if (value > 1024) { value = value / 1024; suffix = 'GiB'; }
     return new Number(value).toFixed(2) + ' ' + suffix;
 }
 
 // General Object + Array Helpers
 export function chunk(arr, chunkSize) {
     if (chunkSize <= 0) throw new Error('Invalid chunk size');
-    
+
     var r = [];
     for (var i = 0, len = arr.length; i < len; i += chunkSize)
         r.push(arr.slice(i, i + chunkSize));
@@ -117,12 +117,12 @@ export function chunk(arr, chunkSize) {
 **/
 export function deepMerge(...objects) {
     const isObject = obj => obj && typeof obj === 'object';
-    
+
     return objects.reduce((prev, obj) => {
         Object.keys(obj).forEach(key => {
             const pVal = prev[key];
             const oVal = obj[key];
-            
+
             if (Array.isArray(pVal) && Array.isArray(oVal)) {
                 prev[key] = pVal.concat(...oVal);
             } else if (isObject(pVal) && isObject(oVal)) {
@@ -131,7 +131,7 @@ export function deepMerge(...objects) {
                 prev[key] = oVal;
             }
         });
-        
+
         return prev;
     }, {});
 }
@@ -157,14 +157,14 @@ export class FileType {
 
 const knownFileEndings = {};
 export function registerFileEnding(ending, type) {
-    if(!(type instanceof FileType)) throw new Error('Provided Object is not a FileType.');
+    if (!(type instanceof FileType)) throw new Error('Provided Object is not a FileType.');
     knownFileEndings[ending.toLowerCase()] = type;
 }
 export function getFileType(filePath) {
     const hasFileEnding = filePath.includes('.');
-    if(hasFileEnding) {
-        const fileEnding = filePath.substring(filePath.lastIndexOf('.')+1).toLowerCase();
-        if(knownFileEndings[fileEnding])  {
+    if (hasFileEnding) {
+        const fileEnding = filePath.substring(filePath.lastIndexOf('.') + 1).toLowerCase();
+        if (knownFileEndings[fileEnding]) {
             return knownFileEndings[fileEnding];
         }
     }

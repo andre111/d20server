@@ -16,11 +16,11 @@ export class Entity {
 
     constructor(type, forcedId) {
         this.type = type;
-        if(forcedId) {
+        if (forcedId) {
             this.id = forcedId;
         }
 
-        if(type) {
+        if (type) {
             this.addDefaultProperties();
         }
     }
@@ -28,7 +28,7 @@ export class Entity {
     postLoad() {
         // add default properties after load from data (for potentially outdated entities)
         // but only do so on the server - the client only recieves full entities and would only waste time here
-        if(Common.isServer()) this.addDefaultProperties();
+        if (Common.isServer()) this.addDefaultProperties();
     }
 
     onAdd() {
@@ -40,7 +40,7 @@ export class Entity {
     }
 
     getID() {
-        if(this.id == null || this.id == undefined) this.id = ID.next();
+        if (this.id == null || this.id == undefined) this.id = ID.next();
         return this.id;
     }
 
@@ -57,7 +57,7 @@ export class Entity {
     }
 
     getManager() {
-        if(this.manager) return this.manager;
+        if (this.manager) return this.manager;
         else return this.type;
     }
 
@@ -68,7 +68,7 @@ export class Entity {
     // DEFINITIONS
     getDefinition() {
         const def = getDefinitions().getEntityDefinition(this.getType());
-        if(!def) throw new Error(`Missing Definition for entity type ${this.getType()}`);
+        if (!def) throw new Error(`Missing Definition for entity type ${this.getType()}`);
         return def;
     }
 
@@ -76,20 +76,20 @@ export class Entity {
         var activeExtensions = [];
 
         const def = this.getDefinition();
-        for(const extensionPoint of def.extensionPoints) {
-            switch(extensionPoint.mode) {
-            case 'ALL':
-                for(const name in extensionPoint.extensionDefinitions) {
-                    activeExtensions.push(extensionPoint.extensionDefinitions[name]);
-                }
-                break;
-            case 'SELECT_SINGLE':
-                const selected = this.getString(extensionPoint.property);
-                const extensionDefinition = extensionPoint.extensionDefinitions[selected];
-                if(extensionDefinition) {
-                    activeExtensions.push(extensionDefinition);
-                }
-                break;
+        for (const extensionPoint of def.extensionPoints) {
+            switch (extensionPoint.mode) {
+                case 'ALL':
+                    for (const name in extensionPoint.extensionDefinitions) {
+                        activeExtensions.push(extensionPoint.extensionDefinitions[name]);
+                    }
+                    break;
+                case 'SELECT_SINGLE':
+                    const selected = this.getString(extensionPoint.property);
+                    const extensionDefinition = extensionPoint.extensionDefinitions[selected];
+                    if (extensionDefinition) {
+                        activeExtensions.push(extensionDefinition);
+                    }
+                    break;
             }
         }
 
@@ -97,9 +97,9 @@ export class Entity {
     }
 
     getPropertyDefinition(name) {
-        if(this.getDefinition().properties[name]) return this.getDefinition().properties[name];
-        for(const extDef of this.getActiveExtensions()) {
-            if(extDef.properties[name]) return extDef.properties[name];
+        if (this.getDefinition().properties[name]) return this.getDefinition().properties[name];
+        for (const extDef of this.getActiveExtensions()) {
+            if (extDef.properties[name]) return extDef.properties[name];
         }
         return null;
     }
@@ -107,19 +107,19 @@ export class Entity {
     // PROPERTY FUNCTIONS
     addDefaultProperties() {
         this.addPropertiesFromDefs(this.getDefinition().properties);
-        for(const extDef of this.getActiveExtensions()) {
+        for (const extDef of this.getActiveExtensions()) {
             this.addPropertiesFromDefs(extDef.properties);
         }
     }
 
     addPropertiesFromDefs(propertyDefinitions) {
-        for(const [name, def] of Object.entries(propertyDefinitions)) {
+        for (const [name, def] of Object.entries(propertyDefinitions)) {
             this.addPropertyIfAbsentOrWrong(name, def.value);
         }
     }
 
     addPropertyIfAbsentOrWrong(name, value) {
-        if(!this.properties[name]) {
+        if (!this.properties[name]) {
             this.properties[name] = value;
         }
     }
@@ -127,7 +127,7 @@ export class Entity {
     clonePropertiesFrom(other) {
         this.properties = {};
         const otherProperties = other.getProperties();
-        for(const name in otherProperties) {
+        for (const name in otherProperties) {
             this.properties[name] = otherProperties[name];
         }
     }
@@ -137,19 +137,19 @@ export class Entity {
     }
 
     getContainedEntityManagerName(containedEntityType) {
-        if(!this.getContainedEntityTypes().includes(containedEntityType)) throw new Error('Tried to access undefined contained entity manager for '+containedEntityType+' in '+this.getType());
+        if (!this.getContainedEntityTypes().includes(containedEntityType)) throw new Error('Tried to access undefined contained entity manager for ' + containedEntityType + ' in ' + this.getType());
 
-        return this.getType()+'/'+this.getID()+'-'+containedEntityType;
+        return this.getType() + '/' + this.getID() + '-' + containedEntityType;
     }
 
     getContainedEntityTypes() {
         //TODO: this should probably be cached in definition
         var types = [];
-        for(const containedEntityType of this.getDefinition().settings.containedEntities) {
+        for (const containedEntityType of this.getDefinition().settings.containedEntities) {
             types.push(containedEntityType);
         }
-        for(const extDef of this.getActiveExtensions()) {
-            for(const containedEntityType of extDef.settings.containedEntities) {
+        for (const extDef of this.getActiveExtensions()) {
+            for (const containedEntityType of extDef.settings.containedEntities) {
                 types.push(containedEntityType);
             }
         }
@@ -157,14 +157,14 @@ export class Entity {
     }
 
     createContainedEntityManagers() {
-        for(const containedEntityType of this.getContainedEntityTypes()) {
+        for (const containedEntityType of this.getContainedEntityTypes()) {
             const manager = EntityManagers.getOrCreate(this.getContainedEntityManagerName(containedEntityType), containedEntityType);
             manager.parentEntity = this;
         }
     }
 
     removeContainedEntityManagers() {
-        for(const containedEntityType of this.getContainedEntityTypes()) {
+        for (const containedEntityType of this.getContainedEntityTypes()) {
             EntityManagers.delete(this.getContainedEntityManagerName(containedEntityType));
         }
     }
@@ -174,7 +174,7 @@ export class Entity {
     }
 
     onPropertyChange(name) {
-        if(!this._transient_updating) {
+        if (!this._transient_updating) {
             this._transient_updating = true;
             this.addDefaultProperties();
 
@@ -190,13 +190,13 @@ export class Entity {
         const macros = {};
 
         this.addPredefinedMacros(macros, this.getDefinition().macros);
-        for(const extDef of this.getActiveExtensions()) {
+        for (const extDef of this.getActiveExtensions()) {
             this.addPredefinedMacros(macros, extDef.macros);
         }
         return macros;
     }
     addPredefinedMacros(masterMap, newMap) {
-        for(const name in newMap) {
+        for (const name in newMap) {
             masterMap[name] = newMap[name];
         }
     }
@@ -239,7 +239,7 @@ export class Entity {
     }
 
     checkType(name, requiredType) {
-        if(this.getPropertyType(name) != requiredType) throw new Error(`Property is of wrong type, required ${requiredType} but is ${this.getPropertyType(name)}`);
+        if (this.getPropertyType(name) != requiredType) throw new Error(`Property is of wrong type, required ${requiredType} but is ${this.getPropertyType(name)}`);
     }
 
     // --
@@ -247,7 +247,7 @@ export class Entity {
         return this.properties[name];
     }
     setInternal(name, value) {
-        if(this.properties[name] === value) return;
+        if (this.properties[name] === value) return;
 
         this.properties[name] = value;
         this.onPropertyChange(name);
@@ -292,7 +292,7 @@ export class Entity {
     getLongList(name) {
         this.checkType(name, Type.LONG_LIST);
         const value = this.getInternal(name);
-        if(!value || value == '') return [];
+        if (!value || value == '') return [];
         return value.split(';').map(s => Number(s));
     }
     setLongList(name, value) {
@@ -303,20 +303,20 @@ export class Entity {
     getStringMap(name) {
         this.checkType(name, Type.STRING_MAP);
         const value = this.getInternal(name);
-        if(!value || value == '') return {};
+        if (!value || value == '') return {};
 
         var map = {};
         var split = value.split('§');
-        for(var i=0; i<split.length-1; i+=2) {
-            map[split[i]] = split[i+1];
+        for (var i = 0; i < split.length - 1; i += 2) {
+            map[split[i]] = split[i + 1];
         }
         return map;
     }
     setStringMap(name, value) {
         this.checkType(name, Type.STRING_MAP);
-        
+
         var string = '';
-        for(const [key, entry] of Object.entries(value)) {
+        for (const [key, entry] of Object.entries(value)) {
             string = string + key.replace('§', '') + '§' + entry.replace('§', '') + '§';
         }
         this.setInternal(name, string);
@@ -374,13 +374,13 @@ export class Entity {
 
     getViewAccess() {
         const as = this.getDefinition().settings.viewAccess;
-        switch(as.mode) {
-        case 'SET':
-            return as.value;
-        case 'PROPERTY':
-            return this.getAccessValue(as.property);
-        case 'PROPERTY_TOGGLE':
-            return this.getBoolean(as.property) ? Access.EVERYONE : Access.CONTROLLING_PLAYER;
+        switch (as.mode) {
+            case 'SET':
+                return as.value;
+            case 'PROPERTY':
+                return this.getAccessValue(as.property);
+            case 'PROPERTY_TOGGLE':
+                return this.getBoolean(as.property) ? Access.EVERYONE : Access.CONTROLLING_PLAYER;
         }
         console.log(`WARNING: Entity Access Mode not implemented: ${as.mode}`);
         return Access.SYSTEM;
@@ -388,13 +388,13 @@ export class Entity {
 
     getEditAccess() {
         const as = this.getDefinition().settings.editAccess;
-        switch(as.mode) {
-        case 'SET':
-            return as.value;
-        case 'PROPERTY':
-            return this.getAccessValue(as.property);
-        case 'PROPERTY_TOGGLE':
-            return this.getBoolean(as.property) ? Access.EVERYONE : Access.CONTROLLING_PLAYER;
+        switch (as.mode) {
+            case 'SET':
+                return as.value;
+            case 'PROPERTY':
+                return this.getAccessValue(as.property);
+            case 'PROPERTY_TOGGLE':
+                return this.getBoolean(as.property) ? Access.EVERYONE : Access.CONTROLLING_PLAYER;
         }
         console.log(`WARNING: Entity Access Mode not implemented: ${as.mode}`);
         return Access.SYSTEM;
@@ -402,12 +402,12 @@ export class Entity {
 
     getAccessLevel(profile) {
         var accessLevel = Access.EVERYONE;
-        if(!profile) accessLevel = Access.SYSTEM;
-        else if(profile.role == Role.GM) accessLevel = Access.GM;
-        else if(this.getControllingPlayers().includes(profile.id)) accessLevel = Access.CONTROLLING_PLAYER;
-        
+        if (!profile) accessLevel = Access.SYSTEM;
+        else if (profile.role == Role.GM) accessLevel = Access.GM;
+        else if (this.getControllingPlayers().includes(profile.id)) accessLevel = Access.CONTROLLING_PLAYER;
+
         //TODO: remove this hacky hardcoding by actually implementing custom listeners for the getControllingPlayers event
-        if(this.getType() == 'map') {
+        if (this.getType() == 'map') {
             return (accessLevel == Access.EVERYONE && profile.currentMap == this.id) ? Access.CONTROLLING_PLAYER : accessLevel;
         }
         return accessLevel;

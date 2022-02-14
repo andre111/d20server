@@ -4,8 +4,8 @@ export class ValueProviderImage extends ValueProviderDefault {
     constructor() {
         super('image');
     }
-    
+
     getIcon(value) {
-        return '/image/'+value.id;
+        return '/image/' + value.id;
     }
 }

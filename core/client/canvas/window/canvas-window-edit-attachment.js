@@ -10,7 +10,7 @@ export class CanvasWindowEditAttachment extends CanvasWindowEditCustom {
         super(w, reference);
         const container = w.content;
         container.className = 'edit-window-container edit-attachment-container flexcol';
-        
+
         // build content
         // Header
         const header = document.createElement('div');
@@ -21,7 +21,7 @@ export class CanvasWindowEditAttachment extends CanvasWindowEditCustom {
             imageEditor.container.className = 'edit-attachment-image';
             header.appendChild(imageEditor.container);
             this.registerEditor(imageEditor);
-            
+
             const headerSide = document.createElement('div');
             headerSide.className = 'cs-header-side flexrow';
 
@@ -39,10 +39,10 @@ export class CanvasWindowEditAttachment extends CanvasWindowEditCustom {
             headerRow2.appendChild(shortDescEditor.container);
             this.registerEditor(shortDescEditor, true);
             headerSide.appendChild(headerRow2);
-            
+
             header.appendChild(headerSide);
         }
-        
+
         const content = document.createElement('div');
         content.className = 'edit-window-area edit-attachment-content';
         container.appendChild(content);
@@ -55,6 +55,6 @@ export class CanvasWindowEditAttachment extends CanvasWindowEditCustom {
             this.registerEditor(editor);
         }
 
-        w.setDimensions(800+2, 400+35);
+        w.setDimensions(800 + 2, 400 + 35);
     }
 }

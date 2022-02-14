@@ -2,7 +2,7 @@ export class Token {
     #type;
     #lexeme;
     #literal;
-    
+
     #line;
     #column;
     #error;

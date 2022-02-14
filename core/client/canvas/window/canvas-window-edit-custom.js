@@ -9,7 +9,7 @@ import { StringFilePropertyEditor } from '../../gui/property-editor/special/stri
 import { StringPropertyEditor } from '../../gui/property-editor/string-property-editor.js';
 
 export class CanvasWindowEditCustom {
-    #editorList; 
+    #editorList;
 
     constructor(w, reference) {
         // create and register one "tab"/EditorList to manage the editors
@@ -26,7 +26,7 @@ export class CanvasWindowEditCustom {
         const editor = new BooleanPropertyEditor(property, label);
         this.#editorList.registerEditor(editor, true);
 
-        if(className) editor.container.className = className;
+        if (className) editor.container.className = className;
         return editor.container;
     }
 
@@ -34,7 +34,7 @@ export class CanvasWindowEditCustom {
         const editor = new LongPropertyEditor(property, label);
         this.#editorList.registerEditor(editor, true);
 
-        if(className) editor.container.className = className;
+        if (className) editor.container.className = className;
         return editor.container;
     }
 
@@ -42,15 +42,15 @@ export class CanvasWindowEditCustom {
         const editor = new DoublePropertyEditor(property, label);
         this.#editorList.registerEditor(editor, true);
 
-        if(className) editor.container.className = className;
+        if (className) editor.container.className = className;
         return editor.container;
     }
-    
+
     createStringEditor(property, label, placeholder = '', className = '') {
         const editor = new StringPropertyEditor(property, label, placeholder);
         this.#editorList.registerEditor(editor);
 
-        if(className) editor.container.className = className;
+        if (className) editor.container.className = className;
         return editor.container;
     }
 
@@ -58,7 +58,7 @@ export class CanvasWindowEditCustom {
         const editor = new LayerPropertyEditor(property, label);
         this.#editorList.registerEditor(editor, true);
 
-        if(className) editor.container.className = className;
+        if (className) editor.container.className = className;
         return editor.container;
     }
 
@@ -66,7 +66,7 @@ export class CanvasWindowEditCustom {
         const editor = new ColorPropertyEditor(property, label);
         this.#editorList.registerEditor(editor, true);
 
-        if(className) editor.container.className = className;
+        if (className) editor.container.className = className;
         return editor.container;
     }
 
@@ -74,7 +74,7 @@ export class CanvasWindowEditCustom {
         const editor = new StringFilePropertyEditor(property, label, filetype);
         this.#editorList.registerEditor(editor, true);
 
-        if(className) editor.container.className = className;
+        if (className) editor.container.className = className;
         return editor.container;
     }
 
@@ -82,7 +82,7 @@ export class CanvasWindowEditCustom {
         const editor = new AccessPropertyEditor(property, label, allowedValues);
         this.#editorList.registerEditor(editor, true);
 
-        if(className) editor.container.className = className;
+        if (className) editor.container.className = className;
         return editor.container;
     }
 
@@ -90,15 +90,15 @@ export class CanvasWindowEditCustom {
     createValueContainer(name, onclick) {
         const li = document.createElement('li');
         li.className = 'edit-window-value-container';
-        
+
         const nameP = document.createElement('p');
         nameP.innerText = name;
-        if(onclick) {
+        if (onclick) {
             nameP.className = 'edit-window-clickable';
             nameP.onclick = onclick;
         }
         li.appendChild(nameP);
-        
+
         return li;
     }
 }

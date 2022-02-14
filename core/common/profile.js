@@ -29,7 +29,7 @@ export class Profile {
     }
 
     getID() {
-        if(this.id == null || this.id == undefined) this.id = ID.next();
+        if (this.id == null || this.id == undefined) this.id = ID.next();
         return this.id;
     }
 
@@ -70,20 +70,20 @@ export class Profile {
     }
 
     getSelectedToken(forceSingle) {
-        if(forceSingle && this._notransfer_selectedTokens.length != 1) return null;
+        if (forceSingle && this._notransfer_selectedTokens.length != 1) return null;
 
         const tokens = this.getSelectedTokens();
         return tokens.length > 0 ? tokens[0] : null;
     }
 
     getSelectedTokens() {
-        if(!this._notransfer_selectedTokens) return [];
+        if (!this._notransfer_selectedTokens) return [];
 
         const map = EntityManagers.get('map').find(this.currentMap);
-        if(map) {
+        if (map) {
             const manager = map.getContainedEntityManager('token');
-            if(manager) return this._notransfer_selectedTokens.map(id => manager.find(id)).filter(t => t);
-        } 
+            if (manager) return this._notransfer_selectedTokens.map(id => manager.find(id)).filter(t => t);
+        }
         return [];
     }
 

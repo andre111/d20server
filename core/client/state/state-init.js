@@ -23,8 +23,8 @@ export class StateInit extends State {
         fetch('/lang.json').then(res => res.json()).then(data => I18N.mergeObject(data));
 
         // add global error "handler" for reporting unhandled/uncaught errors
-        window.onerror = function(message, source, lineno, colno, error) {
-            if(!(Client.getState() instanceof StateDisconnected)) {
+        window.onerror = function (message, source, lineno, colno, error) {
+            if (!(Client.getState() instanceof StateDisconnected)) {
                 Client.setState(new StateDisconnected(-1, 'Clientside Error', error));
                 Connection.close();
             }
@@ -47,7 +47,7 @@ export class StateInit extends State {
     onClose(e) {
         // do NOT go back to StateInit, as old event listeners and other stuff could remain 
         // -> ask for manualy full page reload
-        if(!(Client.getState() instanceof StateDisconnected)) {
+        if (!(Client.getState() instanceof StateDisconnected)) {
             Client.setState(new StateDisconnected(e.code, e.reason));
         }
     }

@@ -7,12 +7,12 @@ export class MouseControllerCanvas extends MouseController {
 
     constructor(canvas) {
         super();
-        
+
         this.canvas = canvas;
-        
+
         canvas.addEventListener("keydown", e => this.keyPressed(e), true);
     }
-    
+
     mouseDragged(e) {
         Client.getState().mouseDragged(e);
     }
@@ -40,9 +40,9 @@ export class MouseControllerCanvas extends MouseController {
     mouseExited(e) {
         Client.getState().mouseExited(e);
     }
-    
+
     keyPressed(e) {
         const action = InputService.getAction(e);
-        if(action != null) Client.getState().actionPerformed(action);
+        if (action != null) Client.getState().actionPerformed(action);
     }
 }

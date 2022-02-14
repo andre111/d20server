@@ -19,23 +19,23 @@ export class TemplateCommand extends Command {
 
     execute(profile, args) {
         const split = splitArguments(args, 2);
-        if(split.length < 2) throw new Error('Usage: /template <name> <argument>[;<argument>[;...]]');
+        if (split.length < 2) throw new Error('Usage: /template <name> <argument>[;<argument>[;...]]');
 
         const name = split[0].toLowerCase();
         const templateArguments = split[1];
 
         // find template
         const template = Templates.get(name);
-        if(!template) throw new Error(`Unknown template: ${name}`);
+        if (!template) throw new Error(`Unknown template: ${name}`);
 
         // parse template
         var inputs = templateArguments.split(';');
-        for(var i=0; i<inputs.length; i++) inputs[i] = ChatService.escape(inputs[i]);
+        for (var i = 0; i < inputs.length; i++) inputs[i] = ChatService.escape(inputs[i]);
         const parseResult = template.parse(profile, inputs);
 
         // build message
         var text = '<div class="chat-sender">' + ChatService.escape(profile.getUsername()) + ': </div>';
-        text = text + '<div class="chat-message">'+parseResult.string+'</div>';
+        text = text + '<div class="chat-message">' + parseResult.string + '</div>';
 
         // determine recipents
         const recipents = this.buildRecipents(profile, this.showPublic, this.showSelf);

@@ -10,8 +10,8 @@ import { CLICommandStatus } from './cli/cli-command-status.js';
 
 export var clicommands = {};
 export function addCLICommand(command) {
-    if(!(command instanceof CLICommand)) throw new Error('Can only add instances of CLICommand');
-    if(clicommands[command.getName()]) throw new Error(`Command with the name ${command.getName()} is already registered`);
+    if (!(command instanceof CLICommand)) throw new Error('Can only add instances of CLICommand');
+    if (clicommands[command.getName()]) throw new Error(`Command with the name ${command.getName()} is already registered`);
     clicommands[command.getName()] = command;
 }
 addCLICommand(new CLICommandStop());
@@ -34,7 +34,7 @@ export class CommandLineService {
             const name = split[0];
             const args = split.slice(1);
 
-            if(clicommands[name]) {
+            if (clicommands[name]) {
                 clicommands[name].execute(args);
             } else {
                 console.log('Unknown command, type "help" for a list of commands');

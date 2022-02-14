@@ -16,17 +16,17 @@ export class ChatEntry {
     triggeredContent;
 
     constructor(text, source, includeGMs, recipents, rolls, triggeredContent) {
-        if(text) {
+        if (text) {
             this.id = ID.next();
             this.text = text;
             this.resetTime();
-            
+
             this.recipents = recipents;
             this.includeGMs = includeGMs || false;
             this.source = source;
 
-            if(rolls) this.setRolls(rolls);
-            if(triggeredContent) this.setTriggeredContent(triggeredContent);
+            if (rolls) this.setRolls(rolls);
+            if (triggeredContent) this.setTriggeredContent(triggeredContent);
         }
     }
 
@@ -59,7 +59,7 @@ export class ChatEntry {
         return this.source;
     }
 
-	// special set methods for rolls and triggered data
+    // special set methods for rolls and triggered data
     getRolls() {
         return this.rolls;
     }
@@ -73,11 +73,11 @@ export class ChatEntry {
     }
 
     setTriggeredContent(triggeredContent) {
-        for(const tc of triggeredContent) {
-			// make entry an actual replace order, instead of normal entry
+        for (const tc of triggeredContent) {
+            // make entry an actual replace order, instead of normal entry
             tc.parent = this.getID();
             tc.entry.replaceParent = this.getID();
-			// transfer important values from parent
+            // transfer important values from parent
             tc.entry.recipents = this.recipents;
             tc.entry.includeGMs = this.includeGMs;
         }
@@ -86,7 +86,7 @@ export class ChatEntry {
     }
 
     resetTime() {
-        this.time = Math.trunc(new Date().getTime()/1000);
+        this.time = Math.trunc(new Date().getTime() / 1000);
     }
 }
 registerType(ChatEntry);

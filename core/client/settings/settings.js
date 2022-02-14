@@ -14,29 +14,29 @@ export class Settings {
     static #window;
 
     static openWindow() {
-        if(!Settings.#window || Settings.#window.closed) {
+        if (!Settings.#window || Settings.#window.closed) {
             Settings.#window = new CanvasWindowSettings();
         }
     }
 
     static createPage(internalName, displayName) {
-        if(Settings.#pages[internalName]) throw new Error(`Duplicated settings page name: ${internalName}`);
+        if (Settings.#pages[internalName]) throw new Error(`Duplicated settings page name: ${internalName}`);
         return Settings.#pages[internalName] = new SettingsPage(internalName, displayName);
     }
 
     static save() {
-        if(Settings.#loading) return;
-        if(!Settings.#loaded) return;
+        if (Settings.#loading) return;
+        if (!Settings.#loaded) return;
 
         // get values as plain object
         var obj = {};
-        for(const [name, page] of Object.entries(Settings.#pages)) {
+        for (const [name, page] of Object.entries(Settings.#pages)) {
             obj[name] = page.toObject();
         }
 
         // load (but override) old values
         const js = localStorage.getItem('settings');
-        if(js) {
+        if (js) {
             const oldObj = JSON.parse(js);
             obj = Object.assign(oldObj, obj);
         }
@@ -49,11 +49,11 @@ export class Settings {
         Settings.#loading = true;
 
         const js = localStorage.getItem('settings');
-        if(js) {
+        if (js) {
             const obj = JSON.parse(js);
 
-            for(const [name, page] of Object.entries(Settings.#pages)) {
-                if(obj[name]) page.fromObject(obj[name]);
+            for (const [name, page] of Object.entries(Settings.#pages)) {
+                if (obj[name]) page.fromObject(obj[name]);
             }
         }
 
@@ -68,12 +68,12 @@ export class Settings {
     static getVolume(volumeSetting) {
         return (SETTING_GLOBAL_VOLUME.value / 100) * (volumeSetting.value / 100);
     }
-    
+
     static addVolumeSettingListener(volumeSetting, listener) {
         volumeSetting.addListener(listener);
         SETTING_GLOBAL_VOLUME.addListener(listener);
     }
-    
+
     constructor() {
     }
 }
@@ -90,7 +90,7 @@ export const SETTING_PAGE_CLIENT = Settings.createPage('client', 'Client');
 SETTING_PAGE_CLIENT.addEntry('showcontrollsbar', SETTING_SHOW_CONTROLLS_BAR);
 
 Events.on('enterMainState', event => {
-    if(ServerData.isGM()) {
+    if (ServerData.isGM()) {
         ServerConfigSettings.init();
         ModuleSettings.init();
     }

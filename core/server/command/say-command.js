@@ -19,7 +19,7 @@ export class SayCommand extends Command {
         // parse message
         const parsed = ChatService.parseInlineExpressions(args);
 
-        var text = '<div class="chat-sender">' + ChatService.escape(''+name.value) + ' (' + ChatService.escape(profile.getUsername()) + '): </div>';
+        var text = '<div class="chat-sender">' + ChatService.escape('' + name.value) + ' (' + ChatService.escape(profile.getUsername()) + '): </div>';
         text = text + '<div class="chat-message">' + parsed.string + '</div>';
 
         ChatService.append(true, new ChatEntry(text, profile.getID(), true, null, parsed.diceRolls, parsed.triggeredContent));

@@ -46,8 +46,8 @@ export class Parser {
             const expr = this.expression();
             this.#consume(EOF, 'Expected end of expression');
             return expr;
-        } catch(error) {
-            if(this.#scripting.errors.length == 0) this.#scripting.error(0, 0, 'Internal: '+error.message);
+        } catch (error) {
+            if (this.#scripting.errors.length == 0) this.#scripting.error(0, 0, 'Internal: ' + error.message);
             return null;
         }
     }
@@ -55,7 +55,7 @@ export class Parser {
     // Statements
     program() {
         const statements = [];
-        while(!this.#isAtEOF()) {
+        while (!this.#isAtEOF()) {
             statements.push(this.declaration());
         }
         return statements;
@@ -63,11 +63,11 @@ export class Parser {
 
     declaration() {
         try {
-            if(this.#match(FUNCTION)) return this.functionDeclaration();
-            if(this.#match(VAR)) return this.varDeclaration();
+            if (this.#match(FUNCTION)) return this.functionDeclaration();
+            if (this.#match(VAR)) return this.varDeclaration();
 
             return this.statement();
-        } catch(error) {
+        } catch (error) {
             //console.log(error);
             // get to valid state to resume parsing
             this.#synchronize();
@@ -78,10 +78,10 @@ export class Parser {
         const name = this.#consume(IDENTIFIER, 'Expected function name');
         const params = [];
         this.#consume(LEFT_PAREN, 'Expected ( after function name');
-        if(!this.#check(RIGHT_PAREN)) {
+        if (!this.#check(RIGHT_PAREN)) {
             do {
                 params.push(this.#consume(IDENTIFIER, 'Expected parameter name'));
-            } while(this.#match(COMMA));
+            } while (this.#match(COMMA));
         }
         this.#consume(RIGHT_PAREN, 'Expected ) after parameters');
 
@@ -94,7 +94,7 @@ export class Parser {
         const name = this.#consume(IDENTIFIER, 'Expected variable name');
 
         var initializer = null;
-        if(this.#match(EQUAL)) {
+        if (this.#match(EQUAL)) {
             initializer = this.expression();
         }
 
@@ -103,17 +103,17 @@ export class Parser {
     }
 
     statement() {
-        if(this.#match(IF)) return this.ifStatement();
-        if(this.#match(RETURN)) return this.returnStatement();
-        if(this.#match(WHILE)) return this.whileStatement();
-        if(this.#match(LEFT_BRACE)) return new Block(this.block());
+        if (this.#match(IF)) return this.ifStatement();
+        if (this.#match(RETURN)) return this.returnStatement();
+        if (this.#match(WHILE)) return this.whileStatement();
+        if (this.#match(LEFT_BRACE)) return new Block(this.block());
 
         return this.expressionStatement();
     }
 
     block() {
         const statements = [];
-        while(!this.#check(RIGHT_BRACE) && !this.#isAtEOF()) {
+        while (!this.#check(RIGHT_BRACE) && !this.#isAtEOF()) {
             statements.push(this.declaration());
         }
         this.#consume(RIGHT_BRACE, 'Expected } after block');
@@ -133,7 +133,7 @@ export class Parser {
 
         const thenBranch = this.statement();
         var elseBranch = null;
-        if(this.#match(ELSE)) {
+        if (this.#match(ELSE)) {
             elseBranch = this.statement();
         }
 
@@ -143,7 +143,7 @@ export class Parser {
     returnStatement() {
         const keyword = this.#previous();
         var expression = null;
-        if(!this.#check(SEMICOLON)) {
+        if (!this.#check(SEMICOLON)) {
             expression = this.expression();
         }
         this.#consume(SEMICOLON, 'Expected ; after return value');
@@ -167,17 +167,17 @@ export class Parser {
     assignment() {
         const expr = this.or();
 
-        if(this.#match(EQUAL)) {
+        if (this.#match(EQUAL)) {
             const equals = this.#previous();
             const value = this.or();
 
-            if(expr instanceof Variable) {
+            if (expr instanceof Variable) {
                 const name = expr.name;
                 return new Assignment(name, value);
-            } else if(expr instanceof Get) {
+            } else if (expr instanceof Get) {
                 const get = expr;
                 return new Set(get.object, get.name, value);
-            } else if(expr instanceof ArrayGet) {
+            } else if (expr instanceof ArrayGet) {
                 const aget = expr;
                 return new ArraySet(aget.object, aget.index, aget.square, value);
             }
@@ -191,7 +191,7 @@ export class Parser {
     or() {
         var expr = this.and();
 
-        while(this.#match(OR)) {
+        while (this.#match(OR)) {
             const operator = this.#previous();
             const right = this.and();
             expr = new Logical(expr, operator, right);
@@ -203,7 +203,7 @@ export class Parser {
     and() {
         var expr = this.equality();
 
-        while(this.#match(AND)) {
+        while (this.#match(AND)) {
             const operator = this.#previous();
             const right = this.equality();
             expr = new Logical(expr, operator, right);
@@ -215,7 +215,7 @@ export class Parser {
     equality() {
         var expr = this.comparison();
 
-        while(this.#match(BANG_EQUAL, EQUAL_EQUAL)) {
+        while (this.#match(BANG_EQUAL, EQUAL_EQUAL)) {
             const operator = this.#previous();
             const right = this.comparison();
             expr = new Binary(expr, operator, right);
@@ -227,7 +227,7 @@ export class Parser {
     comparison() {
         var expr = this.term();
 
-        while(this.#match(GREATER, GREATER_EQUAL, LESS, LESS_EQUAL)) {
+        while (this.#match(GREATER, GREATER_EQUAL, LESS, LESS_EQUAL)) {
             const operator = this.#previous();
             const right = this.term();
             expr = new Binary(expr, operator, right);
@@ -239,7 +239,7 @@ export class Parser {
     term() {
         var expr = this.factor();
 
-        while(this.#match(MINUS, PLUS)) {
+        while (this.#match(MINUS, PLUS)) {
             const operator = this.#previous();
             const right = this.factor();
             expr = new Binary(expr, operator, right);
@@ -251,7 +251,7 @@ export class Parser {
     factor() {
         var expr = this.unary();
 
-        while(this.#match(SLASH, STAR)) {
+        while (this.#match(SLASH, STAR)) {
             const operator = this.#previous();
             const right = this.unary();
             expr = new Binary(expr, operator, right);
@@ -261,7 +261,7 @@ export class Parser {
     }
 
     unary() {
-        if(this.#match(BANG, PLUS, MINUS)) {
+        if (this.#match(BANG, PLUS, MINUS)) {
             const operator = this.#previous();
             const right = this.unary();
             return new Unary(operator, right);
@@ -273,13 +273,13 @@ export class Parser {
     dice() {
         var expr = this.call();
 
-        while(this.#match(DICE)) {
+        while (this.#match(DICE)) {
             const token = this.#previous();
             const sides = this.call();
-            
+
             const modifiers = this.modifiers();
             var label = null;
-            if(this.#match(STRING)) {
+            if (this.#match(STRING)) {
                 label = this.#previous();
             }
 
@@ -291,15 +291,15 @@ export class Parser {
 
     modifiers() {
         const modifiers = [];
-        while(this.#match(IDENTIFIER)) {
+        while (this.#match(IDENTIFIER)) {
             const identifier = this.#previous();
             var comparison = EQUAL_EQUAL;
-            if(this.#match(EQUAL_EQUAL, GREATER, GREATER_EQUAL, LESS, LESS_EQUAL)) {
+            if (this.#match(EQUAL_EQUAL, GREATER, GREATER_EQUAL, LESS, LESS_EQUAL)) {
                 comparison = this.#previous();
             }
             const value = this.call();
 
-            modifiers.push(new Modifier(identifier, comparison, value));            
+            modifiers.push(new Modifier(identifier, comparison, value));
         }
         return modifiers;
     }
@@ -307,23 +307,23 @@ export class Parser {
     call() {
         var expr = this.primary();
 
-        while(true) {
-            if(this.#match(LEFT_PAREN)) {
+        while (true) {
+            if (this.#match(LEFT_PAREN)) {
                 const args = [];
-                if(!this.#check(RIGHT_PAREN)) {
+                if (!this.#check(RIGHT_PAREN)) {
                     do {
                         args.push(this.expression());
-                    } while(this.#match(COMMA));
+                    } while (this.#match(COMMA));
                 }
                 const paren = this.#consume(RIGHT_PAREN, 'Expected ) after arguments');
 
                 expr = new Call(expr, paren, args);
-            } else if(this.#match(LEFT_SQUARE)) {
+            } else if (this.#match(LEFT_SQUARE)) {
                 const index = this.expression();
                 const square = this.#consume(RIGHT_SQUARE, 'Expected ] after index');
 
                 expr = new ArrayGet(expr, index, square);
-            } else if(this.#match(DOT)) {
+            } else if (this.#match(DOT)) {
                 const name = this.#consume(IDENTIFIER, 'Expected property name after .');
                 expr = new Get(expr, name);
             } else {
@@ -335,20 +335,20 @@ export class Parser {
     }
 
     primary() {
-        if(this.#match(NUMBER)) {
+        if (this.#match(NUMBER)) {
             const value = this.#previous().literal;
             const isInteger = Math.trunc(value) == value;
             return new Literal(new Value(value, Type.DOUBLE, String(isInteger ? Math.trunc(value) : value)));
         }
-        if(this.#match(STRING)) {
+        if (this.#match(STRING)) {
             const value = this.#previous().literal;
-            return new Literal(new Value(value, Type.STRING, '"'+value+'"'));
+            return new Literal(new Value(value, Type.STRING, '"' + value + '"'));
         }
-        if(this.#match(TRUE)) return new Literal(true, Type.BOOLEAN, 'true');
-        if(this.#match(FALSE)) return new Literal(false, Type.BOOLEAN, 'false');
-        if(this.#match(NULL)) return new Literal(null, Type.NULL, 'null');
-        if(this.#match(IDENTIFIER)) return new Variable(this.#previous());
-        if(this.#match(LEFT_PAREN)) {
+        if (this.#match(TRUE)) return new Literal(true, Type.BOOLEAN, 'true');
+        if (this.#match(FALSE)) return new Literal(false, Type.BOOLEAN, 'false');
+        if (this.#match(NULL)) return new Literal(null, Type.NULL, 'null');
+        if (this.#match(IDENTIFIER)) return new Variable(this.#previous());
+        if (this.#match(LEFT_PAREN)) {
             const expr = this.expression();
             this.#consume(RIGHT_PAREN, 'Expected ) after expression');
             return new Grouping(expr);
@@ -359,8 +359,8 @@ export class Parser {
 
     // helpers
     #match(...types) {
-        for(const type of types) {
-            if(this.#check(type)) {
+        for (const type of types) {
+            if (this.#check(type)) {
                 this.#advance();
                 return true;
             }
@@ -370,7 +370,7 @@ export class Parser {
     }
 
     #consume(type, message) {
-        if(this.#check(type)) return this.#advance();
+        if (this.#check(type)) return this.#advance();
         throw this.#error(this.#peek(), message);
     }
 
@@ -379,7 +379,7 @@ export class Parser {
     }
 
     #advance() {
-        if(!this.#isAtEOF()) this.#current++;
+        if (!this.#isAtEOF()) this.#current++;
         return this.#previous();
     }
 
@@ -405,10 +405,10 @@ export class Parser {
         // skip to next statement so we can resume parsing from a (somewhat) known state
         this.#advance();
 
-        while(!this.#isAtEOF()) {
-            if(this.#previous().type == SEMICOLON) return;
+        while (!this.#isAtEOF()) {
+            if (this.#previous().type == SEMICOLON) return;
 
-            switch(this.#peek().type) {
+            switch (this.#peek().type) {
                 case IF:
                 case VAR:
                     return; //TODO: add more cases once they exist (FUNCTION, WHILE, FOR, RETURN, ...)

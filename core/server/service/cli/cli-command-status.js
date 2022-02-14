@@ -6,11 +6,11 @@ export class CLICommandStatus extends CLICommand {
         super('status');
     }
 
-    getDescription() { 
+    getDescription() {
         return 'Prints status of server and connected players';
     }
 
-    getHelp() { 
+    getHelp() {
         return 'Prints status of server and connected players';
     }
 

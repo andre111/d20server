@@ -6,24 +6,24 @@ export class CLICommandHelp extends CLICommand {
         super('help');
     }
 
-    getDescription() { 
+    getDescription() {
         return 'Prints this help page';
     }
 
-    getHelp() { 
+    getHelp() {
         return 'Woah recursion...';
     }
 
-    execute(args) { 
+    execute(args) {
         const splitter = this.getSplitter();
-        if(!args || args.length == 0) {
+        if (!args || args.length == 0) {
             // print general help
             console.log('');
             console.log(splitter);
             console.log('Available commands: ');
             console.log(splitter);
             console.group('Command', '-', 'Description');
-            for(const [name, command] of Object.entries(clicommands)) {
+            for (const [name, command] of Object.entries(clicommands)) {
                 //console.log(`    ${name} - ${command.getDescription()}`);
                 console.log(name, '-', command.getDescription());
             }
@@ -34,9 +34,9 @@ export class CLICommandHelp extends CLICommand {
             console.log('');
         } else {
             const command = clicommands[args[0]];
-            if(command) {
+            if (command) {
                 // print command help
-            console.log('');
+                console.log('');
                 console.log(splitter);
                 console.log(`Help for "${command.getName()}"`);
                 console.log(splitter);

@@ -37,12 +37,12 @@ export class StateSignIn extends State {
         labelElement.innerHTML = 'Player';
         fieldset.appendChild(labelElement);
         fieldset.appendChild(document.createElement('br'));
-        
+
         this.accessKeyField = GuiUtils.createInput(fieldset, 'password', 'Access-Key');
         this.accessKeyField.className = 'login-field';
-        this.accessKeyField.onkeydown = e => { if(e.keyCode == 13) this.doSignIn() };
+        this.accessKeyField.onkeydown = e => { if (e.keyCode == 13) this.doSignIn() };
         fieldset.appendChild(document.createElement('br'));
-        
+
         const b = document.createElement('button');
         b.innerHTML = 'Sign In';
         b.className = 'login-field';
@@ -51,7 +51,7 @@ export class StateSignIn extends State {
 
         // add player list observer
         this.listener = Events.on('profileListChange', event => this.onPlayerList());
-        
+
         // send player list request
         const msg = new RequestAccounts();
         MessageService.send(msg);
@@ -66,10 +66,10 @@ export class StateSignIn extends State {
 
     onPlayerList() {
         this.playerList.innerHTML = '';
-        for(const [key, profile] of ServerData.profiles.entries()) {
+        for (const [key, profile] of ServerData.profiles.entries()) {
             const opt = document.createElement('option');
             opt.innerHTML = profile.getUsername();
-            if(profile.isConnected()) opt.disabled = true;
+            if (profile.isConnected()) opt.disabled = true;
             this.playerList.appendChild(opt);
         }
     }

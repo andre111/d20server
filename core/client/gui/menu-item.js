@@ -20,7 +20,7 @@ export class MenuItem {
     }
 
     onHover() {
-        if(this.parent instanceof MenuCategory) this.parent.closeAllChildren();
+        if (this.parent instanceof MenuCategory) this.parent.closeAllChildren();
     }
 
     get name() {
@@ -36,7 +36,7 @@ export class MenuItem {
     }
 
     set parent(parent) {
-        if(!(parent instanceof MenuCategory)) throw new Error('Parent is not a menu category');
+        if (!(parent instanceof MenuCategory)) throw new Error('Parent is not a menu category');
 
         this.#parent = parent;
     }

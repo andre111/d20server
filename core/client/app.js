@@ -61,7 +61,7 @@ document.body.oncontextmenu = () => false;
 
 // Create unified enterMainState event
 Events.on('enterState', event => {
-    if(event.data.state instanceof StateMain) Events.trigger('enterMainState');
+    if (event.data.state instanceof StateMain) Events.trigger('enterMainState');
 });
 
 // register some default stuff
@@ -89,9 +89,9 @@ ImageService.init();
 Events.on('addModeButtons', event => {
     // token mode
     event.data.addButton(new ModeButtonExtended(new ModeButton('/core/files/img/gui/cursor', 'Edit Tokens', () => Client.getState().getMode() instanceof CanvasModeEntities && Client.getState().getMode().entityType == 'token', () => Client.getState().setMode(new CanvasModeEntities('token'))), 0));
-    
+
     // wall mode
-    if(ServerData.isGM()) {
+    if (ServerData.isGM()) {
         event.data.addButton(new ModeButtonExtended(new ModeButton('/core/files/img/gui/wall', 'Edit Walls', () => Client.getState().getMode() instanceof CanvasModeWalls, () => Client.getState().setMode(new CanvasModeWalls())), 0, [
             new ModeButton('/core/files/img/gui/wall', 'Create Walls', () => Client.getState().getMode() instanceof CanvasModeWalls && Client.getState().getMode().action instanceof WallActionCreateWall, () => { Client.getState().setMode(new CanvasModeWalls()); Client.getState().getMode().setAction(new WallActionCreateWall(Client.getState().getMode())); }),
             new ModeButton('/core/files/img/gui/onesidedwall', 'Create One Sided Walls', () => Client.getState().getMode() instanceof CanvasModeWalls && Client.getState().getMode().action instanceof WallActionCreateOneSidedWall, () => { Client.getState().setMode(new CanvasModeWalls()); Client.getState().getMode().setAction(new WallActionCreateOneSidedWall(Client.getState().getMode())); }),
@@ -105,17 +105,17 @@ Events.on('addModeButtonsGM', event => {
     // select layer
     var showLayerButtons = false;
     event.data.addButton(new ModeButtonExtended(new ModeButton('/core/files/img/gui/layers', 'Select Layer', () => showLayerButtons, () => { showLayerButtons = !showLayerButtons; }), 0, [
-            new ModeButton('/core/files/img/gui/bg', 'Background Layer', () => Client.getState().getLayer() == Layer.BACKGROUND, () => { Client.getState().setLayer(Layer.BACKGROUND); showLayerButtons = false; }),
-            new ModeButton('/core/files/img/gui/token', 'Token Layer', () => Client.getState().getLayer() == Layer.MAIN, () => { Client.getState().setLayer(Layer.MAIN); showLayerButtons = false; }),
-            new ModeButton('/core/files/img/gui/gm', 'GM Overlay Layer', () => Client.getState().getLayer() == Layer.GMOVERLAY, () => { Client.getState().setLayer(Layer.GMOVERLAY); showLayerButtons = false; })
-        ])
+        new ModeButton('/core/files/img/gui/bg', 'Background Layer', () => Client.getState().getLayer() == Layer.BACKGROUND, () => { Client.getState().setLayer(Layer.BACKGROUND); showLayerButtons = false; }),
+        new ModeButton('/core/files/img/gui/token', 'Token Layer', () => Client.getState().getLayer() == Layer.MAIN, () => { Client.getState().setLayer(Layer.MAIN); showLayerButtons = false; }),
+        new ModeButton('/core/files/img/gui/gm', 'GM Overlay Layer', () => Client.getState().getLayer() == Layer.GMOVERLAY, () => { Client.getState().setLayer(Layer.GMOVERLAY); showLayerButtons = false; })
+    ])
     );
 
     // select view
     event.data.addButton(new ModeButtonExtended(new ModeButton('/core/files/img/gui/viewGM', 'GM-View', () => !Client.getState().getView().isPlayerView(), () => Client.getState().setView(new CanvasView(ServerData.localProfile, false, false, false, true))), 8));
     event.data.addButton(new ModeButtonExtended(new ModeButton('/core/files/img/gui/viewPlayer', 'Player-View', () => Client.getState().getView().isPlayerView(), () => {
         new CanvasWindowChoose(null, 'profile', id => {
-            if(id > 0) Client.getState().setView(new CanvasView(ServerData.profiles.get(id), true, true, true, false));
+            if (id > 0) Client.getState().setView(new CanvasView(ServerData.profiles.get(id), true, true, true, false));
             Events.trigger('updateModeState');
         });
     }), 0));
@@ -126,8 +126,8 @@ Events.on('addModeButtonsGM', event => {
         manager.registerFileAction(new FileActionCreateToken(manager));
         manager.registerFileAction(new FileActionShowToPlayers(manager));
         manager.init(file => {
-            if(!file) return;
-            
+            if (!file) return;
+
             Events.trigger('fileManagerSelect', {
                 file: file,
                 manager: manager
@@ -173,17 +173,17 @@ Events.on('enterMainState', () => {
 
 // Callbacks
 Events.on('actionCommand', event => {
-    if(!event.data.isGM()) return; // only accept commands from gm
-    
-    if(event.data.getCommand() == 'SHOW_IMAGE') {
+    if (!event.data.isGM()) return; // only accept commands from gm
+
+    if (event.data.getCommand() == 'SHOW_IMAGE') {
         new CanvasWindowImage(null, event.data.getText());
-    } else if(event.data.getCommand() == 'SHOW_TEXT') {
+    } else if (event.data.getCommand() == 'SHOW_TEXT') {
         new CanvasWindowText(null, 'Text', event.data.getText());
     }
 });
 
 Events.on('fileManagerSelect', event => {
-    if(event.data.file.getType() == FILE_TYPE_IMAGE) {
+    if (event.data.file.getType() == FILE_TYPE_IMAGE) {
         new CanvasWindowImage(null, '/data/files' + event.data.file.getPath());
         event.cancel();
     }
@@ -201,36 +201,36 @@ Events.on('entityMenu', event => {
     const menu = event.data.menu;
     const reference = event.data.reference;
 
-    if(reference.has('depth') && reference.canEditProperty('depth', event.data.accessLevel)) {
+    if (reference.has('depth') && reference.canEditProperty('depth', event.data.accessLevel)) {
         const move = menu.createCategory(null, 'Move');
         menu.createItem(move, 'to front', () => {
             const currentMinDepth = MapUtils.currentEntitiesInLayer(reference.getType(), Client.getState().getLayer()).map(e => e.getLong('depth')).reduce((a, b) => Math.min(a, b), 0);
-            reference.setLong('depth', currentMinDepth-1);
+            reference.setLong('depth', currentMinDepth - 1);
             reference.performUpdate();
         });
         menu.createItem(move, 'to back', () => {
             const currentMaxDepth = MapUtils.currentEntitiesInLayer(reference.getType(), Client.getState().getLayer()).map(e => e.getLong('depth')).reduce((a, b) => Math.max(a, b), 0);
-            reference.setLong('depth', currentMaxDepth+1);
+            reference.setLong('depth', currentMaxDepth + 1);
             reference.performUpdate();
         });
     }
 }, true, 100);
 
 Events.on('entityMenu', event => {
-    if(!event.data.isGM) return;
+    if (!event.data.isGM) return;
 
     const menu = event.data.menu;
     menu.createItem(null, 'Delete', () => {
-        new CanvasWindowConfirm(null, 'Confirm removal', 'Are you sure you want to remove the '+event.data.entityType+': '+event.data.reference.getName()+'?', () => {
+        new CanvasWindowConfirm(null, 'Confirm removal', 'Are you sure you want to remove the ' + event.data.entityType + ': ' + event.data.reference.getName() + '?', () => {
             event.data.reference.performRemove();
-            if(menu.mode && menu.mode.clearActiveEntities) menu.mode.clearActiveEntities();
+            if (menu.mode && menu.mode.clearActiveEntities) menu.mode.clearActiveEntities();
         });
     });
 }, true, 0);
 
 //    Tokens
 Events.on('entityMenu', event => {
-    if(event.data.entityType !== 'token') return;
+    if (event.data.entityType !== 'token') return;
 
     const menu = event.data.menu;
     const reference = event.data.reference;
@@ -238,10 +238,10 @@ Events.on('entityMenu', event => {
     const actor = TokenUtil.getActor(reference);
 
     // edit actor
-    if(actor) {
+    if (actor) {
         menu.createItem(null, 'Edit Actor', () => {
             const iActor = TokenUtil.getActor(reference);
-            if(iActor) Events.trigger('openEntity', { entity: iActor }, true);
+            if (iActor) Events.trigger('openEntity', { entity: iActor }, true);
         });
     }
 
@@ -249,38 +249,38 @@ Events.on('entityMenu', event => {
     const sendMacro = name => MessageService.send(new SendChatMessage('!' + name));
     const addMacros = (category, names, sort = true, prefix = '') => {
         // sort macros before adding to menu
-        if(sort) names.sort();
-        
-        if(names.length > 0) {
+        if (sort) names.sort();
+
+        if (names.length > 0) {
             const macroCategory = menu.createCategory(null, category);
             const subCategories = new Map();
 
-            for(var i=0; i<names.length; i++) {
+            for (var i = 0; i < names.length; i++) {
                 var name = names[i];
 
                 // hide macros starting with _
-                if(name.startsWith('_')) continue;
+                if (name.startsWith('_')) continue;
 
                 // use / as a sepparator for sub categories
                 var parent = macroCategory;
-                if(name.includes('/')) {
+                if (name.includes('/')) {
                     const category = name.substring(0, name.indexOf('/'));
-                    name = name.substring(name.indexOf('/')+1);
+                    name = name.substring(name.indexOf('/') + 1);
 
-                    if(!subCategories.has(category)) subCategories.set(category, menu.createCategory(macroCategory, category));
+                    if (!subCategories.has(category)) subCategories.set(category, menu.createCategory(macroCategory, category));
                     parent = subCategories.get(category);
                 }
-                
+
                 const fullName = names[i];
                 menu.createItem(parent, name, () => sendMacro(prefix + fullName));
             }
         }
     };
-    
+
     // actor macros
-    if(actor) {
+    if (actor) {
         const actorAccessLevel = actor.getAccessLevel(ServerData.localProfile);
-        if(Access.matches(actor.getAccessValue('macroUse'), actorAccessLevel)) {
+        if (Access.matches(actor.getAccessValue('macroUse'), actorAccessLevel)) {
             addMacros('Macros', Object.keys(actor.getStringMap('macros')));
 
             addMacros('Inbuilt Macros', Object.keys(actor.getPredefinedMacros()), false, '!');
@@ -288,7 +288,7 @@ Events.on('entityMenu', event => {
     }
 
     // gm actions
-    if(event.data.isGM) {
+    if (event.data.isGM) {
         menu.createItem(null, 'View Notes', () => new CanvasWindowText(null, 'GM Notes', reference.getString('gmNotes')));
         menu.createItem(null, 'Fit to Grid', () => new CanvasWindowFitToGrid(null, reference));
     }
@@ -296,12 +296,12 @@ Events.on('entityMenu', event => {
 
 //    Walls
 Events.on('entityMenu', event => {
-    if(event.data.entityType !== 'wall') return;
+    if (event.data.entityType !== 'wall') return;
 
     const menu = event.data.menu;
     const reference = event.data.reference;
 
-    if(reference.getBoolean('oneSided')) {
+    if (reference.getBoolean('oneSided')) {
         menu.createItem(null, 'Flip', () => {
             const x1 = reference.getLong('x1');
             const y1 = reference.getLong('y1');
@@ -312,27 +312,27 @@ Events.on('entityMenu', event => {
             reference.performUpdate();
         });
     }
-    
-    if(reference.getBoolean('door')) {
-        if(reference.getBoolean('open')) menu.createItem(null, 'Close Door', () => { reference.setBoolean('open', false); reference.performUpdate(); });
+
+    if (reference.getBoolean('door')) {
+        if (reference.getBoolean('open')) menu.createItem(null, 'Close Door', () => { reference.setBoolean('open', false); reference.performUpdate(); });
         else menu.createItem(null, 'Open Door', () => { reference.setBoolean('open', true); reference.performUpdate(); });
-        
-        if(reference.getBoolean('locked')) menu.createItem(null, 'Unlock Door', () => { reference.setBoolean('locked', false); reference.performUpdate(); });
+
+        if (reference.getBoolean('locked')) menu.createItem(null, 'Unlock Door', () => { reference.setBoolean('locked', false); reference.performUpdate(); });
         else menu.createItem(null, 'Lock Door', () => { reference.setBoolean('locked', true); reference.performUpdate(); });
     }
 }, true, 500);
 
 //    Maps
 Events.on('entityMenu', event => {
-    if(event.data.entityType !== 'map') return;
+    if (event.data.entityType !== 'map') return;
 
     const menu = event.data.menu;
     const reference = event.data.reference;
 
-    if(event.data.isGM || reference.getBoolean("playersCanEnter")) {
+    if (event.data.isGM || reference.getBoolean("playersCanEnter")) {
         menu.createItem(null, 'Open', () => MessageService.send(new MovePlayerToMap(reference, ServerData.localProfile)));
     }
-    if(event.data.isGM) {
+    if (event.data.isGM) {
         menu.createItem(null, 'Move Players', () => MessageService.send(new MovePlayerToMap(reference)));
         menu.createItem(null, 'Reset FOW', () => MessageService.send(new UpdateFOW(reference, [], true)));
     }
@@ -340,12 +340,12 @@ Events.on('entityMenu', event => {
 
 //    Actors
 Events.on('entityMenu', event => {
-    if(event.data.entityType !== 'actor') return;
+    if (event.data.entityType !== 'actor') return;
 
     const menu = event.data.menu;
     const reference = event.data.reference;
 
-    if(event.data.isGM) {
+    if (event.data.isGM) {
         menu.createItem(null, 'Create Token', () => {
             const token = new Entity('token');
             token.setLong('actorID', reference.getID());
@@ -354,15 +354,15 @@ Events.on('entityMenu', event => {
             token.setLong('height', reference.getLong('tokenHeight'));
 
             const event = Events.trigger('createTokenFromActor', { token: token, actor: reference }, true);
-            if(!event.canceled) {
+            if (!event.canceled) {
                 Client.getState().setMode(new CanvasModeEntities('token'));
                 Client.getState().getMode().setAddEntityAction(event.data.token);
                 Events.trigger('updateModeState');
             }
         });
         menu.createItem(null, 'Set Default Token', () => {
-            if(Client.getState().getMode() instanceof CanvasModeEntities && Client.getState().getMode().entityType == 'token') {
-                if(Client.getState().getMode().activeEntities.length == 1) {
+            if (Client.getState().getMode() instanceof CanvasModeEntities && Client.getState().getMode().entityType == 'token') {
+                if (Client.getState().getMode().activeEntities.length == 1) {
                     const token = Client.getState().getMode().activeEntities[0];
 
                     reference.setString('tokenImagePath', token.getString('imagePath'));
@@ -374,7 +374,7 @@ Events.on('entityMenu', event => {
         });
         menu.createItem(null, 'Show Image', () => {
             const imagePath = reference.getString('imagePath');
-            if(imagePath) MessageService.send(new ActionCommand('SHOW_IMAGE', 0, 0, 0, false, '/data/files'+imagePath));
+            if (imagePath) MessageService.send(new ActionCommand('SHOW_IMAGE', 0, 0, 0, false, '/data/files' + imagePath));
         });
     }
 }, true, 500);
@@ -383,8 +383,8 @@ Events.on('entityMenu', event => {
 // Edit Windows
 //    allow providing both entities and references and convert them to reference in a high priority listener
 Events.on('openEntity', event => {
-    if(event.data.entity instanceof EntityReference) event.data.entity = event.data.entity;
-    else if(event.data.entity instanceof Entity) event.data.entity = new EntityReference(event.data.entity);
+    if (event.data.entity instanceof EntityReference) event.data.entity = event.data.entity;
+    else if (event.data.entity instanceof Entity) event.data.entity = new EntityReference(event.data.entity);
     else throw new Error('Provided object is not an entity in openEntity event');
 }, false, 1000000);
 
@@ -396,13 +396,13 @@ Events.on('openEntity', event => {
 
 //    open custom windows (TODO: switch to using just openEntity instead)
 Events.on('editWindowCreateTabs', event => {
-    if(event.data.reference.getType() === 'token') {    
+    if (event.data.reference.getType() === 'token') {
         new CanvasWindowEditToken(event.data.window, event.data.reference);
         event.cancel();
-    } else if(event.data.reference.getType() === 'attachment') {
+    } else if (event.data.reference.getType() === 'attachment') {
         new CanvasWindowEditAttachment(event.data.window, event.data.reference);
         event.cancel();
-    } else if(event.data.reference.getType() === 'compendium') {
+    } else if (event.data.reference.getType() === 'compendium') {
         new CanvasWindowEditCompendium(event.data.window, event.data.reference);
         event.cancel();
     }
@@ -410,17 +410,18 @@ Events.on('editWindowCreateTabs', event => {
 
 
 // Internal Links
-Events.on('internalLinkClick', event => {{
-    const target = event.data.target;
+Events.on('internalLinkClick', event => {
+    {
+        const target = event.data.target;
 
-    for(const targetEntityType of [ 'actor', 'attachment' ]) 
-        if(target.startsWith(targetEntityType+':')) {
-            const id = Number(target.substring(targetEntityType.length+1));
-            const entity = EntityManagers.get(targetEntityType).find(id);
-            if(entity) Events.trigger('openEntity', { entity: entity }, true);
+        for (const targetEntityType of ['actor', 'attachment'])
+            if (target.startsWith(targetEntityType + ':')) {
+                const id = Number(target.substring(targetEntityType.length + 1));
+                const entity = EntityManagers.get(targetEntityType).find(id);
+                if (entity) Events.trigger('openEntity', { entity: entity }, true);
 
-            event.cancel();
-        }
+                event.cancel();
+            }
     }
 }, false);
 

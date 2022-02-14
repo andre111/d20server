@@ -52,12 +52,12 @@ export class File {
         this.element.oncontextmenu = e => {
             e.preventDefault();
             this.window.selectFile(this);
-            if(this.window.canEdit()) {
+            if (this.window.canEdit()) {
                 new FileMenu(this, e.clientX, e.clientY);
             }
             return false;
         };
-        if(this.window.canEdit()) {
+        if (this.window.canEdit()) {
             this.element.draggable = true;
             this.element.ondragstart = (event) => {
                 this.window.selectFile(this);
@@ -118,8 +118,8 @@ export class File {
         var thumbURL = '/core/files/img/fileman/blank.gif';
 
         // get thumbnail path for images
-        if(this.getType() == FILE_TYPE_IMAGE) {
-            thumbURL = '/fileman/generatethumb?f='+encodeURIComponent(this.getPath())+'&width=120&height=120';
+        if (this.getType() == FILE_TYPE_IMAGE) {
+            thumbURL = '/fileman/generatethumb?f=' + encodeURIComponent(this.getPath()) + '&width=120&height=120';
         }
 
         return thumbURL;

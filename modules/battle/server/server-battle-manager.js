@@ -7,8 +7,8 @@ import { CommonBattleManager } from '../common/common-battle-manager.js';
 
 export class ServerBattleManager {
     static startBattle(map) {
-        if(!map) return;
-        if(CommonBattleManager.isBattleActive(map)) return;
+        if (!map) return;
+        if (CommonBattleManager.isBattleActive(map)) return;
 
         // activate battle
         ServerBattleManager.resetTokens(map);
@@ -23,8 +23,8 @@ export class ServerBattleManager {
     }
 
     static endBattle(map) {
-        if(!map) return;
-        if(!CommonBattleManager.isBattleActive(map)) return;
+        if (!map) return;
+        if (!CommonBattleManager.isBattleActive(map)) return;
 
         // end battle
         const mapRef = new EntityReference(map);
@@ -39,8 +39,8 @@ export class ServerBattleManager {
     }
 
     static nextTurn(map) {
-        if(!map) return;
-        if(!CommonBattleManager.isBattleActive(map)) return;
+        if (!map) return;
+        if (!CommonBattleManager.isBattleActive(map)) return;
 
         const tokenIDs = CommonBattleManager.getParticipatingTokens(map);
 
@@ -48,16 +48,16 @@ export class ServerBattleManager {
         var current = null;
         var next = null;
         var references = [];
-        for(const tokenID of tokenIDs) {
+        for (const tokenID of tokenIDs) {
             const token = map.getContainedEntityManager('token').find(tokenID);
-            if(token) {
+            if (token) {
                 const ref = new EntityReference(token);
                 references.push(ref);
 
-                if(!ref.getBoolean('battle_turnEnded')) {
-                    if(current == null) {
+                if (!ref.getBoolean('battle_turnEnded')) {
+                    if (current == null) {
                         current = ref;
-                    } else if(next == null) {
+                    } else if (next == null) {
                         next = ref;
                     }
                 }
@@ -65,15 +65,15 @@ export class ServerBattleManager {
         }
 
         // end the turn of current token
-        if(current) {
+        if (current) {
             current.setBoolean('battle_turnEnded', true);
             ServerBattleManager.onTurnEnd(map, current);
         }
 
-        if(!next) {
+        if (!next) {
             // if no next one exists -> start a new round
             const mapRef = new EntityReference(map);
-            const round = mapRef.getLong('battle_round')+1;
+            const round = mapRef.getLong('battle_round') + 1;
             mapRef.setLong('battle_round', round);
             mapRef.performUpdate();
 
@@ -82,22 +82,22 @@ export class ServerBattleManager {
             MessageService.broadcast(msg, map);
 
             // reset token state
-            for(const ref of references) {
+            for (const ref of references) {
                 ref.setBoolean('battle_turnStarted', false);
                 ref.setBoolean('battle_turnEnded', false);
             }
         }
 
         // perform combined updates
-        for(const ref of references) {
+        for (const ref of references) {
             ref.performUpdate();
         }
     }
 
     static resetTokens(map) {
-        if(!map) return;
+        if (!map) return;
 
-        for(const token of map.getContainedEntityManager('token').all()) {
+        for (const token of map.getContainedEntityManager('token').all()) {
             const tokenRef = new EntityReference(token);
             tokenRef.setBoolean('battle_active', false);
             tokenRef.setBoolean('battle_turnStarted', false);
@@ -111,11 +111,11 @@ export class ServerBattleManager {
 
         // send out notification of turn (important: to everybody on the map BUT respect name visibility)
         UserService.forEach(profile => {
-            if(profile.getCurrentMap() == map.getID()) {
+            if (profile.getCurrentMap() == map.getID()) {
                 var content = `???s Turn`
-                if(actor) {
+                if (actor) {
                     const accessLevel = actor.getAccessLevel(profile);
-                    if(actor.canView(profile) && actor.canViewProperty('name', accessLevel) && actor.getString('name')) {
+                    if (actor.canView(profile) && actor.canViewProperty('name', accessLevel) && actor.getString('name')) {
                         content = `${actor.getString('name')}s Turn`;
                     }
                 }
@@ -133,13 +133,13 @@ export class ServerBattleManager {
     }
 
     static updateState(map) {
-        if(!map) return;
+        if (!map) return;
 
         // find current active token
         const activeToken = CommonBattleManager.getActiveToken(map);
-        if(activeToken) {
+        if (activeToken) {
             // check if its turn was started -> start it if not
-            if(!activeToken.getBoolean('battle_turnStarted')) {
+            if (!activeToken.getBoolean('battle_turnStarted')) {
                 const tokenRef = new EntityReference(activeToken);
                 tokenRef.setBoolean('battle_turnStarted', true);
                 tokenRef.performUpdate();

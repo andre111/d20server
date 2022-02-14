@@ -19,7 +19,7 @@ export class CanvasWindowUVTTImport extends CanvasWindow {
     initContent(name) {
         // create container
         const container = this.content;
-        
+
         // create panel
         const panel = document.createElement('div');
         panel.style.width = 'auto';

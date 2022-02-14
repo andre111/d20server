@@ -3,7 +3,7 @@ import { Client } from '../client.js';
 export class Notification {
     #element;
     #time;
-    
+
     constructor(content, time) {
         this.#element = document.createElement('span');
         this.#element.innerText = content;
@@ -13,7 +13,7 @@ export class Notification {
 
     update() {
         this.#time--;
-        if(this.#time < Client.FPS) {
+        if (this.#time < Client.FPS) {
             this.#element.style.opacity = this.#time / Client.FPS;
         }
         return this.#time > 0;

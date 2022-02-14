@@ -8,8 +8,8 @@ export class FileMenu extends Menu {
 
         this.file = file;
 
-        for(const action of file.getWindow().getFileActions()) {
-            if(action.shouldShowFor(file)) {
+        for (const action of file.getWindow().getFileActions()) {
+            if (action.shouldShowFor(file)) {
                 this.createItem(null, action.getName(), () => {
                     action.applyTo(file);
                     this.close();

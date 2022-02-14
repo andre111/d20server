@@ -30,7 +30,7 @@ export class SettingsEntry {
     set value(value) {
         this.#value = value;
         Settings.save();
-        for(const listener of this.#listeners) {
+        for (const listener of this.#listeners) {
             listener();
         }
     }
@@ -44,7 +44,7 @@ export class SettingsEntry {
     }
 
     resetValue() {
-        console.log('reset '+this.#displayName);
+        console.log('reset ' + this.#displayName);
         this.value = this.#defaultValue;
     }
 

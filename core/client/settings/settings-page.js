@@ -12,8 +12,8 @@ export class SettingsPage {
     }
 
     addEntry(internalName, entry) {
-        if(this.#entries[internalName]) throw new Error(`Duplicated settings entry name: ${internalName}`);
-        if(!(entry instanceof SettingsEntry)) throw new Error('Can only add instances of SettingsEntry');
+        if (this.#entries[internalName]) throw new Error(`Duplicated settings entry name: ${internalName}`);
+        if (!(entry instanceof SettingsEntry)) throw new Error('Can only add instances of SettingsEntry');
 
         this.#entries[internalName] = entry;
     }
@@ -32,15 +32,15 @@ export class SettingsPage {
 
     toObject() {
         var obj = {};
-        for(const [name, entry] of Object.entries(this.#entries)) {
-            if(entry.stored) obj[name] = entry.value;
+        for (const [name, entry] of Object.entries(this.#entries)) {
+            if (entry.stored) obj[name] = entry.value;
         }
         return obj;
     }
 
     fromObject(obj) {
-        for(const [name, entry] of Object.entries(this.#entries)) {
-            if(entry.stored && obj[name] != undefined) entry.value = obj[name];
+        for (const [name, entry] of Object.entries(this.#entries)) {
+            if (entry.stored && obj[name] != undefined) entry.value = obj[name];
         }
     }
 }

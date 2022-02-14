@@ -7,20 +7,20 @@ export class CanvasWindowManager {
     static #draggedY;
 
     static onWindowOpen(w) {
-        if(!CanvasWindowManager.#init) {
+        if (!CanvasWindowManager.#init) {
             CanvasWindowManager.#init = true;
             document.addEventListener('mousemove', e => {
-                if(CanvasWindowManager.#dragged) {
+                if (CanvasWindowManager.#dragged) {
                     var x = (e.clientX - CanvasWindowManager.#draggedX);
                     var y = (e.clientY - CanvasWindowManager.#draggedY);
 
-                    if(x + CanvasWindowManager.#dragged.frame.offsetWidth > document.body.clientWidth) x = document.body.clientWidth - CanvasWindowManager.#dragged.frame.offsetWidth;
-                    if(y + CanvasWindowManager.#dragged.frame.offsetHeight > document.body.clientHeight) y = document.body.clientHeight - CanvasWindowManager.#dragged.frame.offsetHeight;
-                    if(x < 0) x = 0;
-                    if(y < 0) y = 0;
+                    if (x + CanvasWindowManager.#dragged.frame.offsetWidth > document.body.clientWidth) x = document.body.clientWidth - CanvasWindowManager.#dragged.frame.offsetWidth;
+                    if (y + CanvasWindowManager.#dragged.frame.offsetHeight > document.body.clientHeight) y = document.body.clientHeight - CanvasWindowManager.#dragged.frame.offsetHeight;
+                    if (x < 0) x = 0;
+                    if (y < 0) y = 0;
 
-                    CanvasWindowManager.#dragged.frame.style.left = x+'px';
-                    CanvasWindowManager.#dragged.frame.style.top = y+'px';
+                    CanvasWindowManager.#dragged.frame.style.left = x + 'px';
+                    CanvasWindowManager.#dragged.frame.style.top = y + 'px';
                 }
             });
             document.addEventListener('mouseup', e => {
@@ -35,14 +35,14 @@ export class CanvasWindowManager {
     }
 
     static closeAll() {
-        for(var i=CanvasWindowManager.#windows.length-1; i>=0; i--) {
+        for (var i = CanvasWindowManager.#windows.length - 1; i >= 0; i--) {
             CanvasWindowManager.#windows[i].close();
         }
     }
 
     static onWindowClose(w) {
         const index = CanvasWindowManager.#windows.indexOf(w);
-        if(index >= 0) CanvasWindowManager.#windows.splice(index, 1);
+        if (index >= 0) CanvasWindowManager.#windows.splice(index, 1);
     }
 
     static dragInit(w, x, y) {
@@ -54,7 +54,7 @@ export class CanvasWindowManager {
 
     static getMaxZIndex() {
         var maxZIndex = 100;
-        for(const w of CanvasWindowManager.#windows) {
+        for (const w of CanvasWindowManager.#windows) {
             maxZIndex = Math.max(maxZIndex, w.zIndex);
         }
         return maxZIndex;

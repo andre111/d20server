@@ -5,12 +5,12 @@ export const Client = {
     VERSION: 10,
     FPS: 30,
 
-    getState: function() {
+    getState: function () {
         return _state;
     },
 
-    setState: function(state) {
-        if(_state) _state.exit();
+    setState: function (state) {
+        if (_state) _state.exit();
         _state = state;
         state.init();
 

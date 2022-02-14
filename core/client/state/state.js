@@ -5,8 +5,8 @@ export class State extends MouseController {
         super();
     }
 
-    init() {}
-    exit() {}
+    init() { }
+    exit() { }
 
-    actionPerformed(action) {}
+    actionPerformed(action) { }
 }

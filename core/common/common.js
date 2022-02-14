@@ -3,13 +3,13 @@ import { ID } from './entity/id.js';
 
 var server = true;
 export const Common = {
-    init: function(isServer, idProvider, entityManagerClass) {
+    init: function (isServer, idProvider, entityManagerClass) {
         server = isServer;
         ID.init(idProvider);
         EntityManagers.init(entityManagerClass);
     },
 
-    isServer: function() {
+    isServer: function () {
         return server;
     }
 }

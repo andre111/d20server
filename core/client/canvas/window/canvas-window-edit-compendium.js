@@ -9,7 +9,7 @@ export class CanvasWindowEditCompendium extends CanvasWindowEditCustom {
         super(w, reference);
         const container = w.content;
         container.className = 'edit-window-container edit-compendium-container flexcol';
-        
+
         // build content
         // Header
         const header = document.createElement('div');
@@ -19,7 +19,7 @@ export class CanvasWindowEditCompendium extends CanvasWindowEditCustom {
             const nameEditor = this.createStringEditor('name');
             nameEditor.className = 'edit-compendium-name';
             header.appendChild(nameEditor);
-            
+
             const headerSide = document.createElement('div');
             headerSide.className = 'cs-header-side flexrow';
 
@@ -27,7 +27,7 @@ export class CanvasWindowEditCompendium extends CanvasWindowEditCustom {
             headerRow1.className = 'edit-window-header-row flexrow';
             const accessLI = document.createElement('li');
             accessLI.appendChild(document.createTextNode(I18N.get('compendium.edit.access', 'Access: ')));
-            accessLI.appendChild(this.createAccessEditor('access', [ Access.EVERYONE, Access.GM ]));
+            accessLI.appendChild(this.createAccessEditor('access', [Access.EVERYONE, Access.GM]));
             headerRow1.appendChild(accessLI);
             headerSide.appendChild(headerRow1);
 
@@ -38,10 +38,10 @@ export class CanvasWindowEditCompendium extends CanvasWindowEditCustom {
             pathLI.appendChild(this.createStringEditor('path'));
             headerRow1.appendChild(pathLI);
             headerSide.appendChild(headerRow2);
-            
+
             header.appendChild(headerSide);
         }
-        
+
         const content = document.createElement('div');
         content.className = 'edit-window-area edit-compendium-content';
         container.appendChild(content);
@@ -54,7 +54,7 @@ export class CanvasWindowEditCompendium extends CanvasWindowEditCustom {
             this.registerEditor(editor);
         }
 
-        w.setDimensions(700+2, 800+35);
+        w.setDimensions(700 + 2, 800 + 35);
         w.showPopoutButton(true);
     }
 }

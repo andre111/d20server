@@ -33,13 +33,13 @@ const ACTIONS = [
 
     // Token Actions (can be performed by any controlling player, should setInitiative be done here to and not as a normal property access?)
     new BattleAction('join', false, true, (profile, map, token, args) => {
-        if(!CommonBattleManager.isBattleActive(map)) return;
-        
+        if (!CommonBattleManager.isBattleActive(map)) return;
+
         const accessLevel = token.getAccessLevel(profile);
-        if(Access.matches(Access.CONTROLLING_PLAYER, accessLevel)) {
+        if (Access.matches(Access.CONTROLLING_PLAYER, accessLevel)) {
             const tokenRef = new EntityReference(token);
             tokenRef.setBoolean('battle_active', true);
-            if(CommonBattleManager.getBattleRound(map) == 0) {
+            if (CommonBattleManager.getBattleRound(map) == 0) {
                 tokenRef.setBoolean('battle_turnStarted', true);
                 tokenRef.setBoolean('battle_turnEnded', true);
             }
@@ -47,10 +47,10 @@ const ACTIONS = [
         }
     }),
     new BattleAction('leave', false, true, (profile, map, token, args) => {
-        if(!CommonBattleManager.isBattleActive(map)) return;
-        
+        if (!CommonBattleManager.isBattleActive(map)) return;
+
         const accessLevel = token.getAccessLevel(profile);
-        if(Access.matches(Access.CONTROLLING_PLAYER, accessLevel)) {
+        if (Access.matches(Access.CONTROLLING_PLAYER, accessLevel)) {
             const tokenRef = new EntityReference(token);
             tokenRef.setBoolean('battle_active', false);
             tokenRef.performUpdate();
@@ -66,19 +66,19 @@ export class BattleCommand extends Command {
     execute(profile, args) {
         // validate some input and find required objects
         const argsSplit = args.split(' ');
-        if(argsSplit.length < 1) throw new Error(`Usage: /battle <action> ...`);
+        if (argsSplit.length < 1) throw new Error(`Usage: /battle <action> ...`);
 
         const map = EntityManagers.get('map').find(profile.getCurrentMap());
-        if(!map) throw new Error(`Battle actions can only be performed on a map`);
+        if (!map) throw new Error(`Battle actions can only be performed on a map`);
 
         const token = profile.getSelectedToken(true);
 
         // find action
-        for(const action of ACTIONS) {
-            if(action.name == argsSplit[0]) {
+        for (const action of ACTIONS) {
+            if (action.name == argsSplit[0]) {
                 // validate action requirements
-                if(action.requiresGM && profile.getRole() != Role.GM) throw new Error(`This action can only be performed by GMs`);
-                if(action.requiresToken && !token) throw new Error(`This action requries a selected token`);
+                if (action.requiresGM && profile.getRole() != Role.GM) throw new Error(`This action can only be performed by GMs`);
+                if (action.requiresToken && !token) throw new Error(`This action requries a selected token`);
 
                 // perform action
                 action.callback(profile, map, token, argsSplit.slice(1));

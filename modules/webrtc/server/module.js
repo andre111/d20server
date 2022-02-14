@@ -7,7 +7,7 @@ import { WebRTCMessage } from '../common/message/webrtc-message.js';
 
 // create TURN/STUN server (only when encryption is enabled, it would not be used in the other case)
 Events.on('serverInit', event => {
-    if(HttpHandler.isHTTPS()) {
+    if (HttpHandler.isHTTPS()) {
         const turnServer = new Turn({ authMech: 'none', minPort: 49152, maxPort: 49152 + 255 });
         turnServer.start();
     }
@@ -15,7 +15,7 @@ Events.on('serverInit', event => {
 
 // simply broadcast any WebRTCMessage communications (but include sender)
 Events.on('recievedMessage', event => {
-    if(event.data.message instanceof WebRTCMessage) {
+    if (event.data.message instanceof WebRTCMessage) {
         event.data.message.sender = event.data.profile.getID();
         MessageService.broadcast(event.data.message);
 

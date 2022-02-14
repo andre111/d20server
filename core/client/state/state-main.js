@@ -68,19 +68,19 @@ export class StateMain extends State {
 
         // add global listener for internal links
         this.internalLinkListener = e => {
-            if(e.target.nodeName == 'A' && e.target.className == 'internal-link') {
-                if(e.target.closest('.mce-content-body') == null) { // only trigger when not inside an active TinyMCE instance
+            if (e.target.nodeName == 'A' && e.target.className == 'internal-link') {
+                if (e.target.closest('.mce-content-body') == null) { // only trigger when not inside an active TinyMCE instance
                     Events.trigger('internalLinkClick', { target: e.target.dataset['target'] }, true);
                 }
                 e.preventDefault();
             }
         };
         document.body.addEventListener('click', this.internalLinkListener);
-        
+
         // get reference to main canvas
         this.canvas = document.getElementById('canvas');
         this.ctx = this.canvas.getContext('2d', { alpha: false });
-        
+
         // add mouse controller
         this.camera = new Camera();
         this.mcc = new MouseControllerCamera(this.camera, new MouseControllerCanvas(canvas));
@@ -93,64 +93,64 @@ export class StateMain extends State {
         canvas.addEventListener('mouseup', e => this.mcc.mouseReleased(e), true);
         canvas.addEventListener('mouseenter', e => this.mcc.mouseEntered(e), true);
         canvas.addEventListener('mouseleave', e => this.mcc.mouseExited(e), true);
-        
+
         //...
         this.#layer = Layer.MAIN;
         this.setMode(new CanvasModeEntities('token', this.#layer));
-        if(ServerData.isGM()) {
+        if (ServerData.isGM()) {
             this.setView(new CanvasView(ServerData.localProfile, false, false, false, true));
         } else {
             this.setView(new CanvasView(ServerData.localProfile, true, true, true, false));
         }
         this.highlightToken = -1;
         this.viewToken = -1;
-        
+
         this.mapChangeListener = Events.on('mapChange', event => this.onMapChange());
-        
+
         this.modePanel = new ModePanel();
-        
+
         // calculate fps times
         this.fpsInterval = 1000 / Client.FPS;
         this.lastFrame = Date.now();
-        
+
         // start rendering
         this.active = true;
         this.onFrame();
-        
+
         // collect render layers
         this.renderLayers = [];
         var data = {
             addRenderLayer: layer => {
-                if(!(layer instanceof CanvasRenderLayer)) throw new Error('Can only add instances of CanvasRenderLayer');
+                if (!(layer instanceof CanvasRenderLayer)) throw new Error('Can only add instances of CanvasRenderLayer');
                 this.renderLayers.push(layer);
             }
         };
         Events.trigger('addRenderLayers', data);
         this.renderLayers.sort((a, b) => a.getLevel() - b.getLevel());
-        
+
         // collect entity renderers
         this.entityRenderers = {};
         data = {
             addEntityRenderer: (type, renderer) => {
-                if(!(renderer instanceof CanvasEntityRenderer)) throw new Error('Can only add instances of CanvasEntityRenderer');
+                if (!(renderer instanceof CanvasEntityRenderer)) throw new Error('Can only add instances of CanvasEntityRenderer');
                 this.entityRenderers[type] = renderer;
             }
         };
         Events.trigger('addEntityRenderers', data);
-        
+
         // collect tabs
         this.sidepanelTabs = [];
         data = {
             addSidepanelTab: tab => {
-                if(!(tab instanceof SidepanelTab)) throw new Error('Can only add instances of SidePanelTab');
+                if (!(tab instanceof SidepanelTab)) throw new Error('Can only add instances of SidePanelTab');
                 this.sidepanelTabs.push(tab);
             }
         };
         Events.trigger('addSidepanelTabs', data);
 
         // create tabs
-        for(const tab of this.sidepanelTabs) {
-            if(tab.isVisible()) {
+        for (const tab of this.sidepanelTabs) {
+            if (tab.isVisible()) {
                 // add panel tab
                 tab.tab.name = tab.getIcon();
                 tab.tab.title = tab.getName();
@@ -169,22 +169,22 @@ export class StateMain extends State {
     }
 
     onFrame() {
-        if(!this.active) return;
-        
+        if (!this.active) return;
+
         // schedule next frame
         requestAnimationFrame(() => this.onFrame());
-        
+
         // adjust canvas sizes
         this.resize(this.canvas);
-        
+
         // calculate time
         var now = Date.now();
         var elapsed = now - this.lastFrame;
-        
+
         // render frame when at correct time
-        if(elapsed > this.fpsInterval) {
+        if (elapsed > this.fpsInterval) {
             this.lastFrame = now - (elapsed % this.fpsInterval);
-            
+
             Events.trigger('frameStart');
             this.draw(this.ctx);
             this.notificationManager.update();
@@ -195,14 +195,14 @@ export class StateMain extends State {
     resize(canvas) {
         this.width = window.innerWidth;
         this.height = window.innerHeight;
-        
+
         // resize canvas to match display size
-        if(canvas.width != this.width || canvas.height != this.height) {
+        if (canvas.width != this.width || canvas.height != this.height) {
             canvas.width = this.width;
             canvas.height = this.height;
         }
     }
-    
+
     onMapChange() {
         this.centerCamera(true);
     }
@@ -210,13 +210,13 @@ export class StateMain extends State {
     getHighlightToken() {
         return this.highlightToken;
     }
-    
+
     setHighlightToken(highlightToken) {
         this.highlightToken = highlightToken;
     }
 
     releaseHighlightToken(highlightToken) {
-        if(this.highlightToken == highlightToken) {
+        if (this.highlightToken == highlightToken) {
             this.highlightToken = -1;
         }
     }
@@ -228,140 +228,140 @@ export class StateMain extends State {
     setViewToken(viewToken) {
         this.viewToken = viewToken;
     }
-    
+
     centerCamera(instant) {
         const map = MapUtils.currentMap();
-        if(!map) return;
-        
+        if (!map) return;
+
         var camTargetX = map.getLong('width') * map.getLong('gridSize') / 2;
-		var camTargetY = map.getLong('height') * map.getLong('gridSize') / 2;
-		
-		// find a controlled token to center on
-		const controllableTokens = MapUtils.findControllableTokens(this.view.getProfile());
-		if(controllableTokens.length > 0) {
-			// find index of last token we focused on
-			var lastIndex = -1;
-			for(var i=0; i<controllableTokens.length; i++) {
-				if(controllableTokens[i].id == this.lastCenteredTokenID) {
-					lastIndex = i;
-				}
-			}
-			
-			// focus on the next one
-			var index = (lastIndex + 1) % controllableTokens.length;
-			camTargetX = controllableTokens[index].getLong('x');
-			camTargetY = controllableTokens[index].getLong('y');
-			this.lastCenteredTokenID = controllableTokens[index].id;
-		}
-		
-		this.camera.setLocation(camTargetX, camTargetY, instant);
+        var camTargetY = map.getLong('height') * map.getLong('gridSize') / 2;
+
+        // find a controlled token to center on
+        const controllableTokens = MapUtils.findControllableTokens(this.view.getProfile());
+        if (controllableTokens.length > 0) {
+            // find index of last token we focused on
+            var lastIndex = -1;
+            for (var i = 0; i < controllableTokens.length; i++) {
+                if (controllableTokens[i].id == this.lastCenteredTokenID) {
+                    lastIndex = i;
+                }
+            }
+
+            // focus on the next one
+            var index = (lastIndex + 1) % controllableTokens.length;
+            camTargetX = controllableTokens[index].getLong('x');
+            camTargetY = controllableTokens[index].getLong('y');
+            this.lastCenteredTokenID = controllableTokens[index].id;
+        }
+
+        this.camera.setLocation(camTargetX, camTargetY, instant);
     }
-    
+
     draw(ctx) {
         ctx.font = '12px arial';
-        
+
         const map = MapUtils.currentMap();
-        
+
         // find viewers
         var viewers = [];
         MapUtils.currentEntities('token').forEach(token => {
             const accessLevel = token.getAccessLevel(this.view.getProfile());
-            if(Access.matches(Access.CONTROLLING_PLAYER, accessLevel)) {
+            if (Access.matches(Access.CONTROLLING_PLAYER, accessLevel)) {
                 viewers.push(token);
             }
         });
         // ...which are potentially overridden
         var forceNormalLimitedView = false;
-        if(this.viewToken > 0) {
+        if (this.viewToken > 0) {
             const forcedViewer = MapUtils.currentEntities('token').find(t => t.getID() == this.viewToken);
-            if(forcedViewer && (ServerData.isGM() || viewers.includes(forcedViewer))) {
+            if (forcedViewer && (ServerData.isGM() || viewers.includes(forcedViewer))) {
                 viewers = [forcedViewer];
                 forceNormalLimitedView = true;
             }
         }
-        
+
         //
         ctx.fillStyle = 'black';
         ctx.beginPath();
         ctx.rect(0, 0, this.width, this.height);
         ctx.fill();
         ctx.closePath();
-        if(!map || !this.view || (viewers.length == 0 && this.view.isPlayerView())) {
+        if (!map || !this.view || (viewers.length == 0 && this.view.isPlayerView())) {
             return;
         }
         this.view.setForceWallOcclusion(forceNormalLimitedView);
         this.view.setForceLights(forceNormalLimitedView);
-        
+
         // update and apply camera
         this.camera.update(this.width, this.height);
         var viewport = this.camera.getViewport();
         ctx.save();
         ctx.setTransform(this.camera.getTransform());
-        
+
         // draw render layers
-        for(const layer of this.renderLayers) {
+        for (const layer of this.renderLayers) {
             layer.render(ctx, this, this.view, viewers, this.camera, viewport, map);
         }
-        
+
         // draw overlay
-        if(this.mode) this.mode.renderOverlay(ctx);
-        
+        if (this.mode) this.mode.renderOverlay(ctx);
+
         ctx.restore();
     }
 
     mouseDragged(e) {
         this.mouseX = e.xm;
         this.mouseY = e.ym;
-        if(this.mode) this.mode.mouseDragged(e);
+        if (this.mode) this.mode.mouseDragged(e);
     }
 
     mouseMoved(e) {
         this.mouseX = e.xm;
         this.mouseY = e.ym;
-        if(this.mode) this.mode.mouseMoved(e);
+        if (this.mode) this.mode.mouseMoved(e);
     }
 
     mouseWheelMoved(e) {
-        if(this.mode) this.mode.mouseWheelMoved(e);
+        if (this.mode) this.mode.mouseWheelMoved(e);
     }
 
     mouseClicked(e) {
         this.canvas.focus();
-        if(this.mode) this.mode.mouseClicked(e);
+        if (this.mode) this.mode.mouseClicked(e);
     }
 
     mouseDblClicked(e) {
         this.canvas.focus();
-        if(this.mode) this.mode.mouseDblClicked(e);
+        if (this.mode) this.mode.mouseDblClicked(e);
     }
 
     mousePressed(e) {
         this.canvas.focus();
         this.viewToken = -1;
-        if(this.mode) this.mode.mousePressed(e);
+        if (this.mode) this.mode.mousePressed(e);
     }
 
     mouseReleased(e) {
-        if(this.mode) this.mode.mouseReleased(e);
+        if (this.mode) this.mode.mouseReleased(e);
     }
 
     mouseEntered(e) {
         this.highlightToken = -1;
-        if(this.mode) this.mode.mouseEntered(e);
+        if (this.mode) this.mode.mouseEntered(e);
     }
 
     mouseExited(e) {
-        if(this.mode) this.mode.mouseExited(e);
+        if (this.mode) this.mode.mouseExited(e);
     }
 
     actionPerformed(action) {
         var pcolor = '#' + (ServerData.localProfile.getColor() & 0x00FFFFFF).toString(16).padStart(6, '0');
-        if(action == 'center_camera') this.centerCamera(false);
-        if(action == 'ping_location') MessageService.send(new PlayEffect('PING', this.mouseX, this.mouseY, 0, 1, true, false, [pcolor]));
-        if(action == 'ping_location_focus') MessageService.send(new PlayEffect('PING', this.mouseX, this.mouseY, 0, 1, true, true, [pcolor]));
+        if (action == 'center_camera') this.centerCamera(false);
+        if (action == 'ping_location') MessageService.send(new PlayEffect('PING', this.mouseX, this.mouseY, 0, 1, true, false, [pcolor]));
+        if (action == 'ping_location_focus') MessageService.send(new PlayEffect('PING', this.mouseX, this.mouseY, 0, 1, true, true, [pcolor]));
         //TODO: if(action == 'toggle_mode_window') ...
         //TODO: if(action == 'toggle_side_pane') ...
-        if(this.mode) this.mode.actionPerformed(action);
+        if (this.mode) this.mode.actionPerformed(action);
     }
 
     getMode() {
@@ -370,7 +370,7 @@ export class StateMain extends State {
 
     setMode(mode) {
         // exit current mode and reset controll hints
-        if(this.mode) this.mode.exit();
+        if (this.mode) this.mode.exit();
         this.setControllHints([]);
 
         // enter new mode
@@ -397,7 +397,7 @@ export class StateMain extends State {
 
     setLayer(layer) {
         this.#layer = layer;
-        if(this.mode) this.mode.onLayerChange();
+        if (this.mode) this.mode.onLayerChange();
     }
 
     get controllsBar() {
@@ -407,12 +407,12 @@ export class StateMain extends State {
     setControllHints(hints) {
         this.#controllsBar.clearHints();
 
-        for(var i=0; i<hints.length; i+=2) {
-            this.#controllsBar.addHint(hints[i], hints[i+1]);
+        for (var i = 0; i < hints.length; i += 2) {
+            this.#controllsBar.addHint(hints[i], hints[i + 1]);
         }
 
         // add standard camera hints
-        this.#controllsBar.addHint([['mouse-middle'],['mouse-left', 'key-Alt']], 'controlls.camera.move');
+        this.#controllsBar.addHint([['mouse-middle'], ['mouse-left', 'key-Alt']], 'controlls.camera.move');
         this.#controllsBar.addHint('mouse-middle', 'controlls.camera.zoom');
         this.#controllsBar.addHint('key-C', 'controlls.camera.center');
     }
@@ -426,8 +426,8 @@ export class StateMain extends State {
     }
 
     getTab(name) {
-        for(const tab of this.sidepanelTabs) {
-            if(tab.getName() == name) return tab;
+        for (const tab of this.sidepanelTabs) {
+            if (tab.getName() == name) return tab;
         }
         return null;
     }

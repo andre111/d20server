@@ -110,10 +110,10 @@ export class DicePreset {
 		loader.load(this.modelFile, gltf => {
 			gltf.scene.traverse(function (node) {
 				if (node.isMesh) {
-					node.castShadow = true; 
+					node.castShadow = true;
 				}
 			});
-			
+
 			this.model = gltf;
 			this.modelLoaded = true;
 		});

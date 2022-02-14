@@ -27,7 +27,7 @@ export class SettingsEntryModuleToggle extends SettingsEntry {
     update(disabled) {
         this.value = !disabled;
 
-        if(this.#editor) {
+        if (this.#editor) {
             this.#updating = true;
             this.#editor.checked = !disabled;
             this.#updating = false;
@@ -60,7 +60,7 @@ export class SettingsEntryModuleToggle extends SettingsEntry {
             this.value = this.#editor.checked;
 
             // notify server
-            if(!this.#updating) {
+            if (!this.#updating) {
                 MessageService.send(new ToggleModule(this.#identifier, !this.value));
             }
         }

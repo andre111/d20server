@@ -7,7 +7,7 @@ import { CanvasModePortals } from './canvas/mode/canvas-mode-portals.js';
 import { CanvasRenderLayerPortals } from './canvas/renderlayer/canvas-renderlayer-portals.js';
 
 Events.on('addModeButtons', event => {
-    if(ServerData.isGM()) {
+    if (ServerData.isGM()) {
         event.data.addButton(new ModeButtonExtended(new ModeButton('/modules/portals/files/img/gui/portal', 'Edit Portals', () => Client.getState().getMode() instanceof CanvasModePortals, () => Client.getState().setMode(new CanvasModePortals())), 0));
     }
 });

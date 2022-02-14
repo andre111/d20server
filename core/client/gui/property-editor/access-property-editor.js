@@ -5,9 +5,9 @@ export class AccessPropertyEditor extends PropertyEditor {
     constructor(name, label, allowedValues) {
         super(name, Type.ACCESS, label);
 
-        if(allowedValues) {
+        if (allowedValues) {
             this.select.innerHTML = '';
-            for(const value of allowedValues) {
+            for (const value of allowedValues) {
                 var option = document.createElement('option');
                 option.value = value;
                 option.innerHTML = value;
@@ -15,11 +15,11 @@ export class AccessPropertyEditor extends PropertyEditor {
             }
         }
     }
-    
+
     initContent(label) {
         this.select = document.createElement('select');
-        const values = [ Access.EVERYONE, Access.CONTROLLING_PLAYER, Access.GM ];
-        for(const value of values) {
+        const values = [Access.EVERYONE, Access.CONTROLLING_PLAYER, Access.GM];
+        for (const value of values) {
             var option = document.createElement('option');
             option.value = value;
             option.innerHTML = value;
@@ -27,16 +27,16 @@ export class AccessPropertyEditor extends PropertyEditor {
         }
         this.container.appendChild(this.select);
         this.addLabel(label);
-        
+
         this.select.onchange = () => this.onChange();
-        
+
         return this.select;
     }
-    
+
     reloadValue(reference, name) {
         this.select.value = reference.getAccessValue(name);
     }
-    
+
     applyValue(reference, name) {
         reference.setAccessValue(name, this.select.value);
     }

@@ -12,15 +12,15 @@ Events.on('propertyChange', event => {
     const entity = event.data.entity;
     const def = entity.getDefinition();
     applyUpdateRules(entity, def.updateRules, event.data.changedProperties);
-    for(const extDef of entity.getActiveExtensions()) {
+    for (const extDef of entity.getActiveExtensions()) {
         applyUpdateRules(entity, extDef.updateRules, event.data.changedProperties);
     }
 });
 
 const SCRIPT = new Scripting(false);
 function applyUpdateRules(entity, updateRules, changedProperties) {
-    for(const ruleDef of updateRules) {
-        if(!entity.has(ruleDef.property)) throw new Error(`Error in UpdateRule: Property ${ruleDef.property} does not exist`);
+    for (const ruleDef of updateRules) {
+        if (!entity.has(ruleDef.property)) throw new Error(`Error in UpdateRule: Property ${ruleDef.property} does not exist`);
 
         try {
             // use cached expression or parse from definition (because parsing is an expensive operation that can lock up the browser for a noticeable time)
@@ -29,23 +29,23 @@ function applyUpdateRules(entity, updateRules, changedProperties) {
 
             const result = SCRIPT.evalExpression(expression, null, entity);
             SCRIPT.throwIfErrored();
-            if(result.type != Type.DOUBLE) throw new Error('Updated rule evaluated to unexpected type: expected DOUBLE got '+result.type);
-        
+            if (result.type != Type.DOUBLE) throw new Error('Updated rule evaluated to unexpected type: expected DOUBLE got ' + result.type);
+
             const value = result.value;
-            switch(entity.getPropertyType(ruleDef.property)) {
-            case Type.DOUBLE:
-                entity.setDouble(ruleDef.property, value);
-                break;
-            case Type.LONG:
-                entity.setLong(ruleDef.property, Math.trunc(value));
-                break;
-            case Type.STRING:
-                var stringValue = '?';
-                if(ruleDef.stringMap && ruleDef.stringMap[Math.trunc(value)]) stringValue = ruleDef.stringMap[Math.trunc(value)];
-                entity.setString(ruleDef.property, stringValue);
-                break;
-            default:
-                throw new Error(`Error in UpdateRule: Cannot modify property of type ${entity.getPropertyType(ruleDef.property)}`);
+            switch (entity.getPropertyType(ruleDef.property)) {
+                case Type.DOUBLE:
+                    entity.setDouble(ruleDef.property, value);
+                    break;
+                case Type.LONG:
+                    entity.setLong(ruleDef.property, Math.trunc(value));
+                    break;
+                case Type.STRING:
+                    var stringValue = '?';
+                    if (ruleDef.stringMap && ruleDef.stringMap[Math.trunc(value)]) stringValue = ruleDef.stringMap[Math.trunc(value)];
+                    entity.setString(ruleDef.property, stringValue);
+                    break;
+                default:
+                    throw new Error(`Error in UpdateRule: Cannot modify property of type ${entity.getPropertyType(ruleDef.property)}`);
             }
             changedProperties[ruleDef.property] = entity.getInternal(ruleDef.property);
         } catch (error) {
@@ -63,26 +63,26 @@ function applyUpdateRules(entity, updateRules, changedProperties) {
 Events.on('getControllingPlayers', event => {
     const entity = event.data.entity;
     const cdef = entity.getDefinition().settings.control;
-    switch(cdef.mode) {
-    case 'NONE':
-    default:
-        return;
-    case 'PROPERTY':
-        if(!entity.has(cdef.property)) return;
-
-        switch(entity.getPropertyType(cdef.property)) {
-        case Type.LONG:
-            event.data.controllingPlayers = [entity.getLong(cdef.property)];
-            return;
-        case Type.LONG_LIST:
-            event.data.controllingPlayers = entity.getLongList(cdef.property);
-            return;
+    switch (cdef.mode) {
+        case 'NONE':
         default:
             return;
-        }
-    //TODO: remove this wierd stuff, maybe just move away from data driven again and just use code
-    case 'TOKEN':
-        event.data.controllingPlayers = TokenUtil.getControllingPlayers(entity);
-        return;
+        case 'PROPERTY':
+            if (!entity.has(cdef.property)) return;
+
+            switch (entity.getPropertyType(cdef.property)) {
+                case Type.LONG:
+                    event.data.controllingPlayers = [entity.getLong(cdef.property)];
+                    return;
+                case Type.LONG_LIST:
+                    event.data.controllingPlayers = entity.getLongList(cdef.property);
+                    return;
+                default:
+                    return;
+            }
+        //TODO: remove this wierd stuff, maybe just move away from data driven again and just use code
+        case 'TOKEN':
+            event.data.controllingPlayers = TokenUtil.getControllingPlayers(entity);
+            return;
     }
 });

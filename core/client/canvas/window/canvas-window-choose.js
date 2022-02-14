@@ -8,10 +8,10 @@ export class CanvasWindowChoose extends CanvasWindow {
     #tree;
 
     constructor(parent, type, callback) {
-        super(parent, 'Select '+type, true);
+        super(parent, 'Select ' + type, true);
 
         this.#callback = callback;
-       
+
         this.#tree = new SearchableIDTree(this.content, null, getValueProvider(type), () => this.onChoose());
         this.#tree.getContainer().style.overflow = 'auto';
         this.#tree.getContainer().style.height = 'calc(100% - 23px)';
@@ -28,7 +28,7 @@ export class CanvasWindowChoose extends CanvasWindow {
 
     onChoose() {
         const choosen = this.#tree.getSelectedValue();
-        if(choosen != null && choosen != undefined) {
+        if (choosen != null && choosen != undefined) {
             this.#callback(Number(choosen));
         } else {
             this.#callback(-1);

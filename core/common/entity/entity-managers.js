@@ -31,11 +31,11 @@ export class EntityManager {
 
     canView(profile) { return true; }
 
-    onDelete() {};
+    onDelete() { };
 
     // parent entity
     set parentEntity(e) {
-        if(!(e instanceof Entity)) throw new Error('Invalid parent entity');
+        if (!(e instanceof Entity)) throw new Error('Invalid parent entity');
         this.#parentEntity = e;
     }
 
@@ -50,8 +50,8 @@ export class EntityManager {
             manager: this
         };
 
-        Events.trigger(name+'_'+this.getType(), data);
-        Events.trigger('any_'+this.getType(), data);
+        Events.trigger(name + '_' + this.getType(), data);
+        Events.trigger('any_' + this.getType(), data);
     }
 }
 
@@ -63,21 +63,21 @@ var _loaded = 0;
 var _loadCB;
 
 export const EntityManagers = {
-    init: function(entityManagerClass) {
+    init: function (entityManagerClass) {
         _entityManagerClass = entityManagerClass;
     },
 
-    createAll: function(cb) {
+    createAll: function (cb) {
         _entityManagers = {};
         _total = Object.keys(getDefinitions().getEntityDefinitions()).length;
         _loaded = 0;
         _loadCB = () => {
             _loaded++;
-            if(_loaded == _total && cb) cb();
+            if (_loaded == _total && cb) cb();
         };
 
-        for(const [type, entityDefinition] of Object.entries(getDefinitions().getEntityDefinitions())) {
-            if(entityDefinition.settings.global) {
+        for (const [type, entityDefinition] of Object.entries(getDefinitions().getEntityDefinitions())) {
+            if (entityDefinition.settings.global) {
                 EntityManagers.create(type, type, _loadCB);
             } else {
                 _loadCB();
@@ -85,31 +85,31 @@ export const EntityManagers = {
         }
     },
 
-    create: function(name, type, cb) {
-        if(_entityManagerClass == null) throw new Error('Cannot create EntityManager before initialization');
+    create: function (name, type, cb) {
+        if (_entityManagerClass == null) throw new Error('Cannot create EntityManager before initialization');
 
         const entityDefinition = getDefinitions().getEntityDefinitions()[type];
-        if(!entityDefinition) throw new Error(`No definition for type: ${type}`);
+        if (!entityDefinition) throw new Error(`No definition for type: ${type}`);
 
         _entityManagers[name] = new _entityManagerClass(name, type, entityDefinition, cb);
     },
-    
-    get: function(name) {
+
+    get: function (name) {
         return _entityManagers[name];
     },
 
-    getOrCreate: function(name, type) {
+    getOrCreate: function (name, type) {
         type = type ?? name;
-        if(!_entityManagers[name]) this.create(name, type);
+        if (!_entityManagers[name]) this.create(name, type);
         return _entityManagers[name];
     },
 
-    getAll: function() {
+    getAll: function () {
         return Object.values(_entityManagers);
     },
 
     delete(name) {
-        if(_entityManagers[name]) {
+        if (_entityManagers[name]) {
             _entityManagers[name].onDelete();
             delete _entityManagers[name];
         }
@@ -117,10 +117,10 @@ export const EntityManagers = {
 
     findEntity(path) {
         const managerName = path.substring(0, path.lastIndexOf('-'));
-        const entityID = path.substring(path.lastIndexOf('-')+1);
+        const entityID = path.substring(path.lastIndexOf('-') + 1);
 
         const manager = EntityManagers.get(managerName);
-        if(!manager) return null;
+        if (!manager) return null;
         return manager.find(entityID);
     }
 }

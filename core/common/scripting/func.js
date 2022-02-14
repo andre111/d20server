@@ -17,7 +17,7 @@ export class Func extends Value {
         return this;
     }
 
-    get arity() { 
+    get arity() {
         return this.#arity;
     }
 
@@ -37,8 +37,8 @@ export class Return {
 
 export function getExprString(name, args) {
     var expr = '';
-    for(const argument of args) {
-        if(expr) expr = expr + ', ';
+    for (const argument of args) {
+        if (expr) expr = expr + ', ';
         expr = expr + argument.expr;
     }
     expr = name + '(' + expr + ')';
@@ -50,19 +50,19 @@ export function getExprString(name, args) {
 export const BUILTIN_NUMBER = new Func(1);
 BUILTIN_NUMBER.call = (interpreter, paren, name, args) => {
     var value = 0;
-    switch(args[0].type) {
-    case Type.DOUBLE:
-        value = args[0].value;
-        break;
-    case Type.BOOLEAN:
-        value = args[0].value ? 1 : 0;
-        break;
-    case Type.STRING:
-        value = parseFloat(args[0].value);
-        if(isNaN(value)) throw new RuntimeError(paren, 'Cannot convert "'+args[0].value+'" to number');
-        break;
-    default:
-        throw new RuntimeError(paren, 'Cannot convert '+args[0].type+' to number');
+    switch (args[0].type) {
+        case Type.DOUBLE:
+            value = args[0].value;
+            break;
+        case Type.BOOLEAN:
+            value = args[0].value ? 1 : 0;
+            break;
+        case Type.STRING:
+            value = parseFloat(args[0].value);
+            if (isNaN(value)) throw new RuntimeError(paren, 'Cannot convert "' + args[0].value + '" to number');
+            break;
+        default:
+            throw new RuntimeError(paren, 'Cannot convert ' + args[0].type + ' to number');
     }
     return new Value(value, Type.DOUBLE, getExprString(name, args));
 };
@@ -108,13 +108,13 @@ BUILTIN_ARRAY.call = (interpreter, paren, name, args) => {
 
 export const BUILTIN_LEN = new Func(1);
 BUILTIN_LEN.call = (interpreter, paren, name, args) => {
-    switch(args[0].type) {
-    case Type.ARRAY:
-        return new Value(args[0].value.length, Type.DOUBLE, getExprString(name, args));
-    case Type.STRING:
-        return new Value(args[0].value.length, Type.DOUBLE, getExprString(name, args));
-    default:
-        throw new RuntimeError(paren, 'Cannot get length of '+args[0].type);
+    switch (args[0].type) {
+        case Type.ARRAY:
+            return new Value(args[0].value.length, Type.DOUBLE, getExprString(name, args));
+        case Type.STRING:
+            return new Value(args[0].value.length, Type.DOUBLE, getExprString(name, args));
+        default:
+            throw new RuntimeError(paren, 'Cannot get length of ' + args[0].type);
     }
 };
 
@@ -124,9 +124,9 @@ BUILTIN_FIND.call = (interpreter, paren, name, args) => {
     interpreter.checkOperandType(paren, args[0], Type.STRING);
     interpreter.checkOperandType(paren, args[1], Type.DOUBLE);
     const manager = EntityManagers.get(args[0].value);
-    if(manager) {
+    if (manager) {
         const entity = manager.find(Math.trunc(args[1].value));
-        if(entity) return new Value(new EntityReference(entity), Type.ENTITY, getExprString(name, args));
+        if (entity) return new Value(new EntityReference(entity), Type.ENTITY, getExprString(name, args));
     }
     return Value.NULL;
 };
@@ -135,10 +135,10 @@ export const BUILTIN_LIST = new Func(1);
 BUILTIN_LIST.call = (interpreter, paren, name, args) => {
     interpreter.checkOperandType(paren, args[0], Type.STRING);
     const manager = EntityManagers.get(args[0].value);
-    if(manager) {
+    if (manager) {
         const array = new ScrArray();
         var index = 0;
-        for(const entity of manager.all()) {
+        for (const entity of manager.all()) {
             array.set(index, new Value(new EntityReference(entity), Type.ENTITY, ''));
             index++;
         }

@@ -15,12 +15,12 @@ class I18n {
         const split = path.split('.');
 
         var parent = this.#data;
-        for(var i=0; i<split.length-1; i++) {
+        for (var i = 0; i < split.length - 1; i++) {
             parent = parent[split[i]];
-            if(!parent) return def;
+            if (!parent) return def;
         }
 
-        return parent[split[split.length-1]] ?? def;
+        return parent[split[split.length - 1]] ?? def;
     }
 
     getAsJson() {

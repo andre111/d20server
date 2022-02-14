@@ -15,12 +15,12 @@ export class SidepanelTab {
         this.#tab = document.createElement('div');
         // TODO: make this use a class and css
         this.#tab.style.height = '100%';
-        this.#tab.style.padding = '4px'; 
+        this.#tab.style.padding = '4px';
         this.#tab.style.overflow = 'auto';
     }
 
     getName() {
-        return I18N.get('sidepanel.tabs.'+this.#key, this.#key);
+        return I18N.get('sidepanel.tabs.' + this.#key, this.#key);
     }
 
     getIcon() {
@@ -30,7 +30,7 @@ export class SidepanelTab {
     isVisible() {
         return this.#visible;
     }
-    
+
     get tab() {
         return this.#tab;
     }

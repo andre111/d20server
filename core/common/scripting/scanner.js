@@ -24,7 +24,7 @@ export class Scanner {
     }
 
     #scanTokens() {
-        while(!this.#isAtEOF()) {
+        while (!this.#isAtEOF()) {
             this.#start = this.#current;
             this.#startColumn = this.#column;
             this.#scanToken();
@@ -35,7 +35,7 @@ export class Scanner {
 
     #scanToken() {
         const c = this.#advance();
-        switch(c) {
+        switch (c) {
             case '(': this.#addToken(LEFT_PAREN); break;
             case ')': this.#addToken(RIGHT_PAREN); break;
             case '{': this.#addToken(LEFT_BRACE); break;
@@ -48,12 +48,12 @@ export class Scanner {
             case '-': this.#addToken(MINUS); break;
             case '+': this.#addToken(PLUS); break;
             case '*': this.#addToken(STAR); break;
-            case '/': 
-                if(this.#match('/')) { // comment
-                    while(this.#peek() != '\n' && !this.#isAtEOF()) this.#advance();
-                    if(this.#keepAll) this.#addToken(COMMENT);
+            case '/':
+                if (this.#match('/')) { // comment
+                    while (this.#peek() != '\n' && !this.#isAtEOF()) this.#advance();
+                    if (this.#keepAll) this.#addToken(COMMENT);
                 } else {
-                    this.#addToken(SLASH); 
+                    this.#addToken(SLASH);
                 }
                 break;
             case '!':
@@ -72,20 +72,20 @@ export class Scanner {
             case ' ':
             case '\r':
             case '\t':
-                if(this.#keepAll) this.#addToken(WHITESPACE);
+                if (this.#keepAll) this.#addToken(WHITESPACE);
                 break; // whitespace
             case '\n':
                 this.#line++;
                 this.#column = 0;
-                if(this.#keepAll) this.#addToken(NEWLINE);
+                if (this.#keepAll) this.#addToken(NEWLINE);
                 break;
             default:
-                if(this.#isDigit(c)) {
+                if (this.#isDigit(c)) {
                     this.#number();
-                } else if(this.#isAlpha(c)) {
+                } else if (this.#isAlpha(c)) {
                     this.#identifier();
                 } else {
-                    if(this.#keepAll) this.#addToken(UNKNOWN);
+                    if (this.#keepAll) this.#addToken(UNKNOWN);
                     this.#scripting.error(this.#line, this.#startColumn, 'Unexpected character');
                 }
                 break;
@@ -94,11 +94,11 @@ export class Scanner {
 
     #string() {
         var literal = '';
-        while(this.#peek() != '"' && this.#peek() != '\n' && !this.#isAtEOF()) {
+        while (this.#peek() != '"' && this.#peek() != '\n' && !this.#isAtEOF()) {
             // check (and skip) escape sequence
-            if(this.#peek() == '\\') {
-                if(this.#peekNext() != '\\' && this.#peekNext() != '"') {
-                    this.#scripting.error(this.#line, this.#column, 'Invalid escape sequence: \\'+this.#peekNext()); // note: this currently will not be shown by the editor
+            if (this.#peek() == '\\') {
+                if (this.#peekNext() != '\\' && this.#peekNext() != '"') {
+                    this.#scripting.error(this.#line, this.#column, 'Invalid escape sequence: \\' + this.#peekNext()); // note: this currently will not be shown by the editor
                 }
                 this.#advance();
             }
@@ -106,9 +106,9 @@ export class Scanner {
             literal += this.#advance();
         }
 
-        if(this.#peek() != '"') {
+        if (this.#peek() != '"') {
             this.#scripting.error(this.#line, this.#column, 'Unterminated string');
-            if(this.#keepAll) this.#addToken(UNKNOWN);
+            if (this.#keepAll) this.#addToken(UNKNOWN);
             return;
         }
         this.#advance();
@@ -119,30 +119,30 @@ export class Scanner {
     }
 
     #number() {
-        while(this.#isDigit(this.#peek())) this.#advance();
+        while (this.#isDigit(this.#peek())) this.#advance();
 
         // check for fractional part
-        if(this.#peek() == '.' && this.#isDigit(this.#peekNext())) {
+        if (this.#peek() == '.' && this.#isDigit(this.#peekNext())) {
             this.#advance();
-            while(this.#isDigit(this.#peek())) this.#advance();
+            while (this.#isDigit(this.#peek())) this.#advance();
         }
-        
+
         this.#addToken(NUMBER, Number(this.#source.substring(this.#start, this.#current)));
     }
 
     #identifier() {
         // ugly hack to make dice work
-        if(this.#isParsingDiceIdentifier()) {
+        if (this.#isParsingDiceIdentifier()) {
             this.#addToken(DICE);
             return;
         }
 
         // parse normal identifier
-        while(this.#isAlphaNumeric(this.#peek())) this.#advance();
+        while (this.#isAlphaNumeric(this.#peek())) this.#advance();
 
         const text = this.#source.substring(this.#start, this.#current);
         var type = KEYWORDS[text];
-        if(!type) type = IDENTIFIER;
+        if (!type) type = IDENTIFIER;
         this.#addToken(type);
     }
 
@@ -152,8 +152,8 @@ export class Scanner {
     }
 
     #match(expected) {
-        if(this.#isAtEOF()) return false;
-        if(this.#source[this.#current] != expected) return false;
+        if (this.#isAtEOF()) return false;
+        if (this.#source[this.#current] != expected) return false;
 
         this.#column++;
         this.#current++;
@@ -161,12 +161,12 @@ export class Scanner {
     }
 
     #peek() {
-        if(this.#isAtEOF()) return '\0';
+        if (this.#isAtEOF()) return '\0';
         return this.#source[this.#current];
     }
-    
+
     #peekNext() {
-        if(this.#current + 1 >= this.#source.length) return '\0';
+        if (this.#current + 1 >= this.#source.length) return '\0';
         return this.#source[this.#current + 1];
     }
 
@@ -196,11 +196,11 @@ export class Scanner {
         // ugly hack to detect if identifier is actually dice operation
         // check if it is a single 'd' followed by a digit
         // (-> this results in variablenames starting with 'd[digit]' not working as expected (does not get parsed as a single identifer))
-        if(this.#current-this.#start != 1) return false;
+        if (this.#current - this.#start != 1) return false;
         const c = this.#source[this.#start];
-        if(c != 'd' && c != 'D' && c != 'w' && c != 'W') return false;
+        if (c != 'd' && c != 'D' && c != 'w' && c != 'W') return false;
 
-        if(!this.#isAlphaNumeric(this.#peek())) return true; // case 1: just 'd' with no more alphanum characters -> dice operator
+        if (!this.#isAlphaNumeric(this.#peek())) return true; // case 1: just 'd' with no more alphanum characters -> dice operator
         return this.#isDigit(this.#peek()); // case 2: 'd[digit]' -> dice operator
     }
 

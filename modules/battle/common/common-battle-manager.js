@@ -1,11 +1,11 @@
 export class CommonBattleManager {
     static getParticipatingTokens(map) {
-        if(!map) return [];
+        if (!map) return [];
 
         // find all participating tokens
         var tokens = [];
-        for(const token of map.getContainedEntityManager('token').all()) {
-            if(token.getBoolean('battle_active')) {
+        for (const token of map.getContainedEntityManager('token').all()) {
+            if (token.getBoolean('battle_active')) {
                 tokens.push(token);
             }
         }
@@ -16,10 +16,10 @@ export class CommonBattleManager {
             const v2 = t2.getDouble('battle_initiative');
             return v2 - v1;
         });
-        
+
         // store ids only
         var tokenIDs = [];
-        for(const token of tokens) {
+        for (const token of tokens) {
             tokenIDs.push(token.getID());
         }
 
@@ -27,13 +27,13 @@ export class CommonBattleManager {
     }
 
     static getActiveToken(map) {
-        if(!map) return null;
-        
+        if (!map) return null;
+
         const tokenIDs = CommonBattleManager.getParticipatingTokens(map);
 
-        for(const tokenID of tokenIDs) {
+        for (const tokenID of tokenIDs) {
             const token = map.getContainedEntityManager('token').find(tokenID);
-            if(token && !token.getBoolean('battle_turnEnded')) {
+            if (token && !token.getBoolean('battle_turnEnded')) {
                 return token;
             }
         }
@@ -42,12 +42,12 @@ export class CommonBattleManager {
     }
 
     static isBattleActive(map) {
-        if(!map) return false;
+        if (!map) return false;
         return map.getBoolean('battle_active');
     }
-    
+
     static getBattleRound(map) {
-        if(!map) return -1;
+        if (!map) return -1;
         return map.getLong('battle_round');
     }
 }

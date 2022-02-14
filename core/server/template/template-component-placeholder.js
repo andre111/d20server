@@ -26,23 +26,23 @@ export class TemplateComponentPlaceholder extends TemplateComponent {
     }
 
     getString() {
-        if(this.string == null) throw new Error('Placeholder was not parsed before getting string');
+        if (this.string == null) throw new Error('Placeholder was not parsed before getting string');
         const currentString = this.string;
         this.string = null;
         return currentString;
     }
 
     getDiceRolls() {
-        if(this.diceRolls == null) throw new Error('Placeholder was not parsed before getting dice rolls');
+        if (this.diceRolls == null) throw new Error('Placeholder was not parsed before getting dice rolls');
         const currentDiceRolls = this.diceRolls;
         this.diceRolls = null;
         return currentDiceRolls;
     }
 
     getTriggeredContent() {
-        if(this.triggeredContent == null) throw new Error('Placeholder was not parsed before getting triggered content');
+        if (this.triggeredContent == null) throw new Error('Placeholder was not parsed before getting triggered content');
         const currentTriggeredContent = this.triggeredContent;
         this.triggeredContent = null;
-        return currentTriggeredContent; 
+        return currentTriggeredContent;
     }
 }

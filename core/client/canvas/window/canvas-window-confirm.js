@@ -4,10 +4,10 @@ import { CanvasWindow } from '../canvas-window.js';
 export class CanvasWindowConfirm extends CanvasWindow {
     constructor(parent, title, text, callback) {
         super(parent, title, true);
-        
+
         // create html elements
         this.content.appendChild(document.createTextNode(text));
-        
+
         this.addButton(I18N.get('global.yes', 'Yes'), () => {
             callback();
             this.close();
