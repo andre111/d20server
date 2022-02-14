@@ -1,0 +1,21 @@
+{
+    "battle.end": "Kampf beenden",
+    "battle.info": "Kampf<br>Runde %0",
+    "battle.nextturn": "Nächster Zug",
+    "battle.notification.ended": "Kampf beendet!",
+    "battle.notification.round": "Runde %0",
+    "battle.notification.started": "kampf begonnen!",
+    "battle.notification.turn": "%0s Zug",
+    "command.battle.error.nomap": "Kampfbefehle können nur auf einer Karte ausgeführt werden",
+    "command.battle.error.notoken": "Dieser Kampfbefehl kann nur mit ausgewähltem Token ausgeführt werden",
+    "command.battle.error.unknown": "Unbekannter Kampfbefehl: %0",
+    "mode.battle": "Kampf beginnen",
+    "token.menu.battle": "Kampf",
+    "token.menu.battle.initiative": "Initiative setzen",
+    "token.menu.battle.join": "Kampf beitreten",
+    "token.menu.battle.leave": "Kampf verlassen",
+    "window.battle.end.prompt": "Willst du den aktuellen Kampf beenden?",
+    "window.battle.end.title": "Kampf beenden",
+    "window.battle.initiative.prompt": "Initiativewert für ausgewählten Token eingeben: ",
+    "window.battle.initiative.title": "Initiative setzen"
+}

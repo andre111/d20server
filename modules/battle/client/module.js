@@ -9,9 +9,10 @@ import { MapUtils } from '../../../core/client/util/maputil.js';
 
 import { ClientBattleManager } from './client-battle-manager.js';
 import { CommonBattleManager } from '../common/common-battle-manager.js';
+import { I18N } from '../../../core/common/util/i18n.js';
 
 Events.on('addModeButtonsGM', event => {
-    event.data.addButton(new ModeButtonExtended(new ModeButton('/modules/battle/files/img/gui/battle', 'Start Battle', () => false, () => {
+    event.data.addButton(new ModeButtonExtended(new ModeButton('/modules/battle/files/img/gui/battle', I18N.get('mode.battle', 'Start Battle'), () => false, () => {
         const msg = new SendChatMessage('/battle start');
         MessageService.send(msg);
     }), 0));
@@ -21,11 +22,11 @@ Events.on('entityMenu', event => {
     if (event.data.entityType != 'token') return;
     if (!CommonBattleManager.isBattleActive(MapUtils.currentMap())) return;
 
-    const category = event.data.menu.createCategory(null, 'Battle');
+    const category = event.data.menu.createCategory(null, I18N.get('token.menu.battle', 'Battle'));
 
     if (event.data.reference.getBoolean('battle_active')) {
-        event.data.menu.createItem(category, 'Set Initiative', () => {
-            new CanvasWindowInput(null, 'Set Initiative', 'Enter initiative for selected token: ', event.data.reference.getDouble('battle_initiative'), value => {
+        event.data.menu.createItem(category, I18N.get('token.menu.battle.initiative', 'Set Initiative'), () => {
+            new CanvasWindowInput(null, I18N.get('window.battle.initiative.title', 'Set Initiative'), I18N.get('window.battle.initiative.prompt', 'Enter initiative for selected token: '), event.data.reference.getDouble('battle_initiative'), value => {
                 if (value == null || value == undefined || value == '') return;
 
                 const newValue = Number(value);
@@ -35,12 +36,12 @@ Events.on('entityMenu', event => {
                 }
             });
         });
-        event.data.menu.createItem(category, 'Leave Battle', () => {
+        event.data.menu.createItem(category, I18N.get('token.menu.battle.leave', 'Leave Battle'), () => {
             const msg = new SendChatMessage('/battle leave');
             MessageService.send(msg);
         });
     } else {
-        event.data.menu.createItem(category, 'Join Battle', () => {
+        event.data.menu.createItem(category, I18N.get('token.menu.battle.join', 'Join Battle'), () => {
             const msg = new SendChatMessage('/battle join');
             MessageService.send(msg);
         });

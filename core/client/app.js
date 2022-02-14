@@ -52,6 +52,7 @@ import { StateMain } from './state/state-main.js';
 import { CanvasWindowEditAttachment } from './canvas/window/canvas-window-edit-attachment.js';
 import { SidepanelTabCompendium } from './sidepanel/sidepanel-tab-compendium.js';
 import { CanvasWindowEditCompendium } from './canvas/window/canvas-window-edit-compendium.js';
+import { I18N } from '../common/util/i18n.js';
 
 // Initialize common code
 Common.init(false, new ClientIDProvider(), ClientEntityManager);
@@ -88,15 +89,15 @@ ImageService.init();
 // Mode Buttons
 Events.on('addModeButtons', event => {
     // token mode
-    event.data.addButton(new ModeButtonExtended(new ModeButton('/core/files/img/gui/cursor', 'Edit Tokens', () => Client.getState().getMode() instanceof CanvasModeEntities && Client.getState().getMode().entityType == 'token', () => Client.getState().setMode(new CanvasModeEntities('token'))), 0));
+    event.data.addButton(new ModeButtonExtended(new ModeButton('/core/files/img/gui/cursor', I18N.get('mode.tokens', 'Edit Tokens'), () => Client.getState().getMode() instanceof CanvasModeEntities && Client.getState().getMode().entityType == 'token', () => Client.getState().setMode(new CanvasModeEntities('token'))), 0));
 
     // wall mode
     if (ServerData.isGM()) {
-        event.data.addButton(new ModeButtonExtended(new ModeButton('/core/files/img/gui/wall', 'Edit Walls', () => Client.getState().getMode() instanceof CanvasModeWalls, () => Client.getState().setMode(new CanvasModeWalls())), 0, [
-            new ModeButton('/core/files/img/gui/wall', 'Create Walls', () => Client.getState().getMode() instanceof CanvasModeWalls && Client.getState().getMode().action instanceof WallActionCreateWall, () => { Client.getState().setMode(new CanvasModeWalls()); Client.getState().getMode().setAction(new WallActionCreateWall(Client.getState().getMode())); }),
-            new ModeButton('/core/files/img/gui/onesidedwall', 'Create One Sided Walls', () => Client.getState().getMode() instanceof CanvasModeWalls && Client.getState().getMode().action instanceof WallActionCreateOneSidedWall, () => { Client.getState().setMode(new CanvasModeWalls()); Client.getState().getMode().setAction(new WallActionCreateOneSidedWall(Client.getState().getMode())); }),
-            new ModeButton('/core/files/img/gui/window', 'Create Windows', () => Client.getState().getMode() instanceof CanvasModeWalls && Client.getState().getMode().action instanceof WallActionCreateWindow, () => { Client.getState().setMode(new CanvasModeWalls()); Client.getState().getMode().setAction(new WallActionCreateWindow(Client.getState().getMode())); }),
-            new ModeButton('/core/files/img/gui/door', 'Create Doors', () => Client.getState().getMode() instanceof CanvasModeWalls && Client.getState().getMode().action instanceof WallActionCreateDoor, () => { Client.getState().setMode(new CanvasModeWalls()); Client.getState().getMode().setAction(new WallActionCreateDoor(Client.getState().getMode())); })
+        event.data.addButton(new ModeButtonExtended(new ModeButton('/core/files/img/gui/wall', I18N.get('mode.walls', 'Edit Walls'), () => Client.getState().getMode() instanceof CanvasModeWalls, () => Client.getState().setMode(new CanvasModeWalls())), 0, [
+            new ModeButton('/core/files/img/gui/wall', I18N.get('mode.walls.create.simple', 'Create Walls'), () => Client.getState().getMode() instanceof CanvasModeWalls && Client.getState().getMode().action instanceof WallActionCreateWall, () => { Client.getState().setMode(new CanvasModeWalls()); Client.getState().getMode().setAction(new WallActionCreateWall(Client.getState().getMode())); }),
+            new ModeButton('/core/files/img/gui/onesidedwall', I18N.get('mode.walls.create.onesided', 'Create Onesided Walls'), () => Client.getState().getMode() instanceof CanvasModeWalls && Client.getState().getMode().action instanceof WallActionCreateOneSidedWall, () => { Client.getState().setMode(new CanvasModeWalls()); Client.getState().getMode().setAction(new WallActionCreateOneSidedWall(Client.getState().getMode())); }),
+            new ModeButton('/core/files/img/gui/window', I18N.get('mode.walls.create.windows', 'Create Windows'), () => Client.getState().getMode() instanceof CanvasModeWalls && Client.getState().getMode().action instanceof WallActionCreateWindow, () => { Client.getState().setMode(new CanvasModeWalls()); Client.getState().getMode().setAction(new WallActionCreateWindow(Client.getState().getMode())); }),
+            new ModeButton('/core/files/img/gui/door', I18N.get('mode.walls.create.doors', 'Create Doors'), () => Client.getState().getMode() instanceof CanvasModeWalls && Client.getState().getMode().action instanceof WallActionCreateDoor, () => { Client.getState().setMode(new CanvasModeWalls()); Client.getState().getMode().setAction(new WallActionCreateDoor(Client.getState().getMode())); })
         ]));
     }
 });
@@ -104,16 +105,16 @@ Events.on('addModeButtons', event => {
 Events.on('addModeButtonsGM', event => {
     // select layer
     var showLayerButtons = false;
-    event.data.addButton(new ModeButtonExtended(new ModeButton('/core/files/img/gui/layers', 'Select Layer', () => showLayerButtons, () => { showLayerButtons = !showLayerButtons; }), 0, [
-        new ModeButton('/core/files/img/gui/bg', 'Background Layer', () => Client.getState().getLayer() == Layer.BACKGROUND, () => { Client.getState().setLayer(Layer.BACKGROUND); showLayerButtons = false; }),
-        new ModeButton('/core/files/img/gui/token', 'Token Layer', () => Client.getState().getLayer() == Layer.MAIN, () => { Client.getState().setLayer(Layer.MAIN); showLayerButtons = false; }),
-        new ModeButton('/core/files/img/gui/gm', 'GM Overlay Layer', () => Client.getState().getLayer() == Layer.GMOVERLAY, () => { Client.getState().setLayer(Layer.GMOVERLAY); showLayerButtons = false; })
+    event.data.addButton(new ModeButtonExtended(new ModeButton('/core/files/img/gui/layers', I18N.get('mode.layer', 'Select Layer'), () => showLayerButtons, () => { showLayerButtons = !showLayerButtons; }), 0, [
+        new ModeButton('/core/files/img/gui/bg', I18N.get('mode.layer.bg', 'Background Layer'), () => Client.getState().getLayer() == Layer.BACKGROUND, () => { Client.getState().setLayer(Layer.BACKGROUND); showLayerButtons = false; }),
+        new ModeButton('/core/files/img/gui/token', I18N.get('mode.layer.token', 'Token Layer'), () => Client.getState().getLayer() == Layer.MAIN, () => { Client.getState().setLayer(Layer.MAIN); showLayerButtons = false; }),
+        new ModeButton('/core/files/img/gui/gm', I18N.get('mode.layer.gm', 'GM Overlay Layer'), () => Client.getState().getLayer() == Layer.GMOVERLAY, () => { Client.getState().setLayer(Layer.GMOVERLAY); showLayerButtons = false; })
     ])
     );
 
     // select view
-    event.data.addButton(new ModeButtonExtended(new ModeButton('/core/files/img/gui/viewGM', 'GM-View', () => !Client.getState().getView().isPlayerView(), () => Client.getState().setView(new CanvasView(ServerData.localProfile, false, false, false, true))), 8));
-    event.data.addButton(new ModeButtonExtended(new ModeButton('/core/files/img/gui/viewPlayer', 'Player-View', () => Client.getState().getView().isPlayerView(), () => {
+    event.data.addButton(new ModeButtonExtended(new ModeButton('/core/files/img/gui/viewGM', I18N.get('mode.view.gm', 'GM-View'), () => !Client.getState().getView().isPlayerView(), () => Client.getState().setView(new CanvasView(ServerData.localProfile, false, false, false, true))), 8));
+    event.data.addButton(new ModeButtonExtended(new ModeButton('/core/files/img/gui/viewPlayer', I18N.get('mode.view.player', 'Player-View'), () => Client.getState().getView().isPlayerView(), () => {
         new CanvasWindowChoose(null, 'profile', id => {
             if (id > 0) Client.getState().setView(new CanvasView(ServerData.profiles.get(id), true, true, true, false));
             Events.trigger('updateModeState');
@@ -121,7 +122,7 @@ Events.on('addModeButtonsGM', event => {
     }), 0));
 
     // files
-    event.data.addButton(new ModeButtonExtended(new ModeButton('/core/files/img/gui/fileman', 'Open File Manager', () => false, () => {
+    event.data.addButton(new ModeButtonExtended(new ModeButton('/core/files/img/gui/fileman', I18N.get('mode.filemanager', 'Open File Manager'), () => false, () => {
         const manager = createDefaultFileManager();
         manager.registerFileAction(new FileActionCreateToken(manager));
         manager.registerFileAction(new FileActionShowToPlayers(manager));
@@ -178,7 +179,7 @@ Events.on('actionCommand', event => {
     if (event.data.getCommand() == 'SHOW_IMAGE') {
         new CanvasWindowImage(null, event.data.getText());
     } else if (event.data.getCommand() == 'SHOW_TEXT') {
-        new CanvasWindowText(null, 'Text', event.data.getText());
+        new CanvasWindowText(null, I18N.get('window.text.title', 'Text'), event.data.getText());
     }
 });
 
@@ -194,7 +195,7 @@ Events.on('fileManagerSelect', event => {
 //    Generic
 Events.on('entityMenu', event => {
     const menu = event.data.menu;
-    menu.createItem(null, 'Edit', () => Events.trigger('openEntity', { entity: event.data.reference }, true));
+    menu.createItem(null, I18N.get('global.edit', 'Edit'), () => Events.trigger('openEntity', { entity: event.data.reference }, true));
 }, true, 1000);
 
 Events.on('entityMenu', event => {
@@ -202,13 +203,13 @@ Events.on('entityMenu', event => {
     const reference = event.data.reference;
 
     if (reference.has('depth') && reference.canEditProperty('depth', event.data.accessLevel)) {
-        const move = menu.createCategory(null, 'Move');
-        menu.createItem(move, 'to front', () => {
+        const move = menu.createCategory(null, I18N.get('entity.menu.move', 'Move'));
+        menu.createItem(move, I18N.get('entity.menu.move.tofront', 'to front'), () => {
             const currentMinDepth = MapUtils.currentEntitiesInLayer(reference.getType(), Client.getState().getLayer()).map(e => e.getLong('depth')).reduce((a, b) => Math.min(a, b), 0);
             reference.setLong('depth', currentMinDepth - 1);
             reference.performUpdate();
         });
-        menu.createItem(move, 'to back', () => {
+        menu.createItem(move, I18N.get('entity.menu.move.toback', 'to back'), () => {
             const currentMaxDepth = MapUtils.currentEntitiesInLayer(reference.getType(), Client.getState().getLayer()).map(e => e.getLong('depth')).reduce((a, b) => Math.max(a, b), 0);
             reference.setLong('depth', currentMaxDepth + 1);
             reference.performUpdate();
@@ -220,8 +221,8 @@ Events.on('entityMenu', event => {
     if (!event.data.isGM) return;
 
     const menu = event.data.menu;
-    menu.createItem(null, 'Delete', () => {
-        new CanvasWindowConfirm(null, 'Confirm removal', 'Are you sure you want to remove the ' + event.data.entityType + ': ' + event.data.reference.getName() + '?', () => {
+    menu.createItem(null, I18N.get('global.delete', 'Delete'), () => {
+        new CanvasWindowConfirm(null, I18N.get('window.delete.title', 'Delete Object(s)'), I18N.get('window.delete.prompt.typed', 'Do you want to delete the %0: %1?', event.data.entityType, event.data.reference.getName()), () => {
             event.data.reference.performRemove();
             if (menu.mode && menu.mode.clearActiveEntities) menu.mode.clearActiveEntities();
         });
@@ -239,7 +240,7 @@ Events.on('entityMenu', event => {
 
     // edit actor
     if (actor) {
-        menu.createItem(null, 'Edit Actor', () => {
+        menu.createItem(null, I18N.get('token.menu.actor', 'Edit Actor'), () => {
             const iActor = TokenUtil.getActor(reference);
             if (iActor) Events.trigger('openEntity', { entity: iActor }, true);
         });
@@ -281,16 +282,16 @@ Events.on('entityMenu', event => {
     if (actor) {
         const actorAccessLevel = actor.getAccessLevel(ServerData.localProfile);
         if (Access.matches(actor.getAccessValue('macroUse'), actorAccessLevel)) {
-            addMacros('Macros', Object.keys(actor.getStringMap('macros')));
+            addMacros(I18N.get('token.menu.macro', 'Macros'), Object.keys(actor.getStringMap('macros')));
 
-            addMacros('Inbuilt Macros', Object.keys(actor.getPredefinedMacros()), false, '!');
+            addMacros(I18N.get('token.menu.macro.inbuilt', 'Inbuilt Macros'), Object.keys(actor.getPredefinedMacros()), false, '!');
         }
     }
 
     // gm actions
     if (event.data.isGM) {
-        menu.createItem(null, 'View Notes', () => new CanvasWindowText(null, 'GM Notes', reference.getString('gmNotes')));
-        menu.createItem(null, 'Fit to Grid', () => new CanvasWindowFitToGrid(null, reference));
+        menu.createItem(null, I18N.get('token.menu.viewnotes', 'View Notes'), () => new CanvasWindowText(null, I18N.get('window.gmnotes.title', 'GM Notes'), reference.getString('gmNotes')));
+        menu.createItem(null, I18N.get('token.menu.fittogrid', 'Fit to Grid'), () => new CanvasWindowFitToGrid(null, reference));
     }
 }, true, 500);
 
@@ -302,7 +303,7 @@ Events.on('entityMenu', event => {
     const reference = event.data.reference;
 
     if (reference.getBoolean('oneSided')) {
-        menu.createItem(null, 'Flip', () => {
+        menu.createItem(null, I18N.get('wall.menu.flip', 'Flip'), () => {
             const x1 = reference.getLong('x1');
             const y1 = reference.getLong('y1');
             reference.setLong('x1', reference.getLong('x2'));
@@ -314,11 +315,11 @@ Events.on('entityMenu', event => {
     }
 
     if (reference.getBoolean('door')) {
-        if (reference.getBoolean('open')) menu.createItem(null, 'Close Door', () => { reference.setBoolean('open', false); reference.performUpdate(); });
-        else menu.createItem(null, 'Open Door', () => { reference.setBoolean('open', true); reference.performUpdate(); });
+        if (reference.getBoolean('open')) menu.createItem(null, I18N.get('wall.menu.close', 'Close Door'), () => { reference.setBoolean('open', false); reference.performUpdate(); });
+        else menu.createItem(null, I18N.get('wall.menu.open', 'Open Door'), () => { reference.setBoolean('open', true); reference.performUpdate(); });
 
-        if (reference.getBoolean('locked')) menu.createItem(null, 'Unlock Door', () => { reference.setBoolean('locked', false); reference.performUpdate(); });
-        else menu.createItem(null, 'Lock Door', () => { reference.setBoolean('locked', true); reference.performUpdate(); });
+        if (reference.getBoolean('locked')) menu.createItem(null, I18N.get('wall.menu.unlock', 'Unlock Door'), () => { reference.setBoolean('locked', false); reference.performUpdate(); });
+        else menu.createItem(null, I18N.get('wall.menu.lock', 'Lock Door'), () => { reference.setBoolean('locked', true); reference.performUpdate(); });
     }
 }, true, 500);
 
@@ -330,11 +331,11 @@ Events.on('entityMenu', event => {
     const reference = event.data.reference;
 
     if (event.data.isGM || reference.getBoolean("playersCanEnter")) {
-        menu.createItem(null, 'Open', () => MessageService.send(new MovePlayerToMap(reference, ServerData.localProfile)));
+        menu.createItem(null, I18N.get('map.menu.open', 'Open'), () => MessageService.send(new MovePlayerToMap(reference, ServerData.localProfile)));
     }
     if (event.data.isGM) {
-        menu.createItem(null, 'Move Players', () => MessageService.send(new MovePlayerToMap(reference)));
-        menu.createItem(null, 'Reset FOW', () => MessageService.send(new UpdateFOW(reference, [], true)));
+        menu.createItem(null, I18N.get('map.menu.moveplayers', 'Move Players'), () => MessageService.send(new MovePlayerToMap(reference)));
+        menu.createItem(null, I18N.get('map.menu.resetfow', 'Reset FOW'), () => MessageService.send(new UpdateFOW(reference, [], true)));
     }
 }, true, 500);
 
@@ -346,7 +347,7 @@ Events.on('entityMenu', event => {
     const reference = event.data.reference;
 
     if (event.data.isGM) {
-        menu.createItem(null, 'Create Token', () => {
+        menu.createItem(null, I18N.get('actor.menu.createtoken', 'Create Token'), () => {
             const token = new Entity('token');
             token.setLong('actorID', reference.getID());
             token.setString('imagePath', reference.getString('tokenImagePath'));
@@ -360,7 +361,7 @@ Events.on('entityMenu', event => {
                 Events.trigger('updateModeState');
             }
         });
-        menu.createItem(null, 'Set Default Token', () => {
+        menu.createItem(null, I18N.get('actor.menu.setdefaulttoken', 'Set Default Token'), () => {
             if (Client.getState().getMode() instanceof CanvasModeEntities && Client.getState().getMode().entityType == 'token') {
                 if (Client.getState().getMode().activeEntities.length == 1) {
                     const token = Client.getState().getMode().activeEntities[0];
@@ -372,7 +373,7 @@ Events.on('entityMenu', event => {
                 }
             }
         });
-        menu.createItem(null, 'Show Image', () => {
+        menu.createItem(null, I18N.get('actor.menu.showimage', 'Show Image'), () => {
             const imagePath = reference.getString('imagePath');
             if (imagePath) MessageService.send(new ActionCommand('SHOW_IMAGE', 0, 0, 0, false, '/data/files' + imagePath));
         });

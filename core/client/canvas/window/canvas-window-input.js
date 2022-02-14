@@ -24,7 +24,7 @@ export class CanvasWindowInput extends CanvasWindow {
         this.addButton(I18N.get('global.cancel', 'Cancel'), () => {
             this.close();
         });
-        this.setDimensions(300, 100);
+        this.setDimensions(300, 120);
         this.center();
 
         // focus main input

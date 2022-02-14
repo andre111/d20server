@@ -4,6 +4,7 @@ import { ChatService } from '../service/chat-service.js';
 
 import { ChatEntry } from '../../common/message/chat/chat-entry.js';
 import { Scripting } from '../../common/scripting/scripting.js';
+import { I18N } from '../../common/util/i18n.js';
 
 const SCRIPT = new Scripting();
 export class RollCommand extends Command {
@@ -35,7 +36,7 @@ export class RollCommand extends Command {
         }
 
         if (this.#sendMessage) {
-            const rollAppendix = this.#showPublic ? '' : (this.#showGM ? ' (to GM)' : ' (to Self)');
+            const rollAppendix = this.#showPublic ? '' : (this.#showGM ? I18N.get('command.roll.to.gm', ' (to GM)') : I18N.get('command.roll.to.self', ' (to Self)'));
             const rollMessage = RollFormatter.formatDiceRoll(profile, args, result, rollAppendix);
 
             // determine recipents

@@ -8,7 +8,7 @@ export class CanvasWindowChoose extends CanvasWindow {
     #tree;
 
     constructor(parent, type, callback) {
-        super(parent, 'Select ' + type, true);
+        super(parent, I18N.get('Select %0', 'Select %0', type), true);
 
         this.#callback = callback;
 

@@ -9,7 +9,7 @@ import { EditorList } from '../../gui/editor-list.js';
 
 export class CanvasWindowEntityDefault extends CanvasWindow {
     constructor(parent, reference) {
-        super(parent, 'Edit ' + reference.getDefinition().displayName, true);
+        super(parent, I18N.get('window.edit.title', 'Edit %0', reference.getDefinition().displayName), true);
 
         this.reference = new EntityReference(reference.getBackingEntity());
         this.tabs = [];

@@ -1,4 +1,5 @@
 import { Scripting } from '../../common/scripting/scripting.js';
+import { I18N } from '../../common/util/i18n.js';
 import { splitArguments } from '../../common/util/stringutil.js';
 import { ChatService } from '../service/chat-service.js';
 import { Command } from './command.js';
@@ -14,7 +15,7 @@ export class IfCommand extends Command {
     execute(profile, args) {
         // parse components
         const split = splitArguments(args, 2);
-        if (split.length < 2) throw new Error('Wrong arguments: <expression> ...');
+        if (split.length < 2) throw new Error(I18N.get('commands.error.arguments', 'Wrong argument count: %0', '<expression> ...'));
 
         const expression = split[0];
         const message = split[1];

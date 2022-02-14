@@ -66,5 +66,3 @@ export const Role = {
     DEFAULT: 'DEFAULT',
     GM: 'GM'
 }
-
-export const Infinite = 1.7976931348623157e+308;

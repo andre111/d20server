@@ -1,13 +1,19 @@
 {
-    "controlls": {
-        "add": {
-            "drawing": "Create Drawing(s)"
-        },
-        "draw": {
-            "filled": "Draw Shape",
-            "outline": "Draw Outline",
-            "equal": "Equal Sizes",
-            "text": "Insert Text"
-        }
-    }
+    "controlls.add.drawing": "Create Drawing(s)",
+    "controlls.draw.equal": "Equal Sizes",
+    "controlls.draw.filled": "Draw Shape",
+    "controlls.draw.outline": "Draw Outline",
+    "controlls.draw.text": "Insert Text",
+    "mode.drawings": "Draw Shapes",
+    "mode.drawings.deleteall": "Delete all Drawings",
+    "mode.drawings.edit": "Edit Drawings",
+    "mode.drawings.ovals": "Draw Ovals",
+    "mode.drawings.rectangles": "Draw Rectangles",
+    "mode.drawings.selectcolor": "Select Color",
+    "mode.drawings.text": "Write Text",
+    "window.drawings.deleteall.prompt": "Delete all (accessible) drawings on the current layer?",
+    "window.drawings.deleteall.title": "Delete Drawings",
+    "window.drawings.selectcolor.title": "Select Drawing Color",
+    "window.drawings.text.prompt": "Enter Text: ",
+    "window.drawings.text.title": "Add Text"
 }

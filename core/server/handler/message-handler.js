@@ -232,7 +232,7 @@ function _handlePing(profile, message) {
 function _handleToggleModule(profile, message) {
     if (profile.getRole() == Role.GM) {
         ModuleService.toggleModule(message.getIdentifier(), message.getDisabled());
-        MessageService.send(new SendNotification('Server Restart Required!', 10), profile);
+        MessageService.send(new SendNotification(I18N.get('notification.server.restartrequired', 'Server Restart Required!'), 10), profile);
     }
 }
 

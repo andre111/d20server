@@ -1,5 +1,6 @@
 import { State } from './state.js';
 import { GuiUtils } from '../util/guiutil.js';
+import { I18N } from '../../common/util/i18n.js';
 
 export class StateLoading extends State {
     current;
@@ -24,7 +25,7 @@ export class StateLoading extends State {
         document.body.appendChild(div);
 
         // create loading bar
-        const fieldset = GuiUtils.createBorderedSet('Loading', '400px', 'auto');
+        const fieldset = GuiUtils.createBorderedSet(I18N.get('state.loading', 'Loading'), '400px', 'auto');
         div.appendChild(fieldset);
 
         this.#progressContainer = document.createElement('div');

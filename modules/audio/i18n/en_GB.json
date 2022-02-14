@@ -1,29 +1,14 @@
 {
-    "token": {
-        "edit": {
-            "tabs": {
-                "audio": "Audio"
-            },
-            "audio": {
-                "path": "File:",
-                "volume": "Volume:",
-                "distance": "Distance (in cells):",
-                "wallsmuffle": "Muffled by walls:",
-                "reverb": "Reverb:",
-                "minpause": "Minimum Pause (in Seconds):",
-                "maxpause": "Maximum Pause (in Seconds):"
-            }
-        }
-    },
-    "settings": {
-        "volume": {
-            "ambient": "Ambient Volume",
-            "music": "Music Volume"
-        }
-    },
-    "modules": {
-        "audio": {
-            "openplayer": "Open Music Player"
-        }
-    }
+    "mode.openplayer": "Open Music Player",
+    "modules.audio.player": "Music Player",
+    "settings.volume.ambient": "Ambient Volume",
+    "settings.volume.music": "Music Volume",
+    "token.edit.audio.distance": "Distance (in cells):",
+    "token.edit.audio.maxpause": "Maximum Pause (in Seconds):",
+    "token.edit.audio.minpause": "Minimum Pause (in Seconds):",
+    "token.edit.audio.path": "File:",
+    "token.edit.audio.reverb": "Reverb:",
+    "token.edit.audio.volume": "Volume:",
+    "token.edit.audio.wallsmuffle": "Muffled by walls:",
+    "token.edit.tabs.audio": "Audio"
 }

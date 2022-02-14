@@ -1,11 +1,5 @@
 {
-    "settings": {
-        "page": {
-            "3ddice": "3D Dice"
-        },
-        "3ddice": {
-            "enabled": "Enabled",
-            "volume": "Volume"
-        }
-    }
+    "settings.3ddice.enabled": "Enabled",
+    "settings.3ddice.volume": "Volume",
+    "settings.page.3ddice": "3D Dice"
 }

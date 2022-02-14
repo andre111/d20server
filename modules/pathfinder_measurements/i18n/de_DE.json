@@ -1,8 +1,11 @@
 {
-    "controlls": {
-        "measurements": {
-            "apply": "Messung beginnen / fixieren",
-            "remove": "Messung zurücksetzen"
-        }
-    }
+    "controlls.measurements.apply": "Messung beginnen / fixieren",
+    "controlls.measurements.remove": "Messung zurücksetzen",
+    "measurement": "Distanz: %0 Felder - %1m",
+    "mode.measurements": "Messungen",
+    "mode.measurements.circle": "Kreis ausmessen",
+    "mode.measurements.cone": "Kegel ausmessen",
+    "mode.measurements.delete": "Messung löschen",
+    "mode.measurements.deleteall": "Alle Messungen löschen",
+    "mode.measurements.line": "Linie ausmessen"
 }

@@ -11,16 +11,12 @@ class I18n {
         this.#data = deepMerge(this.#data, obj);
     }
 
-    get(path, def) {
-        const split = path.split('.');
-
-        var parent = this.#data;
-        for (var i = 0; i < split.length - 1; i++) {
-            parent = parent[split[i]];
-            if (!parent) return def;
+    get(path, def, ...values) {
+        var string = this.#data[path] ?? def;
+        for (var i = 0; i < values.length; i++) {
+            string = string.replace('%' + i, values[i]);
         }
-
-        return parent[split[split.length - 1]] ?? def;
+        return string;
     }
 
     getAsJson() {

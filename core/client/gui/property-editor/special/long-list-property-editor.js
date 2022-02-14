@@ -6,6 +6,7 @@ import { CanvasWindowChoose } from '../../../canvas/window/canvas-window-choose.
 import { Type } from '../../../../common/constants.js';
 import { EntityManagers } from '../../../../common/entity/entity-managers.js';
 import { Events } from '../../../../common/events.js';
+import { I18N } from '../../../../common/util/i18n.js';
 
 
 export class LongListPropertyEditor extends PropertyEditor {
@@ -23,9 +24,9 @@ export class LongListPropertyEditor extends PropertyEditor {
         this.tree = new SearchableIDTree(this.container, null, this.valueProvider, () => this.doOpen());
 
         this.buttonCount = (referenceType != 'profile') ? 3 : 2;
-        if (referenceType != 'profile') this.addButton('Open', false, () => this.doOpen());
-        this.addButton('Add', false, () => this.doAdd());
-        this.addButton('Remove', false, () => this.doRemove());
+        if (referenceType != 'profile') this.addButton(I18N.get('global.open', 'Open'), false, () => this.doOpen());
+        this.addButton(I18N.get('global.add', 'Add'), false, () => this.doAdd());
+        this.addButton(I18N.get('global.remove', 'Remove'), false, () => this.doRemove());
     }
 
     addButton(text, disableable, callback) {

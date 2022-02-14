@@ -15,7 +15,7 @@ export class DirectoryActionDelete extends DirectoryAction {
     applyTo(directory) {
         if (!this.shouldShowFor(directory)) return;
 
-        new CanvasWindowConfirm(this.window, I18N.get('filemanager.action.directory.delete.title', 'Delete directory'), I18N.get('filemanager.action.directory.delete.question', 'Do you want to delete "%0" and all of its contents?').replace('%0', directory.getName()), () => {
+        new CanvasWindowConfirm(this.window, I18N.get('filemanager.action.directory.delete.title', 'Delete directory'), I18N.get('filemanager.action.directory.delete.question', 'Do you want to delete "%0" and all of its contents?', directory.getName()), () => {
             fetchDynamicJSON('/fileman/delete', { d: directory.getPath(), k: this.window.getKey() }, data => {
                 if (data.res == 'ok') {
                     const selectedDirectoryPath = this.window.getSelectedDirectory() ? this.window.getSelectedDirectory().getParentPath() : null;

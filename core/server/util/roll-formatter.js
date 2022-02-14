@@ -1,3 +1,4 @@
+import { I18N } from '../../common/util/i18n.js';
 import { ChatService } from '../service/chat-service.js';
 
 export class RollFormatter {
@@ -8,7 +9,7 @@ export class RollFormatter {
         text = text + '</div>';
 
         text = text + '<span class="hoverable">';
-        text = text + '<div class="chat-info">rolling...</div>';
+        text = text + '<div class="chat-info">' + I18N.get('chat.rolling', 'rolling...') + '</div>';
         text = text + '<div class="onhover">' + ChatService.escape(RollFormatter.normalizeExpression(rollExpression)) + '</div>';
         text = text + '</span>';
 

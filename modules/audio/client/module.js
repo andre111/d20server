@@ -51,7 +51,7 @@ Events.on('enterMainState', event => {
 });
 
 Events.on('addModeButtonsGM', event => {
-    event.data.addButton(new ModeButtonExtended(new ModeButton('/modules/audio/files/img/gui/player', I18N.get('modules.audio.openplayer', 'Open Music Player'), () => false, () => getMusicPlayer().show()), 0));
+    event.data.addButton(new ModeButtonExtended(new ModeButton('/modules/audio/files/img/gui/player', I18N.get('mode.openplayer', 'Open Music Player'), () => false, () => getMusicPlayer().show()), 0));
 });
 
 Events.on('fileManagerSelect', event => {

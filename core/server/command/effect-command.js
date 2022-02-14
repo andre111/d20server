@@ -1,6 +1,7 @@
 import { EntityManagers } from '../../common/entity/entity-managers.js';
 import { PlayEffect } from '../../common/messages.js';
 import { Scripting } from '../../common/scripting/scripting.js';
+import { I18N } from '../../common/util/i18n.js';
 import { splitArguments } from '../../common/util/stringutil.js';
 import { ChatService } from '../service/chat-service.js';
 import { MessageService } from '../service/message-service.js';
@@ -18,12 +19,12 @@ export class EffectCommand extends Command {
 
     execute(profile, args) {
         const split = splitArguments(args);
-        if (split.length != 6) throw new Error('Wrong argument count: <type> <x:expression> <y:expression> <rotation:expression> <scale:expression> <aboveOcc:expression>');
+        if (split.length != 6) throw new Error(I18N.get('commands.error.arguments', 'Wrong argument count: %0', '<type> <x:expression> <y:expression> <rotation:expression> <scale:expression> <aboveOcc:expression>'));
 
         const map = EntityManagers.get('map').find(profile.getCurrentMap());
 
         const type = split[0];
-        if (!EffectCommand.EFFECTS.includes(type)) throw new Error(`Unknown effect type: ${type}`);
+        if (!EffectCommand.EFFECTS.includes(type)) throw new Error(I18N.get('command.effect.error.unknown', 'Unknown effect type: %0', type));
 
         const x = SCRIPT.interpretExpression(ChatService.unescape(split[1]), profile, null);
         SCRIPT.throwIfErrored();

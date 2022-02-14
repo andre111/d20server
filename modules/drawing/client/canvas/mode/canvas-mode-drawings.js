@@ -9,6 +9,7 @@ import { Entity } from '../../../../../core/common/common.js';
 
 import { DrawingRenderer } from '../../renderer/drawing-renderer.js';
 import { EntityReference } from '../../../../../core/common/entity/entity-reference.js';
+import { I18N } from '../../../../../core/common/util/i18n.js';
 
 export const CanvasModeDrawingsGlobals = {
     color: '#FFFFFF'
@@ -69,7 +70,7 @@ export class CanvasModeDrawings extends CanvasMode {
                     this.currentDrawing = this.newDrawing(ServerData.localProfile, map, this.xStart - 1, this.yStart - 1, 2, 2, 0, e.shiftKey ? 'ovalOutline' : 'oval', CanvasModeDrawingsGlobals.color);
                     break;
                 case 'WRITE_TEXT':
-                    new CanvasWindowInput(null, 'Add Text', 'Enter Text: ', '', text => {
+                    new CanvasWindowInput(null, I18N.get('window.drawings.text.title', 'Add Text'), I18N.get('window.drawings.text.prompt', 'Enter Text: '), '', text => {
                         if (text != null && text != undefined && text != '') {
                             this.addDrawing(this.newDrawing(ServerData.localProfile, map, this.xStart - 16, this.yStart - 16, DrawingRenderer.getTextWidth(text) + 8, 40, 0, 'text:' + text, CanvasModeDrawingsGlobals.color));
                         }
@@ -171,7 +172,7 @@ export class CanvasModeDrawings extends CanvasMode {
     }
 
     static deleteAllDrawings() {
-        new CanvasWindowConfirm(null, 'Delete Drawings', 'Delete all (accessible) drawings on the current layer?', () => {
+        new CanvasWindowConfirm(null, I18N.get('window.drawings.deleteall.title', 'Delete Drawings'), I18N.get('window.drawings.deleteall.prompt', 'Delete all (accessible) drawings on the current layer?'), () => {
             const drawings = MapUtils.currentEntitiesInLayer('drawing', Client.getState().getLayer()).filter(drawing => drawing.canEdit(ServerData.localProfile));
             for (const drawing of drawings) {
                 const reference = new EntityReference(drawing);

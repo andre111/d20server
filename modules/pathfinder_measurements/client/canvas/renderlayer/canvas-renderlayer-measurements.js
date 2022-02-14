@@ -4,6 +4,7 @@ import { CanvasRenderLayer } from '../../../../../core/client/canvas/canvas-rend
 import { ServerData } from '../../../../../core/client/server-data.js';
 
 import { IntMathUtils } from '../../../../../core/common/util/mathutil.js';
+import { I18N } from '../../../../../core/common/util/i18n.js';
 
 export class CanvasRenderLayerMeasurements extends CanvasRenderLayer {
     constructor(level) {
@@ -71,7 +72,7 @@ export class CanvasRenderLayerMeasurements extends CanvasRenderLayer {
                 ctx.save();
                 ctx.translate(measurement.x1, measurement.y1);
                 ctx.rotate(angle);
-                ctx.fillText('Distance: ' + lengthCells.toFixed(1) + ' cells - ' + lengthMeters.toFixed(2) + 'm', length / 2 - 70, 16);
+                ctx.fillText(I18N.get('measurement', 'Distance: %0 cells - %1m', lengthCells.toFixed(1), lengthMeters.toFixed(2)), length / 2 - 70, 16);
                 ctx.restore();
             }
 

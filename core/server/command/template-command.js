@@ -1,4 +1,5 @@
 import { ChatEntry } from '../../common/message/chat/chat-entry.js';
+import { I18N } from '../../common/util/i18n.js';
 import { splitArguments } from '../../common/util/stringutil.js';
 import { ChatService } from '../service/chat-service.js';
 import { Templates } from '../template/templates.js';
@@ -19,14 +20,14 @@ export class TemplateCommand extends Command {
 
     execute(profile, args) {
         const split = splitArguments(args, 2);
-        if (split.length < 2) throw new Error('Usage: /template <name> <argument>[;<argument>[;...]]');
+        if (split.length < 2) throw new Error(I18N.get('commands.error.arguments', 'Wrong argument count: %0', '<name> <argument>[;<argument>[;...]]'));
 
         const name = split[0].toLowerCase();
         const templateArguments = split[1];
 
         // find template
         const template = Templates.get(name);
-        if (!template) throw new Error(`Unknown template: ${name}`);
+        if (!template) throw new Error(I18N.get('command.template.error.unknown', 'Unknown template: %0', name));
 
         // parse template
         var inputs = templateArguments.split(';');

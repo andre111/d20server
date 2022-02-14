@@ -3,7 +3,7 @@ import { CanvasWindow } from '../canvas-window.js';
 
 export class CanvasWindowImage extends CanvasWindow {
     constructor(parent, imagePath) {
-        super(parent, I18N.get('window.image', 'Image'), false);
+        super(parent, I18N.get('window.image.title', 'Image'), false);
 
         // create html elements
         const image = new Image();

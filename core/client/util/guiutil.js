@@ -7,6 +7,7 @@ const bgCurrent = Math.floor(Math.random() * (bgMax + 1));
 const bgSource = document.createElement('div');
 bgSource.innerHTML = 'Image Source: Loading...';
 
+//TODO: rewrite with fetch
 const xhr = new XMLHttpRequest();
 xhr.onload = () => {
     if (xhr.status >= 200 && xhr.status < 300) {
@@ -77,7 +78,7 @@ export const GuiUtils = {
         // create copyright div
         const copyrightDiv = document.createElement('div');
         copyrightDiv.className = 'copyright';
-        copyrightDiv.appendChild(document.createTextNode('Copyright © 2021 André Schweiger'));
+        copyrightDiv.appendChild(document.createTextNode('Copyright © 2022 André Schweiger'));
         copyrightDiv.appendChild(bgSource);
         div.appendChild(copyrightDiv);
     },

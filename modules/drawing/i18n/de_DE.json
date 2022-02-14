@@ -1,13 +1,19 @@
 {
-    "controlls": {
-        "add": {
-            "drawing": "Zeichnungen einfügen"
-        },
-        "draw": {
-            "filled": "Form zeichnen",
-            "outline": "Umriss zeichnen",
-            "equal": "Seiten angleichen",
-            "text": "Text einfügen"
-        }
-    }
+    "controlls.add.drawing": "Zeichnungen einfügen",
+    "controlls.draw.equal": "Seiten angleichen",
+    "controlls.draw.filled": "Form zeichnen",
+    "controlls.draw.outline": "Umriss zeichnen",
+    "controlls.draw.text": "Text einfügen",
+    "mode.drawings": "Zeichnen",
+    "mode.drawings.deleteall": "Alle Zeichnungen löschen",
+    "mode.drawings.edit": "Zeichnungen bearbeiten",
+    "mode.drawings.ovals": "Ovale zeichnen",
+    "mode.drawings.rectangles": "Rechtecke zeichnen",
+    "mode.drawings.selectcolor": "Farbe auswählen",
+    "mode.drawings.text": "Text schreiben",
+    "window.drawings.deleteall.prompt": "Alle (zugänglichen) Zeichnungen auf der aktuellen Ebene löschen?",
+    "window.drawings.deleteall.title": "Zeichnungen löschen",
+    "window.drawings.selectcolor.title": "Zeichenfarbe auswählen",
+    "window.drawings.text.prompt": "Text eingeben: ",
+    "window.drawings.text.title": "Text einfügen"
 }

@@ -1,8 +1,8 @@
 import { Access, Role } from '../../../../core/common/constants.js';
 import { EntityManagers } from '../../../../core/common/entity/entity-managers.js';
 import { EntityReference } from '../../../../core/common/entity/entity-reference.js';
+import { I18N } from '../../../../core/common/util/i18n.js';
 import { Command } from '../../../../core/server/command/command.js';
-import { ChatService } from '../../../../core/server/service/chat-service.js';
 import { CommonBattleManager } from '../../common/common-battle-manager.js';
 import { ServerBattleManager } from '../server-battle-manager.js';
 
@@ -66,10 +66,10 @@ export class BattleCommand extends Command {
     execute(profile, args) {
         // validate some input and find required objects
         const argsSplit = args.split(' ');
-        if (argsSplit.length < 1) throw new Error(`Usage: /battle <action> ...`);
+        if (argsSplit.length < 1) throw new Error(I18N.get('commands.error.arguments', 'Wrong argument count: %0', '<action> ...'));
 
         const map = EntityManagers.get('map').find(profile.getCurrentMap());
-        if (!map) throw new Error(`Battle actions can only be performed on a map`);
+        if (!map) throw new Error(I18N.get('command.battle.error.nomap', 'Battle actions can only be performed on a map'));
 
         const token = profile.getSelectedToken(true);
 
@@ -77,8 +77,8 @@ export class BattleCommand extends Command {
         for (const action of ACTIONS) {
             if (action.name == argsSplit[0]) {
                 // validate action requirements
-                if (action.requiresGM && profile.getRole() != Role.GM) throw new Error(`This action can only be performed by GMs`);
-                if (action.requiresToken && !token) throw new Error(`This action requries a selected token`);
+                if (action.requiresGM && profile.getRole() != Role.GM) throw new Error(I18N.get('commands.error.permission', 'You do not have permission to use this command'));
+                if (action.requiresToken && !token) throw new Error(I18N.get('command.battle.error.notoken', 'This action requries a selected token'));
 
                 // perform action
                 action.callback(profile, map, token, argsSplit.slice(1));
@@ -87,6 +87,6 @@ export class BattleCommand extends Command {
         }
 
         // -> no action found
-        throw new Error(`Unknown battle action ${argsSplit[0]}`);
+        throw new Error(I18N.get('command.battle.error.unknown', 'Unknown battle action %0', argsSplit[0]));
     }
 }

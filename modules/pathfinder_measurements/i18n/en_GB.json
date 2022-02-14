@@ -1,8 +1,11 @@
 {
-    "controlls": {
-        "measurements": {
-            "apply": "Begin / Fix Measurement",
-            "remove": "Reset Measurement"
-        }
-    }
+    "controlls.measurements.apply": "Begin / Fix Measurement",
+    "controlls.measurements.remove": "Reset Measurement",
+    "measurement": "Distance: %0 cells - %1m",
+    "mode.measurements": "Measurements",
+    "mode.measurements.circle": "Measure Circle",
+    "mode.measurements.cone": "Measure Cone",
+    "mode.measurements.delete": "Delete Measurement",
+    "mode.measurements.deleteall": "Delete All Measurements",
+    "mode.measurements.line": "Measure Line"
 }

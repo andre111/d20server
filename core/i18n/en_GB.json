@@ -1,221 +1,211 @@
 {
-    "global": {
-        "yes": "Yes",
-        "no": "No",
-        "ok": "Ok",
-        "accept": "Accept",
-        "cancel": "Cancel",
-        "edit": "Edit",
-        "search": "Search..."
-    },
-    "controlls": {
-        "select": "Select",
-        "contextmenu": "Context Menu",
-        "camera": {
-            "move": "Move Camera",
-            "zoom": "Zoom Camera",
-            "center": "Center Camera"
-        },
-        "disablesnap": "Disable Grid Snap",
-        "ping": "Ping",
-        "pinggm": "GM Ping",
-        "add": {
-            "token": "Create Token(s)",
-            "wall": "Create Wall(s)"
-        },
-        "move": "Move",
-        "rotate": "Rotate",
-        "resize": "Resize",
-        "delete": "Delete",
-        "copy": "Copy",
-        "paste": "Paste"
-    },
-    "input": {
-        "value": "Value: ",
-        "relative": "Relative Change: "
-    },
-    "attachment": {
-        "edit": {
-            "name": "Name: "
-        }
-    },
-    "compendium": {
-        "edit": {
-            "access": "Access: ",
-            "path": "Path: "
-        }
-    },
-    "token": {
-        "edit": {
-            "position": "Position: ",
-            "size": "Size: ",
-            "rotation": "Rotation: ",
-            "layer": "Layer: ",
-            
-            "represents": "represents ",
-            
-            "tabs": {
-                "gui": "Gui",
-                "gmnotes": "GM-Notes",
-                "light": "Light"
-            },
-            "gui": {
-                "bars": {
-                    "1": "Bar 1",
-                    "2": "Bar 2",
-                    "3": "Bar 3",
-                    "value": "Value:",
-                    "max": "Maximum:"
-                },
-                "editboxes": {
-                    "title": "Quick Edit Boxes",
-                    "explanation": "(list of [property]:[label],...)"
-                }
-            },
-            "light": {
-                "bright": "Bright Light Radius (in cells):",
-                "dim": "Dim Light Radius (in cells):",
-                "dark": "Darkness Radius (in cells):",
-                "angle": "Angle:",
-                "flicker": "Flickering:",
-                "color": "Colour:"
-            }
-        }
-    },
-    "sidepanel": {
-        "tabs": {
-            "chat": "Chat",
-            "players": "Players",
-            "actors": "Actors",
-            "attachments": "Attachments",
-            "maps": "Maps",
-            "compendium": "Compendium"
-        },
-        "chat": {
-            "send": "Send"
-        },
-        "players": {
-            "changecolor": {
-                "button": "Change own Color",
-                "window": "Select Player Color"
-            }
-        },
-        "actors": {
-            "new": {
-                "button": "New Actor",
-                "title": "New Actor",
-                "prompt": "Enter Actor Name: "
-            }
-        },
-        "attachments": {
-            "new": {
-                "button": "New Attachment",
-                "title": "New Attachment",
-                "prompt": "Enter Attachment Name: "
-            }
-        },
-        "maps": {
-            "new": {
-                "button": "New Map",
-                "title": "New Map",
-                "prompt": "Enter Map Name: "
-            }
-        },
-        "compendium": {
-            "new": {
-                "button": "New Compendium Entry",
-                "title": "New Compendium Entry",
-                "prompt": "Enter Compendium Entry Name: "
-            }
-        }
-    },
-    "settings": {
-        "title": "Settings",
-        "page": {
-            "audio": "Audio",
-            "modules": "Modules"
-        },
-        "volume": {
-            "global": "Global Volume",
-            "weather": "Weather Volume"
-        },
-        "showcontrollsbar": "Show Controlls Bar",
-        "config": {
-            "gmLockout": "GM Lockout",
-            "motd": "Motd"
-        }
-    },
-    "filemanager": {
-        "title": "File Manager",
-        "loaddirs": "Loading directories...",
-        "loadfiles": "Loading files...",
-        "action": {
-            "file": {
-                "createtoken": "Create Token",
-                "delete": {
-                    "name": "Delete",
-                    "title": "Delete file",
-                    "question": "Do you want to delete \"%0\"?"
-                },
-                "rename": {
-                    "name": "Rename",
-                    "title": "Rename file",
-                    "prompt": "Enter new file name: "
-                },
-                "select": "Select",
-                "showtoplayers": "Show to Players",
-                "upload": "Upload"
-            },
-            "directory": {
-                "create": {
-                    "name": "Create",
-                    "title": "Create directory",
-                    "prompt": "Enter directory name: "
-                },
-                "delete": {
-                    "name": "Delete",
-                    "title": "Delete directory",
-                    "question": "Do you want to delete \"%0\" and all of its contents?"
-                },
-                "rename": {
-                    "name": "Rename",
-                    "title": "Rename directory",
-                    "prompt": "Enter new directory name: "
-                }
-            }
-        },
-        "status": {
-            "empty": "This directory is empty",
-            "nomatch": "No files matching search",
-            "directory": {
-                "path": "Directory: ",
-                "dircount": "Directories: ",
-                "filecount": "Files: "
-            },
-            "file": {
-                "path": "File: ",
-                "size": "Size: ",
-                "modified": "Last Modified: "
-            }
-        },
-        "search": "Search: ",
-        "order": {
-            "by": "Order by: ",
-            "name": "Name",
-            "size": "Size",
-            "modified": "Last Modified"
-        },
-        "uploadwindow": "Upload Files" 
-    },
-    "window": {
-        "fittogrid": "Fit to Grid (select a 7x7 cells area with left and right click)",
-        "image": "Image"
-    },
-    "signin": {
-        "error": {
-            "version": "Version not matching server.",
-            "credentials": "Incorrect Username or Access Key.",
-            "lockout": "Server is locked down for GM Access only."
-        }
-    }
+    "actor.menu.createtoken": "Create Token",
+    "actor.menu.setdefaulttoken": "Set Default Token",
+    "actor.menu.showimage": "Show Image",
+    "attachment.edit.name": "Name: ",
+    "chat.rolling": "rolling...",
+    "chat.trigger.error.triggered": "Already triggered",
+    "chat.trigger.error.unknown": "Content not found",
+    "chat.trigger.error.wrongsender": "Not original sender",
+    "command.effect.error.unknown": "Unknown effect type: %0",
+    "command.notification.error.nomap": "You do not have a map loaded",
+    "command.notification.error.noplayer": "Unknown player: %0",
+    "command.roll.to.gm": " (to GM)",
+    "command.roll.to.self": " (to Self)",
+    "command.template.error.unknown": "Unknown template: %0",
+    "command.whisper.title": "%0 to %1: ",
+    "commands.error": "Error in /%0:",
+    "commands.error.arguments": "Wrong argument count: %0",
+    "commands.error.permission": "You do not have permission to use this command",
+    "commands.error.unknown": "Unknown command: /%0",
+    "compendium.edit.access": "Access: ",
+    "compendium.edit.path": "Path: ",
+    "controlls.add.token": "Create Token(s)",
+    "controlls.add.wall": "Create Wall(s)",
+    "controlls.camera.center": "Center Camera",
+    "controlls.camera.move": "Move Camera",
+    "controlls.camera.zoom": "Zoom Camera",
+    "controlls.contextmenu": "Context Menu",
+    "controlls.copy": "Copy",
+    "controlls.delete": "Delete",
+    "controlls.disablesnap": "Disable Grid Snap",
+    "controlls.move": "Move",
+    "controlls.paste": "Paste",
+    "controlls.ping": "Ping",
+    "controlls.pinggm": "GM Ping",
+    "controlls.resize": "Resize",
+    "controlls.rotate": "Rotate",
+    "controlls.select": "Select",
+    "entity.menu.move": "Move",
+    "entity.menu.move.toback": "to back",
+    "entity.menu.move.tofront": "to front",
+    "filemanager.action.directory.create.name": "Create",
+    "filemanager.action.directory.create.prompt": "Enter directory name: ",
+    "filemanager.action.directory.create.title": "Create directory",
+    "filemanager.action.directory.delete.name": "Delete",
+    "filemanager.action.directory.delete.question": "Do you want to delete \"%0\" and all of its contents?",
+    "filemanager.action.directory.delete.title": "Delete directory",
+    "filemanager.action.directory.rename.name": "Rename",
+    "filemanager.action.directory.rename.prompt": "Enter new directory name: ",
+    "filemanager.action.directory.rename.title": "Rename directory",
+    "filemanager.action.file.createtoken": "Create Token",
+    "filemanager.action.file.delete.name": "Delete",
+    "filemanager.action.file.delete.question": "Do you want to delete \"%0\"?",
+    "filemanager.action.file.delete.title": "Delete file",
+    "filemanager.action.file.rename.name": "Rename",
+    "filemanager.action.file.rename.prompt": "Enter new file name: ",
+    "filemanager.action.file.rename.title": "Rename file",
+    "filemanager.action.file.select": "Select",
+    "filemanager.action.file.showtoplayers": "Show to Players",
+    "filemanager.action.file.upload": "Upload",
+    "filemanager.loaddirs": "Loading directories...",
+    "filemanager.loadfiles": "Loading files...",
+    "filemanager.order.by": "Order by: ",
+    "filemanager.order.modified": "Last Modified",
+    "filemanager.order.name": "Name",
+    "filemanager.order.size": "Size",
+    "filemanager.search": "Search: ",
+    "filemanager.status.directory.dircount": "Directories: ",
+    "filemanager.status.directory.filecount": "Files: ",
+    "filemanager.status.directory.path": "Directory: ",
+    "filemanager.status.empty": "This directory is empty",
+    "filemanager.status.file.modified": "Last Modified: ",
+    "filemanager.status.file.path": "File: ",
+    "filemanager.status.file.size": "Size: ",
+    "filemanager.status.nomatch": "No files matching search",
+    "filemanager.title": "File Manager",
+    "filemanager.uploadwindow": "Upload Files",
+    "game.join": "%0 joined",
+    "game.leave": "%0 left",
+    "global.accept": "Accept",
+    "global.add": "Add",
+    "global.cancel": "Cancel",
+    "global.delete": "Delete",
+    "global.edit": "Edit",
+    "global.no": "No",
+    "global.ok": "Ok",
+    "global.open": "Open",
+    "global.remove": "Remove",
+    "global.rename": "Rename",
+    "global.search": "Search...",
+    "global.yes": "Yes",
+    "input.relative": "Relative Change: ",
+    "input.value": "Value: ",
+    "macro.error.noactor": "Could not find actor",
+    "macro.error.notoken": "No (single) token selected",
+    "macro.error.unknown": "Could not find macro: %0",
+    "map.menu.moveplayers": "Move Players",
+    "map.menu.open": "Open",
+    "map.menu.resetfow": "Reset FOW",
+    "mode.filemanager": "Open File Manager",
+    "mode.layer": "Select Layer",
+    "mode.layer.bg": "Background Layer",
+    "mode.layer.gm": "GM Overlay Layer",
+    "mode.layer.token": "Token Layer",
+    "mode.settings": "Open Settings",
+    "mode.tokens": "Edit Tokens",
+    "mode.view.gm": "GM-View",
+    "mode.view.player": "Player-View",
+    "mode.walls": "Edit Walls",
+    "mode.walls.create.doors": "Create Doors",
+    "mode.walls.create.onesided": "Create Onesided Walls",
+    "mode.walls.create.simple": "Create Walls",
+    "mode.walls.create.windows": "Create Windows",
+    "notification.copy.multiple": "%0 Objects copied",
+    "notification.copy.single": "1 Object copied",
+    "notification.server.restartrequired": "Server Restart Required!",
+    "settings.config.gmLockout": "GM Lockout",
+    "settings.config.motd": "Motd",
+    "settings.page.audio": "Audio",
+    "settings.page.modules": "Modules",
+    "settings.showcontrollsbar": "Show Controlls Bar",
+    "settings.title": "Settings",
+    "settings.volume.global": "Global Volume",
+    "settings.volume.weather": "Weather Volume",
+    "sidepanel.actors.new.button": "New Actor",
+    "sidepanel.actors.new.prompt": "Enter Actor Name: ",
+    "sidepanel.actors.new.title": "New Actor",
+    "sidepanel.attachments.new.button": "New Attachment",
+    "sidepanel.attachments.new.prompt": "Enter Attachment Name: ",
+    "sidepanel.attachments.new.title": "New Attachment",
+    "sidepanel.chat.send": "Send",
+    "sidepanel.compendium.new.button": "New Compendium Entry",
+    "sidepanel.compendium.new.prompt": "Enter Compendium Entry Name: ",
+    "sidepanel.compendium.new.title": "New Compendium Entry",
+    "sidepanel.maps.new.button": "New Map",
+    "sidepanel.maps.new.prompt": "Enter Map Name: ",
+    "sidepanel.maps.new.title": "New Map",
+    "sidepanel.players.changecolor.button": "Change own Color",
+    "sidepanel.players.changecolor.window": "Select Player Color",
+    "sidepanel.tabs.actors": "Actors",
+    "sidepanel.tabs.attachments": "Attachments",
+    "sidepanel.tabs.chat": "Chat",
+    "sidepanel.tabs.compendium": "Compendium",
+    "sidepanel.tabs.maps": "Maps",
+    "sidepanel.tabs.players": "Players",
+    "signin.error.credentials": "Incorrect Username or Access Key.",
+    "signin.error.lockout": "Server is locked down for GM Access only.",
+    "signin.error.version": "Version not matching server.",
+    "state.disconnect": "Disconnected",
+    "state.disconnect.description": "Lost connection to server",
+    "state.disconnect.error": "Error",
+    "state.disconnect.error.description": "Encountered an error, please report the trace below and reload...",
+    "state.disconnect.reason": "Reason: %0",
+    "state.disconnect.reload": "Please reload...",
+    "state.loading": "Loading",
+    "state.signin": "Login",
+    "state.signin.accesskey": "Access-Key",
+    "state.signin.button": "Sign In",
+    "state.signin.player": "Player",
+    "token.edit.actor": "Edit Actor",
+    "token.edit.actor.makelocal": "Make Local",
+    "token.edit.actor.open": "Open",
+    "token.edit.actor.represents": "represents ",
+    "token.edit.actor.window.prompt": "Do you want to make the actor local to this token? Changes to the global actor will no longer be reflected in this tokens actor and vice versa. This cannot be undone.",
+    "token.edit.actor.window.title": "Make Actor Local",
+    "token.edit.gui.bars.1": "Bar 1",
+    "token.edit.gui.bars.2": "Bar 2",
+    "token.edit.gui.bars.3": "Bar 3",
+    "token.edit.gui.bars.max": "Maximum:",
+    "token.edit.gui.bars.value": "Value:",
+    "token.edit.gui.editboxes.explanation": "(list of [property]:[label],...)",
+    "token.edit.gui.editboxes.title": "Quick Edit Boxes",
+    "token.edit.layer": "Layer: ",
+    "token.edit.light.angle": "Angle:",
+    "token.edit.light.bright": "Bright Light Radius (in cells):",
+    "token.edit.light.color": "Colour:",
+    "token.edit.light.dark": "Darkness Radius (in cells):",
+    "token.edit.light.dim": "Dim Light Radius (in cells):",
+    "token.edit.light.flicker": "Flickering:",
+    "token.edit.position": "Position: ",
+    "token.edit.rotation": "Rotation: ",
+    "token.edit.size": "Size: ",
+    "token.edit.tabs.gmnotes": "GM-Notes",
+    "token.edit.tabs.gui": "Gui",
+    "token.edit.tabs.light": "Light",
+    "token.menu.actor": "Edit Actor",
+    "token.menu.fittogrid": "Fit to Grid",
+    "token.menu.macro": "Macros",
+    "token.menu.macro.inbuilt": "Inbuilt Macros",
+    "token.menu.viewnotes": "View Notes",
+    "tooltip.property": "Property: %0 - Type: %1",
+    "wall.menu.close": "Close Door",
+    "wall.menu.flip": "Flip",
+    "wall.menu.lock": "Lock Door",
+    "wall.menu.open": "Open Door",
+    "wall.menu.unlock": "Unlock Door",
+    "window.change.prompt": "Set %0:",
+    "window.change.title": "Change %0",
+    "window.changebar.prompt": "Set Bar %0 value:",
+    "window.changebar.title": "Change Bar Value",
+    "window.choose.title": "Select %0",
+    "window.delete.prompt": "Do you want to delete all selected objects?",
+    "window.delete.prompt.typed": "Do you want to delete the %0: %1?",
+    "window.delete.title": "Delete Object(s)",
+    "window.edit.title": "Edit %0",
+    "window.fittogrid.title": "Fit to Grid (select a 7x7 cells area with left and right click)",
+    "window.gmnotes.title": "GM Notes",
+    "window.image.title": "Image",
+    "window.name.title": "Enter Name:",
+    "window.text.title": "Text"
 }

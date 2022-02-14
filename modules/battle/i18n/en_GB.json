@@ -1,0 +1,21 @@
+{
+    "battle.end": "End Battle",
+    "battle.info": "Battle<br>Round %0",
+    "battle.nextturn": "Next Turn",
+    "battle.notification.ended": "Battle ended!",
+    "battle.notification.round": "Round %0",
+    "battle.notification.started": "Battle started!",
+    "battle.notification.turn": "%0s Turn",
+    "command.battle.error.nomap": "Battle actions can only be performed on a map",
+    "command.battle.error.notoken": "This action requries a selected token",
+    "command.battle.error.unknown": "Unknown battle action: %0",
+    "mode.battle": "Start Battle",
+    "token.menu.battle": "Battle",
+    "token.menu.battle.initiative": "Set Initiative",
+    "token.menu.battle.join": "Join Battle",
+    "token.menu.battle.leave": "Leave Battle",
+    "window.battle.end.prompt": "Do you want to end the current battle?",
+    "window.battle.end.title": "End Battle",
+    "window.battle.initiative.prompt": "Enter initiative for selected token: ",
+    "window.battle.initiative.title": "Set Initiative"
+}

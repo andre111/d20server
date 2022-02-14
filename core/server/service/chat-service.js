@@ -6,6 +6,7 @@ import { ChatEntry } from '../../common/message/chat/chat-entry.js';
 import { ChatEntries } from '../../common/messages.js';
 import { Scripting } from '../../common/scripting/scripting.js';
 import { Value } from '../../common/scripting/value.js';
+import { I18N } from '../../common/util/i18n.js';
 import { TokenUtil } from '../../common/util/tokenutil.js';
 import { readJson, saveJson } from '../util/fileutil.js';
 import { RollFormatter } from '../util/roll-formatter.js';
@@ -71,13 +72,13 @@ Events.on('chatMessage', event => {
         } else {
             const token = profile.getSelectedToken(true);
             if (!token) {
-                ChatService.appendNote(profile, 'No (single) token selected');
+                ChatService.appendNote(profile, I18N.get('macro.error.notoken', 'No (single) token selected'));
                 return;
             }
             actor = TokenUtil.getActor(token);
         }
         if (!actor || actor.getType() != 'actor') {
-            ChatService.appendNote(profile, 'Could not find actor');
+            ChatService.appendNote(profile, I18N.get('macro.error.noactor', 'Could not find actor'));
             return;
         }
 
@@ -93,7 +94,7 @@ Events.on('chatMessage', event => {
             macro = actorMacros[macroName];
         }
         if (!macro) {
-            ChatService.appendNote(profile, `Could not find macro: ${macroName}`);
+            ChatService.appendNote(profile, I18N.get('macro.error.unknown', 'Could not find macro: %0', macroName));
             return;
         }
 
@@ -285,7 +286,7 @@ export class ChatService {
         }
 
         // check sender
-        if (entry.getSource() != profile.getID()) throw new Error('Not original sender');
+        if (entry.getSource() != profile.getID()) throw new Error(I18N.get('chat.trigger.error.wrongsender', 'Not original sender'));
 
         // find triggerd content
         var triggeredContent = null;
@@ -297,8 +298,8 @@ export class ChatService {
                 }
             }
         }
-        if (!triggeredContent) throw new Error('Content not found');
-        if (triggeredContent.triggered) throw new Error('Already triggered');
+        if (!triggeredContent) throw new Error(I18N.get('chat.trigger.error.unknown', 'Content not found'));
+        if (triggeredContent.triggered) throw new Error(I18N.get('chat.trigger.error.triggered', 'Already triggered'));
 
         // send trigger
         triggeredContent.triggered = true;

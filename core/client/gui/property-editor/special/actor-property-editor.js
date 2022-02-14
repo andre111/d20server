@@ -22,19 +22,19 @@ export class ActorPropertyEditor extends PropertyEditor {
     }
 
     initContent(label) {
-        this.addLabel(I18N.get('token.edit.represents', 'represents '));
+        this.addLabel(I18N.get('token.edit.actor.represents', 'represents '));
         this.button = document.createElement('button');
         this.button.onclick = () => this.doSelectActor();
         this.container.appendChild(this.button);
 
         this.openButton = document.createElement('button');
-        this.openButton.innerText = 'Open';
+        this.openButton.innerText = I18N.get('token.edit.actor.open', 'Open');
         this.openButton.onclick = () => this.doOpenActor();
         this.container.appendChild(this.openButton);
 
         if (ServerData.isGM()) {
             this.makeLocalButton = document.createElement('button');
-            this.makeLocalButton.innerText = 'Make Local';
+            this.makeLocalButton.innerText = I18N.get('token.edit.actor.makelocal', 'Make Local');
             this.makeLocalButton.onclick = () => this.doMakeLocal();
             this.container.appendChild(this.makeLocalButton);
         }
@@ -79,7 +79,7 @@ export class ActorPropertyEditor extends PropertyEditor {
     doMakeLocal() {
         if (this.#reference.getBoolean('actorLocal')) return;
 
-        new CanvasWindowConfirm(this.window, 'Make Actor Local', 'Do you want to make the actor local to this token? Changes to the global actor will no longer be reflected in this tokens actor and vice versa. This cannot be undone.', () => {
+        new CanvasWindowConfirm(this.window, I18N.get('token.edit.actor.window.title', 'Make Actor Local'), I18N.get('token.edit.actor.window.prompt', 'Do you want to make the actor local to this token? Changes to the global actor will no longer be reflected in this tokens actor and vice versa. This cannot be undone.'), () => {
             MessageService.send(new MakeActorLocal(this.#reference));
         });
     }

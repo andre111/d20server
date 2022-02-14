@@ -3,6 +3,7 @@ import { CanvasWindowInput } from '../../canvas/window/canvas-window-input.js';
 import { CodeEditor } from '../../html/code-editor.js';
 
 import { Type } from '../../../common/constants.js';
+import { I18N } from '../../../common/util/i18n.js';
 
 export class StringMapPropertyEditor extends PropertyEditor {
     constructor(name, label) {
@@ -23,17 +24,17 @@ export class StringMapPropertyEditor extends PropertyEditor {
 
         var buttonPanel = document.createElement('div');
         this.addEntry = document.createElement('button');
-        this.addEntry.innerText = 'Add';
+        this.addEntry.innerText = I18N.get('global.add', 'Add');
         this.addEntry.style.width = '33.33%';
         this.addEntry.onclick = () => this.doAdd();
         buttonPanel.appendChild(this.addEntry);
         this.renameEntry = document.createElement('button');
-        this.renameEntry.innerText = 'Rename';
+        this.renameEntry.innerText = I18N.get('global.rename', 'Rename');
         this.renameEntry.style.width = '33.33%';
         this.renameEntry.onclick = () => this.doRename();
         buttonPanel.appendChild(this.renameEntry);
         this.removeEntry = document.createElement('button');
-        this.removeEntry.innerText = 'Remove';
+        this.removeEntry.innerText = I18N.get('global.remove', 'Remove');
         this.removeEntry.style.width = '33.33%';
         this.removeEntry.onclick = () => this.doRemove();
         buttonPanel.appendChild(this.removeEntry);
@@ -101,7 +102,7 @@ export class StringMapPropertyEditor extends PropertyEditor {
     }
 
     doAdd() {
-        new CanvasWindowInput(null, 'Enter Name:', '', '', name => {
+        new CanvasWindowInput(null, I18N.get('window.name.title', 'Enter Name:'), '', '', name => {
             if (name && this.valueMap[name] == undefined) {
                 this.valueMap[name] = '';
                 this.onChange();
@@ -113,7 +114,7 @@ export class StringMapPropertyEditor extends PropertyEditor {
     doRename() {
         if (this.list.selectedIndex >= 0) {
             var oldName = this.list.value;
-            new CanvasWindowInput(null, 'Enter Name:', '', oldName, name => {
+            new CanvasWindowInput(null, I18N.get('window.name.title', 'Enter Name:'), '', oldName, name => {
                 if (name && this.valueMap[name] == undefined) {
                     var value = this.valueMap[oldName];
                     delete this.valueMap[oldName];

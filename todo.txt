@@ -1,15 +1,15 @@
 //TODO: current plans:
-// add motd (+lockout notice and maybe more? - maybe allow customizing the backgrounds) to login screen
 // refactor config system to use less hardcoding (use definitions that include value type, synced flag and automatic settings window input on client)
+// add motd (+lockout notice and maybe more? - maybe allow customizing the backgrounds) to login screen
 // the compendium "Schablonen" entries are missing the ones from "Anhang 2" in the mhbs (note: some books contain refreshed versions of the olders + ignore changes in mhb3)
 // replace icons with svgs, so color schemes can affect them
+// custom editors for (in order of priority): Maps, Walls, Drawings
+// document all currently used Events (and switch more stuff to using events, def missing are the common entity events)
+// refactor all the export const ... with function to classes with static methods
 
 // make it work on current node lts (only runs on node 1.14 currently) - probably needs replacing spdy with node included http2 server (but then express is not compatible)
 // implement compendium "force show" (may need explicit synching beforehand if players have no access normally)
-// apply i18n at all places, currently it is very sparse all over the place
-// custom editors for (in order of priority): Maps, Walls, Drawings
 // add a "zauber" tab to pathfinder actor (including spells per day, learned count, saves, ...) (or maybe add it as a "sidebar" to the Talente/Zauber tab)
-// document all currently used Events (and switch more stuff to using events)
 // implement (a custom plugin for?) adding internal links in TinyMCE editors
 // webrtc settings (input devices)
 // rethink entity menu (it has become quite large)
@@ -46,7 +46,6 @@
 // Use Mocha (https://mochajs.org/#getting-started) for writing unit tests
 // Maybe: Switch to TypeScript (would be nice to have typed variables/... but might come with multiple complications)
 
-//TODO: when the web client porting is done:
 // Add an "fileRenamed" event and a listener that adjusts token imagePath and audioPath properties to server
 // "Area" module (you can define areas, maybe using the drawing system, that can influence stuff, 
 //               first idea: "no weather/indoor" areas where the WeatherRenderer does not spawn particles)

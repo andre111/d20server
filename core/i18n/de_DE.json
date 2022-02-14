@@ -1,221 +1,211 @@
 {
-    "global": {
-        "yes": "Ja",
-        "no": "Nein",
-        "ok": "Ok",
-        "accept": "Übernehmen",
-        "cancel": "Abbrechen",
-        "edit": "Bearbeiten",
-        "search": "Suchen..."
-    },
-    "controlls": {
-        "select": "Auswählen",
-        "contextmenu": "Kontext Menü",
-        "camera": {
-            "move": "Kamera bewegen",
-            "zoom": "Kamera zoomen",
-            "center": "Kamera zentrieren"
-        },
-        "disablesnap": "Raster deaktiviven",
-        "ping": "Ping",
-        "pinggm": "GM Ping",
-        "add": {
-            "token": "Token einfügen",
-            "wall": "Wände einfügen"
-        },
-        "move": "Bewegen",
-        "rotate": "Drehen",
-        "resize": "Skalieren",
-        "delete": "Löschen",
-        "copy": "Kopieren",
-        "paste": "Einfügen"
-    },
-    "input": {
-        "value": "Wert: ",
-        "relative": "Änderung: "
-    },
-    "attachment": {
-        "edit": {
-            "name": "Name: "
-        }
-    },
-    "compendium": {
-        "edit": {
-            "access": "Zugriff: ",
-            "path": "Pfad: "
-        }
-    },
-    "token": {
-        "edit": {
-            "position": "Position: ",
-            "size": "Größe: ",
-            "rotation": "Rotation: ",
-            "layer": "Ebene: ",
-            
-            "represents": "repräsentiert ",
-            
-            "tabs": {
-                "gui": "Gui",
-                "gmnotes": "GM-Notizen",
-                "light": "Licht"
-            },
-            "gui": {
-                "bars": {
-                    "1": "Leiste 1",
-                    "2": "Leiste 2",
-                    "3": "Leiste 3",
-                    "value": "Wert:",
-                    "max": "Maximum:"
-                },
-                "editboxes": {
-                    "title": "Schnellzugriff Boxen",
-                    "explanation": "(Liste an [property]:[Beschriftung],...)"
-                }
-            },
-            "light": {
-                "bright": "Licht Radius (in Zellen):",
-                "dim": "Dämmerlicht Radius (in Zellen):",
-                "dark": "Dunkelheits Radius (in Zellen):",
-                "angle": "Öffnungswinkel:",
-                "flicker": "Flackern:",
-                "color": "Farbe:"
-            }
-        }
-    },
-    "sidepanel": {
-        "tabs": {
-            "chat": "Chat",
-            "players": "Spieler",
-            "actors": "Akteure",
-            "attachments": "Anhang",
-            "maps": "Karten",
-            "compendium": "Kompendium"
-        },
-        "chat": {
-            "send": "Senden"
-        },
-        "players": {
-            "changecolor": {
-                "button": "Eigene Farbe ändern",
-                "window": "Eigene Farbe auswählen"
-            }
-        },
-        "actors": {
-            "new": {
-                "button": "Neuen Akteur erstellen",
-                "title": "Neuen Akteur erstellen",
-                "prompt": "Name eingeben: "
-            }
-        },
-        "attachments": {
-            "new": {
-                "button": "Neuen Anhang erstellen",
-                "title": "Neuen Anhang erstellen",
-                "prompt": "Name eingeben: "
-            }
-        },
-        "maps": {
-            "new": {
-                "button": "Neue Karte erstellen",
-                "title": "Neue Karte erstellen",
-                "prompt": "Name eingeben: "
-            }
-        },
-        "compendium": {
-            "new": {
-                "button": "Neuen Kompendium Eintrag erstellen",
-                "title": "Neuen Kompendium Eintrag erstellen",
-                "prompt": "Name eingeben: "
-            }
-        }
-    },
-    "settings": {
-        "title": "Einstellungen",
-        "page": {
-            "audio": "Audio",
-            "modules": "Module"
-        },
-        "volume": {
-            "global": "Gesammt Lautstärke",
-            "weather": "Wetter Lautstärke"
-        },
-        "showcontrollsbar": "Zeige Steuerungshinweise",
-        "config": {
-            "gmLockout": "Geschlossener GM Zugang",
-            "motd": "Motd"
-        }
-    },
-    "filemanager": {
-        "title": "Dateimanager",
-        "loaddirs": "Lade Ordner...",
-        "loadfiles": "Lade Dateien...",
-        "action": {
-            "file": {
-                "createtoken": "Als Token erstellen",
-                "delete": {
-                    "name": "Löschen",
-                    "title": "Datei löschen",
-                    "question": "Möchtest du die Datei \"%0\" löschen?"
-                },
-                "rename": {
-                    "name": "Umbenennen",
-                    "title": "Datei umbenennen",
-                    "prompt": "Neuer Dateiname: "
-                },
-                "select": "Auswählen",
-                "showtoplayers": "Allen Spielern zeigen",
-                "upload": "Upload"
-            },
-            "directory": {
-                "create": {
-                    "name": "Neuer Ordner",
-                    "title": "Ordner erstellen",
-                    "prompt": "Ordnername: "
-                },
-                "delete": {
-                    "name": "Löschen",
-                    "title": "Ordner löschen",
-                    "question": "Möchtest du den Ordner \"%0\" mitsammt allen Inhalten löschen?"
-                },
-                "rename": {
-                    "name": "Umbenennen",
-                    "title": "Ordner umbenennen",
-                    "prompt": "Neuer Ordnername: "
-                }
-            }
-        },
-        "status": {
-            "empty": "Dieser Ordner ist leer",
-            "nomatch": "Suche erzielt keine Treffer",
-            "directory": {
-                "path": "Ordner: ",
-                "dircount": "Ordner: ",
-                "filecount": "Dateien: "
-            },
-            "file": {
-                "path": "Datei: ",
-                "size": "Größe: ",
-                "modified": "Geändert: "
-            }
-        },
-        "search": "Suche: ",
-        "order": {
-            "by": "Sortiert nach: ",
-            "name": "Name",
-            "size": "Größe",
-            "modified": "Geändert"
-        },
-        "uploadwindow": "Dateiupload" 
-    },
-    "window": {
-        "fittogrid": "An das Gitter anpassen (wähle mit Links- und Rechtsklick einen 7x7 Zellbereich aus)",
-        "image": "Bild"
-    },
-    "signin": {
-        "error": {
-            "version": "Client Version und Server Version unterschiedlich.",
-            "credentials": "Falscher Spielername oder Zugangscode.",
-            "lockout": "Server befindet sich im geschlossenen GM Zugang."
-        }
-    }
+    "actor.menu.createtoken": "Token erstellen",
+    "actor.menu.setdefaulttoken": "Standardtoken setzen",
+    "actor.menu.showimage": "Zeige Bild",
+    "attachment.edit.name": "Name: ",
+    "chat.rolling": "würfle...",
+    "chat.trigger.error.triggered": "Trigger bereits ausgelöst",
+    "chat.trigger.error.unknown": "Trigger nicht gefunden",
+    "chat.trigger.error.wrongsender": "Nicht urspünglicher Sender",
+    "command.effect.error.unknown": "Unbekannter Effekt: %0",
+    "command.notification.error.nomap": "Du befindest dich auf keiner Karte",
+    "command.notification.error.noplayer": "Unbekannter Spieler: %0",
+    "command.roll.to.gm": " (an SL)",
+    "command.roll.to.self": " (an sich selbst)",
+    "command.template.error.unknown": "Unbekanntes template: %0",
+    "command.whisper.title": "%0 an %1: ",
+    "commands.error": "Fehler in /%0:",
+    "commands.error.arguments": "Falsche Parameteranzahl: %0",
+    "commands.error.permission": "Du bestzt nicht ausreichend Berechtigungen um diesen Befehl zu nutzen",
+    "commands.error.unknown": "Unbekannter Befehl: /%0",
+    "compendium.edit.access": "Zugriff: ",
+    "compendium.edit.path": "Pfad: ",
+    "controlls.add.token": "Token einfügen",
+    "controlls.add.wall": "Wände einfügen",
+    "controlls.camera.center": "Kamera zentrieren",
+    "controlls.camera.move": "Kamera bewegen",
+    "controlls.camera.zoom": "Kamera zoomen",
+    "controlls.contextmenu": "Kontext Menü",
+    "controlls.copy": "Kopieren",
+    "controlls.delete": "Löschen",
+    "controlls.disablesnap": "Raster deaktiviven",
+    "controlls.move": "Bewegen",
+    "controlls.paste": "Einfügen",
+    "controlls.ping": "Ping",
+    "controlls.pinggm": "GM Ping",
+    "controlls.resize": "Skalieren",
+    "controlls.rotate": "Drehen",
+    "controlls.select": "Auswählen",
+    "entity.menu.move": "Bewegen",
+    "entity.menu.move.toback": "nach hinten",
+    "entity.menu.move.tofront": "nach vorne",
+    "filemanager.action.directory.create.name": "Neuer Ordner",
+    "filemanager.action.directory.create.prompt": "Ordnername: ",
+    "filemanager.action.directory.create.title": "Ordner erstellen",
+    "filemanager.action.directory.delete.name": "Löschen",
+    "filemanager.action.directory.delete.question": "Möchtest du den Ordner \"%0\" mitsammt allen Inhalten löschen?",
+    "filemanager.action.directory.delete.title": "Ordner löschen",
+    "filemanager.action.directory.rename.name": "Umbenennen",
+    "filemanager.action.directory.rename.prompt": "Neuer Ordnername: ",
+    "filemanager.action.directory.rename.title": "Ordner umbenennen",
+    "filemanager.action.file.createtoken": "Als Token erstellen",
+    "filemanager.action.file.delete.name": "Löschen",
+    "filemanager.action.file.delete.question": "Möchtest du die Datei \"%0\" löschen?",
+    "filemanager.action.file.delete.title": "Datei löschen",
+    "filemanager.action.file.rename.name": "Umbenennen",
+    "filemanager.action.file.rename.prompt": "Neuer Dateiname: ",
+    "filemanager.action.file.rename.title": "Datei umbenennen",
+    "filemanager.action.file.select": "Auswählen",
+    "filemanager.action.file.showtoplayers": "Allen Spielern zeigen",
+    "filemanager.action.file.upload": "Upload",
+    "filemanager.loaddirs": "Lade Ordner...",
+    "filemanager.loadfiles": "Lade Dateien...",
+    "filemanager.order.by": "Sortiert nach: ",
+    "filemanager.order.modified": "Geändert",
+    "filemanager.order.name": "Name",
+    "filemanager.order.size": "Größe",
+    "filemanager.search": "Suche: ",
+    "filemanager.status.directory.dircount": "Ordner: ",
+    "filemanager.status.directory.filecount": "Dateien: ",
+    "filemanager.status.directory.path": "Ordner: ",
+    "filemanager.status.empty": "Dieser Ordner ist leer",
+    "filemanager.status.file.modified": "Geändert: ",
+    "filemanager.status.file.path": "Datei: ",
+    "filemanager.status.file.size": "Größe: ",
+    "filemanager.status.nomatch": "Suche erzielt keine Treffer",
+    "filemanager.title": "Dateimanager",
+    "filemanager.uploadwindow": "Dateiupload",
+    "game.join": "%0 ist beigetreten",
+    "game.leave": "%0 ist gegangen",
+    "global.accept": "Übernehmen",
+    "global.add": "Hinzufügen",
+    "global.cancel": "Abbrechen",
+    "global.delete": "Löschen",
+    "global.edit": "Bearbeiten",
+    "global.no": "Nein",
+    "global.ok": "Ok",
+    "global.open": "Öffnen",
+    "global.remove": "Entfernen",
+    "global.rename": "Umbenennen",
+    "global.search": "Suchen...",
+    "global.yes": "Ja",
+    "input.relative": "Änderung: ",
+    "input.value": "Wert: ",
+    "macro.error.noactor": "Konnte Akteur nicht finden",
+    "macro.error.notoken": "Kein (einzelner) Token ausgewählt",
+    "macro.error.unknown": "Konnte Macro nicht finden: %0",
+    "map.menu.moveplayers": "Für alle öffnen",
+    "map.menu.open": "Öffnen",
+    "map.menu.resetfow": "FOW zurücksetzen",
+    "mode.filemanager": "Dateimanager öffnen",
+    "mode.layer": "Ebene auswählen",
+    "mode.layer.bg": "Hintergrundebene",
+    "mode.layer.gm": "SL Infoebene",
+    "mode.layer.token": "Tokenebene",
+    "mode.settings": "Einstellungen öffnen",
+    "mode.tokens": "Tokens bearbeiten",
+    "mode.view.gm": "SL-Ansicht",
+    "mode.view.player": "Spieler-Ansicht",
+    "mode.walls": "Wände bearbeiten",
+    "mode.walls.create.doors": "Türen erstellen",
+    "mode.walls.create.onesided": "Einseitige Wände erstellen",
+    "mode.walls.create.simple": "Wände erstellen",
+    "mode.walls.create.windows": "Fenster erstellen",
+    "notification.copy.multiple": "%0 Objekte kopiert",
+    "notification.copy.single": "1 Objekt kopiert",
+    "notification.server.restartrequired": "Serverneustart erforderlich!",
+    "settings.config.gmLockout": "Geschlossener GM Zugang",
+    "settings.config.motd": "Motd",
+    "settings.page.audio": "Audio",
+    "settings.page.modules": "Module",
+    "settings.showcontrollsbar": "Zeige Steuerungshinweise",
+    "settings.title": "Einstellungen",
+    "settings.volume.global": "Gesammt Lautstärke",
+    "settings.volume.weather": "Wetter Lautstärke",
+    "sidepanel.actors.new.button": "Neuen Akteur erstellen",
+    "sidepanel.actors.new.prompt": "Name eingeben: ",
+    "sidepanel.actors.new.title": "Neuen Akteur erstellen",
+    "sidepanel.attachments.new.button": "Neuen Anhang erstellen",
+    "sidepanel.attachments.new.prompt": "Name eingeben: ",
+    "sidepanel.attachments.new.title": "Neuen Anhang erstellen",
+    "sidepanel.chat.send": "Senden",
+    "sidepanel.compendium.new.button": "Neuen Kompendium Eintrag erstellen",
+    "sidepanel.compendium.new.prompt": "Name eingeben: ",
+    "sidepanel.compendium.new.title": "Neuen Kompendium Eintrag erstellen",
+    "sidepanel.maps.new.button": "Neue Karte erstellen",
+    "sidepanel.maps.new.prompt": "Name eingeben: ",
+    "sidepanel.maps.new.title": "Neue Karte erstellen",
+    "sidepanel.players.changecolor.button": "Eigene Farbe ändern",
+    "sidepanel.players.changecolor.window": "Eigene Farbe auswählen",
+    "sidepanel.tabs.actors": "Akteure",
+    "sidepanel.tabs.attachments": "Anhang",
+    "sidepanel.tabs.chat": "Chat",
+    "sidepanel.tabs.compendium": "Kompendium",
+    "sidepanel.tabs.maps": "Karten",
+    "sidepanel.tabs.players": "Spieler",
+    "signin.error.credentials": "Falscher Spielername oder Zugangscode.",
+    "signin.error.lockout": "Server befindet sich im geschlossenen GM Zugang.",
+    "signin.error.version": "Client Version und Server Version unterschiedlich.",
+    "state.disconnect": "Verbindung getrennt",
+    "state.disconnect.description": "Verbindung zum Server verloren",
+    "state.disconnect.error": "Fehler",
+    "state.disconnect.error.description": "Ein Fehler ist aufgetreten, bitte übermittle die unten stehenden Informationen und lade die Seite neu...",
+    "state.disconnect.reason": "Grund: %0",
+    "state.disconnect.reload": "Btte lade die Seite neu...",
+    "state.loading": "Lade",
+    "state.signin": "Login",
+    "state.signin.accesskey": "Zugangsschlüssel",
+    "state.signin.button": "Anmelden",
+    "state.signin.player": "Spieler",
+    "token.edit.actor": "Akteur bearbeiten",
+    "token.edit.actor.makelocal": "Lokal speichern",
+    "token.edit.actor.open": "Öffnen",
+    "token.edit.actor.represents": "repräsentiert ",
+    "token.edit.actor.window.prompt": "Willst du den Akteur dieses Tokens lokal speichern? Änderungen am globalen Akteur werden sich nicht mehr auf die lokale Variante auswirken und umgekehrt. Dies kann nicht rückgängig gemacht werden.",
+    "token.edit.actor.window.title": "Akteur lokal speichern",
+    "token.edit.gui.bars.1": "Leiste 1",
+    "token.edit.gui.bars.2": "Leiste 2",
+    "token.edit.gui.bars.3": "Leiste 3",
+    "token.edit.gui.bars.max": "Maximum:",
+    "token.edit.gui.bars.value": "Wert:",
+    "token.edit.gui.editboxes.explanation": "(Liste an [property]:[Beschriftung],...)",
+    "token.edit.gui.editboxes.title": "Schnellzugriff Boxen",
+    "token.edit.layer": "Ebene: ",
+    "token.edit.light.angle": "Öffnungswinkel:",
+    "token.edit.light.bright": "Licht Radius (in Zellen):",
+    "token.edit.light.color": "Farbe:",
+    "token.edit.light.dark": "Dunkelheits Radius (in Zellen):",
+    "token.edit.light.dim": "Dämmerlicht Radius (in Zellen):",
+    "token.edit.light.flicker": "Flackern:",
+    "token.edit.position": "Position: ",
+    "token.edit.rotation": "Rotation: ",
+    "token.edit.size": "Größe: ",
+    "token.edit.tabs.gmnotes": "GM-Notizen",
+    "token.edit.tabs.gui": "Gui",
+    "token.edit.tabs.light": "Licht",
+    "token.menu.actor": "Akteur bearbeiten",
+    "token.menu.fittogrid": "Am Gitter ausrichten",
+    "token.menu.macro": "Macros",
+    "token.menu.macro.inbuilt": "Integrierte Macros",
+    "token.menu.viewnotes": "SL Notizen öffnen",
+    "tooltip.property": "Property: %0 - Type: %1",
+    "wall.menu.close": "Türe schließen",
+    "wall.menu.flip": "Invertieren",
+    "wall.menu.lock": "Türe aufsperren",
+    "wall.menu.open": "Türe öffnen",
+    "wall.menu.unlock": "Türe absperren",
+    "window.change.prompt": "Setze %0:",
+    "window.change.title": "%0 ändern",
+    "window.changebar.prompt": "Setze Wert der %0. Leiste:",
+    "window.changebar.title": "Leistenwert ändern",
+    "window.choose.title": "%0 auswählen",
+    "window.delete.prompt": "Willst du alle ausgewählten Objekte löschen?",
+    "window.delete.prompt.typed": "Willst du %1 (%0) wirklich löschen?",
+    "window.delete.title": "Objekt(e) löschen",
+    "window.edit.title": "%0 bearbeiten",
+    "window.fittogrid.title": "An das Gitter anpassen (wähle mit Links- und Rechtsklick einen 7x7 Zellbereich aus)",
+    "window.gmnotes.title": "SL Notizen",
+    "window.image.title": "Bild",
+    "window.name.title": "Namen eingeben:",
+    "window.text.title": "Text"
 }

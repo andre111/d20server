@@ -16,6 +16,7 @@ import { Access, Type } from '../../../common/constants.js';
 import { EntityReference } from '../../../common/entity/entity-reference.js';
 import { TokenUtil } from '../../../common/util/tokenutil.js';
 import { Events } from '../../../common/events.js';
+import { I18N } from '../../../common/util/i18n.js';
 
 //TODO: unhardcode all the token special handling
 class EntityActionSelectGizmo {
@@ -257,7 +258,7 @@ export class EntityActionSelect extends EntityAction {
                                     const h = propertyBox.getHeight();
 
                                     if (x <= e.xm && e.xm <= x + w && y <= e.ym && e.ym <= y + h) {
-                                        this.openLongPropertySetDialog(new EntityReference(actor), property, false, 'Change ' + property, 'Set ' + property + ':');
+                                        this.openLongPropertySetDialog(new EntityReference(actor), property, false, I18N.get('window.change.title', 'Change %0', property), I18N.get('window.change.prompt', 'Set %0:', property));
                                         return;
                                     }
                                 }
@@ -327,7 +328,7 @@ export class EntityActionSelect extends EntityAction {
 
                                         if (bx <= e.xm && e.xm <= bx + TokenRenderer.getBarWidth(token, bounds, viewer) && by <= e.ym && e.ym <= by + TokenRenderer.getBarHeight(token, bounds, viewer)) {
                                             const index = i;
-                                            new CanvasWindowIntegerInput(null, 'Change Bar Value', 'Set Bar ' + index + ' value:', TokenUtil.getBarCurrent(token, viewer, index), true, newValue => {
+                                            new CanvasWindowIntegerInput(null, I18N.get('window.changebar.title', 'Change Bar Value'), I18N.get('Set Bar %0 value:', 'Set Bar %0 value:', index), TokenUtil.getBarCurrent(token, viewer, index), true, newValue => {
                                                 TokenUtil.setBarCurrent(token, viewer, index, newValue);
                                             });
                                             return;
@@ -431,7 +432,7 @@ export class EntityActionSelect extends EntityAction {
         const count = this.mode.activeEntities.length;
         if (count > 0) {
             EntityClipboard.setEntities(this.mode.entityType, this.mode.activeEntities);
-            Client.getState().getNotificationManager().addNotification(count > 1 ? count + ' Entities copied' : '1 Entity copied', 2);
+            Client.getState().getNotificationManager().addNotification(count > 1 ? I18N.get('notification.copy.multiple', '%0 Objects copied', count) : I18N.get('notification.copy.single', '1 Object copied'), 2);
         }
     }
 

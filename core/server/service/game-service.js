@@ -11,6 +11,7 @@ import { ChangeConfig, EnterGame, EnterMap, PlayerList } from '../../common/mess
 import { ModuleService } from './module-service.js';
 import { fromJson, toJson } from '../../common/util/datautil.js';
 import { CONFIG } from '../config.js';
+import { I18N } from '../../common/util/i18n.js';
 
 export class GameService {
     static init() {
@@ -24,12 +25,12 @@ export class GameService {
 
     static joinGame(profile) {
         GameService.updateClientState(profile);
-        ChatService.appendNote(null, `${profile.getUsername()} joined!`);
+        ChatService.appendNote(null, I18N.get('game.join', '%0 joined!', profile.getUsername()));
     }
 
     static leaveGame(profile) {
         MessageService.broadcast(new PlayerList(UserService.getAllProfiles()));
-        ChatService.appendNote(null, `${profile.getUsername()} left!`);
+        ChatService.appendNote(null, I18N.get('game.leave', '%0 left!', profile.getUsername()));
     }
 
     static updateClientState(profile) {

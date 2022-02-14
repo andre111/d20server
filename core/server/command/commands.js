@@ -1,5 +1,6 @@
 import { Role } from '../../common/constants.js';
 import { Events } from '../../common/events.js';
+import { I18N } from '../../common/util/i18n.js';
 
 import { ChatService } from '../service/chat-service.js';
 import { Command } from './command.js';
@@ -55,7 +56,7 @@ Events.on('chatMessage', event => {
         const command = Commands.get(commandName);
         if (command) {
             if (command.requiresGM() && profile.getRole() != Role.GM) {
-                ChatService.appendError(profile, 'You do not have permission to use this command');
+                ChatService.appendError(profile, I18N.get('commands.error.permission', 'You do not have permission to use this command'));
                 return;
             }
 
@@ -63,11 +64,11 @@ Events.on('chatMessage', event => {
             try {
                 command.execute(profile, commandArgs);
             } catch (error) {
-                ChatService.appendError(profile, `Error in /${commandName}:`, `${error}`);
+                ChatService.appendError(profile, I18N.get('commands.error', 'Error in /%0', commandName), `${error}`);
                 if (error instanceof Error) console.log(error.stack);
             }
         } else {
-            ChatService.appendError(profile, `Unknown command: ${commandName}`);
+            ChatService.appendError(profile, I18N.get('commands.error.unknown', 'Unknown command: /%0', commandName));
         }
     }
 });

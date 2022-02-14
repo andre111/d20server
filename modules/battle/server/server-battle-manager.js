@@ -1,5 +1,6 @@
 import { EntityReference } from '../../../core/common/entity/entity-reference.js';
 import { SendNotification } from '../../../core/common/messages.js';
+import { I18N } from '../../../core/common/util/i18n.js';
 import { TokenUtil } from '../../../core/common/util/tokenutil.js';
 import { MessageService } from '../../../core/server/service/message-service.js';
 import { UserService } from '../../../core/server/service/user-service.js';
@@ -18,7 +19,7 @@ export class ServerBattleManager {
         mapRef.performUpdate();
 
         // send notification
-        const msg = new SendNotification(`Battle started!`, 5);
+        const msg = new SendNotification(I18N.get('battle.notification.started', 'Battle started!'), 5);
         MessageService.broadcast(msg, map);
     }
 
@@ -34,7 +35,7 @@ export class ServerBattleManager {
         ServerBattleManager.resetTokens(map);
 
         // send notification
-        const msg = new SendNotification(`Battle ended!`, 5);
+        const msg = new SendNotification(I18N.get('battle.notification.ended', 'Battle ended!'), 5);
         MessageService.broadcast(msg, map);
     }
 
@@ -78,7 +79,7 @@ export class ServerBattleManager {
             mapRef.performUpdate();
 
             // send notification
-            const msg = new SendNotification(`Round ${round}`, 5);
+            const msg = new SendNotification(I18N.get('battle.notification.round', 'Round %0', round), 5);
             MessageService.broadcast(msg, map);
 
             // reset token state
@@ -112,14 +113,14 @@ export class ServerBattleManager {
         // send out notification of turn (important: to everybody on the map BUT respect name visibility)
         UserService.forEach(profile => {
             if (profile.getCurrentMap() == map.getID()) {
-                var content = `???s Turn`
+                var content = '???';
                 if (actor) {
                     const accessLevel = actor.getAccessLevel(profile);
                     if (actor.canView(profile) && actor.canViewProperty('name', accessLevel) && actor.getString('name')) {
-                        content = `${actor.getString('name')}s Turn`;
+                        content = actor.getString('name');
                     }
                 }
-                const msg = new SendNotification(content, 5);
+                const msg = new SendNotification(I18N.get('battle.notification.turn', '%0s Turn', content), 5);
                 MessageService.send(msg, profile);
             }
         });

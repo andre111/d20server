@@ -7,10 +7,11 @@ import { MessageService } from '../../../core/client/service/message-service.js'
 import { Events } from '../../../core/common/events.js';
 import { ActionCommand } from '../../../core/common/messages.js';
 import { Settings } from '../../../core/client/settings/settings.js';
+import { I18N } from '../../../core/common/util/i18n.js';
 
 class MusicPlayerWindow extends CanvasWindow {
     constructor(player) {
-        super(null, 'Music Player', false);
+        super(null, I18N.get('modules.audio.player', 'Music Player'), false);
 
         this.player = player;
         this.content.appendChild(this.player.audio);

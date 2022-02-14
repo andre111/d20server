@@ -6,6 +6,7 @@ import { BattleList } from './battle-list.js';
 import { CommonBattleManager } from '../common/common-battle-manager.js';
 import { MessageService } from '../../../core/client/service/message-service.js';
 import { SendChatMessage } from '../../../core/common/messages.js';
+import { I18N } from '../../../core/common/util/i18n.js';
 
 export class ClientBattleManager {
     static #container = null;
@@ -38,7 +39,7 @@ export class ClientBattleManager {
             if (ServerData.isGM()) {
                 // controll buttons
                 const nextTurnButton = document.createElement('button');
-                nextTurnButton.innerText = 'Next Turn';
+                nextTurnButton.innerText = I18N.get('battle.nextturn', 'Next Turn');
                 nextTurnButton.onclick = () => {
                     const msg = new SendChatMessage('/battle nextTurn');
                     MessageService.send(msg);
@@ -46,8 +47,8 @@ export class ClientBattleManager {
                 battleInfo.appendChild(nextTurnButton);
 
                 const endBattleButton = document.createElement('button');
-                endBattleButton.innerText = 'End Battle';
-                endBattleButton.onclick = () => new CanvasWindowConfirm(null, 'End Battle', 'Do you want to end the current battle?', () => {
+                endBattleButton.innerText = I18N.get('battle.end', 'End Battle');
+                endBattleButton.onclick = () => new CanvasWindowConfirm(null, I18N.get('window.battle.end.title', 'End Battle'), I18N.get('window.battle.end.prompt', 'Do you want to end the current battle?'), () => {
                     const msg = new SendChatMessage('/battle end');
                     MessageService.send(msg);
                 });
@@ -70,7 +71,7 @@ export class ClientBattleManager {
 
         //
         if (active) {
-            ClientBattleManager.#infoRoundEl.innerHTML = 'Battle<br>Round ' + map.getLong('battle_round');
+            ClientBattleManager.#infoRoundEl.innerHTML = I18N.get('battle.info', 'Battle<br>Round %0', map.getLong('battle_round'));
             ClientBattleManager.#entryList.reload(CommonBattleManager.getParticipatingTokens(map));
         }
     }

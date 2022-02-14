@@ -1,3 +1,5 @@
+import { I18N } from '../../../common/util/i18n.js';
+
 export class PropertyEditor {
     #name;
 
@@ -25,7 +27,7 @@ export class PropertyEditor {
         }
 
         this.#editComponent.classList.add('property-editor');
-        this.#editComponent.title = 'Property: ' + name + ' - Type: ' + type;
+        this.#editComponent.title = I18N.get('tooltip.property', 'Property: %0 - Type: %1', name, type);
     }
 
     setForceDisable(forceDisable) {

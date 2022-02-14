@@ -15,6 +15,7 @@ import { EntityManagers } from '../../../common/entity/entity-managers.js';
 import { EntityActionCopy } from './entity-action-copy.js';
 import { TokenUtil } from '../../../common/util/tokenutil.js';
 import { ServerData } from '../../server-data.js';
+import { I18N } from '../../../common/util/i18n.js';
 
 export class CanvasModeEntities extends CanvasMode {
     #entityType;
@@ -139,7 +140,7 @@ export class CanvasModeEntities extends CanvasMode {
             // deleting entities
         } else if (a == 'delete') {
             if (this.#activeEntities.length > 0) {
-                new CanvasWindowConfirm(null, 'Delete Object(s)', 'Do you want to delete all selected objects?', () => {
+                new CanvasWindowConfirm(null, I18N.get('window.delete.title', 'Delete Object(s)'), I18N.get('window.delete.prompt', 'Do you want to delete all selected objects?'), () => {
                     for (const reference of this.#activeEntities) {
                         EntityManagers.get(reference.getManager()).remove(reference.getID());
                     }

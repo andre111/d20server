@@ -4,6 +4,7 @@ import { ServerData } from '../server-data.js';
 import { Settings } from '../settings/settings.js';
 
 import { Events } from '../../common/events.js';
+import { I18N } from '../../common/util/i18n.js';
 
 export { ModeButton } from './mode-button.js';
 export { ModeButtonExtended } from './mode-button-extended.js';
@@ -23,7 +24,7 @@ export class ModePanel {
         }
 
         // settings
-        this.buttons.push(new ModeButtonExtended(new ModeButton('/core/files/img/gui/settings', 'Open Settings', () => false, () => Settings.openWindow()), 8));
+        this.buttons.push(new ModeButtonExtended(new ModeButton('/core/files/img/gui/settings', I18N.get('mode.settings', 'Open Settings'), () => false, () => Settings.openWindow()), 8));
 
         // init html elements
         this.container = document.createElement('div');

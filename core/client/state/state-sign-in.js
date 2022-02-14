@@ -6,6 +6,7 @@ import { MessageService } from '../service/message-service.js';
 
 import { RequestAccounts, SignIn } from '../../common/messages.js';
 import { Events } from '../../common/events.js';
+import { I18N } from '../../common/util/i18n.js';
 
 export class StateSignIn extends State {
     playerList;
@@ -25,7 +26,7 @@ export class StateSignIn extends State {
         document.body.appendChild(div);
 
         // create signin elements
-        const fieldset = GuiUtils.createBorderedSet('Login', '400px', 'auto');
+        const fieldset = GuiUtils.createBorderedSet(I18N.get('state.signin', 'Login'), '400px', 'auto');
         div.appendChild(fieldset);
 
         this.playerList = document.createElement('select');
@@ -34,17 +35,17 @@ export class StateSignIn extends State {
         fieldset.appendChild(this.playerList);
         const labelElement = document.createElement('label');
         labelElement.htmlFor = 'signin-playerlist';
-        labelElement.innerHTML = 'Player';
+        labelElement.innerHTML = I18N.get('state.signin.player', 'Player');
         fieldset.appendChild(labelElement);
         fieldset.appendChild(document.createElement('br'));
 
-        this.accessKeyField = GuiUtils.createInput(fieldset, 'password', 'Access-Key');
+        this.accessKeyField = GuiUtils.createInput(fieldset, 'password', I18N.get('state.signin.accesskey', 'Access-Key'));
         this.accessKeyField.className = 'login-field';
         this.accessKeyField.onkeydown = e => { if (e.keyCode == 13) this.doSignIn() };
         fieldset.appendChild(document.createElement('br'));
 
         const b = document.createElement('button');
-        b.innerHTML = 'Sign In';
+        b.innerHTML = I18N.get('state.signin.button', 'Sign In');
         b.className = 'login-field';
         b.onclick = () => this.doSignIn();
         fieldset.appendChild(b);
