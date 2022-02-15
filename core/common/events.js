@@ -26,7 +26,7 @@ export const Events = {
         if (!listeners) return event;
 
         for (const listener of listeners) {
-            if (!event.isCanceled || listener.recieveCanceled) {
+            if (!event.canceled || listener.recieveCanceled) {
                 listener.callback(event);
             }
         }
