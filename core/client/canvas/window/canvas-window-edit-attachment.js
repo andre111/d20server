@@ -1,14 +1,16 @@
-import { CanvasWindowEditCustom } from './canvas-window-edit-custom.js';
+import { CanvasWindowEditEntity } from './canvas-window-edit-entity.js';
 import { ImagePropertyEditor } from '../../gui/property-editor/special/image-property-editor.js';
 import { MultiLineStringPropertyEditor } from '../../gui/property-editor/special/multi-line-property-editor.js';
 import { HTMLStringPropertyEditor } from '../../gui/property-editor/special/html-string-property-editor.js';
 import { I18N } from '../../../common/util/i18n.js';
 
-export class CanvasWindowEditAttachment extends CanvasWindowEditCustom {
+export class CanvasWindowEditAttachment extends CanvasWindowEditEntity {
+    constructor(parent, reference) {
+        super(parent, reference);
+    }
 
-    constructor(w, reference) {
-        super(w, reference);
-        const container = w.content;
+    init() {
+        const container = this.content;
         container.className = 'edit-window-container edit-attachment-container flexcol';
 
         // build content
@@ -55,6 +57,6 @@ export class CanvasWindowEditAttachment extends CanvasWindowEditCustom {
             this.registerEditor(editor);
         }
 
-        w.setDimensions(800 + 2, 400 + 35);
+        this.setDimensions(800 + 2, 400 + 35);
     }
 }

@@ -4,7 +4,6 @@
 // the compendium "Schablonen" entries are missing the ones from "Anhang 2" in the mhbs (note: some books contain refreshed versions of the olders + ignore changes in mhb3)
 // replace icons with svgs, so color schemes can affect them
 // custom editors for (in order of priority): Walls, Drawings
-// refactor custom editors to actually use the openEntity event and create their own windows, instead of hijacking the default window, then remove the editWindowCreateTabs event
 // document all currently used Events (and switch more stuff to using events, def missing are the common entity events)
 // refactor all the export const ... with function to classes with static methods
 

@@ -1,3 +1,9 @@
+import { CanvasWindow } from '../canvas-window.js';
+import { ServerData } from '../../server-data.js';
+
+import { EntityReference } from '../../../common/entity/entity-reference.js';
+import { I18N } from '../../../common/util/i18n.js';
+import { createPropertyEditor } from '../../gui/property-editors.js';
 import { EditorList } from '../../gui/editor-list.js';
 import { AccessPropertyEditor } from '../../gui/property-editor/access-property-editor.js';
 import { BooleanPropertyEditor } from '../../gui/property-editor/boolean-property-editor.js';
@@ -10,15 +16,93 @@ import { LongPropertyEditor } from '../../gui/property-editor/long-property-edit
 import { StringFilePropertyEditor } from '../../gui/property-editor/special/string-file-property-editor.js';
 import { StringPropertyEditor } from '../../gui/property-editor/string-property-editor.js';
 
-export class CanvasWindowEditCustom {
+export class CanvasWindowEditEntity extends CanvasWindow {
+    #reference;
     #editorList;
 
-    constructor(w, reference) {
-        // create and register one "tab"/EditorList to manage the editors
-        this.#editorList = new EditorList(reference, w);
-        w.tabs = [this.#editorList];
+    constructor(parent, reference) {
+        super(parent, I18N.get('window.edit.title', 'Edit %0', reference.getDefinition().displayName), true);
+
+        this.#reference = new EntityReference(reference.getBackingEntity());
+        this.#editorList = new EditorList(this.#reference, this);
+
+        this.addButton(I18N.get('global.accept', 'Accept'), () => {
+            this.doUpdateEntity();
+            if (!this.isPopout()) this.close();
+        });
+        this.addButton(I18N.get('global.cancel', 'Cancel'), () => {
+            this.close();
+        });
+
+        this.init();
+        this.reloadValues();
+        this.center();
+
+        // listen to entity updates and reload window on changes
+        this.#reference.addListener(this);
     }
 
+    init() {
+        const container = this.content;
+        container.classList.add('flexcol', 'flexnowrap');
+        container.style.overflow = 'auto';
+
+        for (const [name, def] of Object.entries(this.#reference.getDefinition().properties)) {
+            const editor = createPropertyEditor(def.type, name, name);
+            container.appendChild(editor.container);
+            this.#editorList.registerEditor(editor, true); //TODO: should these all be set to true?
+        }
+        for (const extDef of this.#reference.getActiveExtensions()) {
+            for (const [name, def] of Object.entries(extDef.properties)) {
+                const editor = createPropertyEditor(def.type, name, name);
+                container.appendChild(editor.container);
+                this.#editorList.registerEditor(editor, true); //TODO: should these all be set to true?
+            }
+        }
+
+        this.setDimensions(300, 500);
+    }
+
+    getReference() {
+        return this.#reference;
+    }
+
+    getAccessLevel() {
+        return this.#reference.getAccessLevel(ServerData.localProfile);
+    }
+
+    reloadValues() {
+        const accessLevel = this.getAccessLevel();
+        this.#editorList.reload(this.#reference, accessLevel);
+    }
+
+    doUpdateEntity() {
+        // apply settings
+        const accessLevel = this.getAccessLevel();
+        this.#editorList.apply(this.#reference, accessLevel);
+
+        // update entity
+        this.#reference.performUpdate();
+    }
+
+    onClose() {
+        super.onClose();
+        this.#editorList.onClose();
+
+        // remove entity listener
+        this.#reference.removeListener(this);
+    }
+
+    // listener methods for EntityReference
+    entityChanged(reference) {
+        this.reloadValues();
+    }
+
+    entityRemoved(reference) {
+        this.close();
+    }
+
+    // HELPER METHODS
     registerEditor(editor, autoUpdate = false) {
         this.#editorList.registerEditor(editor, autoUpdate);
     }

@@ -1,13 +1,15 @@
-import { CanvasWindowEditCustom } from './canvas-window-edit-custom.js';
+import { CanvasWindowEditEntity } from './canvas-window-edit-entity.js';
 import { HTMLStringPropertyEditor } from '../../gui/property-editor/special/html-string-property-editor.js';
 import { I18N } from '../../../common/util/i18n.js';
 import { Access } from '../../../common/constants.js';
 
-export class CanvasWindowEditCompendium extends CanvasWindowEditCustom {
+export class CanvasWindowEditCompendium extends CanvasWindowEditEntity {
+    constructor(parent, reference) {
+        super(parent, reference);
+    }
 
-    constructor(w, reference) {
-        super(w, reference);
-        const container = w.content;
+    init() {
+        const container = this.content;
         container.className = 'edit-window-container edit-compendium-container flexcol';
 
         // build content
@@ -54,7 +56,7 @@ export class CanvasWindowEditCompendium extends CanvasWindowEditCustom {
             this.registerEditor(editor);
         }
 
-        w.setDimensions(700 + 2, 800 + 35);
-        w.showPopoutButton(true);
+        this.setDimensions(700 + 2, 800 + 35);
+        this.showPopoutButton(true);
     }
 }

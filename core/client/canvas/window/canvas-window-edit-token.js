@@ -1,4 +1,4 @@
-import { CanvasWindowEditCustom } from './canvas-window-edit-custom.js';
+import { CanvasWindowEditEntity } from './canvas-window-edit-entity.js';
 import { ActorPropertyEditor } from '../../gui/property-editor/special/actor-property-editor.js';
 import { ImagePropertyEditor } from '../../gui/property-editor/special/image-property-editor.js';
 import { Tabs } from '../../gui/tabs.js';
@@ -7,11 +7,13 @@ import { Events } from '../../../common/events.js';
 import { I18N } from '../../../common/util/i18n.js';
 import { ServerData } from '../../server-data.js';
 
-export class CanvasWindowEditToken extends CanvasWindowEditCustom {
+export class CanvasWindowEditToken extends CanvasWindowEditEntity {
+    constructor(parent, reference) {
+        super(parent, reference);
+    }
 
-    constructor(w, reference) {
-        super(w, reference);
-        const container = w.content;
+    init() {
+        const container = this.content;
         container.className = 'edit-window-container edit-token-container flexcol';
 
         // build content
@@ -28,7 +30,7 @@ export class CanvasWindowEditToken extends CanvasWindowEditCustom {
             const headerSide = document.createElement('div');
             headerSide.className = 'edit-window-header-side flexrow';
 
-            const actorEditor = new ActorPropertyEditor(reference);
+            const actorEditor = new ActorPropertyEditor(this.getReference());
             actorEditor.container.className = 'edit-token-actor flexrow';
             headerSide.appendChild(actorEditor.container);
             this.registerEditor(actorEditor, true);
@@ -120,10 +122,10 @@ export class CanvasWindowEditToken extends CanvasWindowEditCustom {
             tab.appendChild(this.createColorEditor('lightColor'));
         }
         //TODO: replace with something a little less hacky
-        Events.trigger('editTokenWindowCreateTabs', { w: this, tabs: tabs, reference: reference });
+        Events.trigger('editTokenWindowCreateTabs', { w: this, tabs: tabs, reference: this.getReference() });
 
         Tabs.init(tabs);
-        w.setDimensions(420 + 2, 400 + 35);
+        this.setDimensions(420 + 2, 400 + 35);
     }
 
     createBarSettingsEditor(number) {

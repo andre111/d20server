@@ -1,11 +1,14 @@
-import { CanvasWindowEditCustom } from './canvas-window-edit-custom.js';
+import { CanvasWindowEditEntity } from './canvas-window-edit-entity.js';
 import { Events } from '../../../common/events.js';
 import { I18N } from '../../../common/util/i18n.js';
 
-export class CanvasWindowEditMap extends CanvasWindowEditCustom {
-    constructor(w, reference) {
-        super(w, reference);
-        const container = w.content;
+export class CanvasWindowEditMap extends CanvasWindowEditEntity {
+    constructor(parent, reference) {
+        super(parent, reference);
+    }
+
+    init() {
+        const container = this.content;
         container.className = 'edit-window-container edit-map-container flexcol';
 
         // build content
@@ -51,8 +54,8 @@ export class CanvasWindowEditMap extends CanvasWindowEditCustom {
         content.appendChild(this.createBooleanEditor('playersCanEnter'));
 
         //TODO: replace with something a little less hacky
-        Events.trigger('editMapWindowCreateContent', { w: this, content: content, reference: reference });
+        Events.trigger('editMapWindowCreateContent', { w: this, content: content, reference: this.getReference() });
 
-        w.setDimensions(350 + 2, 300 + 35);
+        this.setDimensions(350 + 2, 300 + 35);
     }
 }

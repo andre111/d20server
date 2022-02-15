@@ -38,7 +38,6 @@ import { FileActionShowToPlayers } from './canvas/window/filemanager/action/file
 
 import { StateInit } from './state/state-init.js';
 import { CanvasWindowText } from './canvas/window/canvas-window-text.js';
-import { CanvasWindowEntityDefault } from './canvas/window/canvas-window-entity-default.js';
 import { EntityManagers } from '../common/entity/entity-managers.js';
 import { MapUtils } from './util/maputil.js';
 import { EntityReference } from '../common/entity/entity-reference.js';
@@ -54,6 +53,7 @@ import { SidepanelTabCompendium } from './sidepanel/sidepanel-tab-compendium.js'
 import { CanvasWindowEditCompendium } from './canvas/window/canvas-window-edit-compendium.js';
 import { I18N } from '../common/util/i18n.js';
 import { CanvasWindowEditMap } from './canvas/window/canvas-window-edit-map.js';
+import { CanvasWindowEditEntity } from './canvas/window/canvas-window-edit-entity.js';
 
 // Initialize common code
 Common.init(false, new ClientIDProvider(), ClientEntityManager);
@@ -392,26 +392,19 @@ Events.on('openEntity', event => {
 
 //    open default window with low priority if no other listener has canceled/handled the event
 Events.on('openEntity', event => {
-    new CanvasWindowEntityDefault(event.data.parentWindow, new EntityReference(event.data.entity));
+    if (event.data.entity.getType() === 'token') {
+        new CanvasWindowEditToken(event.data.parentWindow, event.data.entity);
+    } else if (event.data.entity.getType() === 'attachment') {
+        new CanvasWindowEditAttachment(event.data.parentWindow, event.data.entity);
+    } else if (event.data.entity.getType() === 'compendium') {
+        new CanvasWindowEditCompendium(event.data.parentWindow, event.data.entity);
+    } else if (event.data.entity.getType() === 'map') {
+        new CanvasWindowEditMap(event.data.parentWindow, event.data.entity);
+    } else {
+        new CanvasWindowEditEntity(event.data.parentWindow, event.data.entity);
+    }
     event.cancel();
 }, false, 0);
-
-//    open custom windows (TODO: switch to using just openEntity instead)
-Events.on('editWindowCreateTabs', event => {
-    if (event.data.reference.getType() === 'token') {
-        new CanvasWindowEditToken(event.data.window, event.data.reference);
-        event.cancel();
-    } else if (event.data.reference.getType() === 'attachment') {
-        new CanvasWindowEditAttachment(event.data.window, event.data.reference);
-        event.cancel();
-    } else if (event.data.reference.getType() === 'compendium') {
-        new CanvasWindowEditCompendium(event.data.window, event.data.reference);
-        event.cancel();
-    } else if (event.data.reference.getType() === 'map') {
-        new CanvasWindowEditMap(event.data.window, event.data.reference);
-        event.cancel();
-    }
-}, false);
 
 
 // Internal Links
