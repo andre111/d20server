@@ -9,12 +9,18 @@ import { Events } from '../../common/events.js';
 import { I18N } from '../../common/util/i18n.js';
 
 export class StateSignIn extends State {
-    playerList;
-    accessKeyField;
-    listener;
+    #playerList;
+    #accessKeyField;
+
+    #profileListener;
+    #i18nListener;
 
     constructor() {
         super();
+
+        // add player list observer
+        this.#profileListener = Events.on('profileListChange', event => this.onPlayerList());
+        this.#i18nListener = Events.on('i18nUpdate', event => this.onI18NUpdate());
     }
 
     init() {
@@ -29,19 +35,19 @@ export class StateSignIn extends State {
         const fieldset = GuiUtils.createBorderedSet(I18N.get('state.signin', 'Login'), '400px', 'auto');
         div.appendChild(fieldset);
 
-        this.playerList = document.createElement('select');
-        this.playerList.id = 'signin-playerlist';
-        this.playerList.className = 'login-field';
-        fieldset.appendChild(this.playerList);
+        this.#playerList = document.createElement('select');
+        this.#playerList.id = 'signin-playerlist';
+        this.#playerList.className = 'login-field';
+        fieldset.appendChild(this.#playerList);
         const labelElement = document.createElement('label');
         labelElement.htmlFor = 'signin-playerlist';
         labelElement.innerHTML = I18N.get('state.signin.player', 'Player');
         fieldset.appendChild(labelElement);
         fieldset.appendChild(document.createElement('br'));
 
-        this.accessKeyField = GuiUtils.createInput(fieldset, 'password', I18N.get('state.signin.accesskey', 'Access-Key'));
-        this.accessKeyField.className = 'login-field';
-        this.accessKeyField.onkeydown = e => { if (e.keyCode == 13) this.doSignIn() };
+        this.#accessKeyField = GuiUtils.createInput(fieldset, 'password', I18N.get('state.signin.accesskey', 'Access-Key'));
+        this.#accessKeyField.className = 'login-field';
+        this.#accessKeyField.onkeydown = e => { if (e.keyCode == 13) this.doSignIn() };
         fieldset.appendChild(document.createElement('br'));
 
         const b = document.createElement('button');
@@ -50,33 +56,44 @@ export class StateSignIn extends State {
         b.onclick = () => this.doSignIn();
         fieldset.appendChild(b);
 
-        // add player list observer
-        this.listener = Events.on('profileListChange', event => this.onPlayerList());
-
         // send player list request
         const msg = new RequestAccounts();
         MessageService.send(msg);
     }
 
     exit() {
-        Events.remove('profileListChange', this.listener);
+        Events.remove('profileListChange', this.#profileListener);
+        Events.remove('i18nUpdate', this.#i18nListener);
 
-        const div = document.getElementById('signin');
-        div.parentElement.removeChild(div);
+        document.body.innerHTML = '';
     }
 
     onPlayerList() {
-        this.playerList.innerHTML = '';
+        this.#playerList.innerHTML = '';
         for (const [key, profile] of ServerData.profiles.entries()) {
             const opt = document.createElement('option');
             opt.innerHTML = profile.getUsername();
             if (profile.isConnected()) opt.disabled = true;
-            this.playerList.appendChild(opt);
+            this.#playerList.appendChild(opt);
         }
     }
 
+    onI18NUpdate() {
+        //TODO: implement a nicer way to reload the texts, without resetting state
+        // reload gui on i18n update
+        // initial state could be using default values as the lang.json file and ws connection happen in parallel with no guaranteed order
+        const valuePlayerList = this.#playerList.value;
+        const valueAccessKey = this.#accessKeyField.value;
+
+        document.body.innerHTML = '';
+        this.init();
+
+        this.#playerList.value = valuePlayerList;
+        this.#accessKeyField.value = valueAccessKey;
+    }
+
     doSignIn() {
-        const msg = new SignIn(Client.VERSION, this.playerList.value, this.accessKeyField.value);
+        const msg = new SignIn(Client.VERSION, this.#playerList.value, this.#accessKeyField.value);
         MessageService.send(msg);
     }
 }

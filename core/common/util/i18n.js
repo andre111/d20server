@@ -1,3 +1,4 @@
+import { Events } from '../events.js';
 import { deepMerge, toJson } from './datautil.js';
 
 class I18n {
@@ -9,6 +10,7 @@ class I18n {
 
     mergeObject(obj) {
         this.#data = deepMerge(this.#data, obj);
+        Events.trigger('i18nUpdate');
     }
 
     get(path, def, ...values) {
