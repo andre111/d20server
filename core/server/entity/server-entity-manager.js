@@ -192,7 +192,16 @@ export class ServerEntityManager extends EntityManager {
 
     canView(profile) {
         // global always true, contained return parentEntity.canView(profile)
-        return this.parentEntity ? this.parentEntity.canView(profile) : true;
+        if (this.parentEntity) {
+            // special case: maps -> only sync content of current map
+            if (this.parentEntity.getType() == 'map') {
+                return this.parentEntity.getID() == profile.getCurrentMap();
+            }
+
+            return this.parentEntity.canView(profile);
+        } else {
+            return true;
+        }
     }
 
     canAddRemove(profile, entity) {
