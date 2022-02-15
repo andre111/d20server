@@ -1227,6 +1227,9 @@ div.chat-box-content th, div.chat-box-content td {
 .edit-window-header-row li:last-child {
     border-right: none;
 }
+.edit-window-header-side {
+    width: calc(100% - 140px);
+}
 
 /* Tabs */
 .edit-window-tabs .tab-buttons {
@@ -1387,6 +1390,14 @@ div.chat-box-content th, div.chat-box-content td {
 .edit-compendium-content {
     width: calc(100% - 8px);
     height: calc(100% - 50px);
+}
+
+
+/* Map Edit Window */
+.edit-map-container .edit-window-header-row input[type="number"] {
+    width: 40px;
+    height: 20px;
+    text-align: center;
 }
 
 /* 

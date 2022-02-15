@@ -3,7 +3,9 @@ import { AccessPropertyEditor } from '../../gui/property-editor/access-property-
 import { BooleanPropertyEditor } from '../../gui/property-editor/boolean-property-editor.js';
 import { ColorPropertyEditor } from '../../gui/property-editor/color-property-editor.js';
 import { DoublePropertyEditor } from '../../gui/property-editor/double-property-editor.js';
+import { EffectPropertyEditor } from '../../gui/property-editor/effect-property-editor.js';
 import { LayerPropertyEditor } from '../../gui/property-editor/layer-property-editor.js';
+import { LightPropertyEditor } from '../../gui/property-editor/light-property-editor.js';
 import { LongPropertyEditor } from '../../gui/property-editor/long-property-editor.js';
 import { StringFilePropertyEditor } from '../../gui/property-editor/special/string-file-property-editor.js';
 import { StringPropertyEditor } from '../../gui/property-editor/string-property-editor.js';
@@ -56,6 +58,22 @@ export class CanvasWindowEditCustom {
 
     createLayerEditor(property, label, className = '') {
         const editor = new LayerPropertyEditor(property, label);
+        this.#editorList.registerEditor(editor, true);
+
+        if (className) editor.container.className = className;
+        return editor.container;
+    }
+
+    createLightEditor(property, label, className = '') {
+        const editor = new LightPropertyEditor(property, label);
+        this.#editorList.registerEditor(editor, true);
+
+        if (className) editor.container.className = className;
+        return editor.container;
+    }
+
+    createEffectEditor(property, label, className = '') {
+        const editor = new EffectPropertyEditor(property, label);
         this.#editorList.registerEditor(editor, true);
 
         if (className) editor.container.className = className;

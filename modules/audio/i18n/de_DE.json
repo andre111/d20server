@@ -3,7 +3,7 @@
     "modules.audio.player": "Musikspieler",
     "settings.volume.ambient": "Ambiente Lautstärke",
     "settings.volume.music": "Musik Lautstärke",
-    "token.edit.audio.distance": "Distanz (in Zellen):",
+    "token.edit.audio.distance": "Distanz (in Feldern):",
     "token.edit.audio.maxpause": "Maximale Pause (in Sekunden):",
     "token.edit.audio.minpause": "Minimale Pause (in Sekunden):",
     "token.edit.audio.path": "Datei:",

@@ -53,6 +53,7 @@ import { CanvasWindowEditAttachment } from './canvas/window/canvas-window-edit-a
 import { SidepanelTabCompendium } from './sidepanel/sidepanel-tab-compendium.js';
 import { CanvasWindowEditCompendium } from './canvas/window/canvas-window-edit-compendium.js';
 import { I18N } from '../common/util/i18n.js';
+import { CanvasWindowEditMap } from './canvas/window/canvas-window-edit-map.js';
 
 // Initialize common code
 Common.init(false, new ClientIDProvider(), ClientEntityManager);
@@ -405,6 +406,9 @@ Events.on('editWindowCreateTabs', event => {
         event.cancel();
     } else if (event.data.reference.getType() === 'compendium') {
         new CanvasWindowEditCompendium(event.data.window, event.data.reference);
+        event.cancel();
+    } else if (event.data.reference.getType() === 'map') {
+        new CanvasWindowEditMap(event.data.window, event.data.reference);
         event.cancel();
     }
 }, false);

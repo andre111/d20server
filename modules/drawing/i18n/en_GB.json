@@ -4,6 +4,7 @@
     "controlls.draw.filled": "Draw Shape",
     "controlls.draw.outline": "Draw Outline",
     "controlls.draw.text": "Insert Text",
+    "map.edit.playersCanDraw": "Allow Player Drawing:",
     "mode.drawings": "Draw Shapes",
     "mode.drawings.deleteall": "Delete all Drawings",
     "mode.drawings.edit": "Edit Drawings",

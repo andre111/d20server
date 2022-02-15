@@ -42,7 +42,7 @@ export class CanvasWindowEditActor extends CanvasWindowEditCustom {
             this.registerEditor(imageEditor);
 
             const headerSide = document.createElement('div');
-            headerSide.className = 'cs-header-side flexrow';
+            headerSide.className = 'edit-window-header-side flexrow';
 
             headerSide.appendChild(this.createStringEditor('name', '', 'Name...', 'cs-name'));
             const classLevelSpan = document.createElement('span');

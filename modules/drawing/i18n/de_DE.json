@@ -4,6 +4,7 @@
     "controlls.draw.filled": "Form zeichnen",
     "controlls.draw.outline": "Umriss zeichnen",
     "controlls.draw.text": "Text einfügen",
+    "map.edit.playersCanDraw": "Erlaube Spielerzeichnungen",
     "mode.drawings": "Zeichnen",
     "mode.drawings.deleteall": "Alle Zeichnungen löschen",
     "mode.drawings.edit": "Zeichnungen bearbeiten",

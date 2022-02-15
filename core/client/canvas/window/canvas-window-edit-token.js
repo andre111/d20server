@@ -26,7 +26,7 @@ export class CanvasWindowEditToken extends CanvasWindowEditCustom {
             this.registerEditor(imageEditor);
 
             const headerSide = document.createElement('div');
-            headerSide.className = 'cs-header-side flexrow';
+            headerSide.className = 'edit-window-header-side flexrow';
 
             const actorEditor = new ActorPropertyEditor(reference);
             actorEditor.container.className = 'edit-token-actor flexrow';

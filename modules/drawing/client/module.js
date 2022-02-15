@@ -50,3 +50,8 @@ Events.on('addRenderLayers', event => {
 Events.on('addEntityRenderers', event => {
     event.data.addEntityRenderer('drawing', new CanvasEntityRendererDrawing());
 });
+
+Events.on('editMapWindowCreateContent', event => {
+    event.data.content.appendChild(document.createTextNode(I18N.get('map.edit.playersCanDraw', 'Allow Player Drawing:')));
+    event.data.content.appendChild(event.data.w.createBooleanEditor('playersCanDraw'));
+});
