@@ -1,15 +1,16 @@
 import path from 'path';
 import fs from 'fs';
 
-import { readJsonFile } from '../util/fileutil.js';
+import { readJsonFile, saveJsonFile } from '../util/fileutil.js';
 import { Definitions } from '../../common/common.js';
 import { setDefinitions } from '../../common/definitions.js';
 import { MessageService } from './message-service.js';
 import { ModuleDefinitions } from '../../common/messages.js';
 import { UserService } from './user-service.js';
 import { Role } from '../../common/constants.js';
-import { CONFIG } from '../config.js';
+import { CONFIG } from '../../common/config.js';
 import { I18N } from '../../common/util/i18n.js';
+import { PARAMETERS } from '../parameters.js';
 
 class Module {
     identifier;
@@ -22,7 +23,7 @@ class Module {
         this.directory = directory;
 
         this.definition = readJsonFile(path.join(directory, 'module.json'));
-        this.enabled = !CONFIG.get().disabledModules.includes(identifier);
+        this.enabled = !CONFIG.get('disabledModules').includes(identifier);
     }
 
     getIdentifier() {
@@ -45,13 +46,6 @@ class Module {
 var modules = [];
 export class ModuleService {
     static async init() {
-        // "init" config
-        //TODO: move this to an actual "config option definition" system
-        CONFIG.get().disabledModules = CONFIG.get().disabledModules ?? [];
-        CONFIG.get().language = CONFIG.get().language ?? 'de_DE';
-        CONFIG.get().gmLockout = CONFIG.get().gmLockout ?? false;
-        CONFIG.get().motd = CONFIG.get().motd ?? '';
-
         // scan for modules
         fs.readdirSync(path.join(path.resolve(), '/modules/')).forEach(file => {
             const directory = path.join(path.resolve(), '/modules/' + file + '/');
@@ -87,7 +81,7 @@ export class ModuleService {
 
     static loadI18N() {
         const loadLangFile = file => { if (fs.existsSync(file)) I18N.mergeObject(readJsonFile(file)); };
-        const lang = CONFIG.get().language;
+        const lang = CONFIG.get('language');
 
         loadLangFile('./core/i18n/' + lang + '.json');
         ModuleService.forEnabledModules(module => loadLangFile(path.join(module.getDirectory(), 'i18n/' + lang + '.json')));
@@ -126,10 +120,10 @@ export class ModuleService {
         setDefinitions(definitions);
     }
 
-    static forEnabledModules(func) {
+    static forEnabledModules(callback) {
         for (const module of modules) {
             if (module.isEnabled()) {
-                func(module);
+                callback(module);
             }
         }
     }
@@ -165,17 +159,19 @@ export class ModuleService {
             moduleDefinitions[module.identifier] = module.definition;
         }
 
-        MessageService.send(new ModuleDefinitions(moduleDefinitions, CONFIG.get().disabledModules), profile);
+        MessageService.send(new ModuleDefinitions(moduleDefinitions, CONFIG.get('disabledModules')), profile);
     }
 
     static toggleModule(identifier, disabled) {
-        const index = CONFIG.get().disabledModules.indexOf(identifier);
+        const disabledModules = CONFIG.get('disabledModules');
+
+        const index = disabledModules.indexOf(identifier);
         if (disabled) {
-            if (index == -1) CONFIG.get().disabledModules.push(identifier);
+            if (index == -1) disabledModules.push(identifier);
         } else {
-            if (index >= 0) CONFIG.get().disabledModules.splice(index, 1);
+            if (index >= 0) disabledModules.splice(index, 1);
         }
-        CONFIG.save();
+        CONFIG.save(data => saveJsonFile('./' + PARAMETERS.datadir + '/config.json', data, true));
         ModuleService.broadcastModuleDefinitions();
     }
 }

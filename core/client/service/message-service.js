@@ -10,8 +10,7 @@ import { StateMain } from '../state/state-main.js';
 import { CanvasWindowText } from '../canvas/window/canvas-window-text.js';
 import { EffectRenderer } from '../renderer/effect-renderer.js';
 import { ModuleSettings } from '../settings/module-settings.js';
-import { CONFIG } from '../config.js';
-import { ServerConfigSettings } from '../settings/server-config-settings.js';
+import { CONFIG } from '../../common/config.js';
 
 Events.on('recievedMessage', event => {
     const msg = event.data.message;
@@ -82,8 +81,7 @@ Events.on('recievedMessage', event => {
     } else if (msg instanceof ModuleDefinitions) {
         ModuleSettings.onModuleDefinitions(msg.getModuleDefinitions(), msg.getDisabledModules());
     } else if (msg instanceof ChangeConfig) {
-        CONFIG.get()[msg.getKey()] = msg.getValue();
-        ServerConfigSettings.onConfigChange(msg.getKey(), msg.getValue());
+        CONFIG.set(msg.getKey(), msg.getValue());
     } else {
         handled = false;
     }

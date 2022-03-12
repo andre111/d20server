@@ -409,17 +409,16 @@ Events.on('openEntity', event => {
 
 // Internal Links
 Events.on('internalLinkClick', event => {
-    {
-        const target = event.data.target;
+    const target = event.data.target;
 
-        for (const targetEntityType of ['actor', 'attachment'])
-            if (target.startsWith(targetEntityType + ':')) {
-                const id = Number(target.substring(targetEntityType.length + 1));
-                const entity = EntityManagers.get(targetEntityType).find(id);
-                if (entity) Events.trigger('openEntity', { entity: entity }, true);
+    for (const targetEntityType of ['actor', 'attachment']) {
+        if (target.startsWith(targetEntityType + ':')) {
+            const id = Number(target.substring(targetEntityType.length + 1));
+            const entity = EntityManagers.get(targetEntityType).find(id);
+            if (entity) Events.trigger('openEntity', { entity: entity }, true);
 
-                event.cancel();
-            }
+            event.cancel();
+        }
     }
 }, false);
 

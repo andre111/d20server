@@ -10,7 +10,7 @@ import { EntityManagers } from '../../common/entity/entity-managers.js';
 import { ChangeConfig, EnterGame, EnterMap, PlayerList } from '../../common/messages.js';
 import { ModuleService } from './module-service.js';
 import { fromJson, toJson } from '../../common/util/datautil.js';
-import { CONFIG } from '../config.js';
+import { CONFIG } from '../../common/config.js';
 import { I18N } from '../../common/util/i18n.js';
 
 export class GameService {
@@ -34,6 +34,13 @@ export class GameService {
     }
 
     static updateClientState(profile) {
+        // sync config
+        CONFIG.iterate((key, def, value) => {
+            if (def.clientAccessible) {
+                MessageService.send(new ChangeConfig(key, value), profile);
+            }
+        });
+
         // sync data -> moves client into loading state
         fullSync(profile);
 
@@ -47,9 +54,6 @@ export class GameService {
         GameService.reloadMaps(profile);
         ChatService.sendHistory(profile, 100);
         ModuleService.sendModuleDefinitions(profile);
-        //TODO: use config value definitions (with a synced flag)
-        MessageService.send(new ChangeConfig('gmLockout', CONFIG.get().gmLockout), profile);
-        MessageService.send(new ChangeConfig('motd', CONFIG.get().motd), profile);
     }
 
     static reloadMaps(profile) {

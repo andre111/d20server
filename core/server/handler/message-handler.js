@@ -4,14 +4,16 @@ import { UserService } from '../service/user-service.js';
 
 import { EntityManagers } from '../../common/entity/entity-managers.js';
 import { ActionCommand, AddEntities, ChangeConfig, CopyEntity, EntityLoading, MakeActorLocal, MovePlayerToMap, Ping, PlayEffect, PlayerList, RemoveEntity, RequestAccounts, ResponseFail, ResponseOk, SelectedEntities, SendChatMessage, SendNotification, SetPlayerColor, SignIn, SignOut, ToggleModule, UpdateEntityProperties, UpdateFOW } from '../../common/messages.js';
-import { Access, Role } from '../../common/constants.js';
+import { Role } from '../../common/constants.js';
 import { GameService } from '../service/game-service.js';
 import { VERSION } from '../version.js';
 import { Events } from '../../common/events.js';
 import { ModuleService } from '../service/module-service.js';
 import { EntityReference } from '../../common/entity/entity-reference.js';
-import { CONFIG } from '../config.js';
+import { CONFIG } from '../../common/config.js';
 import { I18N } from '../../common/util/i18n.js';
+import { saveJsonFile } from '../util/fileutil.js';
+import { PARAMETERS } from '../parameters.js';
 
 function _handleRequestAccounts(ws, message) {
     MessageService._send(new PlayerList(UserService.getAllProfiles()), ws);
@@ -37,13 +39,13 @@ function _handleSignIn(ws, message) {
     }
 
     // check gm lockout
-    if (CONFIG.get().gmLockout && profile.getRole() != Role.GM) {
+    if (CONFIG.get('gmLockout') && profile.getRole() != Role.GM) {
         MessageService._send(new ResponseFail('SignIn', I18N.get('signin.error.lockout', 'Server is locked down for GM Access only.')), ws);
         return;
     }
 
     // perform sign in
-    MessageService._send(new ResponseOk('SignIn'));
+    MessageService._send(new ResponseOk('SignIn'), ws);
     UserService._onSignIn(profile, ws);
 }
 
@@ -238,16 +240,11 @@ function _handleToggleModule(profile, message) {
 
 function _handleChangeConfig(profile, message) {
     if (profile.getRole() == Role.GM) {
-        // TODO: use actual config value definitions instead of hardcoded stuff
-        if (message.getKey() == 'gmLockout') {
-            CONFIG.get().gmLockout = message.getValue();
-            CONFIG.save();
-
-            // broadcast change to all clients
-            MessageService.broadcast(message);
-        } else if (message.getKey() == 'motd') {
-            CONFIG.get().motd = message.getValue();
-            CONFIG.save();
+        const def = CONFIG.getDefinition(message.getKey());
+        if (def && def.clientAccessible) {
+            //TODO: verify type (should probably happen in the set function?)
+            CONFIG.set(message.getKey(), message.getValue());
+            CONFIG.save(data => saveJsonFile('./' + PARAMETERS.datadir + '/config.json', data, true));
 
             // broadcast change to all clients
             MessageService.broadcast(message);

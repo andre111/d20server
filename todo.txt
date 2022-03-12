@@ -1,5 +1,4 @@
 //TODO: current plans:
-// refactor config system to use less hardcoding (use definitions that include value type, synced flag and automatic settings window input on client)
 // add motd (+lockout notice and maybe more? - maybe allow customizing the backgrounds) to login screen
 // the compendium "Schablonen" entries are missing the ones from "Anhang 2" in the mhbs (note: some books contain refreshed versions of the olders + ignore changes in mhb3)
 // replace icons with svgs, so color schemes can affect them
@@ -41,10 +40,9 @@
 // automatically send client side error traces to server
 // rewrite classes to use private properties and actual getter and setter methods
 // rewrite registerType and the json system to take the class names as a string and use them to restore AND STORE the type/class so that minified (->renamed) code does not cause issues
-// document classes and functions (very similar to javadoc, see datautil.js deepMerge for an example)
+// document classes and functions (-> jsdoc, very similar to javadoc, see datautil.js deepMerge or config.js for examples - this can also provide type hints and existance of properties in the IDE)
 // remove data driven entity stuff and go back to code based definitions?
 // Use Mocha (https://mochajs.org/#getting-started) for writing unit tests
-// Maybe: Switch to TypeScript (would be nice to have typed variables/... but might come with multiple complications)
 
 // Add an "fileRenamed" event and a listener that adjusts token imagePath and audioPath properties to server
 // "Area" module (you can define areas, maybe using the drawing system, that can influence stuff, 

@@ -10,8 +10,13 @@ import { HttpHandler } from './handler/http-handler.js';
 import { CommandLineService } from './service/command-line-service.js';
 import { GameService } from './service/game-service.js';
 import { ModuleService } from './service/module-service.js';
+import { CONFIG } from '../common/config.js';
+import { readJsonFile } from './util/fileutil.js';
 import './handler/message-handler.js';
 import './scripting/func.js';
+
+// load config
+CONFIG.load(readJsonFile('./' + PARAMETERS.datadir + '/config.json'));
 
 // start server
 Common.init(true, new ServerIDProvider(), ServerEntityManager);
