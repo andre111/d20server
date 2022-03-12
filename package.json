@@ -8,6 +8,7 @@
     "generator": "node ./helper/generator.js",
     "converter": "node ./helper/converter.js",
     "scripting": "node ./core/common/scripting/scripting.js",
+    "build": "node ./helper/build.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "dependencies": {
@@ -24,5 +25,8 @@
     "ws": "^7.4.5",
     "yargs": "^17.3.0"
   },
-  "devDependencies": {}
+  "devDependencies": {
+    "clean-css": "^5.2.4",
+    "terser": "^5.10.0"
+  }
 }
