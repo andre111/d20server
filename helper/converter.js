@@ -4,22 +4,22 @@ import { fromJson, toJson } from '../core/common/util/datautil.js';
 import { readJson } from '../core/server/util/fileutil.js';
 
 function convert(type) {
-    const exists = fs.existsSync('./data/entity/'+type+'.db');
-    const db = new nedb({ filename: './data/entity/'+type+'.db', autoload: true });
+    const exists = fs.existsSync('./data/entity/' + type + '.db');
+    const db = new nedb({ filename: './data/entity/' + type + '.db', autoload: true });
 
     // import from old format if the new one did not exist
-    if(!exists) {
+    if (!exists) {
         console.log('Importing from old storage');
-        var entities = readJson('entity.'+type);
-        if(!entities) entities = {};
-        for(const [id, entity] of Object.entries(entities)) {
+        var entities = readJson('entity.' + type);
+        if (!entities) entities = {};
+        for (const [id, entity] of Object.entries(entities)) {
             const stored = {
                 _id: id,
-                json: toJson(entity, false, false)
+                json: toJson(entity, false)
             };
 
             db.update({ _id: id }, stored, { upsert: true }, (err) => {
-                if(err) console.log(err);
+                if (err) console.log(err);
             });
         }
     }
@@ -27,14 +27,14 @@ function convert(type) {
     // convert format (properties stored directly in entity)
     console.log('Converting to directly stored properties');
     db.find({}, (err, docs) => {
-        for(const doc of docs) {
+        for (const doc of docs) {
             const entity = fromJson(doc.json);
-            for(const [name, property] of Object.entries(entity.properties)) {
-                if(property.type) entity.properties[name] = property.value;
+            for (const [name, property] of Object.entries(entity.properties)) {
+                if (property.type) entity.properties[name] = property.value;
             }
-            doc.json = toJson(entity, false, false);
+            doc.json = toJson(entity, false);
 
-            db.update({ _id: doc._id }, doc, { upsert: true }, err => {}); 
+            db.update({ _id: doc._id }, doc, { upsert: true }, err => { });
         }
 
         db.persistence.compactDatafile();
@@ -48,7 +48,7 @@ function moveMacros() {
     const newestTokenPerActor = new Map();
     // for every token
     tokenDB.find({}, (err, docs) => {
-        for(const doc of docs) {
+        for (const doc of docs) {
             const token = fromJson(doc.json);
             const tokenID = Number(doc._id);
             const tokenMacros = getStringMap(token.properties['macros']);
@@ -58,11 +58,11 @@ function moveMacros() {
             const isNewest = !newestTokenPerActor.has(actorID) || newestTokenPerActor.get(actorID) < tokenID;
 
             // find actor
-            if(tokenMacros != {} && actorID > 0 && isNewest) {
+            if (tokenMacros != {} && actorID > 0 && isNewest) {
                 newestTokenPerActor.set(actorID, tokenID);
 
                 actorDB.find({ _id: String(actorID) }, (err, adocs) => {
-                    if(adocs.length == 0) {
+                    if (adocs.length == 0) {
                         console.log(`Actor ${actorID} not found`);
                         return;
                     }
@@ -70,13 +70,13 @@ function moveMacros() {
                     const actor = fromJson(adocs[0].json);
                     // move and update macros
                     const macros = getStringMap(actor.properties['macros']);
-                    for(const [name, value] of Object.entries(tokenMacros)) {
+                    for (const [name, value] of Object.entries(tokenMacros)) {
                         macros[name] = value.replace(/selected\.property\.mod/g, 'selected.actor.property.mod');
                     }
                     actor.properties['macros'] = setStringMap(macros);
                     // save modified actor
-                    adocs[0].json = toJson(actor, false, false);
-                    actorDB.update({ _id: adocs[0]._id }, adocs[0], { upsert: true }, err => {}); 
+                    adocs[0].json = toJson(actor, false);
+                    actorDB.update({ _id: adocs[0]._id }, adocs[0], { upsert: true }, err => { });
                 });
             }
         }
@@ -86,42 +86,42 @@ function moveMacros() {
 }
 
 function getStringMap(value) {
-    if(!value || value == '') return {};
+    if (!value || value == '') return {};
 
     var map = {};
     var split = value.split('§');
-    for(var i=0; i<split.length-1; i+=2) {
-        map[split[i]] = split[i+1];
+    for (var i = 0; i < split.length - 1; i += 2) {
+        map[split[i]] = split[i + 1];
     }
     return map;
 }
 function setStringMap(value) {
     var string = '';
-    for(const [key, entry] of Object.entries(value)) {
+    for (const [key, entry] of Object.entries(value)) {
         string = string + key.replace('§', '') + '§' + entry.replace('§', '') + '§';
     }
     return string;
 }
 
 function moveToPerMapStorage(type) {
-    console.log('Moving '+type+' to per map storage');
-    const sourceDB = new nedb({ filename: './data/entity/'+type+'.db', autoload: true });
+    console.log('Moving ' + type + ' to per map storage');
+    const sourceDB = new nedb({ filename: './data/entity/' + type + '.db', autoload: true });
     const targetDBS = {};
-    const getTargetDB = function(mapID) {
-        if(!targetDBS[mapID]) targetDBS[mapID] = new nedb({ filename: './data/entity/map/'+mapID+'-'+type+'.db', autoload: true });
+    const getTargetDB = function (mapID) {
+        if (!targetDBS[mapID]) targetDBS[mapID] = new nedb({ filename: './data/entity/map/' + mapID + '-' + type + '.db', autoload: true });
         return targetDBS[mapID];
     }
 
     // for every entity
     sourceDB.find({}, (err, docs) => {
-        for(const doc of docs) {
+        for (const doc of docs) {
             const entity = fromJson(doc.json);
             const mapID = Number(entity.properties['map']);
 
             // store in per map db (which only gets loaded once!)
             const targetDB = getTargetDB(mapID);
             targetDB.update({ _id: doc._id }, doc, { upsert: true }, (err) => {
-                if(err) console.log(err);
+                if (err) console.log(err);
             });
         }
     });

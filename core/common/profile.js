@@ -16,7 +16,7 @@ export class Profile {
     created;
     lastLogin;
     // TODO: these things should really be stored in a sepparate server only object!
-    _notransfer_selectedTokens;
+    #selectedTokens;
 
     constructor(username, role) {
         this.username = username;
@@ -70,31 +70,30 @@ export class Profile {
     }
 
     getSelectedToken(forceSingle) {
-        if (forceSingle && this._notransfer_selectedTokens.length != 1) return null;
+        if (forceSingle && this.#selectedTokens.length != 1) return null;
 
         const tokens = this.getSelectedTokens();
         return tokens.length > 0 ? tokens[0] : null;
     }
 
     getSelectedTokens() {
-        if (!this._notransfer_selectedTokens) return [];
+        if (!this.#selectedTokens) return [];
 
         const map = EntityManagers.get('map').find(this.currentMap);
         if (map) {
             const manager = map.getContainedEntityManager('token');
-            if (manager) return this._notransfer_selectedTokens.map(id => manager.find(id)).filter(t => t);
+            if (manager) return this.#selectedTokens.map(id => manager.find(id)).filter(t => t);
         }
         return [];
     }
 
     setSelectedTokens(selectedTokens) {
-        this._notransfer_selectedTokens = selectedTokens;
+        this.#selectedTokens = selectedTokens;
     }
 
     getUnprivilegedCopy() {
-        const copy = new Profile(this._notransfer_accessKey, this.username, this.role);
+        const copy = new Profile(this.username, Role.DEFAULT);
         copy.id = this.getID();
-        copy.role = Role.DEFAULT;
         return copy;
     }
 }

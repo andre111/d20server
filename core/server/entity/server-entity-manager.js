@@ -71,7 +71,7 @@ export class ServerEntityManager extends EntityManager {
             this.saveOperations++;
             const doc = {
                 _id: id,
-                json: toJson(entity, false, false)
+                json: toJson(entity, false)
             };
             this.db.update({ _id: id }, doc, { upsert: true }, err => {
                 this.saveOperations--;
@@ -168,7 +168,7 @@ export class ServerEntityManager extends EntityManager {
             this.saveOperations++;
             const doc = {
                 _id: String(id),
-                json: toJson(entity, false, false)
+                json: toJson(entity, false)
             };
             this.db.update({ _id: String(id) }, doc, { upsert: true }, err => {
                 this.saveOperations--;
@@ -271,7 +271,7 @@ export class ServerEntityManager extends EntityManager {
             for (const [id, entity] of Object.entries(this.entities)) {
                 const doc = {
                     _id: id,
-                    json: toJson(entity, false, false)
+                    json: toJson(entity, false)
                 };
 
                 this.db.update({ _id: id }, doc, { upsert: true }, err => { }); //TODO: error handling

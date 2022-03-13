@@ -18,14 +18,17 @@ Events.on('propertyChange', event => {
 });
 
 const SCRIPT = new Scripting(false);
+const UPDATE_RULE_EXPR_CACHE = new Map();
 function applyUpdateRules(entity, updateRules, changedProperties) {
     for (const ruleDef of updateRules) {
         if (!entity.has(ruleDef.property)) throw new Error(`Error in UpdateRule: Property ${ruleDef.property} does not exist`);
 
         try {
             // use cached expression or parse from definition (because parsing is an expensive operation that can lock up the browser for a noticeable time)
-            const expression = ruleDef._transient_parsedExpression ? ruleDef._transient_parsedExpression : SCRIPT.parseExpression(ruleDef.expression);
-            ruleDef._transient_parsedExpression = expression;
+            if (!UPDATE_RULE_EXPR_CACHE.has(ruleDef.expression)) {
+                UPDATE_RULE_EXPR_CACHE.set(ruleDef.expression, SCRIPT.parseExpression(ruleDef.expression));
+            }
+            const expression = UPDATE_RULE_EXPR_CACHE.get(ruleDef.expression);
 
             const result = SCRIPT.evalExpression(expression, null, entity);
             SCRIPT.throwIfErrored();

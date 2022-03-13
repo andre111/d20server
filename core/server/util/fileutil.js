@@ -24,11 +24,11 @@ export function saveJsonFile(file, object, pretty = false) {
     const dir = path.dirname(file);
     if (!fs.existsSync(dir)) fs.mkdirsSync(dir);
 
-    const text = toJson(object, false, pretty);
+    const text = toJson(object, pretty);
     fs.writeFileSync(file, text);
 }
 export async function saveJsonAsync(name, object, pretty = false) {
-    const text = toJson(object, false, pretty);
+    const text = toJson(object, pretty);
     await fs.writeFile(nameToPath(name, '.json'), text);
 }
 

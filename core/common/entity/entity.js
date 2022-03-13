@@ -12,7 +12,7 @@ export class Entity {
     manager;
     properties = {};
 
-    _transient_updating = false;
+    #updating = false;
 
     constructor(type, forcedId) {
         this.type = type;
@@ -174,12 +174,12 @@ export class Entity {
     }
 
     onPropertyChange(name) {
-        if (!this._transient_updating) {
-            this._transient_updating = true;
+        if (!this.#updating) {
+            this.#updating = true;
             this.addDefaultProperties();
 
             const event = Events.trigger('propertyChange', { entity: this, name: name, changedProperties: {} }, false);
-            this._transient_updating = false;
+            this.#updating = false;
 
             return event.data.changedProperties;
         }

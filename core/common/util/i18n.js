@@ -22,7 +22,7 @@ class I18n {
     }
 
     getAsJson() {
-        return toJson(this.#data, true, false);
+        return toJson(this.#data, false);
     }
 }
 export const I18N = new I18n(); 

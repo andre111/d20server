@@ -18,7 +18,7 @@ function storeTypeRecursion(object) {
         }
     } else {
         for (const key in object) {
-            if (object.hasOwnProperty(key) && !key.startsWith('_transient_')) {
+            if (object.hasOwnProperty(key)) {
                 storeType(object[key]);
             }
         }
@@ -67,20 +67,9 @@ function assignTypeRecursion(object) {
 }
 
 // json functions with automatic type assignment and calling preSave/postLoad
-function jsonReplacer(key, value) {
-    if (key.startsWith('_transient_')) return undefined;
-    else return value;
-}
-function jsonReplacerTransfer(key, value) {
-    if (key.startsWith('_transient_')) return undefined;
-    if (key.startsWith('_notransfer_')) return undefined;
-    else return value;
-}
-
-export function toJson(object, forTransfer, pretty = false) {
+export function toJson(object, pretty = false) {
     storeType(object);
-    if (forTransfer) return JSON.stringify(object, jsonReplacerTransfer, pretty ? 4 : null);
-    else return JSON.stringify(object, jsonReplacer, pretty ? 4 : null);
+    return JSON.stringify(object, null, pretty ? 4 : null);
 }
 
 export function fromJson(text) {

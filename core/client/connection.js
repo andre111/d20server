@@ -17,7 +17,7 @@ export const Connection = {
     },
 
     send(msg) {
-        _ws.send(toJson(msg, true));
+        _ws.send(toJson(msg));
     },
 
     read(evt) {

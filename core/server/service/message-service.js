@@ -20,6 +20,6 @@ export class MessageService {
         if (!message || !ws) return;
         if (!(message instanceof Message)) throw new Error('Can only send instances of message');
 
-        ws.send(toJson(message, true));
+        ws.send(toJson(message));
     }
 }
