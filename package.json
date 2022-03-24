@@ -9,7 +9,7 @@
     "converter": "node ./helper/converter.js",
     "scripting": "node ./core/common/scripting/scripting.js",
     "build": "node ./helper/build.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "mocha --recursive"
   },
   "dependencies": {
     "@rmanibus/nedb": "^1.9.0-beta.1",
@@ -27,6 +27,7 @@
   },
   "devDependencies": {
     "clean-css": "^5.2.4",
+    "mocha": "^9.2.2",
     "terser": "^5.10.0"
   }
 }

@@ -6,7 +6,13 @@
 // document all currently used Events (and switch more stuff to using events, def missing are the common entity events)
 // refactor all the export const ... with function to classes with static methods
 
-// make it work on current node lts (only runs on node 1.14 currently) - probably needs replacing spdy with node included http2 server (but then express is not compatible)
+//TODO: current technical plans:
+// add jsdoc comments defining as many types as possible
+// add // @ts-check at the top of files to enable more strict "type-checking"
+// add unit tests using Mocha (https://mochajs.org/#getting-started)
+// rewrite classes (and const objects as classes with static methods) to use private properties and actual getter and setter methods
+
+// make it work on current node lts (only runs on node 1.14 currently) - probably needs replacing spdy with node included http2 server (but then express is not compatible, could potentially be solved with https://www.npmjs.com/package/http2-express-bridge)
 // implement compendium "force show" (may need explicit synching beforehand if players have no access normally)
 // add a "zauber" tab to pathfinder actor (including spells per day, learned count, saves, ...) (or maybe add it as a "sidebar" to the Talente/Zauber tab)
 // implement (a custom plugin for?) adding internal links in TinyMCE editors
@@ -38,11 +44,8 @@
 //TODO: Long term technical todos
 // use "npx madge --circular ./core/ ./modules/" to find circular dependencies and get rid of them
 // automatically send client side error traces to server
-// rewrite classes to use private properties and actual getter and setter methods
 // rewrite registerType and the json system to take the class names as a string and use them to restore AND STORE the type/class so that minified (->renamed) code does not cause issues
-// document classes and functions (-> jsdoc, very similar to javadoc, see datautil.js deepMerge or config.js for examples - this can also provide type hints and existance of properties in the IDE)
 // remove data driven entity stuff and go back to code based definitions?
-// Use Mocha (https://mochajs.org/#getting-started) for writing unit tests
 
 // Add an "fileRenamed" event and a listener that adjusts token imagePath and audioPath properties to server
 // "Area" module (you can define areas, maybe using the drawing system, that can influence stuff, 
