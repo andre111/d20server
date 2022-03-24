@@ -1,3 +1,4 @@
+// @ts-check
 import { Type } from '../constants.js';
 
 export class Value {

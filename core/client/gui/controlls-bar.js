@@ -1,3 +1,4 @@
+// @ts-check
 import { I18N } from '../../common/util/i18n.js';
 import { isString } from '../../common/util/stringutil.js';
 import { SETTING_SHOW_CONTROLLS_BAR } from '../settings/settings.js';

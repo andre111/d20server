@@ -1,3 +1,4 @@
+// @ts-check
 import { AmbientAudio } from '../../ambient-audio.js';
 
 import { CanvasRenderLayer } from '../../../../../core/client/canvas/canvas-renderlayer.js';

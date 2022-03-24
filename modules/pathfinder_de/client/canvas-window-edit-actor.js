@@ -1,3 +1,4 @@
+// @ts-check
 import { LongPropertyEditor } from '../../../core/client/gui/property-editor/long-property-editor.js';
 import { StringMapPropertyEditor } from '../../../core/client/gui/property-editor/string-map-property-editor.js';
 import { AccessPropertyEditor } from '../../../core/client/gui/property-editor/access-property-editor.js';
@@ -101,7 +102,7 @@ export class CanvasWindowEditActor extends CanvasWindowEditEntity {
         //    Attributes
         if (Access.matches(Access.CONTROLLING_PLAYER, accessLevel)) {
             const tab = document.createElement('div');
-            tab.name = 'Attribute';
+            tab.dataset.name = 'Attribute';
             tab.style.display = 'flex';
             tabs.appendChild(tab);
 
@@ -233,7 +234,7 @@ export class CanvasWindowEditActor extends CanvasWindowEditEntity {
         //    Biographie
         {
             const tab = document.createElement('div');
-            tab.name = 'Biographie';
+            tab.dataset.name = 'Biographie';
             tab.className = 'edit-window-area edit-window-full-area flexrow';
             tabs.appendChild(tab);
 
@@ -280,7 +281,7 @@ export class CanvasWindowEditActor extends CanvasWindowEditEntity {
         //    Talente/Zauber
         if (Access.matches(Access.CONTROLLING_PLAYER, accessLevel)) {
             const tab = document.createElement('div');
-            tab.name = 'Talente/Zauber';
+            tab.dataset.name = 'Talente/Zauber';
             tab.className = 'edit-window-area edit-window-full-area flexrow';
             tabs.appendChild(tab);
 
@@ -302,7 +303,7 @@ export class CanvasWindowEditActor extends CanvasWindowEditEntity {
         //    Macros
         if (Access.matches(Access.CONTROLLING_PLAYER, accessLevel)) {
             const tab = document.createElement('div');
-            tab.name = 'Macros';
+            tab.dataset.name = 'Macros';
             tab.className = 'edit-window-area edit-window-full-area flexrow';
             tabs.appendChild(tab);
 
@@ -338,7 +339,7 @@ export class CanvasWindowEditActor extends CanvasWindowEditEntity {
         //    GM
         if (Access.matches(Access.GM, accessLevel)) {
             const tab = document.createElement('div');
-            tab.name = 'GM';
+            tab.dataset.name = 'GM';
             tab.className = 'edit-window-area edit-window-full-area flexrow';
             tabs.appendChild(tab);
 

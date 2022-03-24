@@ -1,3 +1,4 @@
+// @ts-check
 import { CanvasWindowEditEntity } from './canvas-window-edit-entity.js';
 import { ActorPropertyEditor } from '../../gui/property-editor/special/actor-property-editor.js';
 import { ImagePropertyEditor } from '../../gui/property-editor/special/image-property-editor.js';
@@ -74,7 +75,7 @@ export class CanvasWindowEditToken extends CanvasWindowEditEntity {
         //    Gui
         {
             const tab = document.createElement('div');
-            tab.name = I18N.get('token.edit.tabs.gui', 'Gui');
+            tab.dataset.name = I18N.get('token.edit.tabs.gui', 'Gui');
             tab.className = 'edit-window-area edit-window-full-area';
             tabs.appendChild(tab);
 
@@ -90,7 +91,7 @@ export class CanvasWindowEditToken extends CanvasWindowEditEntity {
         //    GM-Notes
         if (ServerData.isGM()) {
             const tab = document.createElement('div');
-            tab.name = I18N.get('token.edit.tabs.gmnotes', 'GM-Notes');
+            tab.dataset.name = I18N.get('token.edit.tabs.gmnotes', 'GM-Notes');
             tab.className = 'edit-window-area edit-window-full-area';
             tabs.appendChild(tab);
 
@@ -104,7 +105,7 @@ export class CanvasWindowEditToken extends CanvasWindowEditEntity {
         //    Light
         {
             const tab = document.createElement('div');
-            tab.name = I18N.get('token.edit.tabs.light', 'Light');
+            tab.dataset.name = I18N.get('token.edit.tabs.light', 'Light');
             tab.className = 'edit-window-area edit-window-full-area edit-window-grid';
             tabs.appendChild(tab);
 

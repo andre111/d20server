@@ -1,3 +1,4 @@
+// @ts-check
 import { CanvasWindow } from '../canvas-window.js';
 import { toFormatedSize } from '../../../common/util/datautil.js';
 import { I18N } from '../../../common/util/i18n.js';
@@ -82,7 +83,7 @@ export class CanvasWindowFilemanagerUpload extends CanvasWindow {
             progressDiv.className = 'fileman-fileupload-progress';
             nameDiv.appendChild(progressDiv);
             const stripes = document.createElement('div');
-            stripes.classList = 'fileman-stripes';
+            stripes.className = 'fileman-stripes';
             progressDiv.appendChild(stripes);
 
             // attach elements for later reference

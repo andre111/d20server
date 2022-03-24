@@ -1,3 +1,4 @@
+// @ts-check
 import { ToggleModule } from '../../common/messages.js';
 import { MessageService } from '../service/message-service.js';
 import { SettingsEntry } from './settings-entry.js';

@@ -1,3 +1,4 @@
+// @ts-check
 var _lastCTX = null;
 export const DrawingRenderer = {
     FONT: '32px Arial',

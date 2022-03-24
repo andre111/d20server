@@ -1,3 +1,4 @@
+// @ts-check
 import { CanvasRenderLayer } from '../canvas-renderlayer.js';
 import { LightRenderer } from '../../renderer/light-renderer.js';
 import { MapUtils } from '../../util/maputil.js';

@@ -1,3 +1,4 @@
+// @ts-check
 import { EntityManagers } from '../../common/entity/entity-managers.js';
 import { PlayEffect } from '../../common/messages.js';
 import { Scripting } from '../../common/scripting/scripting.js';

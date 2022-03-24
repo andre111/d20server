@@ -1,3 +1,4 @@
+// @ts-check
 export class Message {
     // default message requirements
     requiresAuthentication() {

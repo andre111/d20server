@@ -1,3 +1,4 @@
+// @ts-check
 import { Access, Role } from '../../../../core/common/constants.js';
 import { EntityManagers } from '../../../../core/common/entity/entity-managers.js';
 import { EntityReference } from '../../../../core/common/entity/entity-reference.js';

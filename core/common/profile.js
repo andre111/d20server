@@ -1,3 +1,4 @@
+// @ts-check
 import { registerType } from './util/datautil.js';
 import { ID } from './entity/id.js';
 import { Role } from './constants.js';

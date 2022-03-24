@@ -1,3 +1,4 @@
+// @ts-check
 import { TemplateComponentPlaceholder } from './template-component-placeholder.js';
 
 export class Template {

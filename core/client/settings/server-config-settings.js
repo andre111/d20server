@@ -1,3 +1,4 @@
+// @ts-check
 import { CONFIG } from '../../common/config.js';
 import { Type } from '../../common/constants.js';
 import { Events } from '../../common/events.js';

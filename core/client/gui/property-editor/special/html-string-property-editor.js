@@ -1,3 +1,4 @@
+// @ts-check
 import { PropertyEditor } from '../property-editor.js';
 import { createDefaultFileManager } from '../../../canvas/window/canvas-window-filemanager.js';
 
@@ -37,6 +38,7 @@ export class HTMLStringPropertyEditor extends PropertyEditor {
         if (this.window.isPopout()) return; // tinymce has issues in popout window
         this.editButton.style.display = 'none';
 
+        // @ts-ignore
         tinymce.init({
             target: this.textDiv,
             plugins: 'table,lists,hr,image',
@@ -81,6 +83,7 @@ export class HTMLStringPropertyEditor extends PropertyEditor {
     }
 
     setHTMLValue() {
+        // @ts-ignore
         this.textDiv.innerHTML = DOMPurify.sanitize(this.value, { USE_PROFILES: { html: true } });
     }
 
@@ -109,6 +112,7 @@ export class HTMLStringPropertyEditor extends PropertyEditor {
 
     onDestroy() {
         if (this.editor) {
+            // @ts-ignore
             tinymce.remove(this.editor);
         }
     }

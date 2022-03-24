@@ -1,3 +1,4 @@
+// @ts-check
 import { EntityManager } from '../../common/entity/entity-managers.js';
 import { Entity } from '../../common/common.js';
 import { Access } from '../../common/constants.js';
@@ -138,7 +139,7 @@ export class ServerEntityManager extends EntityManager {
             accessLevel: accessLevel,
             manager: this
         }, true);
-        if (event.isCanceled) return;
+        if (event.canceled) return;
 
         // apply changes (checking again for invalid changes made by event callbacks)
         var changedProperties = {};

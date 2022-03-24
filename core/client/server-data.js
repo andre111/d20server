@@ -1,3 +1,4 @@
+// @ts-check
 import { Role } from '../common/constants.js';
 
 export const ServerData = {

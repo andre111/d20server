@@ -1,3 +1,4 @@
+// @ts-check
 import { Menu } from '../../gui/menu.js';
 import { ServerData } from '../../server-data.js';
 

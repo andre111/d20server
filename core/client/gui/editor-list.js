@@ -1,3 +1,4 @@
+// @ts-check
 import { ServerData } from '../server-data.js';
 
 export class EditorList {

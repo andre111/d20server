@@ -1,3 +1,4 @@
+// @ts-check
 import { Client } from '../../../../../core/client/client.js';
 import { CanvasMode } from '../../../../../core/client/canvas/canvas-mode.js';
 import { CanvasWindowConfirm } from '../../../../../core/client/canvas/window/canvas-window-confirm.js';

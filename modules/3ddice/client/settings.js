@@ -1,3 +1,4 @@
+// @ts-check
 import { SettingsEntryNumberRange } from '../../../core/client/settings/settings-entry-number-range.js';
 import { SettingsEntryToggle } from '../../../core/client/settings/settings-entry-toggle.js';
 import { Settings } from '../../../core/client/settings/settings.js';

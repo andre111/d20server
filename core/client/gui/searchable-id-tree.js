@@ -1,3 +1,4 @@
+// @ts-check
 import { I18N } from '../../common/util/i18n.js';
 
 class DirectoryNode {
@@ -240,6 +241,7 @@ export class SearchableIDTree {
         this.#imageObserver = new IntersectionObserver((entries, observer) => {
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
+                    /** @type {*} */ //TODO: fix this by assigning the correct type?
                     const image = entry.target;
                     image.src = image.dataset.src;
                     this.#imageObserver.unobserve(image);
@@ -279,7 +281,7 @@ export class SearchableIDTree {
             }
 
             // else just compare the current name
-            return p1[i1] < p2[i2] ? -1 : p1[i1] > p2[i2]; // seemingly way more efficient than localCompare
+            return p1[i1] < p2[i2] ? -1 : (p1[i1] > p2[i2] ? 1 : 0); // seemingly way more efficient than localCompare
         });
 
 

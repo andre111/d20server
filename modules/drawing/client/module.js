@@ -1,3 +1,4 @@
+// @ts-check
 import { ModeButton, ModeButtonExtended } from '../../../core/client/canvas/mode-panel.js';
 import { ServerData } from '../../../core/client/server-data.js';
 import { MapUtils } from '../../../core/client/util/maputil.js';

@@ -1,3 +1,4 @@
+// @ts-check
 import { CanvasWindow } from '../canvas-window.js';
 
 export class CanvasWindowText extends CanvasWindow {

@@ -1,3 +1,4 @@
+// @ts-check
 /**
  * Represents a single event.
  * Should never be constructed directly, use the Events class for interacting with the events system.

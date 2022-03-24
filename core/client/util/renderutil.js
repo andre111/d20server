@@ -1,3 +1,4 @@
+// @ts-check
 export const RenderUtils = {
     addPaths(ctx, paths) {
         ctx.beginPath();

@@ -1,3 +1,4 @@
+// @ts-check
 import { CanvasWindow } from '../canvas-window.js';
 import { ServerData } from '../../server-data.js';
 

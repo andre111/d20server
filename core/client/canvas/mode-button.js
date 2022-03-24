@@ -1,3 +1,4 @@
+// @ts-check
 import { Events } from '../../common/events.js';
 
 export class ModeButton {

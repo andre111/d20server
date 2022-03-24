@@ -1,3 +1,4 @@
+// @ts-check
 import { Events } from '../../../core/common/events.js';
 
 import { CanvasWindowEditActor } from './canvas-window-edit-actor.js';

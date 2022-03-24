@@ -1,3 +1,4 @@
+// @ts-check
 import { ID } from '../../entity/id.js';
 import { registerType } from '../../util/datautil.js';
 

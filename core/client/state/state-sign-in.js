@@ -1,3 +1,4 @@
+// @ts-check
 import { State } from "./state.js";
 import { Client } from '../client.js';
 import { ServerData } from '../server-data.js';

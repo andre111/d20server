@@ -1,3 +1,4 @@
+// @ts-check
 import { Events } from '../../../core/common/events.js';
 import { FILE_TYPE_UVTT } from '../common/module.js';
 import { CanvasWindowUVTTImport } from './canvas/window/canvas-window-uvttimport.js';

@@ -1,3 +1,4 @@
+// @ts-check
 import { Type } from '../constants.js';
 import { Modifier } from './dice.js';
 import { ArrayGet, ArraySet, Assignment, Binary, Call, Dice, Get, Grouping, Literal, Logical, Set, Unary, Variable } from './expr.js';
@@ -182,7 +183,7 @@ export class Parser {
                 return new ArraySet(aget.object, aget.index, aget.square, value);
             }
 
-            error(equals, 'Invalid assignment target');
+            this.#error(equals, 'Invalid assignment target');
         }
 
         return expr;
@@ -344,9 +345,9 @@ export class Parser {
             const value = this.#previous().literal;
             return new Literal(new Value(value, Type.STRING, '"' + value + '"'));
         }
-        if (this.#match(TRUE)) return new Literal(true, Type.BOOLEAN, 'true');
-        if (this.#match(FALSE)) return new Literal(false, Type.BOOLEAN, 'false');
-        if (this.#match(NULL)) return new Literal(null, Type.NULL, 'null');
+        if (this.#match(TRUE)) return new Literal(new Value(true, Type.BOOLEAN, 'true'));
+        if (this.#match(FALSE)) return new Literal(new Value(false, Type.BOOLEAN, 'false'));
+        if (this.#match(NULL)) return new Literal(new Value(null, Type.NULL, 'null'));
         if (this.#match(IDENTIFIER)) return new Variable(this.#previous());
         if (this.#match(LEFT_PAREN)) {
             const expr = this.expression();

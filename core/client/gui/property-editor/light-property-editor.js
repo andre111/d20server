@@ -1,3 +1,4 @@
+// @ts-check
 import { PropertyEditor } from './property-editor.js';
 import { Type, Light } from '../../../common/constants.js';
 

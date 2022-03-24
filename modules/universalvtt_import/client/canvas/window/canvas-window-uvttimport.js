@@ -1,3 +1,4 @@
+// @ts-check
 import { CanvasWindow } from '../../../../../core/client/canvas/canvas-window.js';
 import { MessageService } from '../../../../../core/client/service/message-service.js';
 import { SendChatMessage } from '../../../../../core/common/messages.js';

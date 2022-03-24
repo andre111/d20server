@@ -1,3 +1,4 @@
+// @ts-check
 import { Role, Type } from '../../common/constants.js';
 import { EntityReference } from '../../common/entity/entity-reference.js';
 import { Events } from '../../common/events.js';

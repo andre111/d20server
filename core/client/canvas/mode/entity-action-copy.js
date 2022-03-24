@@ -1,3 +1,4 @@
+// @ts-check
 import { EntityAction } from './entity-action.js';
 import { CopyEntity } from '../../../common/messages.js';
 import { MessageService } from '../../service/message-service.js';

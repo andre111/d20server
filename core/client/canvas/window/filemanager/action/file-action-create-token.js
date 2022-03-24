@@ -1,3 +1,4 @@
+// @ts-check
 import { FileAction } from './file-action.js';
 import { Client } from '../../../../client.js';
 import { StateMain } from '../../../../state/state-main.js';

@@ -1,3 +1,4 @@
+// @ts-check
 import { registerType } from './util/datautil.js';
 
 var _definitions = null;

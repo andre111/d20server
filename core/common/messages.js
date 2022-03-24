@@ -1,3 +1,5 @@
+// @ts-check
+
 // Account Messages
 export { PlayerList } from './message/account/player-list.js';
 export { RequestAccounts } from './message/account/request-accounts.js';

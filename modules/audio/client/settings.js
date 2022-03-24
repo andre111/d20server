@@ -1,3 +1,4 @@
+// @ts-check
 import { SettingsEntryNumberRange } from '../../../core/client/settings/settings-entry-number-range.js';
 import { SETTING_PAGE_AUDIO } from '../../../core/client/settings/settings.js';
 

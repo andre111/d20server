@@ -1,3 +1,4 @@
+// @ts-check
 export const ColorUtils = {
     randomSaturatedColor: function () {
         const hue = Math.random();

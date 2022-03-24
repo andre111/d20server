@@ -1,3 +1,4 @@
+// @ts-check
 import { Notification } from './notification.js';
 
 export class NotificationManager {

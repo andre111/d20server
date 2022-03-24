@@ -1,3 +1,4 @@
+// @ts-check
 export class Tabs {
     static init(container) {
         // create a cached list of all container contents
@@ -11,7 +12,7 @@ export class Tabs {
         for (const c of content) {
             const tab = document.createElement('div');
             tab.className = 'tab-content';
-            tab.name = c.name;
+            tab.dataset.name = c.dataset.name;
             tab.title = c.title;
             tab.appendChild(c);
             tabs.push(tab);
@@ -30,7 +31,7 @@ export class Tabs {
             const index = i;
 
             const button = document.createElement('button');
-            button.innerText = tabs[i].name;
+            button.innerText = tabs[i].dataset.name;
             button.title = tabs[i].title;
             button.onclick = () => Tabs.select(container, index);
             buttonDiv.appendChild(button);

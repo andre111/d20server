@@ -1,3 +1,5 @@
+// @ts-check
+import { Entity } from '../../../core/common/common.js';
 import { EntityManagers } from '../../../core/common/entity/entity-managers.js';
 import { Events } from '../../../core/common/events.js';
 import { PlayEffect } from '../../../core/common/messages.js';
@@ -23,6 +25,7 @@ Events.on('modify_token', event => {
         }
 
         // find portal at current location
+        /** @type {Entity} */
         var portal = null;
         map.getContainedEntityManager('portal').all().forEach(p => {
             if (p.getLong('x1') == newX && p.getLong('y1') == newY) {

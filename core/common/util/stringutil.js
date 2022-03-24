@@ -1,3 +1,5 @@
+// @ts-check
+
 // split line at "spaces but only outside Single-Quotes" and "quotes" to sepparate arguments
 export function splitArguments(line, limit = 0) {
     if (limit == 1) return [line];
@@ -41,5 +43,5 @@ export function splitArguments(line, limit = 0) {
 }
 
 export function isString(s) {
-    return typeof (s) === 'string' || s instanceof String;
+    return typeof s === 'string' || s instanceof String;
 }

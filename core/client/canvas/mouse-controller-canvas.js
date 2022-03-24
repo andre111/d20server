@@ -1,3 +1,4 @@
+// @ts-check
 import { Client } from '../client.js';
 import { MouseController } from '../mouse-controller.js';
 import { InputService } from '../service/input-service.js';

@@ -1,3 +1,4 @@
+// @ts-check
 import { Events } from '../common/events.js';
 import { toJson, fromJson } from '../common/util/datautil.js';
 

@@ -1,3 +1,4 @@
+// @ts-check
 import { PropertyEditor } from '../property-editor.js';
 import { CanvasWindowChoose } from '../../../canvas/window/canvas-window-choose.js';
 import { ServerData } from '../../../server-data.js';

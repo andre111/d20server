@@ -1,3 +1,5 @@
+// @ts-check
+//TODO: this whole module needs a refactor/general rewrite (the dice-... files are way more complicated than they need to be)
 import { DiceRoller } from './dice-roller.js';
 import { SETTING_3DDICE_ENABLE } from './settings.js';
 

@@ -1,3 +1,4 @@
+// @ts-check
 import { PropertyEditor } from './property-editor.js';
 import { CanvasWindowInput } from '../../canvas/window/canvas-window-input.js';
 import { CodeEditor } from '../../html/code-editor.js';

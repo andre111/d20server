@@ -1,3 +1,4 @@
+// @ts-check
 import path from 'path';
 import { existsSync } from 'fs';
 import fs from 'fs-extra';

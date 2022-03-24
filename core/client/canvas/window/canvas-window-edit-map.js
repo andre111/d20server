@@ -1,3 +1,4 @@
+// @ts-check
 import { CanvasWindowEditEntity } from './canvas-window-edit-entity.js';
 import { Events } from '../../../common/events.js';
 import { I18N } from '../../../common/util/i18n.js';

@@ -1,3 +1,4 @@
+// @ts-check
 import { CanvasWindowEditEntity } from './canvas-window-edit-entity.js';
 import { HTMLStringPropertyEditor } from '../../gui/property-editor/special/html-string-property-editor.js';
 import { I18N } from '../../../common/util/i18n.js';

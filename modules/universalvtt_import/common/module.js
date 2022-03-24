@@ -1,3 +1,4 @@
+// @ts-check
 import { FileType, registerFileEnding } from '../../../core/common/util/datautil.js';
 
 export const FILE_TYPE_UVTT = new FileType('uvtt', true);

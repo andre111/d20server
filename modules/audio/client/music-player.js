@@ -1,3 +1,4 @@
+// @ts-check
 import { SETTING_MUSIC_VOLUME } from './settings.js';
 
 import { CanvasWindow } from '../../../core/client/canvas/canvas-window.js';
@@ -37,7 +38,6 @@ export class MusicPlayer {
     constructor() {
         this.audio = document.createElement('audio');
         this.audio.controls = ServerData.isGM();
-        this.audio.controlsList = 'nodownload';
         this.audio.loop = true;
         this.audio.volume = Settings.getVolume(SETTING_MUSIC_VOLUME);
         this.window = null;

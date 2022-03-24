@@ -1,3 +1,4 @@
+// @ts-check
 import { Type } from '../constants.js';
 import { EntityManagers } from '../entity/entity-managers.js';
 import { EntityReference } from '../entity/entity-reference.js';

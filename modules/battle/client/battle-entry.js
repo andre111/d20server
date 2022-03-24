@@ -1,3 +1,4 @@
+// @ts-check
 import { Client } from '../../../core/client/client.js';
 import { TokenRenderer } from '../../../core/client/renderer/token-renderer.js';
 import { ServerData } from '../../../core/client/server-data.js';

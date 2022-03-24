@@ -1,3 +1,4 @@
+// @ts-check
 import { Events } from '../events.js';
 import { deepMerge, toJson } from './datautil.js';
 

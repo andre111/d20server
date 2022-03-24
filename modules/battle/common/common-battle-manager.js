@@ -1,3 +1,4 @@
+// @ts-check
 export class CommonBattleManager {
     static getParticipatingTokens(map) {
         if (!map) return [];

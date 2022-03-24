@@ -1,3 +1,4 @@
+// @ts-check
 export const IntMathUtils = {
 	doLineSegmentsIntersect: function (x11, y11, x12, y12, x21, y21, x22, y22) {
 		return IntMathUtils.doAABBsIntersect(Math.min(x11, x12), Math.min(y11, y12), Math.max(x11, x12), Math.max(y11, y12),

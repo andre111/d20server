@@ -1,6 +1,10 @@
+// @ts-check
 import { RenderUtils } from '../util/renderutil.js';
 import { IntMathUtils } from '../../common/util/mathutil.js';
 import { Events } from '../../common/events.js';
+
+// @ts-ignore
+const ClipperLib = window.ClipperLib;
 
 class ViewerWallCache {
 	constructor(pwr, x, y, viewport) {

@@ -1,3 +1,4 @@
+// @ts-check
 import { Message } from '../../../../core/common/message/message.js';
 import { registerType } from '../../../../core/common/util/datautil.js';
 

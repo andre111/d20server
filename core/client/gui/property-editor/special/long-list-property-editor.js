@@ -1,3 +1,4 @@
+// @ts-check
 import { PropertyEditor } from '../property-editor.js';
 import { SearchableIDTree } from '../../../gui/searchable-id-tree.js';
 import { getValueProvider } from '../../../gui/value-providers.js';

@@ -1,3 +1,4 @@
+// @ts-check
 import { PropertyEditor } from '../property-editor.js';
 import { Type } from '../../../../common/constants.js';
 
@@ -19,7 +20,7 @@ export class StringSelectionPropertyEditor extends PropertyEditor {
         this.container.appendChild(this.select);
         this.addLabel(label);
 
-        this.select.onChange = () => this.onChange();
+        this.select.onchange = () => this.onChange();
 
         return this.select;
     }

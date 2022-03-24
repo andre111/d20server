@@ -1,3 +1,4 @@
+// @ts-check
 import { CanvasRenderLayer } from '../canvas-renderlayer.js';
 
 export class CanvasRenderLayerGrid extends CanvasRenderLayer {

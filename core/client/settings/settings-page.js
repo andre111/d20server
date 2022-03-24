@@ -1,3 +1,4 @@
+// @ts-check
 import { SettingsEntry } from './settings-entry.js';
 
 export class SettingsPage {

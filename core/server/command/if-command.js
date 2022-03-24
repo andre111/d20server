@@ -1,3 +1,4 @@
+// @ts-check
 import { Scripting } from '../../common/scripting/scripting.js';
 import { I18N } from '../../common/util/i18n.js';
 import { splitArguments } from '../../common/util/stringutil.js';

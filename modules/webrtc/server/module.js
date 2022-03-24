@@ -1,3 +1,4 @@
+// @ts-check
 import * as Turn from 'node-turn';
 
 import { Events } from '../../../core/common/events.js';

@@ -1,3 +1,4 @@
+// @ts-check
 import { EntityReference } from '../../../core/common/entity/entity-reference.js';
 import { SendNotification } from '../../../core/common/messages.js';
 import { I18N } from '../../../core/common/util/i18n.js';

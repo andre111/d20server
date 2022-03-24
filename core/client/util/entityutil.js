@@ -1,5 +1,8 @@
+// @ts-check
 import { Rect } from '../../common/util/rect.js';
 
+// @ts-ignore
+// added by loading an external library
 let { translate, rotate, compose, inverse, applyToPoint } = window.TransformationMatrix;
 
 export const EntityUtils = {

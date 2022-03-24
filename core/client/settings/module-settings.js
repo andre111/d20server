@@ -1,3 +1,4 @@
+// @ts-check
 import { SettingsEntryModuleToggle } from './settings-entry-module-toggle.js';
 import { Settings } from './settings.js';
 

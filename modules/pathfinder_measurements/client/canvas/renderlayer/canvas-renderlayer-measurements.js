@@ -1,3 +1,4 @@
+// @ts-check
 import { Measurements } from '../../measurements.js';
 
 import { CanvasRenderLayer } from '../../../../../core/client/canvas/canvas-renderlayer.js';

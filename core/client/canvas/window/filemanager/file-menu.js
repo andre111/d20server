@@ -1,3 +1,4 @@
+// @ts-check
 import { Menu } from '../../../gui/menu.js';
 
 export class FileMenu extends Menu {

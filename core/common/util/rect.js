@@ -1,3 +1,4 @@
+// @ts-check
 export class Rect {
     constructor(x, y, width, height) {
         this.x = Math.trunc(x);

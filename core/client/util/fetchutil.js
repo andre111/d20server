@@ -1,3 +1,4 @@
+// @ts-check
 export const fetchDynamicJSON = function (url, data, onSuccess, onError) {
     fetch(url, {
         method: 'POST',

@@ -1,3 +1,4 @@
+// @ts-check
 import { Menu } from '../../../gui/menu.js';
 
 export class DirectoryMenu extends Menu {
@@ -10,7 +11,7 @@ export class DirectoryMenu extends Menu {
 
         for (const action of directory.getWindow().getDirectoryActions()) {
             if (action.shouldShowFor(directory)) {
-                this.createItem(this.container, action.getName(), () => {
+                this.createItem(null, action.getName(), () => {
                     action.applyTo(directory);
                     this.close();
                 });

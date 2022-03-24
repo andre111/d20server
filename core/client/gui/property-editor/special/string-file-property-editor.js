@@ -1,3 +1,4 @@
+// @ts-check
 import { PropertyEditor } from '../property-editor.js';
 import { Type } from '../../../../common/constants.js';
 import { createDefaultFileManager } from '../../../canvas/window/canvas-window-filemanager.js';

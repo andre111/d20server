@@ -1,3 +1,4 @@
+// @ts-check
 import { I18N } from '../../../common/util/i18n.js';
 
 export class PropertyEditor {
@@ -109,6 +110,13 @@ export class PropertyEditor {
         this.#window = window;
     }
 
+    //TODO: find/define an actual return type for this function
+    /**
+     * Create the html dom elements for this editor and return the actual editor element.
+     * @abstract
+     * @param {string} label an optional label
+     * @returns {*} the editor element
+     */
     initContent(label) { throw new Error('Cannot call abstract function'); }
     reloadValue(reference, name) { throw new Error('Cannot call abstract function'); }
     applyValue(reference, name) { throw new Error('Cannot call abstract function'); }

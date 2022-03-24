@@ -1,3 +1,4 @@
+// @ts-check
 import { WallAction } from './wall-action.js';
 import { MapUtils } from '../../util/maputil.js';
 import { ServerData } from '../../server-data.js';

@@ -1,3 +1,4 @@
+// @ts-check
 export class CanvasWindowManager {
     static #windows = [];
     static #init = false;

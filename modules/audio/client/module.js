@@ -1,3 +1,4 @@
+// @ts-check
 import { AmbientAudio } from './ambient-audio.js';
 import { CanvasRenderLayerAmbientSounds } from './canvas/renderlayer/canvas-renderlayer-ambient-sounds.js';
 import { getMusicPlayer } from './music-player.js';
@@ -12,7 +13,7 @@ import { I18N } from '../../../core/common/util/i18n.js';
 // token editing
 Events.on('editTokenWindowCreateTabs', event => {
     const tab = document.createElement('div');
-    tab.name = I18N.get('token.edit.tabs.audio', 'Audio');
+    tab.dataset.name = I18N.get('token.edit.tabs.audio', 'Audio');
     tab.className = 'edit-window-area edit-window-full-area edit-window-grid';
     event.data.tabs.appendChild(tab);
 

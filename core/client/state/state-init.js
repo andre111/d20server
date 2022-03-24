@@ -1,3 +1,4 @@
+// @ts-check
 import { State } from './state.js';
 import { StateSignIn } from './state-sign-in.js';
 import { StateDisconnected } from './state-disconnected.js';
@@ -14,9 +15,13 @@ export class StateInit extends State {
 
     init() {
         // initialize libraries
+        // @ts-ignore
         dayjs.locale('de');
+        // @ts-ignore
         dayjs.extend(window.dayjs_plugin_relativeTime);
+        // @ts-ignore
         dayjs.extend(window.dayjs_plugin_duration);
+        // @ts-ignore
         dayjs.extend(window.dayjs_plugin_localizedFormat);
 
         // load language file

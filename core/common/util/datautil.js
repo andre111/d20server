@@ -1,3 +1,5 @@
+// @ts-check
+
 // funtion for registering types NEEDS to be called for every type/class transmitted/stored as json
 const nameToTypeMap = new Map();
 export function registerType(type) {

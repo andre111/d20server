@@ -1,3 +1,4 @@
+// @ts-check
 import { EntityManagers } from '../../../common/entity/entity-managers.js';
 import { CLICommand } from './cli-command.js';
 

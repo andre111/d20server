@@ -1,3 +1,4 @@
+// @ts-check
 import { PlaceholderRollInlineTriggered } from './placeholder-roll-inline-triggered.js';
 import { PlaceholderRollInline } from './placeholder-roll-inline.js';
 import { PlaceholderText } from './placeholder-text.js';

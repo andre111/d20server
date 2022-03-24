@@ -1,3 +1,4 @@
+// @ts-check
 import { Type } from '../constants.js';
 import { EntityManagers } from '../entity/entity-managers.js';
 import { Entity } from '../entity/entity.js';
@@ -87,6 +88,7 @@ export class TokenUtil {
         reference.performUpdate();
     }
 
+    //TODO: this has no relation to tokens?
     static intersectsWall(mapID, x1, y1, x2, y2) {
         const map = EntityManagers.get('map').find(mapID);
         if (!map) return false;

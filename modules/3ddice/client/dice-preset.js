@@ -1,3 +1,4 @@
+// @ts-check
 export class DicePreset {
 
 	constructor(type, shape = '') {
@@ -20,6 +21,7 @@ export class DicePreset {
 		this.display = 'values';
 		this.modelLoaded = false;
 		this.modelFile = null;
+		this.colorset = null;
 	}
 
 	setValues(min = 1, max = 20, step = 1) {
@@ -105,6 +107,7 @@ export class DicePreset {
 	}
 
 	loadModel() {
+		// @ts-ignore
 		var loader = new GLTFLoader();
 		// Load a glTF resource
 		loader.load(this.modelFile, gltf => {

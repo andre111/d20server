@@ -1,3 +1,4 @@
+// @ts-check
 import { Event } from './event.js';
 
 /**

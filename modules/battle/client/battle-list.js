@@ -1,3 +1,4 @@
+// @ts-check
 import { MapUtils } from '../../../core/client/util/maputil.js';
 import { BattleEntry } from './battle-entry.js';
 

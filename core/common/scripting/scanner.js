@@ -1,3 +1,4 @@
+// @ts-check
 import { BANG, BANG_EQUAL, COMMA, COMMENT, DICE, DOT, EOF, EQUAL, EQUAL_EQUAL, GREATER, GREATER_EQUAL, IDENTIFIER, KEYWORDS, LEFT_BRACE, LEFT_PAREN, LEFT_SQUARE, LESS, LESS_EQUAL, MINUS, NEWLINE, NUMBER, PLUS, RIGHT_BRACE, RIGHT_PAREN, RIGHT_SQUARE, SEMICOLON, SLASH, STAR, STRING, Token, UNKNOWN, WHITESPACE } from './token.js';
 
 export class Scanner {
@@ -170,7 +171,7 @@ export class Scanner {
         return this.#source[this.#current + 1];
     }
 
-    #addToken(type, literal = '', lexeme = '') {
+    #addToken(type, literal, lexeme = '') {
         lexeme = lexeme || this.#source.substring(this.#start, this.#current);
         this.#tokens.push(new Token(type, lexeme, literal, this.#line, this.#startColumn));
     }

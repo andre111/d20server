@@ -1,3 +1,4 @@
+// @ts-check
 import { CanvasRenderLayer } from '../../../../../core/client/canvas/canvas-renderlayer.js';
 import { MapUtils } from '../../../../../core/client/util/maputil.js';
 

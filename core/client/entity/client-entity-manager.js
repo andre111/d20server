@@ -1,3 +1,4 @@
+// @ts-check
 import { EntityManager } from '../../common/entity/entity-managers.js'
 import { Entity } from '../../common/entity/entity.js';
 import { AddEntities, RemoveEntity, UpdateEntityProperties } from '../../common/messages.js';

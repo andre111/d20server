@@ -1,3 +1,4 @@
+// @ts-check
 import yargs from 'yargs';
 import { hideBin } from 'yargs/helpers';
 
@@ -17,4 +18,4 @@ export const PARAMETERS = yargs(hideBin(process.argv))
     })
     .help()
     .alias('help', 'h')
-    .argv;
+    .parseSync();

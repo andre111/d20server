@@ -1,3 +1,4 @@
+// @ts-check
 import { fullSync } from '../entity/server-entity-managers.js';
 import { EDIT_KEY } from '../handler/filemanager.js';
 import { ChatService } from './chat-service.js';

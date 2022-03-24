@@ -1,3 +1,4 @@
+// @ts-check
 import { TemplateComponent } from './template-component.js';
 
 export class TemplateComponentText extends TemplateComponent {

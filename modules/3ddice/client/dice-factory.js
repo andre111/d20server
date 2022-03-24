@@ -1,6 +1,15 @@
-import { DiceColors } from './dice-colors.js';
+// @ts-check
+import { DiceColors, DICE_SCALE } from './dice-colors.js';
 import { DicePreset } from './dice-preset.js';
 import { DICE_MODELS } from './dice-models.js';
+
+//TODO: remove workaround for accessing 'external' libraries
+// @ts-ignore
+const THREE = window.THREE;
+// @ts-ignore
+const PIXI = window.PIXI;
+// @ts-ignore
+const CANNON = window.CANNON;
 
 export class DiceFactory {
 	constructor() {
@@ -135,62 +144,6 @@ export class DiceFactory {
 
 	initializeMaterials() {
 		this.material_options = {
-			/*'plastic': {
-				'type':'standard',
-				'options':{
-					metalness: 0,
-					roughness: 0.6,
-					envMapIntensity:0.8
-				},
-				'scopedOptions':{
-					roughnessMap : 'roughnessMap_fingerprint',
-					envMap : true
-				}
-			},
-			'metal': {
-				'type':'standard',
-				'options': {
-					roughness: 1,
-					metalness: 1
-				},
-				'scopedOptions':{
-					roughnessMap : 'roughnessMap_metal',
-					envMap : true
-				}
-			},
-			'wood': {
-				'type':'standard',
-				'options': {
-					roughness:1,
-					metalness:0
-				},
-				'scopedOptions':{
-					roughnessMap : 'roughnessMap_wood',
-					envMap : true
-				}
-			},
-			'glass': {
-				'type':'standard',
-				'options': {
-					roughness: 0.3,
-					metalness: 0
-				},
-				'scopedOptions':{
-					roughnessMap : 'roughnessMap_fingerprint',
-					envMap : true
-				}
-			},
-			'chrome': {
-				'type':'standard',
-				'options': {
-					metalness: 1,
-					roughness: 0.1
-				},
-				'scopedOptions':{
-					roughnessMap : 'roughnessMap_fingerprint',
-					envMap : true
-				}
-			}*/
 			'plastic': {
 				'type': 'phong',
 				'options': {
@@ -308,19 +261,14 @@ export class DiceFactory {
 			let cacheString = '';
 			if (colorset) {
 				cacheString = this.setMaterialInfo(diceobj, colorset);
-			}
-			else if (diceobj.colorset) {
+			} else if (diceobj.colorset) {
 				cacheString = this.setMaterialInfo(diceobj, diceobj.colorset);
 			} else {
 				cacheString = this.setMaterialInfo(diceobj);
 			}
 
 			let baseTextureCacheString = scopedTextureCache.type + type + cacheString;
-			let materials;
-			if (this.baseTextureCache[baseTextureCacheString])
-				materials = this.baseTextureCache[baseTextureCacheString];
-			else
-				materials = this.createMaterials(scopedTextureCache, baseTextureCacheString, diceobj, 1.0);
+			let materials = this.createMaterials(scopedTextureCache, baseTextureCacheString, diceobj, 1.0);
 
 			dicemesh = new THREE.Mesh(geom, materials);
 
@@ -487,17 +435,15 @@ export class DiceFactory {
 		//var img    = canvasBump.toDataURL('image/png');
 		//document.write('<img src=''+img+''/>');
 		//generate basetexture for caching
-		if (!this.baseTextureCache[baseTextureCacheString]) {
-			let texture = new THREE.CanvasTexture(canvas);
-			texture.flipY = false;
-			mat.map = texture;
-			mat.map.anisotropy = 4;
+		let texture = new THREE.CanvasTexture(canvas);
+		texture.flipY = false;
+		mat.map = texture;
+		mat.map.anisotropy = 4;
 
-			let bumpMap = new THREE.CanvasTexture(canvasBump);
-			bumpMap.flipY = false;
-			mat.bumpMap = bumpMap;
-			mat.bumpMap.anisotropy = 4;
-		}
+		let bumpMap = new THREE.CanvasTexture(canvasBump);
+		bumpMap.flipY = false;
+		mat.bumpMap = bumpMap;
+		mat.bumpMap.anisotropy = 4;
 
 		//mat.displacementMap = mat.bumpMap;
 
@@ -835,14 +781,14 @@ export class DiceFactory {
 
 		// if selected label color is still not set, pick one
 		if (this.label_color_rand == '' && Array.isArray(this.label_color)) {
-			var colorindex = this.label_color[Math.floor(Math.random() * this.label_color.length)];
+			var labelColorIndex = this.label_color[Math.floor(Math.random() * this.label_color.length)];
 
 			// if label list and outline list are same length, treat them as a parallel list
 			if (Array.isArray(this.label_outline) && this.label_outline.length == this.label_color.length) {
-				this.label_outline_rand = this.label_outline[colorindex];
+				this.label_outline_rand = this.label_outline[labelColorIndex];
 			}
 
-			this.label_color_rand = this.label_color[colorindex];
+			this.label_color_rand = this.label_color[labelColorIndex];
 
 		} else if (this.label_color_rand == '') {
 			this.label_color_rand = this.label_color;
@@ -850,9 +796,9 @@ export class DiceFactory {
 
 		// if selected label outline is still not set, pick one
 		if (this.label_outline_rand == '' && Array.isArray(this.label_outline)) {
-			var colorindex = this.label_outline[Math.floor(Math.random() * this.label_outline.length)];
+			var outlineIndex = this.label_outline[Math.floor(Math.random() * this.label_outline.length)];
 
-			this.label_outline_rand = this.label_outline[colorindex];
+			this.label_outline_rand = this.label_outline[outlineIndex];
 
 		} else if (this.label_outline_rand == '') {
 			this.label_outline_rand = this.label_outline;

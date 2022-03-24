@@ -1,3 +1,4 @@
+// @ts-check
 export class Token {
     #type;
     #lexeme;

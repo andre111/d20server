@@ -1,3 +1,4 @@
+// @ts-check
 import { ActionCommand } from '../../../../../common/messages.js';
 import { FILE_TYPE_IMAGE } from '../../../../../common/util/datautil.js';
 import { I18N } from '../../../../../common/util/i18n.js';

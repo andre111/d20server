@@ -1,3 +1,4 @@
+// @ts-check
 import { MouseController } from '../../mouse-controller.js';
 
 export class WallAction extends MouseController {

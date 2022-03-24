@@ -1,3 +1,4 @@
+// @ts-check
 import { Type } from '../constants.js';
 import { Events } from '../events.js';
 import { Scripting } from '../scripting/scripting.js';

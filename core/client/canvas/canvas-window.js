@@ -1,3 +1,4 @@
+// @ts-check
 import { CanvasWindowManager } from './canvas-window-manager.js';
 
 //TODO: resizeability + storing and restoring sizes
@@ -88,8 +89,8 @@ export class CanvasWindow {
     set zIndex(value) {
         this.#zIndex = value;
 
-        if (this.#modalPane) this.#modalPane.style.zIndex = value;
-        this.#frame.style.zIndex = value;
+        if (this.#modalPane) this.#modalPane.style.zIndex = String(value);
+        this.#frame.style.zIndex = String(value);
     }
 
     get modal() {

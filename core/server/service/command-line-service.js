@@ -1,3 +1,4 @@
+// @ts-check
 import readline from 'readline';
 import { CLICommand } from './cli/cli-command.js';
 import { CLICommandStop } from './cli/cli-command-stop.js';

@@ -1,4 +1,4 @@
-
+// @ts-check
 import { IDProvider } from '../../common/entity/id.js';
 import { readJson, saveJson, backupJson } from '../util/fileutil.js';
 

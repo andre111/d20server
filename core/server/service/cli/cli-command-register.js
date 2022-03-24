@@ -1,3 +1,4 @@
+// @ts-check
 import { CLICommand } from './cli-command.js';
 import { UserService } from '../user-service.js';
 import { Role } from '../../../common/constants.js';

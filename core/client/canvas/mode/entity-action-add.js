@@ -1,3 +1,4 @@
+// @ts-check
 import { EntityAction } from './entity-action.js';
 import { Client } from '../../client.js';
 import { MapUtils } from '../../util/maputil.js';

@@ -1,3 +1,4 @@
+// @ts-check
 import { RuntimeError } from './runtime-error.js';
 
 export class Environment {

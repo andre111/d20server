@@ -1,3 +1,4 @@
+// @ts-check
 // this NEEDS to be the first import to handle argument parsing before all other code
 import { PARAMETERS } from './parameters.js';
 

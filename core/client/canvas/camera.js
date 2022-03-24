@@ -1,5 +1,7 @@
+// @ts-check
 import { Rect } from '../../common/util/rect.js';
 
+// @ts-ignore
 let { scale, translate, compose, inverse, applyToPoint } = window.TransformationMatrix;
 
 export class Camera {

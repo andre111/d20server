@@ -1,3 +1,4 @@
+// @ts-check
 const TEXTURELIST = {
 	'none': {
 		composite: 'source-over',
@@ -167,7 +168,7 @@ const TEXTURELIST = {
 	}
 };
 
-const DICE_SCALE = {
+export const DICE_SCALE = {
 	'd2': 1,
 	'd4': 1,
 	'd6': 1.3,
@@ -410,6 +411,8 @@ export const COLORSETS = {
 };
 
 export class DiceColors {
+	static diceTextures = {};
+	static diceBumps = {};
 
 	static loadTextures(callback) {
 
@@ -506,7 +509,7 @@ export class DiceColors {
 
 		// this is an attempt to make the foregroudn color stand out from the background color
 		// it sometimes produces ok results
-		let brightness = ((parseInt(rgb[0]) * 299) + (parseInt(rgb[1]) * 587) + (parseInt(rgb[2]) * 114)) / 1000;
+		let brightness = ((rgb[0] * 299) + (rgb[1] * 587) + (rgb[2] * 114)) / 1000;
 		let foreground = (brightness > 126) ? 'rgb(30,30,30)' : 'rgb(230,230,230)'; // high brightness = dark text, else bright text
 		let background = 'rgb(' + rgb[0] + ',' + rgb[1] + ',' + rgb[2] + ')';
 

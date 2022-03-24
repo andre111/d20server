@@ -1,3 +1,4 @@
+// @ts-check
 import { State } from "./state.js";
 import { GuiUtils } from '../util/guiutil.js';
 import { I18N } from '../../common/util/i18n.js';

@@ -1,3 +1,4 @@
+// @ts-check
 import { CanvasWindow } from '../canvas-window.js';
 import { Camera } from '../camera.js';
 import { MouseController } from '../../mouse-controller.js';
@@ -79,7 +80,7 @@ export class CanvasWindowFitToGrid extends CanvasWindow {
 
     render() {
         // stop rendering once closed
-        if (this.isClosed) {
+        if (this.closed) {
             Events.remove('frameEnd', this.listener);
             return;
         }

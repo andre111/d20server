@@ -1,3 +1,4 @@
+// @ts-check
 import { File } from './file.js';
 import { DirectoryMenu } from './directory-menu.js';
 import { fetchDynamicJSON } from '../../../util/fetchutil.js';

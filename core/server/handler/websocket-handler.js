@@ -1,3 +1,4 @@
+// @ts-check
 import websocket from 'ws';
 import { Events } from '../../common/events.js';
 

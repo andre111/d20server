@@ -1,3 +1,4 @@
+// @ts-check
 import { ValueProviderProfile } from '../../../core/client/gui/value-provider-profile.js';
 import { ServerData } from '../../../core/client/server-data.js';
 import { Events } from '../../../core/common/events.js';
@@ -68,9 +69,9 @@ export class WebRTCEntry {
 
             const volumeInput = document.createElement('input');
             volumeInput.type = 'range';
-            volumeInput.value = 100;
+            volumeInput.value = '100';
             volumeInput.onchange = event => {
-                this.#video.volume = volumeInput.value / 100;
+                this.#video.volume = Number(volumeInput.value) / 100;
             };
             volumeDiv.appendChild(volumeInput);
 

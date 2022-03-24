@@ -1,3 +1,4 @@
+// @ts-check
 import { ValueProvider } from './value-provider.js';
 import { EntityManagers } from '../../common/entity/entity-managers.js';
 

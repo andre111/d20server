@@ -1,3 +1,4 @@
+// @ts-check
 import bcrypt from 'bcrypt';
 import { Profile } from '../../common/common.js';
 

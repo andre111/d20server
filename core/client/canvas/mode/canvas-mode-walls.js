@@ -1,3 +1,4 @@
+// @ts-check
 import { CanvasMode } from '../canvas-mode.js';
 import { WallActionCreateWall } from './wall-action-create-wall.js';
 import { MapUtils } from '../../util/maputil.js';

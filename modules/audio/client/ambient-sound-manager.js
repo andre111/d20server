@@ -1,3 +1,4 @@
+// @ts-check
 import { Client } from '../../../core/client/client.js';
 import { Settings } from '../../../core/client/settings/settings.js';
 import { MapUtils } from '../../../core/client/util/maputil.js';
@@ -19,6 +20,7 @@ export class AmbientSoundManager {
             // and play new sounds
             this.stop();
             var volume = token.getDouble('audioVolume') * Settings.getVolume(SETTING_AMBIENT_VOLUME);
+            // @ts-ignore
             this.sound = new Howl({
                 src: ['/data/files' + token.getString('audioPath')],
                 format: ['ogg'],

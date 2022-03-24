@@ -1,7 +1,16 @@
+// @ts-check
 import { DICE_MODELS } from './dice-models.js';
 import { COLORSETS } from './dice-colors.js';
 import { SETTING_3DDICE_VOLUME } from './settings.js';
 import { Settings } from '../../../core/client/settings/settings.js';
+
+//TODO: remove workaround for accessing 'external' libraries
+// @ts-ignore
+const THREE = window.THREE;
+// @ts-ignore
+const CANNON = window.CANNON;
+// @ts-ignore
+const Howl = window.Howl;
 
 export class DiceBox {
 	constructor(element_container, dice_factory, config) {
@@ -14,9 +23,7 @@ export class DiceBox {
 		this.adaptive_timestep = false;
 		this.last_time = 0;
 		this.settle_time = 0;
-		this.running = false;
 		this.rolling = false;
-		this.threadid;
 
 		this.nbIterationsBetweenRolls = 15;
 
@@ -64,7 +71,7 @@ export class DiceBox {
 		this.light;
 		this.light_amb;
 		this.desk;
-		this.pane;
+		this.pane = null;
 
 		//public variables
 		this.public_interface = {};
@@ -142,7 +149,7 @@ export class DiceBox {
 			this.sounds = this.config.sounds;
 			this.soundsSurface = this.config.soundsSurface;
 			this.shadows = this.config.shadowQuality != 'none';
-			this.speed = 1;
+			this.speed = this.config.speed;
 			this.throwingForce = this.config.throwingForce;
 			this.scene = new THREE.Scene();
 
@@ -202,6 +209,7 @@ export class DiceBox {
 				this.pmremGenerator = new THREE.PMREMGenerator(this.renderer);
 				this.pmremGenerator.compileEquirectangularShader();
 
+				// @ts-ignore
 				new RGBELoader()
 					.setDataType(THREE.UnsignedByteType)
 					.setPath('/modules/3ddice/files/textures/equirectangular/')
@@ -720,13 +728,11 @@ export class DiceBox {
 		if (this.throwFinished('render')) {
 			//if animated dice still on the table, keep animating
 
-			this.running = false;
 			this.rolling = false;
 
 			if (this.callback) this.callback(this.throws);
 			this.callback = null;
 			this.throws = null;
-			this.running = (new Date()).getTime();
 			if (!this.animatedDiceDetected)
 				this.shouldUpdateOnFrame = false;
 		}
@@ -765,7 +771,6 @@ export class DiceBox {
 	}
 
 	clearDice() {
-		this.running = false;
 		this.deadDiceList = this.deadDiceList.concat(this.diceList);
 		this.diceList = [];
 	}
@@ -836,7 +841,6 @@ export class DiceBox {
 
 		// animate the previously simulated roll
 		this.rolling = true;
-		this.running = (new Date()).getTime();
 		this.last_time = 0;
 		this.callback = callback;
 		this.throws = throws;

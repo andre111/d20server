@@ -1,3 +1,4 @@
+// @ts-check
 import { EntityAction } from './entity-action.js';
 import { EntityActionRotate } from './entity-action-rotate.js';
 import { EntityActionResize } from './entity-action-resize.js';

@@ -1,3 +1,5 @@
+// @ts-check
+
 export const Access = {
     EVERYONE: 'EVERYONE',
     CONTROLLING_PLAYER: 'CONTROLLING_PLAYER',

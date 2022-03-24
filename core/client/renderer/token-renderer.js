@@ -1,3 +1,4 @@
+// @ts-check
 import { Events } from '../../common/events.js';
 import { EntityUtils } from '../util/entityutil.js';
 import { ImageService } from '../service/image-service.js';

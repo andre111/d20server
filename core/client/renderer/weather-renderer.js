@@ -1,3 +1,4 @@
+// @ts-check
 import { ImageService } from '../service/image-service.js';
 import { IntMathUtils } from '../../common/util/mathutil.js';
 import { Effect } from '../../common/constants.js';
@@ -158,6 +159,7 @@ export const WeatherRenderer = {
                     WeatherRenderer._sound = null;
                 }
                 WeatherRenderer._soundSrc = soundSrc;
+                // @ts-ignore
                 WeatherRenderer._sound = new Howl({
                     src: [soundSrc],
                     volume: 0.1 * Settings.getVolume(SETTING_WEATHER_VOLUME),
@@ -176,6 +178,7 @@ export const WeatherRenderer = {
         if (Math.random() < lightningChance) {
             WeatherRenderer._lightning = 0.9;
             var thunderSound = '/core/files/audio/weather/thunder' + IntMathUtils.getRandomInt(4) + '.mp3';
+            // @ts-ignore
             new Howl({
                 src: [thunderSound],
                 volume: 0.5 * Settings.getVolume(SETTING_WEATHER_VOLUME),

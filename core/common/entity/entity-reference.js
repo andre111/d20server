@@ -1,3 +1,4 @@
+// @ts-check
 import { Access } from '../constants.js';
 import { Entity } from './entity.js';
 import { EntityManagers } from './entity-managers.js';

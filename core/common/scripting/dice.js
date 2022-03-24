@@ -1,3 +1,4 @@
+// @ts-check
 import { Type } from '../constants.js';
 import { DiceRoller } from '../util/dice-roller.js';
 import { RuntimeError } from './runtime-error.js';
@@ -245,12 +246,6 @@ function evaluateDouble(interpreter, token, expr, truncate = true) {
     const value = expr.accept(interpreter);
     interpreter.checkOperandType(token, value, Type.DOUBLE);
     return truncate ? Math.trunc(value.value) : value.value;
-}
-
-function evaluateString(interpreter, token, expr) {
-    const value = expr.accept(interpreter);
-    interpreter.checkOperandType(token, value, Type.STRING);
-    return value.value;
 }
 
 function match(value1, comparison, value2) {

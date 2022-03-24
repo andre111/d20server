@@ -1,3 +1,4 @@
+// @ts-check
 import { EntityAction } from './entity-action.js';
 import { EntityActionSelect } from './entity-action-select.js';
 import { Client } from '../../client.js';

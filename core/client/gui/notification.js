@@ -1,3 +1,4 @@
+// @ts-check
 import { Client } from '../client.js';
 
 export class Notification {
@@ -14,7 +15,7 @@ export class Notification {
     update() {
         this.#time--;
         if (this.#time < Client.FPS) {
-            this.#element.style.opacity = this.#time / Client.FPS;
+            this.#element.style.opacity = String(this.#time / Client.FPS);
         }
         return this.#time > 0;
     }

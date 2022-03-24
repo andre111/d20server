@@ -1,3 +1,4 @@
+// @ts-check
 import { Command } from './command.js';
 import { RollFormatter } from '../util/roll-formatter.js';
 import { ChatService } from '../service/chat-service.js';

@@ -1,3 +1,4 @@
+// @ts-check
 import fs from 'fs-extra';
 import { splitArguments } from '../../../../core/common/util/stringutil.js';
 import { Command } from '../../../../core/server/command/command.js';

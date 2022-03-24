@@ -1,3 +1,4 @@
+// @ts-check
 import { ModeButton } from './mode-button.js';
 import { ModeButtonExtended } from './mode-button-extended.js';
 import { ServerData } from '../server-data.js';

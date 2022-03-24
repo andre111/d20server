@@ -1,3 +1,4 @@
+// @ts-check
 export const DICE_MODELS = {
     "d2": {
         "metadata": {

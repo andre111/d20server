@@ -1,3 +1,4 @@
+// @ts-check
 import { Events } from '../../common/events.js';
 import { CanvasWindowSettings } from '../canvas/window/canvas-window-settings.js';
 import { ServerData } from '../server-data.js';

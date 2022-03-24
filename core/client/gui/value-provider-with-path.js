@@ -1,3 +1,4 @@
+// @ts-check
 import { ValueProviderDefault } from './value-provider-default.js';
 
 export class ValueProviderWithPath extends ValueProviderDefault {

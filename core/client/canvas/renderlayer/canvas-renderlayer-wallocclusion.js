@@ -1,3 +1,4 @@
+// @ts-check
 import { CanvasRenderLayer } from '../canvas-renderlayer.js';
 import { MapUtils } from '../../util/maputil.js';
 import { RenderUtils } from '../../util/renderutil.js';
@@ -38,7 +39,7 @@ export class CanvasRenderLayerWallOcclusion extends CanvasRenderLayer {
                     ctx.clip();
                     TokenRenderer.renderTokens(ctx, MapUtils.currentEntitiesSorted('token', Layer.BACKGROUND), view.getProfile(), state.getHighlightToken(), true, false);
                     ctx.fillStyle = 'rgba(0, 0, 0, 0.7)';
-                    ctx.fillRect(extendedViewport.x, extendedViewport.y, extendedViewport.width, extendedViewport.heigth);
+                    ctx.fillRect(extendedViewport.x, extendedViewport.y, extendedViewport.width, extendedViewport.height);
                     ctx.restore();
                 }
 

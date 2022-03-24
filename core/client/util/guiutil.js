@@ -1,3 +1,5 @@
+// @ts-check
+
 // for createInput
 var _nextID = 0;
 

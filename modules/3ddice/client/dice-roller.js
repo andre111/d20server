@@ -1,3 +1,4 @@
+// @ts-check
 import { Client } from '../../../core/client/client.js';
 import { DiceBox } from './dice-box.js';
 import { DiceColors } from './dice-colors.js';
@@ -14,11 +15,11 @@ export class DiceRoller {
         this.preloaded = false;
         this.scheduledThrows = [];
 
-        this._createCanvas();
-        this._initialize();
+        this.#createCanvas();
+        this.#initialize();
     }
 
-    _createCanvas() {
+    #createCanvas() {
         this.canvas = document.createElement('div');
         this.canvas.style.position = 'absolute';
         this.canvas.style.left = '0';
@@ -30,7 +31,7 @@ export class DiceRoller {
         document.body.appendChild(this.canvas);
     }
 
-    _initialize() {
+    #initialize() {
         new Promise(async resolve => {
             this.factory = new DiceFactory();
             await this.factory._loadFonts();
@@ -59,7 +60,7 @@ export class DiceRoller {
         });
     }
 
-    _performThrow(t) {
+    #performThrow(t) {
         if (!this.isReady) return false;
         if (!this.preloaded) {
             this.box.preloadSounds();
@@ -101,7 +102,7 @@ export class DiceRoller {
         if (schedule) {
             this.scheduledThrows.push(t);
         } else {
-            this._performThrow(t);
+            this.#performThrow(t);
         }
     }
 
@@ -111,7 +112,7 @@ export class DiceRoller {
 
         // try to start the next throw
         if (this.scheduledThrows.length > 0) {
-            if (this._performThrow(this.scheduledThrows[0])) {
+            if (this.#performThrow(this.scheduledThrows[0])) {
                 this.scheduledThrows.shift();
             }
         }

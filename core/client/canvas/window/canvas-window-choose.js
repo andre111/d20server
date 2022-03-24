@@ -1,3 +1,4 @@
+// @ts-check
 import { CanvasWindow } from '../canvas-window.js';
 import { getValueProvider } from '../../gui/value-providers.js';
 import { SearchableIDTree } from '../../gui/searchable-id-tree.js';

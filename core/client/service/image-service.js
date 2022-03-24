@@ -1,3 +1,4 @@
+// @ts-check
 import { RenderUtils } from '../util/renderutil.js';
 
 class CachedImage {
@@ -56,9 +57,9 @@ export const ImageService = {
             }
         } else {
             // load image from server
-            var img = new Image();
-            img.src = path;
-            cache[cachePath] = new CachedImage(img);
+            var image = new Image();
+            image.src = path;
+            cache[cachePath] = new CachedImage(image);
         }
 
         return null;

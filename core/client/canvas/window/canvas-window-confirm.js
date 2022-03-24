@@ -1,3 +1,4 @@
+// @ts-check
 import { I18N } from '../../../common/util/i18n.js';
 import { CanvasWindow } from '../canvas-window.js';
 

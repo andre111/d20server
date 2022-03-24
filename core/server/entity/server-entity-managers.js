@@ -1,3 +1,4 @@
+// @ts-check
 import { MessageService } from '../service/message-service.js';
 
 import { getDefinitions } from '../../common/definitions.js';

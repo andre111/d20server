@@ -1,3 +1,4 @@
+// @ts-check
 import { CanvasRenderLayer } from '../canvas-renderlayer.js';
 import { MapUtils } from '../../util/maputil.js';
 import { ImageService } from '../../service/image-service.js';

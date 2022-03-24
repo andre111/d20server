@@ -1,3 +1,4 @@
+// @ts-check
 import { Measurements } from './measurements.js';
 import { CanvasRenderLayerMeasurements } from './canvas/renderlayer/canvas-renderlayer-measurements.js';
 import { CanvasModeMeasurements } from './canvas/mode/canvas-mode-measurements.js';

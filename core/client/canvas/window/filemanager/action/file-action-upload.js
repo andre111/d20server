@@ -1,3 +1,4 @@
+// @ts-check
 import { I18N } from '../../../../../common/util/i18n.js';
 import { CanvasWindowFilemanagerUpload } from '../../canvas-window-filemanager-upload.js';
 import { FileAction } from './file-action.js';

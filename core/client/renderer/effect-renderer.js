@@ -1,3 +1,4 @@
+// @ts-check
 class AbstractEffect {
     constructor(x, y, rotation, scale) {
         this.x = x;

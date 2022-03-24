@@ -1,3 +1,4 @@
+// @ts-check
 import { I18N } from '../../common/util/i18n.js';
 import { splitArguments } from '../../common/util/stringutil.js';
 import { ChatService } from '../service/chat-service.js';

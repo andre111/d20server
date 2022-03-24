@@ -1,3 +1,4 @@
+// @ts-check
 import express from 'express';
 import fs from 'fs-extra';
 import path from 'path';
@@ -185,11 +186,11 @@ export class FileManager {
         router.get('/generatethumb', function (req, res) {
             res.setHeader('content-type', 'image/png');
 
-            const width = req.query.width || 120;
-            const height = req.query.height || 120;
+            const width = Number(req.query.width) || 120;
+            const height = Number(req.query.height) || 120;
 
             // create and validate path
-            const filePath = path.join(serverRoot, req.query.f);
+            const filePath = path.join(serverRoot, String(req.query.f));
             if (!validatePath(filePath)) { res.send({ res: 'error', msg: 'invalid path' }); return; }
 
             // call graphicsmagick (TODO: replace with no external dependency)
@@ -204,13 +205,13 @@ export class FileManager {
         /* Upload files */
         const storage = multer.diskStorage({
             destination: function (req, file, cb) {
-                if (req.body.k != EDIT_KEY) { cb('access denied', null); return; }
+                if (req.body.k != EDIT_KEY) { cb(new Error('access denied'), null); return; }
 
                 // create and validate path
                 const dirPath = path.join(serverRoot, req.body.d);
-                if (!validatePath(dirPath)) { cb('invalid path', null); return; }
+                if (!validatePath(dirPath)) { cb(new Error('invalid path'), null); return; }
                 const filePath = path.join(dirPath, file.originalname);
-                if (!validatePath(filePath)) { cb('invalid path', null); return; }
+                if (!validatePath(filePath)) { cb(new Error('invalid path'), null); return; }
 
                 cb(null, dirPath);
             },

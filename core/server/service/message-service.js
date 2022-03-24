@@ -1,3 +1,4 @@
+// @ts-check
 import { Message } from '../../common/message/message.js';
 import { toJson } from '../../common/util/datautil.js';
 import { UserService } from './user-service.js';

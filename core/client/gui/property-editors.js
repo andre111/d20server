@@ -1,3 +1,4 @@
+// @ts-check
 import { StringPropertyEditor } from './property-editor/string-property-editor.js';
 import { LongPropertyEditor } from './property-editor/long-property-editor.js';
 import { BooleanPropertyEditor } from './property-editor/boolean-property-editor.js';

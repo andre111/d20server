@@ -1,3 +1,4 @@
+// @ts-check
 import { ChatService } from '../service/chat-service.js';
 import { MessageService } from '../service/message-service.js';
 import { UserService } from '../service/user-service.js';

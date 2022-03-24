@@ -1,3 +1,4 @@
+// @ts-check
 import { DirectoryAction } from './directory-action.js';
 import { CanvasWindowConfirm } from '../../canvas-window-confirm.js';
 import { I18N } from '../../../../../common/util/i18n.js';

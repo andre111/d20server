@@ -1,3 +1,4 @@
+// @ts-check
 import { ServerData } from '../../../core/client/server-data.js';
 import { MessageService } from '../../../core/client/service/message-service.js';
 import { Events } from '../../../core/common/events.js';
@@ -10,9 +11,9 @@ import { WebRTCEntry } from './webrtc-entry.js';
 //TODO: As far as I understood stun needs two sepparate servers for full functionality? -> using public stuntman server for now
 //TODO: Maybe replace with TURN server that can catch these cases as well
 const peerConnectionConfig = {
-    'iceServers': [
-        { 'url': 'stun:' + location.hostname + ':3478' },
-        //{ 'url': 'turn:'+location.hostname+':3478' },
+    iceServers: [
+        { 'urls': 'stun:' + location.hostname + ':3478' },
+        //{ 'urls': 'turn:'+location.hostname+':3478' },
         //{ 'urls': 'stun:stun.stunprotocol.org:3478' }
     ]
 };

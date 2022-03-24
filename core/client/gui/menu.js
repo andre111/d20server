@@ -1,3 +1,4 @@
+// @ts-check
 import { MenuCategory } from './menu-category.js';
 import { MenuItem } from './menu-item.js';
 

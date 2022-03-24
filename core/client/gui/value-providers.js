@@ -1,3 +1,4 @@
+// @ts-check
 import { ValueProviderAttachment } from './value-provider-attachment.js';
 import { ValueProviderProfile } from './value-provider-profile.js';
 import { ValueProviderDefault } from './value-provider-default.js';

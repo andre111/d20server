@@ -1,3 +1,4 @@
+// @ts-check
 class ISAction {
     constructor(name, keyCode, shift, ctrl, alt) {
         this.name = name;

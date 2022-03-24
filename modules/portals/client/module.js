@@ -1,3 +1,4 @@
+// @ts-check
 import { ModeButtonExtended } from '../../../core/client/canvas/mode-button-extended.js';
 import { ModeButton } from '../../../core/client/canvas/mode-button.js';
 import { Client } from '../../../core/client/client.js';

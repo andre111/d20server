@@ -1,3 +1,4 @@
+// @ts-check
 import { Role } from '../../common/constants.js';
 import { Events } from '../../common/events.js';
 import { I18N } from '../../common/util/i18n.js';

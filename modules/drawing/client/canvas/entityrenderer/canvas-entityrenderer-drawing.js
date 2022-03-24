@@ -1,3 +1,4 @@
+// @ts-check
 import { CanvasEntityRenderer } from '../../../../../core/client/canvas/canvas-entityrenderer.js';
 import { DrawingRenderer } from '../../renderer/drawing-renderer.js';
 

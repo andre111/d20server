@@ -1,3 +1,4 @@
+// @ts-check
 import { CanvasMode } from '../canvas-mode.js';
 import { EntityActionAdd } from './entity-action-add.js';
 import { EntityActionMove } from './entity-action-move.js';

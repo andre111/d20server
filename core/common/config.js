@@ -1,3 +1,4 @@
+// @ts-check
 import { Type } from './constants.js';
 import { Events } from './events.js';
 import { deepMerge } from './util/datautil.js';
@@ -6,7 +7,13 @@ import { deepMerge } from './util/datautil.js';
  * Manages config definitions and concrete values.
  */
 class Config {
+    /**
+     * @type {Object<string, ConfigDefinition>}
+     */
     #definitions;
+    /**
+     * @type {Object<string, *>}
+     */
     #data;
 
     constructor() {
@@ -35,7 +42,7 @@ class Config {
 
     /**
      * Iterates all defined config values and passes them to the provided callback.
-     * @param {configIterationCallback} callback the {@link configIterationCallback} callback
+     * @param {ConfigIterationCallback} callback the {@link ConfigIterationCallback} callback
      */
     iterate(callback) {
         for (const key of Object.keys(this.#definitions)) {
@@ -46,7 +53,7 @@ class Config {
     /**
      * Returns the definition for the provided key.
      * @param {string} key name of the config key
-     * @returns {configDefinition} the config definition or null if no definition is present for the provided key
+     * @returns {ConfigDefinition} the {@link ConfigDefinition} or null if no definition is present for the provided key
      */
     getDefinition(key) {
         if (this.#definitions[key]) {
@@ -87,7 +94,7 @@ class Config {
 
     /**
      * "Saves" config data by providing it to the callback
-     * @param {configSaveCallback} callback the {@link configSaveCallback} callback to use
+     * @param {ConfigSaveCallback} callback the {@link ConfigSaveCallback} callback to use
      */
     save(callback) {
         callback(this.#data);
@@ -104,7 +111,7 @@ CONFIG.define('motd', Type.STRING, '', true, false);
 
 /**
  * Object describing the config definition of a single key
- * @typedef {object} configDefinition
+ * @typedef {object} ConfigDefinition
  * @property {string} type the type - see Type in constants.js
  * @property {*} defaultValue the default value of the config option
  * @property {boolean} clientAccessible when true values should be synced to ALL clients and GMs can change them
@@ -113,16 +120,16 @@ CONFIG.define('motd', Type.STRING, '', true, false);
 
 /**
  * Callback for the config iteration function
- * @callback configIterationCallback
+ * @callback ConfigIterationCallback
  * @param {string} key name of the config key to define
- * @param {configDefinition} definition the definition object
+ * @param {ConfigDefinition} definition the definition object
  * @param {*} value current value of the config option
  * @returns {void}
  */
 
 /**
  * Callback for handling saving of config data
- * @callback configSaveCallback
+ * @callback ConfigSaveCallback
  * @param {*} data the config data to save
  * @returns {void}
  */

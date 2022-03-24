@@ -1,3 +1,4 @@
+// @ts-check
 import { CanvasWindow } from '../canvas-window.js';
 import { ServerData } from '../../server-data.js';
 import { toFormatedSize } from '../../../common/util/datautil.js';
@@ -412,6 +413,7 @@ export class CanvasWindowFilemanager extends CanvasWindow {
         // change status
         if (file) this.setStatus(I18N.get('filemanager.status.file.path', 'File: ') + file.getPath() + ' - '
             + I18N.get('filemanager.status.file.size', 'Size: ') + toFormatedSize(file.getSize()) + ' - '
+            // @ts-ignore
             + I18N.get('filemanager.status.file.modified', 'Last Modified: ') + dayjs.unix(file.getModified()).format('lll'));
         else this.setStatus('');
 

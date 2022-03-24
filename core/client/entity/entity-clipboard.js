@@ -1,3 +1,4 @@
+// @ts-check
 import { EntityReference } from "../../common/entity/entity-reference.js";
 
 var _typedClipboard = new Map();

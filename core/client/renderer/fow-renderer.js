@@ -1,7 +1,11 @@
+// @ts-check
 import { Events } from '../../common/events.js';
 import { UpdateFOW } from '../../common/messages.js';
 import { MessageService } from '../service/message-service.js';
 import { MapUtils } from '../util/maputil.js';
+
+// @ts-ignore
+const ClipperLib = window.ClipperLib;
 
 var _seen = null;
 var _cpr = new ClipperLib.Clipper();

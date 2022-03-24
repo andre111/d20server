@@ -1,9 +1,9 @@
+// @ts-check
 import { ModeButton, ModeButtonExtended } from '../../../core/client/canvas/mode-panel.js';
 import { CanvasWindowInput } from '../../../core/client/canvas/window/canvas-window-input.js';
 import { MessageService } from '../../../core/client/service/message-service.js';
 
 import { Events } from '../../../core/common/events.js';
-import { EntityManagers } from '../../../core/common/entity/entity-managers.js';
 import { SendChatMessage } from '../../../core/common/messages.js';
 import { MapUtils } from '../../../core/client/util/maputil.js';
 

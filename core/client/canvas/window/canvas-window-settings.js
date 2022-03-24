@@ -1,3 +1,4 @@
+// @ts-check
 import { I18N } from '../../../common/util/i18n.js';
 import { Tabs } from '../../gui/tabs.js';
 import { Settings } from '../../settings/settings.js';

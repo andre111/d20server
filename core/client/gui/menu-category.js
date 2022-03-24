@@ -1,3 +1,4 @@
+// @ts-check
 import { MenuItem } from './menu-item.js';
 
 export class MenuCategory extends MenuItem {

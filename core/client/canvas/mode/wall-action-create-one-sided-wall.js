@@ -1,3 +1,4 @@
+// @ts-check
 import { WallActionCreate } from './wall-action-create.js';
 
 export class WallActionCreateOneSidedWall extends WallActionCreate {

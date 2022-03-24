@@ -1,3 +1,4 @@
+// @ts-check
 import { AmbientSoundManager } from './ambient-sound-manager.js';
 
 import { MapUtils } from '../../../core/client/util/maputil.js';
@@ -9,7 +10,9 @@ export const AmbientAudio = {
         if (performedInit) return;
 
         // initialise reverb convolver (needs to have a howl created first to work!)
+        // @ts-ignore
         new Howl({ src: '/modules/audio/files/ir.wav', autoplay: false });
+        // @ts-ignore
         Howler.addConvolver('reverb', '/modules/audio/files/ir.wav');
         performedInit = true;
     },
@@ -20,6 +23,7 @@ export const AmbientAudio = {
             AmbientAudio.stop();
             return;
         }
+        // @ts-ignore
         Howler.pos(listenerX, listenerY, listenerZ);
 
         // start new sounds / update
@@ -36,6 +40,7 @@ export const AmbientAudio = {
     },
 
     stop: function () {
+        // @ts-ignore
         for (const [key, manager] of managers.entries()) {
             manager.stop();
         }

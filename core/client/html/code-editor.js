@@ -1,3 +1,4 @@
+// @ts-check
 import { Scripting } from '../../common/scripting/scripting.js';
 import { EOF, IDENTIFIER, LEFT_PAREN, NEWLINE, UNKNOWN, WHITESPACE } from '../../common/scripting/token.js';
 

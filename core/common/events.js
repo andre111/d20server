@@ -1,5 +1,7 @@
+// @ts-check
 import { EventListener } from './event-listener.js';
 import { Event } from './event.js';
+import { isString } from './util/stringutil.js';
 
 /**
  * Provides static methods for handling events with custom data.
@@ -22,7 +24,7 @@ export class Events {
      * @returns {EventListener} the newly created {@link EventListener} object
      */
     static on(name, callback, recieveCanceled = false, priority = 0) {
-        if (typeof name !== 'string') throw new Error('name is not a string');
+        if (!isString(name)) throw new Error('name is not a string');
         if (callback === null || callback === undefined) throw new Error('callback cannot be null/undefined');
 
         if (!Events.#listeners[name]) Events.#listeners[name] = [];

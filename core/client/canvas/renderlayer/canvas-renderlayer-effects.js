@@ -1,3 +1,4 @@
+// @ts-check
 import { CanvasRenderLayer } from '../canvas-renderlayer.js';
 import { EffectRenderer } from '../../renderer/effect-renderer.js';
 

@@ -1,3 +1,4 @@
+// @ts-check
 import { CanvasWindowInput } from './canvas-window-input.js';
 
 export class CanvasWindowIntegerInput extends CanvasWindowInput {

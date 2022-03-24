@@ -1,3 +1,4 @@
+// @ts-check
 export const ATTRIBUTES = {
     str: { name: 'Stärke', abr: 'ST' },
     dex: { name: 'Geschicklichkeit', abr: 'GE' },

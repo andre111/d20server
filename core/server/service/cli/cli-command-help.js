@@ -1,3 +1,4 @@
+// @ts-check
 import { CLICommand } from './cli-command.js';
 import { clicommands } from '../command-line-service.js';
 

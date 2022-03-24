@@ -1,3 +1,4 @@
+// @ts-check
 import { ServerBattleManager } from './server-battle-manager.js';
 
 import { Events } from '../../../core/common/events.js';

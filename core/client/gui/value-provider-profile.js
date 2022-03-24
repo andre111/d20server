@@ -1,3 +1,4 @@
+// @ts-check
 import { ValueProvider } from './value-provider.js';
 import { ServerData } from '../server-data.js';
 import { RenderUtils } from '../util/renderutil.js';

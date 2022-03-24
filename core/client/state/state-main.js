@@ -1,3 +1,4 @@
+// @ts-check
 import { Client } from '../client.js';
 import { State } from './state.js';
 import { Camera } from '../canvas/camera.js';
@@ -53,12 +54,12 @@ export class StateMain extends State {
         // create html elements
         const canvas = document.createElement('canvas');
         canvas.id = 'canvas';
-        canvas.tabIndex = '1';
+        canvas.tabIndex = 1;
         document.body.appendChild(canvas);
 
         const sidepanel = document.createElement('div');
         sidepanel.id = 'sidepanel';
-        sidepanel.tabIndex = '2';
+        sidepanel.tabIndex = 2;
         document.body.appendChild(sidepanel);
 
         this.notificationManager = new NotificationManager();
@@ -96,7 +97,7 @@ export class StateMain extends State {
 
         //...
         this.#layer = Layer.MAIN;
-        this.setMode(new CanvasModeEntities('token', this.#layer));
+        this.setMode(new CanvasModeEntities('token'));
         if (ServerData.isGM()) {
             this.setView(new CanvasView(ServerData.localProfile, false, false, false, true));
         } else {
@@ -119,40 +120,37 @@ export class StateMain extends State {
 
         // collect render layers
         this.renderLayers = [];
-        var data = {
+        Events.trigger('addRenderLayers', {
             addRenderLayer: layer => {
                 if (!(layer instanceof CanvasRenderLayer)) throw new Error('Can only add instances of CanvasRenderLayer');
                 this.renderLayers.push(layer);
             }
-        };
-        Events.trigger('addRenderLayers', data);
+        });
         this.renderLayers.sort((a, b) => a.getLevel() - b.getLevel());
 
         // collect entity renderers
         this.entityRenderers = {};
-        data = {
+        Events.trigger('addEntityRenderers', {
             addEntityRenderer: (type, renderer) => {
                 if (!(renderer instanceof CanvasEntityRenderer)) throw new Error('Can only add instances of CanvasEntityRenderer');
                 this.entityRenderers[type] = renderer;
             }
-        };
-        Events.trigger('addEntityRenderers', data);
+        });
 
         // collect tabs
         this.sidepanelTabs = [];
-        data = {
+        Events.trigger('addSidepanelTabs', {
             addSidepanelTab: tab => {
                 if (!(tab instanceof SidepanelTab)) throw new Error('Can only add instances of SidePanelTab');
                 this.sidepanelTabs.push(tab);
             }
-        };
-        Events.trigger('addSidepanelTabs', data);
+        });
 
         // create tabs
         for (const tab of this.sidepanelTabs) {
             if (tab.isVisible()) {
                 // add panel tab
-                tab.tab.name = tab.getIcon();
+                tab.tab.dataset.name = tab.getIcon();
                 tab.tab.title = tab.getName();
                 sidepanel.appendChild(tab.tab);
             }

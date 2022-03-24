@@ -1,3 +1,4 @@
+// @ts-check
 import { PropertyEditor } from '../property-editor.js';
 import { createDefaultFileManager } from '../../../canvas/window/canvas-window-filemanager.js';
 
@@ -44,6 +45,8 @@ export class ImagePropertyEditor extends PropertyEditor {
     }
 
     doEditImage() {
+        // @ts-ignore
+        //TODO: the disabled property does not officially exist -> it just currently gets set anyways
         if (!this.image.disabled) {
             const manager = createDefaultFileManager(this.imagePath, this.window);
             manager.init(file => {
@@ -60,6 +63,8 @@ export class ImagePropertyEditor extends PropertyEditor {
     }
 
     doClearImage() {
+        // @ts-ignore
+        //TODO: the disabled property does not officially exist -> it just currently gets set anyways
         if (!this.image.disabled) {
             this.imagePath = '';
             this.reloadImage();

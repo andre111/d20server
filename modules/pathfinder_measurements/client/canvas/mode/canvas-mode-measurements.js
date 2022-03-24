@@ -1,3 +1,4 @@
+// @ts-check
 import { CanvasMode } from '../../../../../core/client/canvas/canvas-mode.js';
 import { Client } from '../../../../../core/client/client.js';
 import { ServerData } from '../../../../../core/client/server-data.js';

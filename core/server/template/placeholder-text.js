@@ -1,3 +1,4 @@
+// @ts-check
 import { Placeholder } from './placeholder.js';
 
 import { ChatService } from '../service/chat-service.js';

@@ -1,3 +1,4 @@
+// @ts-check
 import { SidepanelTab } from './sidepanel-tab.js';
 import { SearchableIDTree } from '../gui/searchable-id-tree.js';
 import { getValueProvider } from '../gui/value-providers.js';

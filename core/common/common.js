@@ -1,3 +1,4 @@
+// @ts-check
 import { EntityManagers } from './entity/entity-managers.js';
 import { ID } from './entity/id.js';
 

@@ -1,3 +1,4 @@
+// @ts-check
 import { I18N } from '../../../../../common/util/i18n.js';
 import { fetchDynamicJSON } from '../../../../util/fetchutil.js';
 import { CanvasWindowInput } from '../../canvas-window-input.js';

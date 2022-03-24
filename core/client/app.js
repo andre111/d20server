@@ -1,3 +1,4 @@
+// @ts-check
 import { Common, Entity } from '../common/common.js';
 import { Events } from '../common/events.js';
 import { Access, Layer } from '../common/constants.js';

@@ -1,3 +1,4 @@
+// @ts-check
 import { SidepanelTab } from './sidepanel-tab.js';
 import { GuiUtils } from '../util/guiutil.js';
 import { MessageService } from '../service/message-service.js';
@@ -81,6 +82,7 @@ export class SidepanelTabChat extends SidepanelTab {
 
     add(entries) {
         for (const entry of entries) {
+            // @ts-ignore
             const sanitizedText = DOMPurify.sanitize(entry.getText(), { USE_PROFILES: { html: true } });
 
             if (entry.getReplaceParent() && entry.getReplaceParent() > 0) {
@@ -107,10 +109,10 @@ export class SidepanelTabChat extends SidepanelTab {
 
                 // add replaceable trigger
                 for (const element of container.querySelectorAll('.replaceable')) {
-                    element.onclick = () => {
+                    element.addEventListener('click', () => {
                         const msg = new SendChatMessage('/trigger ' + entry.getID() + ' ' + element.id);
                         MessageService.send(msg);
-                    };
+                    });
                 }
 
                 // add timestamp (with hover and auto update)
@@ -123,6 +125,7 @@ export class SidepanelTabChat extends SidepanelTab {
                 timestampHover.className = 'onhover';
                 timestampP.appendChild(timestampHover);
 
+                // @ts-ignore
                 const unix = dayjs.unix(entry.getTime());
                 timestampText.innerHTML = unix.fromNow();
                 timestampHover.innerHTML = unix.format('lll');
@@ -145,6 +148,7 @@ export class SidepanelTabChat extends SidepanelTab {
 
     scheduleUpdate(timestampText, entry, unix) {
         // determine wait time (a second when below a minute ago, a minute when below one hour, one hour otherwise)
+        // @ts-ignore
         var ago = dayjs.duration(dayjs().diff(unix)).as('seconds');
         var time = (ago < 60 ? 1 : (ago < 60 * 60 ? 60 : 60 * 60)) * 1000;
 

@@ -1,7 +1,9 @@
+// @ts-check
 import { getDefinitions } from '../definitions.js';
 import { Entity } from '../common.js';
 import { Events } from '../events.js';
 
+//TODO: extract to own file
 export class EntityManager {
     #name;
     #type;

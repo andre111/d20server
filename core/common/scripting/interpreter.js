@@ -1,3 +1,4 @@
+// @ts-check
 import { Type } from '../constants.js';
 import { performDiceRolls } from './dice.js';
 import { Environment } from './environment.js';
@@ -318,7 +319,7 @@ export class Interpreter extends Visitor {
                     break;
                 //TODO: add support for other value types
                 default:
-                    throw new RuntimeError(get.name, 'Cannot set property of type ' + type);
+                    throw new RuntimeError(set.name, 'Cannot set property of type ' + type);
             }
 
             // notify scripting system of entity modification

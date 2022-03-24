@@ -1,3 +1,4 @@
+// @ts-check
 export const DefinitionUtils = {
     getExtensionPointForProperty: function (definition, name) {
         for (var extensionPoint of definition.extensionPoints) {

@@ -1,3 +1,4 @@
+// @ts-check
 import { CanvasEntityRenderer } from '../canvas-entityrenderer.js';
 import { TokenRenderer } from '../../renderer/token-renderer.js';
 

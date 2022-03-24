@@ -1,3 +1,4 @@
+// @ts-check
 import { FILE_TYPE_IMAGE, getFileType } from '../../../../common/util/datautil.js';
 import { FileMenu } from './file-menu.js';
 

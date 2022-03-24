@@ -1,3 +1,4 @@
+// @ts-check
 import { CanvasWindowEditEntity } from './canvas-window-edit-entity.js';
 import { ImagePropertyEditor } from '../../gui/property-editor/special/image-property-editor.js';
 import { MultiLineStringPropertyEditor } from '../../gui/property-editor/special/multi-line-property-editor.js';

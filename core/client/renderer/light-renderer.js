@@ -1,3 +1,4 @@
+// @ts-check
 import { MapUtils } from '../util/maputil.js';
 import { RenderUtils } from '../util/renderutil.js';
 import { FOWRenderer } from './fow-renderer.js';
@@ -9,6 +10,7 @@ import { IntMathUtils } from '../../common/util/mathutil.js';
 import { TokenUtil } from '../../common/util/tokenutil.js';
 import { Events } from '../../common/events.js';
 
+// @ts-ignore
 let { applyToPoint } = window.TransformationMatrix;
 
 class LightWallCache {

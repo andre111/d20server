@@ -1,3 +1,4 @@
+// @ts-check
 import { Connection } from '../connection.js';
 import { ActionCommand, AddEntities, ChangeConfig, ChatEntries, ClearEntities, EnterGame, EnterMap, EntityLoading, ModuleDefinitions, PlayEffect, PlayerList, RemoveEntity, ResponseFail, ResponseOk, SendNotification, ServerDefinitions, UpdateEntityProperties } from '../../common/messages.js';
 import { Events } from '../../common/events.js';

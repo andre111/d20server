@@ -1,3 +1,4 @@
+// @ts-check
 export class Command {
     #name;
     #aliases;

@@ -1,3 +1,4 @@
+// @ts-check
 import { PropertyEditor } from './property-editor.js';
 import { Type } from '../../../common/constants.js';
 
@@ -18,6 +19,8 @@ export class BooleanPropertyEditor extends PropertyEditor {
         if (label) this.addLabel(label);
 
         this.checkBox.onclick = () => {
+            // @ts-ignore
+            //TODO: the disabled property does not officially exist -> it just currently gets set anyways
             if (this.checkBox.disabled) return;
 
             this.checked = !this.checked;

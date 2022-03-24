@@ -1,3 +1,4 @@
+// @ts-check
 export class IDProvider {
     next() { throw new Error('Cannot call abstract function'); }
 }
