@@ -22,7 +22,7 @@ export class CanvasWindowSettings extends CanvasWindow {
         for (const page of Settings.pages) {
             // create tab panel
             const panel = document.createElement('div');
-            panel.name = I18N.get('settings.page.' + page.internalName, page.displayName);
+            panel.dataset.name = I18N.get('settings.page.' + page.internalName, page.displayName);
             panel.className = 'edit-window-area'; //TODO: generalize this css class + move the code below to css
             panel.style.width = 'auto';
             panel.style.height = 'auto';
