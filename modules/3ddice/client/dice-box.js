@@ -496,7 +496,7 @@ export class DiceBox {
 
 		dicemesh.notation = vectordata;
 		dicemesh.result = [];
-		dicemesh.forcedResult = dicedata.result;
+		dicemesh.forcedResult = dicedata.value;
 		dicemesh.startAtIteration = dicedata.startAtIteration;
 		dicemesh.stopped = 0;
 		dicemesh.castShadow = this.shadows;
@@ -730,9 +730,8 @@ export class DiceBox {
 
 			this.rolling = false;
 
-			if (this.callback) this.callback(this.throws);
+			if (this.callback) this.callback();
 			this.callback = null;
-			this.throws = null;
 			if (!this.animatedDiceDetected)
 				this.shouldUpdateOnFrame = false;
 		}
@@ -843,7 +842,6 @@ export class DiceBox {
 		this.rolling = true;
 		this.last_time = 0;
 		this.callback = callback;
-		this.throws = throws;
 		this.shouldUpdateOnFrame = true;
 	}
 }

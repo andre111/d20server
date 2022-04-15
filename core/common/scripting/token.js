@@ -1,4 +1,8 @@
 // @ts-check
+
+/**
+ * Represents a single token created by the scanner and used throughout the scripting system.
+ */
 export class Token {
     #type;
     #lexeme;
@@ -8,6 +12,13 @@ export class Token {
     #column;
     #error;
 
+    /**
+     * @param {Symbol} type the type of the token
+     * @param {string} lexeme the source code representation of this token
+     * @param {string | number} literal the literal value of this token
+     * @param {number} line the source line location of this token
+     * @param {number} column the source column location of this token
+     */
     constructor(type, lexeme, literal, line, column) {
         this.#type = type;
         this.#lexeme = lexeme;
@@ -15,7 +26,7 @@ export class Token {
 
         this.#line = line;
         this.#column = column;
-        this.#error = false;
+        this.#error = '';
     }
 
     get type() {
@@ -76,6 +87,7 @@ export const GREATER = Symbol('operator');
 export const GREATER_EQUAL = Symbol('operator');
 export const LESS = Symbol('operator');
 export const LESS_EQUAL = Symbol('operator');
+/** @typedef {BANG_EQUAL | EQUAL_EQUAL | GREATER | GREATER_EQUAL | LESS | LESS_EQUAL} COMPARISON */
 
 // literals
 export const IDENTIFIER = Symbol('identifier');

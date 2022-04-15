@@ -1,6 +1,10 @@
 // @ts-check
+import { Scripting } from './scripting.js';
 import { BANG, BANG_EQUAL, COMMA, COMMENT, DICE, DOT, EOF, EQUAL, EQUAL_EQUAL, GREATER, GREATER_EQUAL, IDENTIFIER, KEYWORDS, LEFT_BRACE, LEFT_PAREN, LEFT_SQUARE, LESS, LESS_EQUAL, MINUS, NEWLINE, NUMBER, PLUS, RIGHT_BRACE, RIGHT_PAREN, RIGHT_SQUARE, SEMICOLON, SLASH, STAR, STRING, Token, UNKNOWN, WHITESPACE } from './token.js';
 
+/**
+ * Scanner converting a source string into a list of {@link Token}s.
+ */
 export class Scanner {
     #scripting
     #source;
@@ -13,8 +17,18 @@ export class Scanner {
     #column = 0;
     #startColumn = 0;
 
+    /** @type {Token[]} */
     #tokens;
 
+    /**
+     * Scannes the provided source and builds a list of {@link Token}s.
+     * Reports encountered errors to the provided {@link Scripting} environment.
+     * The final list of tokens can be accessed using the {@link tokens} property.
+     * 
+     * @param {Scripting} scripting the {@link Scripting} environment
+     * @param {string} source the script source string
+     * @param {boolean} keepAll flag specifying whether to keep comments/whitespace/unknown tokens, used for more detailed error reporting, default false
+     */
     constructor(scripting, source, keepAll = false) {
         this.#scripting = scripting;
         this.#source = source;
@@ -24,6 +38,9 @@ export class Scanner {
         this.#scanTokens();
     }
 
+    /**
+     * Scans all tokens from the source.
+     */
     #scanTokens() {
         while (!this.#isAtEOF()) {
             this.#start = this.#current;
@@ -34,6 +51,9 @@ export class Scanner {
         this.#addToken(EOF, '', '<EOF>');
     }
 
+    /**
+     * Scans and adds a single token.
+     */
     #scanToken() {
         const c = this.#advance();
         switch (c) {
@@ -93,6 +113,11 @@ export class Scanner {
         }
     }
 
+    /**
+     * Scans and adds a STRING literal token.
+     * Supports basic escape sequences: \\ and \".
+     * Expects the leading " to be already scanned/skipped.
+     */
     #string() {
         var literal = '';
         while (this.#peek() != '"' && this.#peek() != '\n' && !this.#isAtEOF()) {
@@ -119,6 +144,11 @@ export class Scanner {
         this.#addToken(STRING, literal);
     }
 
+    /**
+     * Scans and adds a NUMBER literal token. 
+     * Supports an optional fractional part.
+     * Expects the leading digit to be already scanned/skipped.
+     */
     #number() {
         while (this.#isDigit(this.#peek())) this.#advance();
 
@@ -131,6 +161,10 @@ export class Scanner {
         this.#addToken(NUMBER, Number(this.#source.substring(this.#start, this.#current)));
     }
 
+    /**
+     * Scans and adds an identifier (or DICE token) starting from the current location.
+     * Expects the leading character to be already scanned/skipped.
+     */
     #identifier() {
         // ugly hack to make dice work
         if (this.#isParsingDiceIdentifier()) {
@@ -147,11 +181,24 @@ export class Scanner {
         this.#addToken(type);
     }
 
+    /**
+     * Returns the current character and advances to the next AFTERWARDS.
+     * Does NOT perform range checking.
+     * 
+     * @returns {string}
+     */
     #advance() {
         this.#column++;
         return this.#source[this.#current++];
     }
 
+    /**
+     * Checks if the current character matches the expected value.
+     * If true advances to the next character.
+     * 
+     * @param {string} expected the expected value
+     * @returns {boolean} true when sucessfully matched and advanced, false otherwise
+     */
     #match(expected) {
         if (this.#isAtEOF()) return false;
         if (this.#source[this.#current] != expected) return false;
@@ -161,37 +208,73 @@ export class Scanner {
         return true;
     }
 
+    /**
+     * Returns the current character.
+     * @returns {string} the current character or \0 if at eof
+     */
     #peek() {
         if (this.#isAtEOF()) return '\0';
         return this.#source[this.#current];
     }
 
+    /**
+     * Returns the next character.
+     * @returns {string} the next character or \0 if at eof
+     */
     #peekNext() {
         if (this.#current + 1 >= this.#source.length) return '\0';
         return this.#source[this.#current + 1];
     }
 
-    #addToken(type, literal, lexeme = '') {
+    /**
+     * Adds a new token to the list of parsed tokens.
+     * @param {Symbol} type the type of this token, refer to token.js for possible values
+     * @param {string | number} literal the literal value of this token, optional
+     * @param {string} lexeme the source string representing this token, will be derived from start and current positions if not specified
+     */
+    #addToken(type, literal = null, lexeme = '') {
         lexeme = lexeme || this.#source.substring(this.#start, this.#current);
         this.#tokens.push(new Token(type, lexeme, literal, this.#line, this.#startColumn));
     }
 
+    /**
+     * @returns {boolean} true if at eof, false otherwise
+     */
     #isAtEOF() {
         return this.#current >= this.#source.length;
     }
 
+    /**
+     * @param {string} c the character to test
+     * @returns {boolean} true if the character is a digit, false otherwise
+     */
     #isDigit(c) {
         return c >= '0' && c <= '9';
     }
 
+    /**
+     * @param {string} c the character to test
+     * @returns {boolean} true if the character matches [a-zA-z_], false otherwise
+     */
     #isAlpha(c) {
         return (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') || c == '_';
     }
 
+    /**
+     * @param {string} c the character to test
+     * @returns {boolean} true if isAlpha(c) or isDigit(c) is true, false otherwise
+     */
     #isAlphaNumeric(c) {
         return this.#isAlpha(c) || this.#isDigit(c);
     }
 
+    /**
+     * Checks if the currently scanned identifier should actually be a DICE token.
+     * TODO: This is not the correct way to do this, as it breaks identifier name definitions (names starting with d<digit> cannot be used).
+     * But for now this is a required oddity to make dice expressions work.
+     * 
+     * @returns {boolean} true if the currently scanned identifier should actually be a DICE token, false otherwise
+     */
     #isParsingDiceIdentifier() {
         //TODO: this is a really ugly part of an otherwise nice scanner/parser, SEE IF IT CAN BE REPLACED WITH A GOOD SOLUTION
         // ugly hack to detect if identifier is actually dice operation
@@ -205,6 +288,7 @@ export class Scanner {
         return this.#isDigit(this.#peek()); // case 2: 'd[digit]' -> dice operator
     }
 
+    /** the list of scanned tokens */
     get tokens() {
         return this.#tokens;
     }

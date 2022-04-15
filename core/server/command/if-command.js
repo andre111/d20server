@@ -16,7 +16,7 @@ export class IfCommand extends Command {
     execute(profile, args) {
         // parse components
         const split = splitArguments(args, 2);
-        if (split.length < 2) throw new Error(I18N.get('commands.error.arguments', 'Wrong argument count: %0', '<expression> ...'));
+        if (split.length < 2) throw new Error(I18N.get('commands.error.arguments', 'Wrong argument count: %0', '<condition:expression> ...'));
 
         const expression = split[0];
         const message = split[1];

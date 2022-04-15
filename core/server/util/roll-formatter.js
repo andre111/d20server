@@ -32,8 +32,8 @@ export class RollFormatter {
         var hadCriticalFailure = false;
         var hadCriticalSuccess = false;
         for (const roll of diceRolls) {
-            if (roll.cf) hadCriticalFailure = true;
-            if (roll.cs) hadCriticalSuccess = true;
+            if (roll.criticalFailure) hadCriticalFailure = true;
+            if (roll.criticalSuccess) hadCriticalSuccess = true;
         }
 
         // color format

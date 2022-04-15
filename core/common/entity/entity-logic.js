@@ -33,7 +33,7 @@ function applyUpdateRules(entity, updateRules, changedProperties) {
 
             const result = SCRIPT.evalExpression(expression, null, entity);
             SCRIPT.throwIfErrored();
-            if (result.type != Type.DOUBLE) throw new Error('Updated rule evaluated to unexpected type: expected DOUBLE got ' + result.type);
+            if (result.type != Type.DOUBLE) throw new Error('Update rule evaluated to unexpected type: expected DOUBLE got ' + result.type);
 
             const value = result.value;
             switch (entity.getPropertyType(ruleDef.property)) {

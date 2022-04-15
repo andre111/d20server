@@ -1,6 +1,6 @@
 // @ts-check
 
-export const Access = {
+export const Access = Object.freeze({
     EVERYONE: 'EVERYONE',
     CONTROLLING_PLAYER: 'CONTROLLING_PLAYER',
     GM: 'GM',
@@ -13,24 +13,24 @@ export const Access = {
         else if (required == Access.CONTROLLING_PLAYER) return has == Access.SYSTEM || has == Access.GM || has == Access.CONTROLLING_PLAYER;
         else return true;
     }
-}
+});
 
-export const Effect = {
+export const Effect = Object.freeze({
     NONE: 'NONE',
     FOG: 'FOG',
     RAIN_LIGHT: 'RAIN_LIGHT',
     RAIN_HEAVY: 'RAIN_HEAVY',
     RAIN_STORM: 'RAIN_STORM',
     SNOW: 'SNOW'
-}
+});
 
-export const Layer = {
+export const Layer = Object.freeze({
     BACKGROUND: 'BACKGROUND',
     MAIN: 'MAIN',
     GMOVERLAY: 'GMOVERLAY'
-}
+});
 
-export const Light = {
+export const Light = Object.freeze({
     DARK: 'DARK',
     DIM: 'DIM',
     BRIGHT: 'BRIGHT',
@@ -41,9 +41,9 @@ export const Light = {
         else if (required == Light.DIM) return has == Light.DARK;
         else if (required == Light.BRIGHT) return has == Light.DARK || has == Light.DIM;
     }
-}
+});
 
-export const Type = {
+export const Type = Object.freeze({
     STRING: 'STRING',
     LONG: 'LONG',
     BOOLEAN: 'BOOLEAN',
@@ -62,9 +62,9 @@ export const Type = {
     FUNCTION: 'FUNCTION',
     PLAYER: 'PLAYER',
     NULL: 'NULL'
-}
+});
 
-export const Role = {
+export const Role = Object.freeze({
     DEFAULT: 'DEFAULT',
     GM: 'GM'
-}
+});

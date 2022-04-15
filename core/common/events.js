@@ -2,6 +2,7 @@
 import { EventListener } from './event-listener.js';
 import { Event } from './event.js';
 import { isString } from './util/stringutil.js';
+/** @typedef {import('./event-listener.js').EventCallback} EventCallback */
 
 /**
  * Provides static methods for handling events with custom data.
@@ -74,12 +75,3 @@ export class Events {
         return event;
     }
 }
-
-//TODO: this is duplicated from event-listener.js, see if there is a better way of accessing a custom defined type from multiple modules
-/**
- * Callback for implementing an event listener.
- * See {@link Events.on} for how to register a listener.
- * @callback EventCallback
- * @param {Event} event the event object
- * @returns {void}
- */
