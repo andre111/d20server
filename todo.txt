@@ -1,4 +1,6 @@
 //TODO: current plans:
+// server cannot start without existing data folder and config.json -> FIX IT
+// create a system for gms to create (and delete?) further accounts?
 // add motd (+lockout notice and maybe more? - maybe allow customizing the backgrounds) to login screen
 // the compendium "Schablonen" entries are missing the ones from "Anhang 2" in the mhbs (note: some books contain refreshed versions of the olders + ignore changes in mhb3)
 // replace icons with svgs, so color schemes can affect them
