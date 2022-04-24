@@ -2,7 +2,7 @@
 import express from 'express';
 import fs from 'fs-extra';
 import path from 'path';
-import gm from 'gm';
+import sharp from 'sharp';
 import multer from 'multer';
 
 import { PARAMETERS } from '../parameters.js';
@@ -184,22 +184,18 @@ export class FileManager {
 
         /* Generate thumbnail */
         router.get('/generatethumb', function (req, res) {
-            res.setHeader('content-type', 'image/png');
+            res.setHeader('content-type', 'image/webp');
 
-            const width = Number(req.query.width) || 120;
-            const height = Number(req.query.height) || 120;
+            const width = Math.max(0, Math.min(Number(req.query.width) || 120, 120));
+            const height = Math.max(0, Math.min(Number(req.query.height) || 120, 120));
 
             // create and validate path
             const filePath = path.join(serverRoot, String(req.query.f));
             if (!validatePath(filePath)) { res.send({ res: 'error', msg: 'invalid path' }); return; }
 
-            // call graphicsmagick (TODO: replace with no external dependency)
-            gm(filePath)
-                .resize(width, height, '^')
-                .gravity('Center')
-                .crop(width, height)
-                .stream('png')
-                .pipe(res);
+            // generate thumbnail (TODO: on the fly operation simply seems to be to expensive)
+            //TODO: this still sometimes hangs for a very long time
+            sharp(filePath).resize(width, height).webp().pipe(res);
         });
 
         /* Upload files */
