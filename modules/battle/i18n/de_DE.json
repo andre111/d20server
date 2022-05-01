@@ -4,7 +4,7 @@
     "battle.nextturn": "Nächster Zug",
     "battle.notification.ended": "Kampf beendet!",
     "battle.notification.round": "Runde %0",
-    "battle.notification.started": "kampf begonnen!",
+    "battle.notification.started": "Kampf begonnen!",
     "battle.notification.turn": "%0s Zug",
     "command.battle.error.nomap": "Kampfbefehle können nur auf einer Karte ausgeführt werden",
     "command.battle.error.notoken": "Dieser Kampfbefehl kann nur mit ausgewähltem Token ausgeführt werden",
