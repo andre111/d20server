@@ -85,24 +85,24 @@ class DirectoryNode {
         this.expanded = expanded;
     }
 
-    search(searchText) {
+    search(search) {
         // search children and track match state
         var hadMatch = false;
         for (const directory of this.directories) {
-            hadMatch = directory.search(searchText) || hadMatch;
+            hadMatch = directory.search(search) || hadMatch;
         }
         for (const entry of this.entries) {
-            hadMatch = entry.search(searchText) || hadMatch;
+            hadMatch = entry.search(search) || hadMatch;
         }
 
         // update gui
         if (hadMatch) {
             this.elementStyle.display = 'list-item';
-            if (searchText) this.setExpanded(true);
+            if (search) this.setExpanded(true);
         } else {
             this.elementStyle.display = 'none';
         }
-        if (!searchText) this.setExpanded(false);
+        if (!search) this.setExpanded(false);
         return hadMatch;
     }
 }
@@ -166,20 +166,31 @@ class EntryNode {
         return this.element;
     }
 
-    search(searchText) {
+    search(search) {
         // perform search
         var hadMatch = false;
-        if (searchText.startsWith('?')) {
+        if (search == null) {
+            hadMatch = true;
+        } else if (search.tags.length > 0) {
             // tag based search
-            if (searchText.length > 1) {
-                searchText = searchText.substring(1);
+            var allTagsMatched = true;
+            for (const searchTag of search.tags) {
+                var tagMatched = false;
                 for (const tag of this.tags) {
-                    if (tag.startsWith(searchText)) hadMatch = true;
+                    if (tag.startsWith(searchTag)) {
+                        tagMatched = true;
+                        break;
+                    }
+                }
+                if (!tagMatched) {
+                    allTagsMatched = false;
+                    break;
                 }
             }
+            hadMatch = allTagsMatched;
         } else {
             // name based search
-            hadMatch = this.name.toLowerCase().includes(searchText);
+            hadMatch = this.name.toLowerCase().includes(search.text);
         }
 
         // update gui
@@ -200,6 +211,28 @@ class EntryNode {
 
     _onDeselect() {
         this.divContainer.className = '';
+    }
+}
+
+class Search {
+    #text;
+    #tags;
+
+    constructor(search) {
+        this.#text = search;
+        if (search.startsWith('?') && search.length > 1) {
+            this.#tags = search.substring(1).split('+');
+        } else {
+            this.#tags = [];
+        }
+    }
+
+    get text() {
+        return this.#text;
+    }
+
+    get tags() {
+        return this.#tags;
     }
 }
 
@@ -337,7 +370,8 @@ export class SearchableIDTree {
     }
 
     _onFilter() {
-        this.#rootDirectory.search(this.#filter.value.toLowerCase());
+        const search = this.#filter.value ? new Search(this.#filter.value.toLowerCase()) : null;
+        this.#rootDirectory.search(search);
     }
 
     _onSelect(entry, confirm = false) {
