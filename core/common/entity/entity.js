@@ -415,10 +415,12 @@ export class Entity {
     }
 
     canView(profile) {
+        if (profile == null) return true; // profile = null -> SYSTEM level access -> always true
         return EntityManagers.get(this.getManager()).canView(profile) && Access.matches(this.getViewAccess(), this.getAccessLevel(profile));
     }
 
     canEdit(profile) {
+        if (profile == null) return true; // profile = null -> SYSTEM level access -> always true
         return EntityManagers.get(this.getManager()).canView(profile) && Access.matches(this.getEditAccess(), this.getAccessLevel(profile));
     }
 

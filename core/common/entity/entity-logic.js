@@ -56,6 +56,7 @@ function applyUpdateRules(entity, updateRules, changedProperties) {
             //TODO: how can I report where the old error happended?
             //throw new Error(`Error in UpdateRule: ${error.message}`);
             console.log(`Error in UpdateRule: ${error.message}`);
+            console.log(error);
             throw error;
         }
     }
