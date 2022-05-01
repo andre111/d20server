@@ -329,6 +329,11 @@ export class Interpreter extends Visitor {
 
             // check access
             if (!this.#scripting.checkReadAccess(this.#profile, entity, propertyName)) {
+                // special case: check property existance
+                if (entity && !entity.has(propertyName)) {
+                    throw new RuntimeError(get.name, 'Unknown property');
+                }
+
                 throw new RuntimeError(get.name, 'Read access denied');
             }
 
@@ -411,8 +416,13 @@ export class Interpreter extends Visitor {
             const propertyName = set.name.lexeme;
 
             // check access
-            if (!this.#scripting.checkReadAccess(this.#profile, entity, propertyName)) {
-                throw new RuntimeError(set.name, 'Read access denied');
+            if (!this.#scripting.checkWriteAccess(this.#profile, entity, propertyName)) {
+                // special case: check property existance
+                if (entity && !entity.has(propertyName)) {
+                    throw new RuntimeError(set.name, 'Unknown property');
+                }
+
+                throw new RuntimeError(set.name, 'Write access denied');
             }
 
             // evaluate value, check type and set
