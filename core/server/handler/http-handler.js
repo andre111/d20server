@@ -4,7 +4,8 @@ import path from 'path';
 import morgan from 'morgan';
 import compression from 'compression';
 import fs from 'fs-extra';
-import spdy from 'spdy';
+import http from 'http';
+import https from 'https';
 
 import { ModuleService } from '../service/module-service.js';
 import { buildLangJson, getLangJson } from './lang-json.js';
@@ -24,14 +25,11 @@ function createBaseServer(server) {
         options.key = fs.readFileSync(privateKeyPath);
         options.cert = fs.readFileSync(certificatePath);
         isHTTPS = true;
-    } else {
-        options.spdy = {
-            plain: true,
-            ssl: false
-        };
+        console.log('Starting secure https server...');
+        return https.createServer(options, server);
     }
-    console.log('Starting server...');
-    return spdy.createServer(options, server);
+    console.log('Starting http server...');
+    return http.createServer(server);
 }
 
 export class HttpHandler {
