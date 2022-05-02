@@ -22,7 +22,7 @@ export class CanvasWindowEditEntity extends CanvasWindow {
     #editorList;
 
     constructor(parent, reference) {
-        super(parent, I18N.get('window.edit.title', 'Edit %0', reference.getDefinition().displayName), true);
+        super(parent, I18N.get('window.edit.title', 'Edit %0', (reference.getName() ? reference.getName() : reference.getDefinition().displayName)), true);
 
         this.#reference = new EntityReference(reference.getBackingEntity());
         this.#editorList = new EditorList(this.#reference, this);
