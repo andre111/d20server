@@ -20,9 +20,9 @@ function getDirectories(srcpath, response) {
     };
     response.push(info);
 
-    fs.readdirSync(FileManager.serverRoot + srcpath).map(file => {
-        var pathDir = path.join(srcpath, file);
-        if (fs.statSync(FileManager.serverRoot + pathDir).isDirectory()) {
+    fs.readdirSync(FileManager.serverRoot + srcpath, { withFileTypes: true }).map(file => {
+        var pathDir = path.join(srcpath, file.name);
+        if (file.isDirectory()) {
             if (srcpath && srcpath != '/') info.d++;
             getDirectories(pathDir, response);
         } else {
@@ -194,7 +194,6 @@ export class FileManager {
             if (!validatePath(filePath)) { res.send({ res: 'error', msg: 'invalid path' }); return; }
 
             // generate thumbnail (TODO: on the fly operation simply seems to be to expensive)
-            //TODO: this still sometimes hangs for a very long time
             sharp(filePath).resize(width, height).webp().pipe(res);
         });
 
