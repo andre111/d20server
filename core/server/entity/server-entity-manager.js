@@ -1,7 +1,7 @@
 // @ts-check
 import { EntityManager } from '../../common/entity/entity-managers.js';
 import { Entity } from '../../common/common.js';
-import { Access } from '../../common/constants.js';
+import { Access, Role } from '../../common/constants.js';
 import { AddEntities, ClearEntities, RemoveEntity, UpdateEntityProperties } from '../../common/messages.js';
 import { MessageService } from '../service/message-service.js';
 import { UserService } from '../service/user-service.js';
@@ -192,6 +192,8 @@ export class ServerEntityManager extends EntityManager {
     }
 
     canView(profile) {
+        if (profile.role == Role.SYSTEM) return true;
+
         // global always true, contained return parentEntity.canView(profile)
         if (this.parentEntity) {
             // special case: maps -> only sync content of current map

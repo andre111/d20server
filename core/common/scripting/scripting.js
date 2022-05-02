@@ -1,5 +1,5 @@
 // @ts-check
-import { Type } from '../constants.js';
+import { Role, Type } from '../constants.js';
 import { EntityManagers } from '../entity/entity-managers.js';
 import { EntityReference } from '../entity/entity-reference.js';
 import { Entity } from '../entity/entity.js';
@@ -87,11 +87,11 @@ export class Scripting {
      * See {@link errors} and {@link throwIfErrored} to check for potential errors during execution.
      * Resets stored errors before operation.
      * @param {string} source the source code
-     * @param {Profile} profile the executing profile, may be null for system level operation, default null
+     * @param {Profile} profile the executing profile
      * @param {Entity} self the Entity or EntityReference representing the 'self' entity
      * @param {(interpreter: Interpreter) => void} interpreterCallback callback called with the {@link Interpreter} object before interpretation
      */
-    interpret(source, profile = null, self = null, interpreterCallback = null) {
+    interpret(source, profile, self = null, interpreterCallback = null) {
         const program = this.parse(source);
         this.execute(program, profile, self, interpreterCallback);
     }
@@ -114,11 +114,11 @@ export class Scripting {
      * Executes a previously parsed program.
      * Resets stored errors and dice rolls before operation, keeping the ones from the cached program object.
      * @param {CachedProgram} program the cached program, created by {@link parse}
-     * @param {Profile} profile the executing profile, may be null for system level operation, default null
+     * @param {Profile} profile the executing profile
      * @param {Entity} self the Entity or EntityReference representing the 'self' entity
      * @param {(interpreter: Interpreter) => void} interpreterCallback callback called with the {@link Interpreter} object before interpretation
      */
-    execute(program, profile = null, self = null, interpreterCallback = null) {
+    execute(program, profile, self = null, interpreterCallback = null) {
         // reset state
         this.#errors = [];
         this.#diceRolls = [];
@@ -150,12 +150,12 @@ export class Scripting {
      * Parses and interprets the provided expression.
      * Resets stored errors and dice rolls before operation.
      * @param {string} source the expression
-     * @param {Profile} profile the executing profile, may be null for system level operation, default null
+     * @param {Profile} profile the executing profile
      * @param {Entity} self the Entity or EntityReference representing the 'self' entity
      * @param {(interpreter: Interpreter) => void} interpreterCallback callback called with the {@link Interpreter} object before interpretation
      * @returns {Value} the resulting {@link Value} on successful execution, or null if any errors have been encountered, see {@link errors} and {@link throwIfErrored}
      */
-    interpretExpression(source, profile = null, self = null, interpreterCallback = null) {
+    interpretExpression(source, profile, self = null, interpreterCallback = null) {
         const expression = this.parseExpression(source);
         return this.evalExpression(expression, profile, self, interpreterCallback);
     }
@@ -177,11 +177,11 @@ export class Scripting {
      * Evaluates a previously parsed expression.
      * Resets stored errors and dice rolls before operation, keeping the ones from the cached expression object.
      * @param {CachedExpression} expression the cached expression, created by {@link parseExpression}
-     * @param {Profile} profile the executing profile, may be null for system level operation, default null
+     * @param {Profile} profile the executing profile
      * @param {Entity} self the Entity or EntityReference representing the 'self' entity
      * @param {(interpreter: Interpreter) => void} interpreterCallback callback called with the {@link Interpreter} object before interpretation
      */
-    evalExpression(expression, profile = null, self = null, interpreterCallback = null) {
+    evalExpression(expression, profile, self = null, interpreterCallback = null) {
         // reset state
         this.#errors = [];
         this.#diceRolls = [];
@@ -271,11 +271,11 @@ export class Scripting {
      * Defines global functions, player/self/sToken/sActor/... and other global variables.
      * Afterwards defines the global variables as specified in the scripting environment, potentially overriding earlier values.
      * Finally calls the 'createInterpreter' event.
-     * @param {Profile} profile the executing profile, may be null for system level operation, default null
+     * @param {Profile} profile the executing profile
      * @param {Entity} self the Entity or EntityReference representing the 'self' entity
      * @returns {Interpreter} the created Interpreter
      */
-    #createInterpreter(profile = null, self = null) {
+    #createInterpreter(profile, self = null) {
         const interpreter = new Interpreter(this, profile);
 
         // define global functions (TODO: maybe just move this to variable defintions in the constructor)
@@ -291,7 +291,7 @@ export class Scripting {
         interpreter.defineGlobal('list', BUILTIN_LIST);
 
         // define player, sToken, sActor, cMap and self variables when applicable
-        if (profile) {
+        if (profile && profile.role != Role.SYSTEM) {
             interpreter.defineGlobal('player', new Value(profile, Type.PLAYER, ''));
 
             const sToken = profile.getSelectedToken(true);

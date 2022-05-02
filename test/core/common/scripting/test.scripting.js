@@ -1,5 +1,6 @@
 import { strict as assert } from 'assert';
 import { Type } from '../../../../core/common/constants.js';
+import { Profile } from '../../../../core/common/profile.js';
 import { Scripting } from '../../../../core/common/scripting/scripting.js';
 import { Value } from '../../../../core/common/scripting/value.js';
 
@@ -43,7 +44,7 @@ describe('Scripting', function () {
                 var counterTwo = makeCounter();
                 print(counterTwo());
                 print(counter());
-            `);
+            `, Profile.SYSTEM);
         });
     });
 
@@ -51,14 +52,14 @@ describe('Scripting', function () {
         it('evaluates basic expressions to the expected value', function () {
             const scripting = new Scripting(false);
 
-            const result = scripting.interpretExpression('(3 * 2 + 5 - sqrt(25)) / min(1.5, 4)');
+            const result = scripting.interpretExpression('(3 * 2 + 5 - sqrt(25)) / min(1.5, 4)', Profile.SYSTEM);
             assert.equal(result.value, (3 * 2 + 5 - Math.sqrt(25)) / Math.min(1.5, 4));
         });
 
         it('evaluates dice expressions without errors', function () {
             const scripting = new Scripting(false);
 
-            const result = scripting.interpretExpression('1d20cs>=19r==1"fire"');
+            const result = scripting.interpretExpression('1d20cs>=19r==1"fire"', Profile.SYSTEM);
             assert.equal(result.type, Type.DOUBLE, 'Type of dice result is not DOUBLE');
             //TODO: check return value to be inside valid range
 
@@ -76,7 +77,7 @@ describe('Scripting', function () {
             // because otherwise the numbers are included in the identifier
             // scripting.interpretExpression('4d6dl1');
             // readd the above if this ever becomes possible again
-            scripting.interpretExpression('4d6dl(1)');
+            scripting.interpretExpression('4d6dl(1)', Profile.SYSTEM);
             scripting.throwIfErrored();
         });
 
@@ -84,19 +85,19 @@ describe('Scripting', function () {
             const scripting = new Scripting(false, false);
 
             // check many different kind of errors (with builtin throwIfErrored function)
-            assert.throws(() => { scripting.interpretExpression('a +- 2'); scripting.throwIfErrored(); });
-            assert.throws(() => { scripting.interpretExpression('a; 3'); scripting.throwIfErrored(); });
-            assert.throws(() => { scripting.interpretExpression('a + "test"'); scripting.throwIfErrored(); });
-            assert.throws(() => { scripting.interpretExpression('"test" - "string subtraction"'); scripting.throwIfErrored(); });
-            assert.throws(() => { scripting.interpretExpression('min(2)'); scripting.throwIfErrored(); });
-            assert.throws(() => { scripting.interpretExpression('min(2, 3'); scripting.throwIfErrored(); });
-            assert.throws(() => { scripting.interpretExpression('a = 2'); scripting.throwIfErrored(); });
-            assert.throws(() => { scripting.interpretExpression('(-3)d10'); scripting.throwIfErrored(); });
-            assert.throws(() => { scripting.interpretExpression('1d0'); scripting.throwIfErrored(); });
+            assert.throws(() => { scripting.interpretExpression('a +- 2', Profile.SYSTEM); scripting.throwIfErrored(); });
+            assert.throws(() => { scripting.interpretExpression('a; 3', Profile.SYSTEM); scripting.throwIfErrored(); });
+            assert.throws(() => { scripting.interpretExpression('a + "test"', Profile.SYSTEM); scripting.throwIfErrored(); });
+            assert.throws(() => { scripting.interpretExpression('"test" - "string subtraction"', Profile.SYSTEM); scripting.throwIfErrored(); });
+            assert.throws(() => { scripting.interpretExpression('min(2)', Profile.SYSTEM); scripting.throwIfErrored(); });
+            assert.throws(() => { scripting.interpretExpression('min(2, 3', Profile.SYSTEM); scripting.throwIfErrored(); });
+            assert.throws(() => { scripting.interpretExpression('a = 2', Profile.SYSTEM); scripting.throwIfErrored(); });
+            assert.throws(() => { scripting.interpretExpression('(-3)d10', Profile.SYSTEM); scripting.throwIfErrored(); });
+            assert.throws(() => { scripting.interpretExpression('1d0', Profile.SYSTEM); scripting.throwIfErrored(); });
             //TODO: add more test cases with different errors
 
             // also tests errors are available in the errors property
-            scripting.interpretExpression('12 * "test"');
+            scripting.interpretExpression('12 * "test"', Profile.SYSTEM);
             assert.equal(scripting.errors.length, 1, 'Unexpected number of errors reported');
         });
     });
@@ -107,14 +108,14 @@ describe('Scripting', function () {
 
             scripting.pushVariable('testa', new Value(1144185, Type.DOUBLE, ''));
             scripting.pushVariable('testb', new Value('AND', Type.STRING, ''));
-            assert.equal(scripting.interpretExpression('testa').value, 1144185);
-            assert.equal(scripting.interpretExpression('testb').value, 'AND');
+            assert.equal(scripting.interpretExpression('testa', Profile.SYSTEM).value, 1144185);
+            assert.equal(scripting.interpretExpression('testb', Profile.SYSTEM).value, 'AND');
 
             // 'override' an existing value + predefined function
             scripting.pushVariable('testa', new Value(-1, Type.DOUBLE, ''));
             scripting.pushVariable('min', new Value(42, Type.DOUBLE, ''));
-            assert.equal(scripting.interpretExpression('testa').value, -1);
-            assert.equal(scripting.interpretExpression('min').value, 42);
+            assert.equal(scripting.interpretExpression('testa', Profile.SYSTEM).value, -1);
+            assert.equal(scripting.interpretExpression('min', Profile.SYSTEM).value, 42);
         });
 
         it('throws an Error on invalid arguments', function () {
@@ -135,20 +136,20 @@ describe('Scripting', function () {
             scripting.pushVariable('testa', new Value(1144185, Type.DOUBLE, ''));
             scripting.pushVariable('testa', new Value(42, Type.DOUBLE, ''));
             scripting.popVariable('testa');
-            assert.equal(scripting.interpretExpression('testa').value, 1144185);
+            assert.equal(scripting.interpretExpression('testa', Profile.SYSTEM).value, 1144185);
 
             scripting.pushVariable('testa', new Value(0, Type.DOUBLE, ''));
             scripting.pushVariable('testa', new Value(1, Type.DOUBLE, ''));
             scripting.popVariable('testa');
-            assert.equal(scripting.interpretExpression('testa').value, 0);
+            assert.equal(scripting.interpretExpression('testa', Profile.SYSTEM).value, 0);
 
             // restore very first value
             scripting.popVariable('testa');
-            assert.equal(scripting.interpretExpression('testa').value, 1144185);
+            assert.equal(scripting.interpretExpression('testa', Profile.SYSTEM).value, 1144185);
 
             // remove last value -> undefined -> should error
             scripting.popVariable('testa');
-            assert.throws(() => { scripting.interpretExpression('testa'); scripting.throwIfErrored(); }, 'Variable did not correctly revert to being undefined');
+            assert.throws(() => { scripting.interpretExpression('testa', Profile.SYSTEM); scripting.throwIfErrored(); }, 'Variable did not correctly revert to being undefined');
         });
     });
 });

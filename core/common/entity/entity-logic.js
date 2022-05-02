@@ -1,6 +1,7 @@
 // @ts-check
 import { Type } from '../constants.js';
 import { Events } from '../events.js';
+import { Profile } from '../profile.js';
 import { Scripting } from '../scripting/scripting.js';
 import { TokenUtil } from '../util/tokenutil.js';
 
@@ -31,7 +32,7 @@ function applyUpdateRules(entity, updateRules, changedProperties) {
             }
             const expression = UPDATE_RULE_EXPR_CACHE.get(ruleDef.expression);
 
-            const result = SCRIPT.evalExpression(expression, null, entity);
+            const result = SCRIPT.evalExpression(expression, Profile.SYSTEM, entity);
             SCRIPT.throwIfErrored();
             if (result.type != Type.DOUBLE) throw new Error('Update rule evaluated to unexpected type: expected DOUBLE got ' + result.type);
 

@@ -6,6 +6,8 @@ import { EntityManagers } from './entity/entity-managers.js';
 import { ColorUtils } from './util/colorutil.js';
 
 export class Profile {
+    static SYSTEM = new Profile('', Role.SYSTEM, -1);
+
     id;
     username;
     role;
@@ -19,9 +21,10 @@ export class Profile {
     // TODO: these things should really be stored in a sepparate server only object!
     #selectedTokens;
 
-    constructor(username, role) {
+    constructor(username, role, id = null) {
         this.username = username;
         this.role = role;
+        this.id = id;
 
         this.color = ColorUtils.randomSaturatedColor();
 

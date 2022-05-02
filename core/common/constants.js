@@ -66,5 +66,6 @@ export const Type = Object.freeze({
 
 export const Role = Object.freeze({
     DEFAULT: 'DEFAULT',
-    GM: 'GM'
+    GM: 'GM',
+    SYSTEM: 'SYSTEM'
 });

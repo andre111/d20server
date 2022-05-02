@@ -403,7 +403,7 @@ export class Entity {
 
     getAccessLevel(profile) {
         var accessLevel = Access.EVERYONE;
-        if (!profile) accessLevel = Access.SYSTEM;
+        if (profile.role == Role.SYSTEM) accessLevel = Access.SYSTEM;
         else if (profile.role == Role.GM) accessLevel = Access.GM;
         else if (this.getControllingPlayers().includes(profile.id)) accessLevel = Access.CONTROLLING_PLAYER;
 
@@ -415,12 +415,10 @@ export class Entity {
     }
 
     canView(profile) {
-        if (profile == null) return true; // profile = null -> SYSTEM level access -> always true
         return EntityManagers.get(this.getManager()).canView(profile) && Access.matches(this.getViewAccess(), this.getAccessLevel(profile));
     }
 
     canEdit(profile) {
-        if (profile == null) return true; // profile = null -> SYSTEM level access -> always true
         return EntityManagers.get(this.getManager()).canView(profile) && Access.matches(this.getEditAccess(), this.getAccessLevel(profile));
     }
 

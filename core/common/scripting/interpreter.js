@@ -27,7 +27,7 @@ export class Interpreter extends Visitor {
 
     /**
      * @param {Scripting} scripting the {@link Scripting} environment
-     * @param {Profile} profile the executing {@link Profile}, or null to run at system level
+     * @param {Profile} profile the executing {@link Profile}
      */
     constructor(scripting, profile) {
         super();
@@ -47,7 +47,7 @@ export class Interpreter extends Visitor {
     }
 
     /**
-     * @returns the executing {@link Profile}, or null if running at system level
+     * @returns the executing {@link Profile}
      */
     getProfile() {
         return this.#profile;
