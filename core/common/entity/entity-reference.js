@@ -103,21 +103,21 @@ export class EntityReference extends Entity {
 
     getProperties() {
         // create new combined property map
-        const props = deepMerge(this.getBackingEntity().getProperties(), this.changedProperties);
+        const props = deepMerge(this.backingEntity.getProperties(), this.changedProperties);
         return props;
     }
 
     has(name) {
         if (!this.backingEntity) return false;
-        return this.getBackingEntity().has(name);
+        return super.has(name);
     }
 
     getInternal(name) {
         if (this.changedProperties[name]) return this.changedProperties[name];
-        return this.getBackingEntity().getInternal(name);
+        return this.backingEntity.getInternal(name);
     }
     setInternal(name, value) {
-        if (value === this.getBackingEntity().getInternal(name)) delete this.changedProperties[name];
+        if (value === this.backingEntity.getInternal(name)) delete this.changedProperties[name];
         else this.changedProperties[name] = value;
         this.onPropertyChange(name);
     }
@@ -188,7 +188,7 @@ export class EntityReference extends Entity {
     }
 
     getModifiedEntity() {
-        const modified = this.getBackingEntity().clone();
+        const modified = this.backingEntity.clone();
         modified.clonePropertiesFrom(this);
         return modified;
     }
@@ -204,15 +204,15 @@ export class EntityReference extends Entity {
     }
 
     isValid() {
-        const backingEntity = this.getBackingEntity();
+        const backingEntity = this.backingEntity;
         return backingEntity != null && backingEntity != undefined;
     }
 
     entityChanged(entity) {
         // update mouse offset
         if (entity.has('x') && entity.has('y')) {
-            const xdiff = entity.getLong('x') - this.getBackingEntity().getLong('x');
-            const ydiff = entity.getLong('y') - this.getBackingEntity().getLong('y');
+            const xdiff = entity.getLong('x') - this.backingEntity.getLong('x');
+            const ydiff = entity.getLong('y') - this.backingEntity.getLong('y');
             this.mouseOffsetX += xdiff;
             this.mouseOffsetY += ydiff;
         }
