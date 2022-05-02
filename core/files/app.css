@@ -1354,10 +1354,6 @@ div.chat-box-content th, div.chat-box-content td {
     flex: 0 0 90px;
     border-right: var(--border-separator);
 }
-.edit-attachment-content {
-    width: calc(100% - 8px);
-    height: calc(100% - 90px);
-}
 
 
 /* Compendium Edit Window */

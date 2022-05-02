@@ -11,6 +11,7 @@ export class PropertyEditor {
     #reloading = false;
     #changed = false;
     #changeListeners = [];
+    #reloadListeners = [];
 
     #window;
 
@@ -39,11 +40,16 @@ export class PropertyEditor {
         this.#changeListeners.push(listener);
     }
 
+    addReloadListener(listener) {
+        this.#reloadListeners.push(listener);
+    }
+
     //TODO: call onChange on changes, duh
     onChange() {
         if (this.#reloading) return;
         this.#changed = true;
 
+        // notify listeners
         for (const listener of this.#changeListeners) {
             listener();
         }
@@ -66,6 +72,11 @@ export class PropertyEditor {
         this.reloadValue(reference, this.name);
         this.#reloading = false;
         this.#changed = false;
+
+        // notify listeners
+        for (const listener of this.#reloadListeners) {
+            listener();
+        }
     }
 
     apply(reference, accessLevel) {

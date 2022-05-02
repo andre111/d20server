@@ -1,7 +1,7 @@
 // @ts-check
-import { ValueProviderDefault } from './value-provider-default.js';
+import { ValueProviderWithPath } from './value-provider-with-path.js';
 
-export class ValueProviderAttachment extends ValueProviderDefault {
+export class ValueProviderAttachment extends ValueProviderWithPath {
     constructor() {
         super('attachment');
     }

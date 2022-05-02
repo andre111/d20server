@@ -1,20 +1,21 @@
 // @ts-check
-import { CanvasWindowEditEntity } from './canvas-window-edit-entity.js';
-import { ImagePropertyEditor } from '../../gui/property-editor/special/image-property-editor.js';
-import { MultiLineStringPropertyEditor } from '../../gui/property-editor/special/multi-line-property-editor.js';
-import { HTMLStringPropertyEditor } from '../../gui/property-editor/special/html-string-property-editor.js';
-import { StringCodePropertyEditor } from '../../gui/property-editor/special/string-code-property-editor.js';
-import { I18N } from '../../../common/util/i18n.js';
-import { Tabs } from '../../gui/tabs.js';
+import { CanvasWindowEditEntity } from '../../../core/client/canvas/window/canvas-window-edit-entity.js';
+import { HTMLStringPropertyEditor } from '../../../core/client/gui/property-editor/special/html-string-property-editor.js';
+import { ImagePropertyEditor } from '../../../core/client/gui/property-editor/special/image-property-editor.js';
+import { MultiLineStringPropertyEditor } from '../../../core/client/gui/property-editor/special/multi-line-property-editor.js';
+import { StringCodePropertyEditor } from '../../../core/client/gui/property-editor/special/string-code-property-editor.js';
+import { StringPropertyEditor } from '../../../core/client/gui/property-editor/string-property-editor.js';
+import { Tabs } from '../../../core/client/gui/tabs.js';
+import { I18N } from '../../../core/common/util/i18n.js';
 
-export class CanvasWindowEditAttachment extends CanvasWindowEditEntity {
+export class CanvasWindowEditSpell extends CanvasWindowEditEntity {
     constructor(parent, reference) {
         super(parent, reference);
     }
 
     init() {
         const container = this.content;
-        container.className = 'edit-window-container edit-attachment-container flexcol';
+        container.className = 'edit-window-container edit-spell-container flexcol';
 
         // build content
         // Header
@@ -65,13 +66,45 @@ export class CanvasWindowEditAttachment extends CanvasWindowEditEntity {
         {
             const tab = document.createElement('div');
             tab.dataset.name = I18N.get('attachment.edit.tabs.description', 'Description');
-            tab.className = 'edit-window-area edit-window-full-area';
+            tab.className = 'edit-window-area edit-window-full-area edit-spell-content';
             tabs.appendChild(tab);
+
+            const row1 = document.createElement('div');
+            row1.className = 'edit-spell-row flexrow';
+            row1.appendChild(document.createTextNode('Schule: '));
+            row1.appendChild(this.createStringEditor('pf_school'));
+            row1.appendChild(document.createTextNode('Grad: '));
+            row1.appendChild(this.createStringEditor('pf_level'));
+            tab.append(row1);
+
+            const row2 = document.createElement('div');
+            row2.className = 'edit-spell-row flexrow';
+            row2.appendChild(document.createTextNode('Zeitaufwand: '));
+            row2.appendChild(this.createStringEditor('pf_castingTime'));
+            tab.append(row2);
+
+            const row3 = document.createElement('div');
+            row3.className = 'edit-spell-row flexrow';
+            row3.appendChild(document.createTextNode('Komponenten: '));
+            row3.appendChild(this.createStringEditor('pf_components'));
+            tab.append(row3);
+
+            const row4 = document.createElement('div');
+            row4.className = 'edit-spell-row flexrow';
+            row4.appendChild(document.createTextNode('Reichweite: '));
+            row4.appendChild(this.createStringEditor('pf_range'));
+            tab.append(row4);
+
+            tab.append(this.createHidingRow(['pf_target'], ['Ziel: ']));
+            tab.append(this.createHidingRow(['pf_effect'], ['Effekt: ']));
+            tab.append(this.createHidingRow(['pf_area'], ['Wirkungsbereich: ']));
+            tab.append(this.createHidingRow(['pf_duration'], ['Wirkungsdauer: ']));
+            tab.append(this.createHidingRow(['pf_save', 'pf_sr'], ['Rettungswurf: ', 'Zauberresistenz']));
 
             const editor = new HTMLStringPropertyEditor('descFull', '');
             editor.container.style.width = 'calc(100% - 10px)';
-            editor.container.style.height = 'calc(100% - 10px)';
             editor.container.style.margin = '5px';
+            editor.container.style.flexGrow = '1';
             tab.appendChild(editor.container);
             this.registerEditor(editor);
         }
@@ -106,5 +139,38 @@ export class CanvasWindowEditAttachment extends CanvasWindowEditEntity {
 
         Tabs.init(tabs);
         this.setDimensions(800 + 2, 600 + 35);
+    }
+
+    createHidingRow(properties, labels) {
+        // create row with editors
+        const editors = [];
+        const row = document.createElement('div');
+        row.className = 'edit-spell-row flexrow';
+        for (var i = 0; i < properties.length; i++) {
+            const editor = new StringPropertyEditor(properties[i], '', '');
+            this.registerEditor(editor);
+            editors.push(editor);
+
+            row.appendChild(document.createTextNode(labels[i]));
+            row.appendChild(editor.container);
+        }
+
+        // create listener for hiding and register to all editors
+        const listener = () => this.updateHidingRow(row, editors);
+        for (const editor of editors) {
+            editor.addChangeListener(listener);
+            editor.addReloadListener(listener);
+        }
+
+        return row;
+    }
+
+    updateHidingRow(row, editors) {
+        var hide = true;
+        for (const editor of editors) {
+            if (editor.textField.value) hide = false;
+        }
+        if (hide) row.classList.add('hide');
+        else row.classList.remove('hide');
     }
 }

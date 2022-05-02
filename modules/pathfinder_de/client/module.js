@@ -2,10 +2,15 @@
 import { Events } from '../../../core/common/events.js';
 
 import { CanvasWindowEditActor } from './canvas-window-edit-actor.js';
+import { CanvasWindowEditSpell } from './canvas-window-edit-spell.js';
 
 Events.on('openEntity', event => {
-    if (event.data.entity.getType() === 'actor' && event.data.entity.getString('type') === 'pf_char_de') {
-        new CanvasWindowEditActor(event.data.parentWindow, event.data.entity);
+    const entity = event.data.entity;
+    if (entity.getType() === 'actor' && entity.getString('type') === 'pf_char_de') {
+        new CanvasWindowEditActor(event.data.parentWindow, entity);
+        event.cancel();
+    } else if (entity.getType() === 'attachment' && entity.getString('type') === 'pf_spell_de') {
+        new CanvasWindowEditSpell(event.data.parentWindow, entity);
         event.cancel();
     }
 }, false, 1);

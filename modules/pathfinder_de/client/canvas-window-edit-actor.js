@@ -6,7 +6,6 @@ import { AccessPropertyEditor } from '../../../core/client/gui/property-editor/a
 import { HTMLStringPropertyEditor } from '../../../core/client/gui/property-editor/special/html-string-property-editor.js';
 import { LongListPropertyEditor } from '../../../core/client/gui/property-editor/special/long-list-property-editor.js';
 import { ImagePropertyEditor } from '../../../core/client/gui/property-editor/special/image-property-editor.js';
-import { StringSelectionPropertyEditor } from '../../../core/client/gui/property-editor/special/string-selection-property-editor.js';
 
 import { Tabs } from '../../../core/client/gui/tabs.js';
 
@@ -14,7 +13,6 @@ import { MessageService } from '../../../core/client/service/message-service.js'
 import { SendChatMessage } from '../../../core/common/messages.js';
 
 import { ATTRIBUTES, SAVES, SKILL_LIST } from './character-values.js';
-import { DefinitionUtils } from '../../../core/common/util/definitionutil.js';
 import { CanvasWindowEditEntity } from '../../../core/client/canvas/window/canvas-window-edit-entity.js';
 import { ServerData } from '../../../core/client/server-data.js';
 import { Access } from '../../../core/common/constants.js';
@@ -351,16 +349,8 @@ export class CanvasWindowEditActor extends CanvasWindowEditEntity {
                 valueName.appendChild(this.createStringEditor('path'));
                 valuesLI.appendChild(valueName);
 
-                const extensionPoint = DefinitionUtils.getExtensionPointForProperty(this.getReference().getDefinition(), 'type');
-                var extensions = {};
-                for (const [key, value] of Object.entries(extensionPoint.extensionDefinitions)) {
-                    extensions[key] = value.displayName;
-                }
-
                 const valueType = this.createValueContainer('Typ');
-                const typeEditor = new StringSelectionPropertyEditor('type', '', extensions);
-                valueType.appendChild(typeEditor.container);
-                this.registerEditor(typeEditor);
+                valueType.appendChild(this.createExtensionPointEditor('type', ''));
                 valuesLI.appendChild(valueType);
 
                 const valueToken = this.createValueContainer('Token');

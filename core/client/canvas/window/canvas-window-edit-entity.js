@@ -16,6 +16,8 @@ import { LightPropertyEditor } from '../../gui/property-editor/light-property-ed
 import { LongPropertyEditor } from '../../gui/property-editor/long-property-editor.js';
 import { StringFilePropertyEditor } from '../../gui/property-editor/special/string-file-property-editor.js';
 import { StringPropertyEditor } from '../../gui/property-editor/string-property-editor.js';
+import { StringSelectionPropertyEditor } from '../../gui/property-editor/special/string-selection-property-editor.js';
+import { DefinitionUtils } from '../../../common/util/definitionutil.js';
 
 export class CanvasWindowEditEntity extends CanvasWindow {
     #reference;
@@ -203,5 +205,19 @@ export class CanvasWindowEditEntity extends CanvasWindow {
         li.appendChild(nameP);
 
         return li;
+    }
+
+    createExtensionPointEditor(property, label, className = '') {
+        const extensionPoint = DefinitionUtils.getExtensionPointForProperty(this.getReference().getDefinition(), property);
+        var extensions = {};
+        for (const [key, value] of Object.entries(extensionPoint.extensionDefinitions)) {
+            extensions[key] = value.displayName;
+        }
+
+        const editor = new StringSelectionPropertyEditor(property, label, extensions);
+        this.#editorList.registerEditor(editor, false);
+
+        if (className) editor.container.className = className;
+        return editor.container;
     }
 }

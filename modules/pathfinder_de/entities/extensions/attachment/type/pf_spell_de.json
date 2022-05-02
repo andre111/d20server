@@ -1,66 +1,70 @@
 {
-    "displayName": "Attachment",
+    "displayName": "PF Zauber (DE)",
     "settings": {
-        "synched": true,
-        "global": true,
-        "addRemoveAccess": "GM",
-        "control": {
-            "mode": "NONE"
-        },
-        "viewAccess": {
-            "mode": "SET",
-            "value": "EVERYONE"
-        },
-        "editAccess": {
-            "mode": "SET",
-            "value": "EVERYONE"
-        },
         "containedEntities": []
     },
     "properties": {
-        "name": {
+        "pf_school": {
             "type": "STRING",
             "editAccess": "GM",
             "viewAccess": "EVERYONE",
             "value": ""
         },
-        "path": {
+        "pf_level": {
             "type": "STRING",
             "editAccess": "GM",
             "viewAccess": "EVERYONE",
             "value": ""
         },
-        "type": {
-            "type": "STRING",
-            "editAccess": "GM",
-            "viewAccess": "EVERYONE",
-            "value": "basic"
-        },
-        "imagePath": {
+        "pf_castingTime": {
             "type": "STRING",
             "editAccess": "GM",
             "viewAccess": "EVERYONE",
             "value": ""
         },
-        "descShort": {
+        "pf_components": {
             "type": "STRING",
             "editAccess": "GM",
             "viewAccess": "EVERYONE",
             "value": ""
         },
-        "descFull": {
+        "pf_range": {
             "type": "STRING",
             "editAccess": "GM",
             "viewAccess": "EVERYONE",
             "value": ""
         },
-        "tags": {
+        "pf_target": {
             "type": "STRING",
             "editAccess": "GM",
             "viewAccess": "EVERYONE",
             "value": ""
         },
-        "macro": {
+        "pf_effect": {
+            "type": "STRING",
+            "editAccess": "GM",
+            "viewAccess": "EVERYONE",
+            "value": ""
+        },
+        "pf_area": {
+            "type": "STRING",
+            "editAccess": "GM",
+            "viewAccess": "EVERYONE",
+            "value": ""
+        },
+        "pf_duration": {
+            "type": "STRING",
+            "editAccess": "GM",
+            "viewAccess": "EVERYONE",
+            "value": ""
+        },
+        "pf_save": {
+            "type": "STRING",
+            "editAccess": "GM",
+            "viewAccess": "EVERYONE",
+            "value": ""
+        },
+        "pf_sr": {
             "type": "STRING",
             "editAccess": "GM",
             "viewAccess": "EVERYONE",
@@ -68,16 +72,5 @@
         }
     },
     "updateRules": [],
-    "macros": {},
-    "extensionPoints": [
-        {
-            "name": "base",
-            "mode": "ALL"
-        },
-        {
-            "name": "type",
-            "mode": "SELECT_SINGLE",
-            "property": "type"
-        }
-    ]
+    "macros": {}
 }
