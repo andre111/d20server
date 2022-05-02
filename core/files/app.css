@@ -330,7 +330,7 @@ input:focus {
 
     display: none;
 }
-.html-editor:hover > button {
+.html-editor:hover > button:enabled {
     display: block;
 }
 
