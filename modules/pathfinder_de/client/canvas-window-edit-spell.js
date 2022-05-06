@@ -71,35 +71,21 @@ export class CanvasWindowEditSpell extends CanvasWindowEditEntity {
 
             const row1 = document.createElement('div');
             row1.className = 'edit-spell-row flexrow';
-            row1.appendChild(document.createTextNode('Schule: '));
+            row1.appendChild(document.createTextNode(I18N.get('pf.spell.school', 'School') + ': '));
             row1.appendChild(this.createStringEditor('pf_school'));
-            row1.appendChild(document.createTextNode('Grad: '));
+            row1.appendChild(document.createTextNode(I18N.get('pf.spell.level', 'Level') + ': '));
             row1.appendChild(this.createStringEditor('pf_level'));
             tab.append(row1);
 
-            const row2 = document.createElement('div');
-            row2.className = 'edit-spell-row flexrow';
-            row2.appendChild(document.createTextNode('Zeitaufwand: '));
-            row2.appendChild(this.createStringEditor('pf_castingTime'));
-            tab.append(row2);
+            tab.append(this.createHidingRow(['pf_castingTime'], [I18N.get('pf.spell.castingTime', 'Casting Time') + ': ']));
+            tab.append(this.createHidingRow(['pf_components'], [I18N.get('pf.spell.components', 'Components') + ': ']));
+            tab.append(this.createHidingRow(['pf_range'], [I18N.get('pf.spell.range', 'Range') + ': ']));
 
-            const row3 = document.createElement('div');
-            row3.className = 'edit-spell-row flexrow';
-            row3.appendChild(document.createTextNode('Komponenten: '));
-            row3.appendChild(this.createStringEditor('pf_components'));
-            tab.append(row3);
-
-            const row4 = document.createElement('div');
-            row4.className = 'edit-spell-row flexrow';
-            row4.appendChild(document.createTextNode('Reichweite: '));
-            row4.appendChild(this.createStringEditor('pf_range'));
-            tab.append(row4);
-
-            tab.append(this.createHidingRow(['pf_target'], ['Ziel: ']));
-            tab.append(this.createHidingRow(['pf_effect'], ['Effekt: ']));
-            tab.append(this.createHidingRow(['pf_area'], ['Wirkungsbereich: ']));
-            tab.append(this.createHidingRow(['pf_duration'], ['Wirkungsdauer: ']));
-            tab.append(this.createHidingRow(['pf_save', 'pf_sr'], ['Rettungswurf: ', 'Zauberresistenz']));
+            tab.append(this.createHidingRow(['pf_target'], [I18N.get('pf.spell.target', 'Target') + ': ']));
+            tab.append(this.createHidingRow(['pf_effect'], [I18N.get('pf.spell.effect', 'Effect') + ': ']));
+            tab.append(this.createHidingRow(['pf_area'], [I18N.get('pf.spell.area', 'Area') + ': ']));
+            tab.append(this.createHidingRow(['pf_duration'], [I18N.get('pf.spell.duration', 'Duration') + ': ']));
+            tab.append(this.createHidingRow(['pf_save', 'pf_sr'], [I18N.get('pf.spell.save', 'Save') + ': ', I18N.get('pf.spell.sr', 'Spell Resistance') + ': ']));
 
             const editor = new HTMLStringPropertyEditor('descFull', '');
             editor.container.style.width = 'calc(100% - 10px)';

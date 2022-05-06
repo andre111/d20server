@@ -1,0 +1,15 @@
+{
+    "command.pf_use.error.noentity": "Entity nicht gefunden oder Zugriff verweigert",
+    "command.pf_use.error.unsupported": "Entity Typ %0 wird nicht unterstützt",
+    "pf.spell.school": "Schule",
+    "pf.spell.level": "Grad",
+    "pf.spell.castingTime": "Zeitaufwand",
+    "pf.spell.components": "Komponenten",
+    "pf.spell.range": "Reichweite",
+    "pf.spell.target": "Ziel",
+    "pf.spell.effect": "Effekt",
+    "pf.spell.area": "Wirkungsbereich",
+    "pf.spell.duration": "Wirkungsdauer",
+    "pf.spell.save": "Rettungswurf",
+    "pf.spell.sr": "Zauberresistenz"
+}

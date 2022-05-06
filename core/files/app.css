@@ -670,18 +670,24 @@ div.chat-box {
 }
 div.chat-box-header {
     display: block;
-    width: 90%;
+    width: 95%;
     margin: 0 auto;
     border: solid 1px black;
-    border-radius: 12px;
+    border-radius: 10px;
     text-align: center;
     color: white;
     text-shadow: 0px 0px 3px black, 0px 0px 3px black;
     box-shadow: 0px 0px 3px black;
 }
+div.chat-box-header span {
+    font-weight: bold;
+}
+div.chat-box-header p {
+    margin: 0;
+}
 div.chat-box-content {
     display: block;
-    width: 80%;
+    width: 90%;
     margin: 0 auto;
     border: solid 1px black;
     background-color: rgba(255, 255, 255, 0.5);;
