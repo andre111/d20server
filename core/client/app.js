@@ -249,11 +249,7 @@ Events.on('entityMenu', event => {
     }
 
     // sending macros
-    const sendMacro = name => MessageService.send(new SendChatMessage('!' + name));
-    const addMacros = (category, names, sort = true, prefix = '') => {
-        // sort macros before adding to menu
-        if (sort) names.sort();
-
+    const addMacros = (category, macros, names) => {
         if (names.length > 0) {
             const macroCategory = menu.createCategory(null, category);
             const subCategories = new Map();
@@ -274,8 +270,8 @@ Events.on('entityMenu', event => {
                     parent = subCategories.get(category);
                 }
 
-                const fullName = names[i];
-                menu.createItem(parent, name, () => sendMacro(prefix + fullName));
+                const macro = macros[i];
+                menu.createItem(parent, name, () => MessageService.send(new SendChatMessage(macro)));
             }
         }
     };
@@ -284,9 +280,23 @@ Events.on('entityMenu', event => {
     if (actor) {
         const actorAccessLevel = actor.getAccessLevel(ServerData.localProfile);
         if (Access.matches(actor.getAccessValue('macroUse'), actorAccessLevel)) {
-            addMacros(I18N.get('token.menu.macro', 'Macros'), Object.keys(actor.getStringMap('macros')));
+            // collect user defined
+            const macros = Object.keys(actor.getStringMap('macros')).sort();
+            addMacros(I18N.get('token.menu.macro', 'Macros'), macros.map(m => '!' + m), macros);
 
-            addMacros(I18N.get('token.menu.macro.inbuilt', 'Inbuilt Macros'), Object.keys(actor.getPredefinedMacros()), false, '!');
+            // collect actor inbuilt
+            const inbuiltMacroNames = Object.keys(actor.getPredefinedMacros());
+            const inbuiltMacros = inbuiltMacroNames.map(m => '!!' + m);
+            // collect attachments
+            //TODO: these are unsorted, fix this
+            for (const attachmentID of actor.getLongList('attachments')) {
+                const attachment = EntityManagers.get('attachment').find(attachmentID);
+                if (attachment.getString('macro')) {
+                    inbuiltMacros.push('?attachment-' + attachmentID + '.macro');
+                    inbuiltMacroNames.push(attachment.getString('path') + attachment.getName());
+                }
+            }
+            addMacros(I18N.get('token.menu.macro.inbuilt', 'Inbuilt Macros'), inbuiltMacros, inbuiltMacroNames);
         }
     }
 

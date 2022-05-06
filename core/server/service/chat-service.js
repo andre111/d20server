@@ -100,24 +100,70 @@ Events.on('chatMessage', event => {
         }
 
         // execute macro
-        SCRIPT.pushVariable('sActor', new Value(new EntityReference(actor), Type.ENTITY, ''));
-        const scriptMarker = '?SCRIPT?\n';
-        if (macro.startsWith(scriptMarker)) {
-            SCRIPT.interpret(macro.substring('?SCRIPT?\n'.length), profile, null);
-            if (SCRIPT.errors.length != 0) {
-                ChatService.appendError(profile, SCRIPT.errors.join('\n'));
-            }
-        } else {
-            const macroLines = macro.split('\n');
-            for (const macroLine of macroLines) {
-                if (macroLine.trim() == '') continue;
+        executeMacro(macro, profile, actor);
+    }
 
-                ChatService.onMessage(profile, macroLine);
+    // new macro system
+    // format: ?<entityPath>.<property> or ?<entityPath>!<predefinedMacroName>
+    if (message.startsWith('?')) {
+        event.cancel();
+
+        // find entity
+        var entity = null;
+        if (message.includes('.')) {
+            entity = EntityManagers.findEntity(message.substring(1, message.indexOf('.')));
+        } else if (message.includes('!')) {
+            entity = EntityManagers.findEntity(message.substring(1, message.indexOf('!')));
+        }
+        if (!entity) {
+            ChatService.appendNote(profile, I18N.get('macro.error.noentity', 'Could not find entity'));
+            return;
+        }
+
+        // find macro
+        var macro = null;
+        if (message.includes('.')) {
+            const property = message.substring(message.indexOf('.') + 1);
+            if (entity.canViewProperty(property, entity.getAccessLevel(profile)) && entity.getPropertyType(property) == Type.STRING) {
+                macro = entity.getString(property);
+            }
+        } else if (message.includes('!')) {
+            const macroName = message.substring(message.indexOf('!') + 1);
+            const predefMacros = entity.getPredefinedMacros();
+            if (predefMacros[macroName]) {
+                macro = predefMacros[macroName].join('\n');
             }
         }
-        SCRIPT.popVariable('sActor');
+        if (!macro) {
+            ChatService.appendNote(profile, I18N.get('macro.error.unknown', 'Could not find macro: %0', message));
+            return;
+        }
+
+        // execute macro
+        executeMacro(macro, profile, entity);
     }
 });
+
+function executeMacro(macro, profile, self = null) {
+    if (self) SCRIPT.pushVariable('self', new Value(new EntityReference(self), Type.ENTITY, ''));
+
+    const scriptMarker = '?SCRIPT?\n';
+    if (macro.startsWith(scriptMarker)) {
+        SCRIPT.interpret(macro.substring('?SCRIPT?\n'.length), profile, self);
+        if (SCRIPT.errors.length != 0) {
+            ChatService.appendError(profile, SCRIPT.errors.join('\n'));
+        }
+    } else {
+        const macroLines = macro.split('\n');
+        for (const macroLine of macroLines) {
+            if (macroLine.trim() == '') continue;
+
+            ChatService.onMessage(profile, macroLine);
+        }
+    }
+
+    if (self) SCRIPT.popVariable('self');
+}
 
 export class ChatService {
     static onMessage(profile, message) {

@@ -97,6 +97,7 @@
     "input.relative": "Änderung: ",
     "input.value": "Wert: ",
     "macro.error.noactor": "Konnte Akteur nicht finden",
+    "macro.error.noentity": "Konnte Entity nicht finden",
     "macro.error.notoken": "Kein (einzelner) Token ausgewählt",
     "macro.error.unknown": "Konnte Macro nicht finden: %0",
     "map.edit.dimensions": "Dimensionen: ",

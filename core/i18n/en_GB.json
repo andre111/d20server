@@ -97,6 +97,7 @@
     "input.relative": "Relative Change: ",
     "input.value": "Value: ",
     "macro.error.noactor": "Could not find actor",
+    "macro.error.noentity": "Could not find entity",
     "macro.error.notoken": "No (single) token selected",
     "macro.error.unknown": "Could not find macro: %0",
     "map.edit.dimensions": "Dimensions: ",
