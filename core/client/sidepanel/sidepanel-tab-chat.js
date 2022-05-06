@@ -132,6 +132,19 @@ export class SidepanelTabChat extends SidepanelTab {
                     });
                 }
 
+                // load dynamic content
+                // "cast" (type before parenthesis) required for ts type checking
+                for (const element of /** @type {NodeListOf<HTMLElement>} */ (container.querySelectorAll('[data-property]'))) {
+                    const entityElement = /** @type {HTMLElement} */ (element.closest('[data-entity]'));
+
+                    const entity = EntityManagers.findEntity(entityElement.dataset['entity']);
+                    const property = element.dataset['property'];
+                    if (entity && entity.has(property) && entity.getPropertyType(property) === Type.STRING) {
+                        // @ts-ignore
+                        element.innerHTML = DOMPurify.sanitize(entity.getString(property), { USE_PROFILES: { html: true } });
+                    }
+                }
+
                 // add timestamp (with hover and auto update)
                 const timestampP = document.createElement('p');
                 timestampP.className = 'chat-timestamp hoverable';
