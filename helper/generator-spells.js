@@ -75,8 +75,33 @@ export function createSpell(entry, zauberIcons) {
             }
         }
     }
+    if (entry['Wuerfe']) {
+        for (const t of entry['Wuerfe']) {
+            // adjust expression
+            var expr = t['Formel'] ?? '';
+            expr = expr.replace(/W/g, 'd');
+            for (const key of Object.keys(throwVariables)) {
+                expr = expr.replace(new RegExp(key, 'g'), throwVariables[key]);
+            }
+            switch (t['Art']) {
+                case 'Nahkampfangriff':
+                    expr = '1d20 + sActor.pf_baseAttackBonus + sActor.pf_strMod + sActor.modAttack';
+                    break;
+                case 'Fernkampfangriff':
+                    expr = '1d20 + sActor.pf_baseAttackBonus + sActor.pf_dexMod + sActor.modAttack';
+                    break;
+                case 'Schaden':
+                    expr += ' + sActor.modDamage';
+                    break;
+            }
+
+            // add throw
+            if (throws != '') throws += ';';
+            throws += t['Name'] + ';/r ' + expr;
+        }
+    }
     //TODO: add data defined throws
-    const macro = `?SCRIPT?\nsendChat("/pf_use "+self.manager+":"+self.id+" ${throws}");\n`;
+    const macro = `?SCRIPT?\nsendChat("/pf_use "+self.manager+"-"+self.id+" ${throws}");\n`;
     attachment.setString('macro', macro);
 
     return attachment;
@@ -163,8 +188,12 @@ function createSaveString(entry) {
         for (const save of entry['Rettungswurf']) {
             if (saves != '') saves += ' oder ';
 
-            saves += save['Art'];
-            if (save['Effekt']) saves += `, ${save['Effekt']}`;
+            if (save['Art']) {
+                saves += save['Art'];
+                if (save['Effekt']) saves += `, ${save['Effekt']}`;
+            } else if (save['Effekt']) {
+                saves += save['Effekt'];
+            }
         }
         return saves;
     } else {
@@ -178,4 +207,14 @@ function createSRString(entry) {
     } else {
         return '';
     }
+}
+
+const throwVariables = {
+    '<<Level>>': 'sActor.pf_level',
+    '<<Stärke>>': 'sActor.pf_strMod',
+    '<<Geschicklichkeit>>': 'sActor.pf_dexMod',
+
+    '<<RK>>': 'sActor.pf_ac',
+    '<<RK-B>>': 'sActor.pf_acTouch',
+    '<<RK-ADFF>>': 'sActor.pf_acFlatFooted'
 }

@@ -1,0 +1,15 @@
+{
+    "command.pf_use.error.noentity": "Entity not found or accessible",
+    "command.pf_use.error.unsupported": "Unsupported entity type: %0",
+    "pf.spell.school": "School",
+    "pf.spell.level": "Level",
+    "pf.spell.castingTime": "Casting Time",
+    "pf.spell.components": "Components",
+    "pf.spell.range": "Range",
+    "pf.spell.target": "Target",
+    "pf.spell.effect": "Effect",
+    "pf.spell.area": "Area",
+    "pf.spell.duration": "Duration",
+    "pf.spell.save": "Save",
+    "pf.spell.sr": "Spell Resistance"
+}

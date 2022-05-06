@@ -6,6 +6,8 @@ import { MessageService } from '../service/message-service.js';
 import { SendChatMessage } from '../../common/messages.js';
 import { Events } from '../../common/events.js';
 import { I18N } from '../../common/util/i18n.js';
+import { EntityManagers } from '../../common/entity/entity-managers.js';
+import { Type } from '../../common/constants.js';
 
 export class SidepanelTabChat extends SidepanelTab {
     constructor() {
@@ -107,12 +109,40 @@ export class SidepanelTabChat extends SidepanelTab {
 
                 container.innerHTML = sanitizedText;
 
-                // add replaceable trigger
-                for (const element of container.querySelectorAll('.replaceable')) {
+                // add button trigger
+                // "cast" (type before parenthesis) required for ts type checking
+                for (const element of /** @type {NodeListOf<HTMLElement>} */ (container.querySelectorAll('.chat-button'))) {
                     element.addEventListener('click', () => {
-                        const msg = new SendChatMessage('/trigger ' + entry.getID() + ' ' + element.id);
-                        MessageService.send(msg);
+                        const command = element.dataset['command'];
+                        if (command && command.includes(':')) {
+                            const commandName = command.substring(0, command.indexOf(':'));
+                            const commandContent = command.substring(command.indexOf(':') + 1);
+                            switch (commandName) {
+                                case 'trigger':
+                                    MessageService.send(new SendChatMessage('/trigger ' + entry.getID() + ' ' + commandContent));
+                                    break;
+                                case 'chat':
+                                    MessageService.send(new SendChatMessage(commandContent));
+                                    break;
+                                default:
+                                    console.log('Warning: Unknown button command: ' + command);
+                                    break;
+                            }
+                        }
                     });
+                }
+
+                // load dynamic content
+                // "cast" (type before parenthesis) required for ts type checking
+                for (const element of /** @type {NodeListOf<HTMLElement>} */ (container.querySelectorAll('[data-property]'))) {
+                    const entityElement = /** @type {HTMLElement} */ (element.closest('[data-entity]'));
+
+                    const entity = EntityManagers.findEntity(entityElement.dataset['entity']);
+                    const property = element.dataset['property'];
+                    if (entity && entity.has(property) && entity.getPropertyType(property) === Type.STRING) {
+                        // @ts-ignore
+                        element.innerHTML = DOMPurify.sanitize(entity.getString(property), { USE_PROFILES: { html: true } });
+                    }
                 }
 
                 // add timestamp (with hover and auto update)

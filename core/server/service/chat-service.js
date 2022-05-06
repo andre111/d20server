@@ -305,7 +305,7 @@ export class ChatService {
                         parent: null,
                         triggerd: false
                     });
-                    string += `<span id="${entry.getID()}" class="chat-dice-inline chat-button replaceable">${triggerText}</span>`;
+                    string += `<span id="${entry.getID()}" data-command="trigger:${entry.getID()}" class="chat-dice-inline chat-button replaceable">${triggerText}</span>`;
                 } else {
                     for (const diceRoll of resultDiceRolls) {
                         diceRolls.push(diceRoll);

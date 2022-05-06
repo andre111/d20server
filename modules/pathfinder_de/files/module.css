@@ -246,3 +246,50 @@
 .edit-spell-content:focus-within .edit-spell-row.hide {
     display: flex;
 }
+
+/* Chat Boxes */
+.pf-spell.chat-box-header {
+    background-color: #e2cf9d;
+}
+.pf-spell.chat-box-content {
+    font-size: 14px;
+    padding: 5px;
+}
+.pf-spell.chat-box-content table {
+    width: calc(100% - 10px);
+    margin: 0;
+    margin-bottom: 5px;
+}
+.pf-spell.chat-box-content th {
+    padding: 0;
+    text-align: left;
+}
+.pf-spell.chat-box-content td {
+    width: 100%; /* both of these are needed to make it take up available space and then cut off overflow */
+    max-width: 1px; /* both of these are needed to make it take up available space and then cut off overflow */
+    padding: 0;
+
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.pf-spell-description {
+    position: relative;
+    width: 100%;
+    max-height: 150px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    
+    padding-top: 5px;
+}
+.pf-spell-description:after {
+    content: '';
+    position: absolute;
+    width: 100%;
+    height: 70px;
+    left: 0;
+    bottom: 0;
+
+    background: linear-gradient(to bottom, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0.8) 100%);
+    pointer-events: none;
+}
