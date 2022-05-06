@@ -409,6 +409,7 @@ Events.on('openEntity', event => {
 
 
 // Internal Links
+//TODO: switch to using generic entity paths: <manager>-<id> probably with a special marker in form "open:<manager>-<id>"
 Events.on('internalLinkClick', event => {
     const target = event.data.target;
 

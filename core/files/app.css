@@ -341,9 +341,9 @@ input:focus {
 
 /* Used for links that open internaly */
 .internal-link {
-    color: black;
+    color: inherit;
 }
-.internal-link:hover {
+.internal-link:hover, .internal-link:focus {
     text-shadow: var(--text-shadow-hover);
 }
 
@@ -647,7 +647,8 @@ span.chat-dice-uncounted {
     text-decoration: line-through;
     text-decoration-color: red;
 }
-span.chat-dice-inline {
+span.chat-dice-inline,
+span.chat-button {
     height: 20px;
     display: inline-flex;
     border: solid 1px black;
