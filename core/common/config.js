@@ -89,7 +89,7 @@ class Config {
      * @param {*} data the data to load
      */
     load(data) {
-        this.#data = data;
+        this.#data = data ?? {};
     }
 
     /**
