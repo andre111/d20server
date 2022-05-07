@@ -106,7 +106,7 @@ export const CONFIG = new Config();
 
 //TODO: move this to a better place (extendable by modules)
 CONFIG.define('disabledModules', Type.ARRAY, [], null, false, true);
-CONFIG.define('language', Type.STRING, 'de_DE', ['de_DE', 'en_GB'], true, true); //TODO: Dynamically find available languages
+CONFIG.define('language', Type.STRING, 'de_DE', ['de_DE', 'en_GB'], true, false); //TODO: Dynamically find available languages
 CONFIG.define('gmLockout', Type.BOOLEAN, false, null, true, false);
 CONFIG.define('motd', Type.STRING, '', null, true, false);
 

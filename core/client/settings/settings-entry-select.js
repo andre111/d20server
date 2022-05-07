@@ -20,6 +20,7 @@ export class SettingsEntrySelect extends SettingsEntry {
             option.innerHTML = value;
             editor.appendChild(option);
         }
+        editor.value = this.value;
 
         editor.onchange = () => {
             this.value = editor.value;

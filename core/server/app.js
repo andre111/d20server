@@ -15,9 +15,18 @@ import { CONFIG } from '../common/config.js';
 import { readJsonFile } from './util/fileutil.js';
 import './handler/message-handler.js';
 import './scripting/func.js';
+import { buildLangJson } from './handler/lang-json.js';
 
 // load config
 CONFIG.load(readJsonFile('./' + PARAMETERS.datadir + '/config.json'));
+
+//TODO: find a better place for this
+Events.on('configValueChange', event => {
+    if (event.data.key === 'language') {
+        ModuleService.loadI18N(); // load new text definitions
+        buildLangJson(); // update http served file (TODO: should maybe just always host all language files?)
+    }
+});
 
 // start server
 Common.init(true, new ServerIDProvider(), ServerEntityManager);
