@@ -149,6 +149,7 @@
     "notification.copy.single": "1 Objekt kopiert",
     "notification.server.restartrequired": "Serverneustart erforderlich!",
     "settings.config.gmLockout": "Geschlossener GM Zugang",
+    "settings.config.language": "Sprache",
     "settings.config.motd": "Motd",
     "settings.page.audio": "Audio",
     "settings.page.modules": "Module",

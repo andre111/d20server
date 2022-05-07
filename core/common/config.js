@@ -26,15 +26,17 @@ class Config {
      * @param {string} key name of the config key to define
      * @param {string} type see Type in constants.js
      * @param {*} defaultValue the default value of the config option
-     * @param {boolean} clientAccessible when true values should be synced to ALL clients and GMs can change them
-     * @param {boolean} restartRequired when true clients should be notified of required server restart on changes
+     * @param {Array<*>} availableValues the available values, or null for free input, default null
+     * @param {boolean} clientAccessible when true values should be synced to ALL clients and GMs can change them, default false
+     * @param {boolean} restartRequired when true clients should be notified of required server restart on changes, default false
      */
-    define(key, type, defaultValue, clientAccessible = false, restartRequired = false) {
+    define(key, type, defaultValue, availableValues = null, clientAccessible = false, restartRequired = false) {
         if (this.#definitions[key]) throw new Error('Config key ' + key + ' is already defined');
 
         this.#definitions[key] = {
             type: type,
             defaultValue: defaultValue,
+            availableValues: availableValues,
             clientAccessible: clientAccessible,
             restartRequired: restartRequired
         };
@@ -103,10 +105,10 @@ class Config {
 export const CONFIG = new Config();
 
 //TODO: move this to a better place (extendable by modules)
-CONFIG.define('disabledModules', Type.ARRAY, [], false, true);
-CONFIG.define('language', Type.STRING, 'de_DE', true, true);
-CONFIG.define('gmLockout', Type.BOOLEAN, false, true, false);
-CONFIG.define('motd', Type.STRING, '', true, false);
+CONFIG.define('disabledModules', Type.ARRAY, [], null, false, true);
+CONFIG.define('language', Type.STRING, 'de_DE', ['de_DE', 'en_GB'], true, true); //TODO: Dynamically find available languages
+CONFIG.define('gmLockout', Type.BOOLEAN, false, null, true, false);
+CONFIG.define('motd', Type.STRING, '', null, true, false);
 
 
 /**
@@ -114,6 +116,7 @@ CONFIG.define('motd', Type.STRING, '', true, false);
  * @typedef {object} ConfigDefinition
  * @property {string} type the type - see Type in constants.js
  * @property {*} defaultValue the default value of the config option
+ * @property {Array<*>} availableValues the available values, or null for free input
  * @property {boolean} clientAccessible when true values should be synced to ALL clients and GMs can change them
  * @property {boolean} restartRequired when true clients should be notified of required server restart on changes
  */

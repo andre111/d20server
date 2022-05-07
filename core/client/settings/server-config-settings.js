@@ -4,6 +4,7 @@ import { Type } from '../../common/constants.js';
 import { Events } from '../../common/events.js';
 import { ChangeConfig } from '../../common/messages.js';
 import { MessageService } from '../service/message-service.js';
+import { SettingsEntrySelect } from './settings-entry-select.js';
 import { SettingsEntryToggle } from './settings-entry-toggle.js';
 import { Settings } from './settings.js';
 
@@ -23,7 +24,12 @@ export class ServerConfigSettings {
                         entry = new SettingsEntryToggle('settings.config.' + key, key, value);
                         break;
                     case Type.STRING:
-                        //TODO: implement (for motd) - and later how do I special case language?
+                        if (def.availableValues) {
+                            entry = new SettingsEntrySelect('settings.config.' + key, key, value, def.availableValues);
+                            break;
+                        } else {
+                            //TODO: implement free string input (for motd)
+                        }
                         break;
                     default:
                         console.log('WARNING: Cannot create config entry of type: ' + def.type);

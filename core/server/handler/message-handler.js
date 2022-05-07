@@ -249,6 +249,11 @@ function _handleChangeConfig(profile, message) {
 
             // broadcast change to all clients
             MessageService.broadcast(message);
+
+            // notify clients of required restart
+            if (def.restartRequired) {
+                MessageService.send(new SendNotification(I18N.get('notification.server.restartrequired', 'Server Restart Required!'), 10), profile);
+            }
         }
     }
 }
