@@ -1,32 +1,4 @@
-.cs-container {
-    padding: 0;
-    width: 700px;
-    height: 800px;
-}
-
 /* Header */
-.cs-header {
-    height: 142px;
-    display: flex;
-
-    border-bottom: var(--border-separator);
-}
-.cs-image {
-    width: 140px;
-    height: 140px;
-
-    border-right: var(--border-separator);
-}
-.cs-image img {
-    border: none;
-}
-.cs-name input {
-    margin: 4px;
-    width: calc(100% - 8px);
-    height: 40px;
-
-    font-size: 32px;
-}
 .cs-class-level {
     flex: 0 0 40%;
     align-items: center;
@@ -43,32 +15,12 @@
 }
 
 .cs-container .edit-window-header-row:nth-of-type(1) input {
-    width: 120px;
+    width: 166px;
 }
 .cs-container .edit-window-header-row input[type="number"] {
     width: 32px;
     text-align: center;
 }
-
-/* Tabs */
-.cs-tabs {
-    height: calc(100% - 142px);
-}
-.cs-tabs .tab-buttons {
-    padding-top: 10px;
-    padding-bottom: 5px;
-}
-
-/* General Purpose Components */
-.cs-content-sidebar {
-    width: 200px;
-    height: 100%;
-    
-    flex: 0 0 200px;
-    flex-wrap: nowrap;
-    border-right: var(--border-separator);
-}
-
 
 /* Attributes Tab */
 .cs-attributes {
@@ -185,48 +137,6 @@
 .cs-skill-text {
     width: 70px;
     margin-left: 5px;
-}
-
-/* Macros Tab */
-.cs-macros-sidebar input {
-    width: 32px;
-    height: 32px;
-}
-
-/* GM Tab */
-.cs-gm-sidebar {
-    overflow: auto;
-}
-.cs-gm-sidebar button {
-    width: 50%;
-}
-.cs-gm-token span {
-    display: flex;
-}
-.cs-gm-token input {
-    width: 32px;
-    height: 32px;
-}
-.cs-gm-token-image {
-    width: 70px;
-    height: 70px;
-
-    flex: 0 0 70px;
-    margin: 0 10px;
-}
-.cs-gm-token-image img {
-    border: none;
-}
-.cs-sight-editor {
-    width: 100%;
-    padding-left: 5px;
-
-    justify-content: start;
-    line-height: 26px;
-}
-.cs-sight-editor input {
-    width: 48px;
-    height: 16px;
 }
 
 /* Spell Editor */

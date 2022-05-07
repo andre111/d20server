@@ -210,8 +210,8 @@ export class CanvasWindowEditEntity extends CanvasWindow {
     createExtensionPointEditor(property, label, className = '') {
         const extensionPoint = DefinitionUtils.getExtensionPointForProperty(this.getReference().getDefinition(), property);
         var extensions = {};
-        for (const [key, value] of Object.entries(extensionPoint.extensionDefinitions)) {
-            extensions[key] = value.displayName;
+        for (const key of Object.keys(extensionPoint.extensionDefinitions)) {
+            extensions[key] = I18N.get(this.getReference().getType() + '.extension.' + extensionPoint.name + '.' + key + '.name', key);
         }
 
         const editor = new StringSelectionPropertyEditor(property, label, extensions);

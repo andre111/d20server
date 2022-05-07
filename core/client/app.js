@@ -55,6 +55,7 @@ import { CanvasWindowEditCompendium } from './canvas/window/canvas-window-edit-c
 import { I18N } from '../common/util/i18n.js';
 import { CanvasWindowEditMap } from './canvas/window/canvas-window-edit-map.js';
 import { CanvasWindowEditEntity } from './canvas/window/canvas-window-edit-entity.js';
+import { CanvasWindowEditActor } from './canvas/window/canvas-window-edit-actor.js';
 
 // Initialize common code
 Common.init(false, new ClientIDProvider(), ClientEntityManager);
@@ -411,6 +412,8 @@ Events.on('openEntity', event => {
         new CanvasWindowEditCompendium(event.data.parentWindow, event.data.entity);
     } else if (event.data.entity.getType() === 'map') {
         new CanvasWindowEditMap(event.data.parentWindow, event.data.entity);
+    } else if (event.data.entity.getType() === 'actor') {
+        new CanvasWindowEditActor(event.data.parentWindow, event.data.entity);
     } else {
         new CanvasWindowEditEntity(event.data.parentWindow, event.data.entity);
     }

@@ -43,7 +43,7 @@ export function createSpell(entry, zauberIcons) {
     // generate attachment entity
     console.log(`Generating Zauber: ${name}`);
     const attachment = new Entity('attachment');
-    attachment.setString('type', 'pf_spell_de');
+    attachment.setString('type', 'pf_spell');
     attachment.setString('name', name.replace(/\//, '\\'));
     attachment.setString('path', 'Zauber/');
     if (imagePath) attachment.setString('imagePath', '/image/' + imagePath);

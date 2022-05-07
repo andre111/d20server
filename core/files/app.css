@@ -1206,6 +1206,7 @@ div.chat-box-content th, div.chat-box-content td {
 
 /* Header */
 .edit-window-header {
+    display: flex;
     flex-grow: 0;
     flex-shrink: 0;
     
@@ -1239,9 +1240,54 @@ div.chat-box-content th, div.chat-box-content td {
 }
 
 /* Tabs */
+.edit-window-tabs {
+    height: calc(100% - 142px);
+}
 .edit-window-tabs .tab-buttons {
     padding-top: 10px;
     padding-bottom: 5px;
+}
+
+/* Macros Tab */
+.edit-window-macros-sidebar input {
+    width: 32px;
+    height: 32px;
+}
+
+/* GM Tab */
+.edit-window-gm-sidebar {
+    overflow: auto;
+}
+.edit-window-gm-sidebar button {
+    width: 50%;
+}
+.edit-window-gm-token span {
+    display: flex;
+}
+.edit-window-gm-token input {
+    width: 32px;
+    height: 32px;
+}
+.edit-window-gm-token-image {
+    width: 70px;
+    height: 70px;
+
+    flex: 0 0 70px;
+    margin: 0 10px;
+}
+.edit-window-gm-token-image img {
+    border: none;
+}
+.edit-window-sight-editor {
+    width: 100%;
+    padding-left: 5px;
+
+    justify-content: start;
+    line-height: 26px;
+}
+.edit-window-sight-editor input {
+    width: 48px;
+    height: 16px;
 }
 
 /* General Purpose Components */
@@ -1259,6 +1305,16 @@ div.chat-box-content th, div.chat-box-content td {
     width: calc(100% - 8px);
     height: calc(100% - 8px);
 }
+.edit-window-content-sidebar {
+    width: 200px;
+    height: 100%;
+    
+    flex: 0 0 200px;
+    flex-wrap: nowrap;
+    border-right: var(--border-separator);
+}
+
+/* Value Containers */
 .edit-window-value-container {
     display: flex;
     flex-direction: column;
@@ -1297,6 +1353,7 @@ div.chat-box-content th, div.chat-box-content td {
     text-shadow: var(--text-shadow-hover);
 }
 
+/* Layouts */
 .edit-window-row {
     align-items: center;
     
@@ -1316,6 +1373,25 @@ div.chat-box-content th, div.chat-box-content td {
 .edit-window-grid input,
 .edit-window-grid button {
     height: 20px;
+}
+
+
+/* Actor Edit Window */
+.edit-actor-image {
+    width: 140px;
+    height: 140px;
+
+    border-right: var(--border-separator);
+}
+.edit-actor-image img {
+    border: none;
+}
+.edit-actor-name input {
+    margin: 4px;
+    width: calc(100% - 8px);
+    height: 40px;
+
+    font-size: 32px;
 }
 
 

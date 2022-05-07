@@ -35,7 +35,7 @@
             "type": "STRING",
             "editAccess": "GM",
             "viewAccess": "EVERYONE",
-            "value": "pf_char_de"
+            "value": "pf_char"
         },
         "controllingPlayers": {
             "type": "LONG_LIST",
@@ -73,7 +73,6 @@
             "viewAccess": "GM",
             "value": ""
         },
-
         "tokenImagePath": {
             "type": "STRING",
             "editAccess": "GM",
@@ -92,7 +91,6 @@
             "viewAccess": "EVERYONE",
             "value": "70"
         },
-        
         "macros": {
             "type": "STRING_MAP",
             "editAccess": "CONTROLLING_PLAYER",
@@ -105,7 +103,6 @@
             "viewAccess": "EVERYONE",
             "value": "CONTROLLING_PLAYER"
         },
-
         "modAttack": {
             "type": "LONG",
             "editAccess": "CONTROLLING_PLAYER",
@@ -166,7 +163,6 @@
             "viewAccess": "CONTROLLING_PLAYER",
             "value": "0"
         },
-        
         "sightBright": {
             "type": "DOUBLE",
             "editAccess": "GM",
@@ -198,10 +194,8 @@
             "value": "1"
         }
     },
-    "updateRules": [
-    ],
-    "macros": {
-    },
+    "updateRules": [],
+    "macros": {},
     "extensionPoints": [
         {
             "name": "base",

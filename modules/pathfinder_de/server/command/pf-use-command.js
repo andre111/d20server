@@ -22,7 +22,7 @@ export class PFUseCommand extends Command {
         }
 
         // act on entity type
-        if (entity.getType() === 'attachment' && entity.getString('type') === 'pf_spell_de') {
+        if (entity.getType() === 'attachment' && entity.getString('type') === 'pf_spell') {
             this.#useSpell(profile, entity, argsSplit[1]);
         } else {
             throw new Error(I18N.get('command.pf_use.error.unsupported', 'Unsupported entity type: %0', entity.getType()));

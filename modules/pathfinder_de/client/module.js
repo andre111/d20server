@@ -1,15 +1,15 @@
 // @ts-check
 import { Events } from '../../../core/common/events.js';
 
-import { CanvasWindowEditActor } from './canvas-window-edit-actor.js';
+import { CanvasWindowEditChar } from './canvas-window-edit-char.js';
 import { CanvasWindowEditSpell } from './canvas-window-edit-spell.js';
 
 Events.on('openEntity', event => {
     const entity = event.data.entity;
-    if (entity.getType() === 'actor' && entity.getString('type') === 'pf_char_de') {
-        new CanvasWindowEditActor(event.data.parentWindow, entity);
+    if (entity.getType() === 'actor' && entity.getString('type') === 'pf_char') {
+        new CanvasWindowEditChar(event.data.parentWindow, entity);
         event.cancel();
-    } else if (entity.getType() === 'attachment' && entity.getString('type') === 'pf_spell_de') {
+    } else if (entity.getType() === 'attachment' && entity.getString('type') === 'pf_spell') {
         new CanvasWindowEditSpell(event.data.parentWindow, entity);
         event.cancel();
     }
