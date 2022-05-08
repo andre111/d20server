@@ -37,11 +37,11 @@ CONTENTS:
     --color-dark: #e2cf9d;
 
     --color-highlight: #553300;
-    --shadow-hover: 0px 0px 3px 1px var(--color-highlight); 
+    --shadow-hover: 0px 0px 3px 1px var(--color-highlight);
     --shadow-active: 0px 0px 3px 1px var(--color-highlight);
     --text-shadow-hover: 0px 0px 5px var(--color-highlight);
     --text-shadow-active: 0px 0px 5px var(--color-highlight);
-    
+
     --bg: url(/core/files/img/paper_texture.png), var(--color-light);
     --bg-transparent: rgba(254, 238, 189, 0.85);
 
@@ -54,7 +54,8 @@ CONTENTS:
 --------------------------------------------------------------
 */
 /* required to make content refer to actual window size */
-html, body {
+html,
+body {
     width: 100%;
     height: 100%;
     margin: 0;
@@ -69,6 +70,7 @@ html, body {
     width: 100%;
     height: 100%;
 }
+
 #canvas:focus {
     outline: none;
 }
@@ -86,6 +88,7 @@ html, body {
     box-shadow: 0px 0px 6px black;
     z-index: 10;
 }
+
 #sidepanel:focus {
     outline: none;
 }
@@ -105,7 +108,8 @@ html, body {
     display: flex;
     justify-content: center;
     align-items: center;
-    background-color: white; /*TODO: choose a better color*/
+    background-color: white;
+    /*TODO: choose a better color*/
     position: fixed;
     top: 0;
     left: 0;
@@ -140,6 +144,7 @@ html, body {
     font-weight: bold;
     color: white;
 }
+
 .copyright a {
     color: white;
 }
@@ -178,14 +183,18 @@ table {
     margin-left: auto;
     margin-right: auto;
 }
-th, td {
+
+th,
+td {
     border: var(--border-separator);
     border-collapse: collapse;
     padding: 5px;
 }
+
 table.table-bg {
     background-color: rgba(0, 0, 0, 0.02);
 }
+
 table.table-bg tr:first-of-type {
     background-color: rgba(0, 0, 0, 0.03);
 }
@@ -195,12 +204,14 @@ p {
     margin-block-start: 0;
     margin-block-end: 1em;
 }
+
 hr {
     margin-block-start: 0;
     margin-block-end: 0;
-    border-color: var(--color-dark); 
+    border-color: var(--color-dark);
 }
-p + hr {
+
+p+hr {
     margin-block-start: -1em;
     margin-block-end: 0;
 }
@@ -216,7 +227,9 @@ h6 {
     background-color: rgba(0, 0, 0, 0.05);
     font-size: 1.1em;
 }
-h6:before, h6:after {
+
+h6:before,
+h6:after {
     content: '';
     width: 100%;
     height: 2px;
@@ -227,9 +240,11 @@ h6:before, h6:after {
     border-width: 1px 0;
     border-color: var(--color-dark);
 }
+
 h6:before {
     top: 0;
 }
+
 h6:after {
     bottom: 0;
 }
@@ -241,16 +256,19 @@ h6:after {
     flex-wrap: wrap;
     justify-content: flex-start;
 }
+
 .flexcol {
     display: flex;
     flex-direction: column;
     flex-wrap: wrap;
     justify-content: flex-start;
 }
-.flexrow > *,
-.flexcol > * {
+
+.flexrow>*,
+.flexcol>* {
     flex: 1;
 }
+
 .flexnowrap {
     flex-wrap: nowrap;
 }
@@ -261,18 +279,23 @@ button {
     background: var(--color-dark);
     background: linear-gradient(0deg, var(--color-dark) 0%, var(--color-medium) 100%);
 }
+
 button:enabled:hover {
     box-shadow: inset var(--shadow-hover);
 }
+
 button:active {
     box-shadow: inset var(--shadow-active);
 }
+
 input {
     border-width: 1px;
 }
+
 input:enabled:hover {
     box-shadow: var(--shadow-hover);
 }
+
 input:focus {
     box-shadow: var(--shadow-active);
 }
@@ -291,7 +314,8 @@ input:focus {
     overflow: hidden;
     padding: 2px;
     border: solid 1px black;
-    /* border-radius: 4px; */ /* TODO: does this actually make it look better? */
+    /* border-radius: 4px; */
+    /* TODO: does this actually make it look better? */
 }
 
 .checkbox {
@@ -302,12 +326,14 @@ input:focus {
     border: none;
     display: inline-block;
 }
+
 .checkbox p {
     width: 100%;
     height: 100%;
     background-size: contain;
     background: url(/core/files/img/icon/box-unchecked.png);
 }
+
 .checkbox.checked p {
     background: url(/core/files/img/icon/box-checked.png);
 }
@@ -315,12 +341,14 @@ input:focus {
 .html-editor {
     position: relative;
 }
+
 .html-editor form {
     width: 100%;
     height: 100%;
     user-select: text;
 }
-.html-editor > button {
+
+.html-editor>button {
     position: absolute;
     right: 0;
     top: 0;
@@ -330,7 +358,8 @@ input:focus {
 
     display: none;
 }
-.html-editor:hover > button:enabled {
+
+.html-editor:hover>button:enabled {
     display: block;
 }
 
@@ -343,7 +372,9 @@ input:focus {
 .internal-link {
     color: inherit;
 }
-.internal-link:hover, .internal-link:focus {
+
+.internal-link:hover,
+.internal-link:focus {
     text-shadow: var(--text-shadow-hover);
 }
 
@@ -352,12 +383,14 @@ input:focus {
     width: 12px;
     height: 12px;
 }
+
 ::-webkit-scrollbar-track {
-    box-shadow: inset 0 0 6px rgba(0,0,0,0.3); 
+    box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
     border-radius: 10px;
 }
+
 ::-webkit-scrollbar-thumb {
-    box-shadow: inset 0 0 6px rgba(0,0,0,0.5); 
+    box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.5);
     border-radius: 10px;
     background-color: var(--color-light);
 }
@@ -372,8 +405,9 @@ code-editor {
     display: block;
     overflow: none;
 }
-code-editor > textarea,
-code-editor > pre {
+
+code-editor>textarea,
+code-editor>pre {
     position: absolute;
     width: 100%;
     height: 100%;
@@ -388,36 +422,44 @@ code-editor > pre {
     -moz-tab-size: 4;
     -o-tab-size: 4;
     tab-size: 4;
-    white-space: pre-wrap; /*pre wrap can cause inconsistent line wrapping between textarea and pre*/
+    white-space: pre-wrap;
+    /*pre wrap can cause inconsistent line wrapping between textarea and pre*/
     overflow-wrap: anywhere;
     overflow-x: hidden;
     overflow-y: auto;
 }
-code-editor > textarea {
+
+code-editor>textarea {
     resize: none;
     background: transparent;
     z-index: 1;
-    color: rgba(119, 88, 93, 0.5); /*no transparent for tests*/
+    color: rgba(119, 88, 93, 0.5);
+    /*no transparent for tests*/
     color: transparent;
     caret-color: darkslategrey;
     outline: none;
     border: none;
 }
-code-editor > pre {
+
+code-editor>pre {
     color: white;
     border: none;
     counter-reset: line;
 }
-code-editor > pre * {
+
+code-editor>pre * {
     max-width: 100%;
-    
-    white-space: pre-wrap; /*pre wrap can cause inconsistent line wrapping between textarea and pre*/
+
+    white-space: pre-wrap;
+    /*pre wrap can cause inconsistent line wrapping between textarea and pre*/
     overflow-wrap: anywhere;
 }
-code-editor > pre span.line {
+
+code-editor>pre span.line {
     position: relative;
 }
-code-editor > pre span.line:before {
+
+code-editor>pre span.line:before {
     counter-increment: line;
     content: counter(line);
     display: inline-block;
@@ -436,51 +478,52 @@ code-editor > pre span.line:before {
 
 code[class*="language-"],
 pre[class*="language-"] {
-	color: #002b36;
-	text-align: left;
-	word-spacing: normal;
-	word-break: normal;
-	word-wrap: normal;
+    color: #002b36;
+    text-align: left;
+    word-spacing: normal;
+    word-break: normal;
+    word-wrap: normal;
 
-	-webkit-hyphens: none;
-	-moz-hyphens: none;
-	-ms-hyphens: none;
-	hyphens: none;
+    -webkit-hyphens: none;
+    -moz-hyphens: none;
+    -ms-hyphens: none;
+    hyphens: none;
 }
 
 .token.comment {
-	color: #93a1a1;
+    color: #93a1a1;
 }
 
 .token.punctuation {
-	color: #586e75;
+    color: #586e75;
 }
 
 .token.boolean,
 .token.null,
 .token.number {
-	color: #268bd2;
+    color: #268bd2;
 }
 
 .token.string {
-	color: #2aa198;
+    color: #2aa198;
 }
 
 .token.keyword {
-	color: #859900;
+    color: #859900;
 }
 
 .token.dice,
 .token.function {
-	color: #b58900;
+    color: #b58900;
 }
 
 .token.error {
     position: relative;
-	text-decoration: #cb4b16 dotted underline;
+    text-decoration: #cb4b16 dotted underline;
     text-decoration-thickness: 2px;
     text-decoration-skip-ink: none;
 }
+
 .token.error:before {
     content: attr(data-error);
     position: absolute;
@@ -488,12 +531,12 @@ pre[class*="language-"] {
 
     z-index: 2;
     pointer-events: none;
-    
+
     top: 50%;
     transform: translateY(-50%);
     left: 100%;
     margin-left: 10px;
-    
+
     /* basic styles */
     width: auto;
     height: 28px;
@@ -504,6 +547,7 @@ pre[class*="language-"] {
     text-align: center;
     white-space: nowrap;
 }
+
 .token.error:after {
     content: "";
     position: absolute;
@@ -542,10 +586,12 @@ pre[class*="language-"] {
     top: 128px;
     left: 0;
 }
+
 .mode-sub-panel {
     display: inline-block;
     margin: 0 0 0 0;
 }
+
 .mode-button {
     pointer-events: auto;
     width: 32px;
@@ -554,9 +600,11 @@ pre[class*="language-"] {
     margin: 2px 2px 2px 2px;
     background-color: var(--color-light);
 }
+
 .mode-button:hover {
     background-color: var(--color-medium);
 }
+
 .mode-sub-button {
     width: 28px;
     height: 28px;
@@ -575,20 +623,25 @@ pre[class*="language-"] {
     border-radius: 6px;
     border: solid 1px var(--color-dark);
     position: relative;
-    box-shadow: var(--shadow-active); /* TODO: Is this really important/noticable? */
+    box-shadow: var(--shadow-active);
+    /* TODO: Is this really important/noticable? */
 }
+
 .chat-sender {
     font-weight: bold;
     font-size: 16px;
     margin: 0;
 }
+
 .chat-sender-special {
     font-style: italic;
 }
+
 .chat-message {
     font-size: 16px;
     margin: 8px 0 0 8px;
 }
+
 .chat-error {
     font-family: monospace;
     font-style: italic;
@@ -596,11 +649,13 @@ pre[class*="language-"] {
     margin: 0;
     white-space: pre-wrap;
 }
+
 .chat-info {
     font-style: italic;
     font-size: 14px;
     margin: 0;
 }
+
 .chat-timestamp {
     position: absolute;
     top: 0;
@@ -608,6 +663,7 @@ pre[class*="language-"] {
     margin: 0 5px 0 0;
     font-size: 12px;
 }
+
 .chat-timestamp p {
     margin: 0;
 }
@@ -619,34 +675,44 @@ span.chat-dice-bg {
     place-content: center;
     line-height: 48px;
 }
+
 span.chat-dice-4 {
     background-image: url(/core/files/img/dice/small/d4.png);
 }
+
 span.chat-dice-6 {
     background-image: url(/core/files/img/dice/small/d6.png);
 }
+
 span.chat-dice-8 {
     background-image: url(/core/files/img/dice/small/d8.png);
 }
+
 span.chat-dice-10 {
     background-image: url(/core/files/img/dice/small/d10.png);
 }
+
 span.chat-dice-12 {
     background-image: url(/core/files/img/dice/small/d12.png);
 }
+
 span.chat-dice-20 {
     background-image: url(/core/files/img/dice/small/d20.png);
 }
+
 span.chat-dice-crit {
     color: #008800;
 }
+
 span.chat-dice-fail {
     color: #FF0000;
 }
+
 span.chat-dice-uncounted {
     text-decoration: line-through;
     text-decoration-color: red;
 }
+
 span.chat-dice-inline,
 span.chat-button {
     height: 20px;
@@ -657,6 +723,7 @@ span.chat-button {
     place-content: center;
     line-height: 18px;
 }
+
 span.chat-button:hover {
     background-color: var(--color-light);
     box-shadow: var(--shadow-hover);
@@ -668,6 +735,7 @@ div.chat-box {
     place-content: center;
     margin-block-end: 0.5em;
 }
+
 div.chat-box-header {
     display: block;
     width: 95%;
@@ -679,26 +747,33 @@ div.chat-box-header {
     text-shadow: 0px 0px 3px black, 0px 0px 3px black;
     box-shadow: 0px 0px 3px black;
 }
+
 div.chat-box-header span {
     font-weight: bold;
 }
+
 div.chat-box-header p {
     margin: 0;
 }
+
 div.chat-box-content {
     display: block;
     width: 90%;
     margin: 0 auto;
     border: solid 1px black;
-    background-color: rgba(255, 255, 255, 0.5);;
+    background-color: rgba(255, 255, 255, 0.5);
+    ;
     box-shadow: 0px 0px 3px black;
 }
+
 div.chat-box-content table {
     border: none;
     margin-left: 0;
     margin-right: 0;
 }
-div.chat-box-content th, div.chat-box-content td {
+
+div.chat-box-content th,
+div.chat-box-content td {
     border: none;
 }
 
@@ -707,8 +782,9 @@ div.chat-box-content th, div.chat-box-content td {
     visibility: none;
     position: fixed;
     display: inline;
-    z-index: 20; /*TODO: this makes this unusable in windows, but for now only the chat uses this component and it fixes the order there */
-    
+    z-index: 20;
+    /*TODO: this makes this unusable in windows, but for now only the chat uses this component and it fixes the order there */
+
     color: black;
     background-color: white;
     border: solid 1px black;
@@ -720,6 +796,7 @@ div.chat-box-content th, div.chat-box-content td {
     opacity: 0;
     transition: opacity 0.3s;
 }
+
 .onhover::after {
     content: "";
     position: absolute;
@@ -730,6 +807,7 @@ div.chat-box-content th, div.chat-box-content td {
     border-style: solid;
     border-color: black transparent transparent transparent;
 }
+
 .hoverable:hover .onhover {
     visibility: visible;
     opacity: 1;
@@ -745,15 +823,19 @@ div.chat-box-content th, div.chat-box-content td {
     width: 20px;
     height: 20px;
 }
+
 .settings-number-range {
     margin: auto;
 }
+
 .settings-text {
     margin: auto;
 }
+
 .settings-module-name {
     margin: 0;
 }
+
 .settings-module-description {
     font-size: 14px;
 }
@@ -777,6 +859,7 @@ div.chat-box-content th, div.chat-box-content td {
     justify-content: flex-end;
     align-items: center;
 }
+
 .notifications span {
     text-shadow: 0px 0px 6px black, 0px 0px 6px black;
     font-weight: bold;
@@ -793,32 +876,38 @@ div.chat-box-content th, div.chat-box-content td {
 .tree-list {
     margin-left: 4px;
     padding: 0;
-    
+
     list-style: none;
     user-select: none;
 
     font-variant: initial;
 }
-.tree-list .tree-list { /* show background on nested lists/directories */
+
+.tree-list .tree-list {
+    /* show background on nested lists/directories */
     border: 1px solid black;
     padding: 3px;
     padding-bottom: 0;
     margin-top: -4px;
     margin-bottom: 4px;
 }
+
 .tree-list-bg1 {
     background-color: var(--color-light);
 }
+
 .tree-list-bg2 {
     background-color: var(--color-dark);
 }
+
 .tree-list li {
     width: 100%;
     clear: both;
 }
+
 .tree-list div {
     width: 100%;
-    
+
     clear: both;
 
     margin-bottom: 3px;
@@ -829,12 +918,15 @@ div.chat-box-content th, div.chat-box-content td {
     line-height: 15px;
     cursor: pointer;
 }
+
 .tree-list div:hover {
     box-shadow: var(--shadow-hover);
 }
+
 .tree-list div.selected {
     background-color: var(--color-selected);
 }
+
 .tree-list-icon {
     width: 16px;
     height: 16px;
@@ -845,6 +937,7 @@ div.chat-box-content th, div.chat-box-content td {
 
     line-height: 30px;
 }
+
 .tree-entry-desc {
     clear: both;
 
@@ -854,6 +947,7 @@ div.chat-box-content th, div.chat-box-content td {
     font-size: 12px;
     line-height: normal;
 }
+
 .tree-search-input {
     width: 100%;
     padding: 2px;
@@ -869,24 +963,27 @@ div.chat-box-content th, div.chat-box-content td {
 .fileman-dirlist {
     margin-left: 4px;
     padding: 0;
-    
+
     list-style: none;
 }
+
 .fileman-dirlist li {
     width: 98%;
 
     float: left;
     clear: both;
 }
+
 .fileman-dirlist ul {
     margin: 0;
     padding: 0 0 0 20px;
 
-    list-style:none;
+    list-style: none;
 }
+
 .fileman-dirlist div {
     width: 98%;
-    
+
     float: left;
     clear: both;
 
@@ -895,24 +992,31 @@ div.chat-box-content th, div.chat-box-content td {
     line-height: 15px;
     cursor: pointer;
 }
+
 .fileman-dirlist div:hover {
     box-shadow: var(--shadow-hover);
 }
+
 .fileman-dirlist div.selected {
     background-color: var(--color-selected);
 }
+
 .fileman-dirlist div.drop {
     background-color: var(--color-selected);
 }
+
 .fileman-dirlist div * {
-    pointer-events: none; /* prevents drag and drop issues with child elements of the div */
+    pointer-events: none;
+    /* prevents drag and drop issues with child elements of the div */
 }
+
 .fileman-dirlist .fileman-expand {
     float: left;
 
     margin: 3px 3px 0 0;
     pointer-events: all;
 }
+
 .fileman-dirlist .fileman-diricon {
     float: left;
 
@@ -924,6 +1028,7 @@ div.chat-box-content th, div.chat-box-content td {
 .fileman-filelist {
     padding-left: 20px;
 }
+
 .fileman-filelist li {
     width: 140px;
     height: 140px;
@@ -943,13 +1048,16 @@ div.chat-box-content th, div.chat-box-content td {
     background-color: var(--color-medium);
     cursor: pointer;
 }
+
 .fileman-filelist li:hover {
     box-shadow: var(--shadow-hover);
 }
+
 .fileman-filelist li.selected {
     border-color: var(--color-selected);
     background-color: var(--color-selected);
 }
+
 .fileman-thumbnail {
     width: 120px;
     height: 120px;
@@ -964,6 +1072,7 @@ div.chat-box-content th, div.chat-box-content td {
     background-position: center center;
     background-repeat: no-repeat;
 }
+
 .fileman-filename {
     width: 95%;
 
@@ -973,7 +1082,7 @@ div.chat-box-content th, div.chat-box-content td {
 
     color: white;
     text-shadow: 0px 0px 6px black, 0px 0px 6px black, 0px 0px 6px black;
-    
+
     margin: 0;
 }
 
@@ -989,9 +1098,11 @@ div.chat-box-content th, div.chat-box-content td {
     background-position: 2px center;
     background-repeat: no-repeat;
 }
+
 .fileman-button:hover {
     cursor: pointer;
 }
+
 .fileman-input-info {
     margin: 0 5px 5px 0;
 }
@@ -1002,6 +1113,7 @@ div.chat-box-content th, div.chat-box-content td {
     margin: 8px 0 0 0;
     border: 1px solid var(--color-medium);
 }
+
 .fileman-fileupload-name {
     height: 20px;
 
@@ -1011,6 +1123,7 @@ div.chat-box-content th, div.chat-box-content td {
 
     line-height: 20px;
 }
+
 .fileman-fileupload-progress {
     width: 0;
     height: 100%;
@@ -1022,12 +1135,15 @@ div.chat-box-content th, div.chat-box-content td {
 
     background: var(--color-dark);
 }
+
 .fileman-fileupload-done {
     background: #dbff87;
 }
+
 .fileman-fileupload-error {
     background: #ff8787;
 }
+
 .fileman-stripes {
     width: 100%;
     height: 100%;
@@ -1044,6 +1160,7 @@ div.chat-box-content th, div.chat-box-content td {
 .tabs {
     position: relative;
 }
+
 .tab-buttons {
     width: 100%;
     height: 40px;
@@ -1051,6 +1168,7 @@ div.chat-box-content th, div.chat-box-content td {
     justify-content: space-around;
     user-select: none;
 }
+
 .tab-buttons button {
     height: 24px;
     display: inline-block;
@@ -1065,10 +1183,11 @@ div.chat-box-content th, div.chat-box-content td {
     font-size: 18px;
     font-variant: small-caps;
     border-bottom: 3px solid rgba(0, 0, 0, 0.25);
-    
+
     cursor: pointer;
     transition: 0.3s;
 }
+
 .tab-buttons button:hover,
 .tab-buttons button.active {
     border-bottom: 3px solid black;
@@ -1084,6 +1203,7 @@ div.chat-box-content th, div.chat-box-content td {
     top: 40px;
     left: 0;
 }
+
 /*.tab-hidden {
     visibility: hidden;
 }
@@ -1109,11 +1229,14 @@ div.chat-box-content th, div.chat-box-content td {
 
     overflow: hidden;
 
-    will-change: transform; /* notifies browser that this element can and will move -> in a sepparate composite layer -> no more lags during moves */
+    will-change: transform;
+    /* notifies browser that this element can and will move -> in a sepparate composite layer -> no more lags during moves */
 }
+
 .dialog.modal {
     background: var(--bg);
 }
+
 .dialog-title {
     position: relative;
     height: 24px;
@@ -1126,6 +1249,7 @@ div.chat-box-content th, div.chat-box-content td {
 
     cursor: move;
 }
+
 .dialog-title p {
     flex: 1 1 0%;
     height: 19px;
@@ -1137,6 +1261,7 @@ div.chat-box-content th, div.chat-box-content td {
 
     user-select: none;
 }
+
 .dialog-title button {
     width: 24px;
     height: 19px;
@@ -1144,10 +1269,12 @@ div.chat-box-content th, div.chat-box-content td {
 
     border-radius: 10px;
 }
+
 .dialog-content {
     position: relative;
     padding: 4px;
 }
+
 .dialog-buttons {
     position: absolute;
     left: 0;
@@ -1156,16 +1283,18 @@ div.chat-box-content th, div.chat-box-content td {
     height: 24px;
 
     border-top: 1px solid black;
-    
+
     display: flex;
     place-content: flex-end;
 }
+
 .dialog-buttons button {
     height: 19px;
     margin: 2px;
 
     border-radius: 10px;
 }
+
 .dialog-modal-pane {
     position: absolute;
     width: 100%;
@@ -1185,20 +1314,24 @@ div.chat-box-content th, div.chat-box-content td {
     flex-wrap: nowrap;
     user-select: none;
 }
+
 .edit-window-container input,
 .edit-window-container select {
     background: none;
     border: none;
     outline: none;
 }
+
 .edit-window-container input[type="number"] {
     -moz-appearance: textfield;
 }
+
 .edit-window-container input[type="number"]::-webkit-outer-spin-button,
 .edit-window-container input[type="number"]::-webkit-inner-spin-button {
     -webkit-appearance: none;
     margin: 0;
 }
+
 .edit-window-container textarea {
     background: none;
     border: none;
@@ -1209,20 +1342,22 @@ div.chat-box-content th, div.chat-box-content td {
     display: flex;
     flex-grow: 0;
     flex-shrink: 0;
-    
+
     border-bottom: var(--border-separator);
 
     background-color: rgba(0, 0, 0, 0.05);
 }
+
 .edit-window-header-row {
     flex: 0 0 100%;
-    
+
     padding: 0;
     margin: 0;
     list-style: none;
-    
+
     border-top: var(--border-separator);
 }
+
 .edit-window-header-row li {
     padding: 4px;
     border-right: var(--border-separator);
@@ -1232,9 +1367,11 @@ div.chat-box-content th, div.chat-box-content td {
     align-items: center;
     white-space: nowrap;
 }
+
 .edit-window-header-row li:last-child {
     border-right: none;
 }
+
 .edit-window-header-side {
     width: calc(100% - 140px);
 }
@@ -1243,6 +1380,7 @@ div.chat-box-content th, div.chat-box-content td {
 .edit-window-tabs {
     height: calc(100% - 142px);
 }
+
 .edit-window-tabs .tab-buttons {
     padding-top: 10px;
     padding-bottom: 5px;
@@ -1258,16 +1396,20 @@ div.chat-box-content th, div.chat-box-content td {
 .edit-window-gm-sidebar {
     overflow: auto;
 }
+
 .edit-window-gm-sidebar button {
     width: 50%;
 }
+
 .edit-window-gm-token span {
     display: flex;
 }
+
 .edit-window-gm-token input {
     width: 32px;
     height: 32px;
 }
+
 .edit-window-gm-token-image {
     width: 70px;
     height: 70px;
@@ -1275,9 +1417,11 @@ div.chat-box-content th, div.chat-box-content td {
     flex: 0 0 70px;
     margin: 0 10px;
 }
+
 .edit-window-gm-token-image img {
     border: none;
 }
+
 .edit-window-sight-editor {
     width: 100%;
     padding-left: 5px;
@@ -1285,6 +1429,7 @@ div.chat-box-content th, div.chat-box-content td {
     justify-content: start;
     line-height: 26px;
 }
+
 .edit-window-sight-editor input {
     width: 48px;
     height: 16px;
@@ -1295,20 +1440,22 @@ div.chat-box-content th, div.chat-box-content td {
     margin: 4px;
     border: var(--border-separator);
     border-radius: 4px;
-    
+
     list-style: none;
     padding: 0;
 
     overflow: auto;
 }
+
 .edit-window-full-area {
     width: calc(100% - 8px);
     height: calc(100% - 8px);
 }
+
 .edit-window-content-sidebar {
     width: 200px;
     height: 100%;
-    
+
     flex: 0 0 200px;
     flex-wrap: nowrap;
     border-right: var(--border-separator);
@@ -1319,10 +1466,11 @@ div.chat-box-content th, div.chat-box-content td {
     display: flex;
     flex-direction: column;
     align-items: center;
-    
+
     border-bottom: var(--border-separator);
 }
-.edit-window-value-container > p:first-of-type {
+
+.edit-window-value-container>p:first-of-type {
     width: 100%;
     margin: 0;
     padding-top: 5px;
@@ -1331,24 +1479,28 @@ div.chat-box-content th, div.chat-box-content td {
     font-variant: small-caps;
     background: rgba(0, 0, 0, 0.05);
     border-bottom: var(--border-separator);
-    
+
     user-select: none;
 }
+
 .edit-window-value-container div {
     display: inline;
 }
+
 .edit-window-value-container input,
 .edit-window-value-container select {
     margin-top: 4px;
-    
+
     text-align: center;
 }
+
 .edit-window-clickable {
     font-variant: small-caps;
 
     cursor: pointer;
     user-select: none;
 }
+
 .edit-window-clickable:hover {
     text-shadow: var(--text-shadow-hover);
 }
@@ -1356,10 +1508,11 @@ div.chat-box-content th, div.chat-box-content td {
 /* Layouts */
 .edit-window-row {
     align-items: center;
-    
+
     width: 100%;
     padding: 0 5px;
 }
+
 .edit-window-row input {
     height: 20px;
     width: 100%;
@@ -1370,6 +1523,7 @@ div.chat-box-content th, div.chat-box-content td {
     grid-template-columns: auto auto;
     padding: 4px;
 }
+
 .edit-window-grid input,
 .edit-window-grid button {
     height: 20px;
@@ -1383,9 +1537,11 @@ div.chat-box-content th, div.chat-box-content td {
 
     border-right: var(--border-separator);
 }
+
 .edit-actor-image img {
     border: none;
 }
+
 .edit-actor-name input {
     margin: 4px;
     width: calc(100% - 8px);
@@ -1397,32 +1553,38 @@ div.chat-box-content th, div.chat-box-content td {
 
 /* Token Edit Window */
 .edit-token-image {
-    width: 90px;
-    height: 90px;
+    width: 120px;
+    height: 120px;
 
-    flex: 0 0 90px;
+    flex: 0 0 120px;
     border-right: var(--border-separator);
 }
+
 .edit-token-actor {
     padding: 4px;
 }
+
 .edit-token-actor button {
     height: 20px;
     flex: 0 1;
     white-space: nowrap;
 }
+
 .edit-token-actor button:first-of-type {
     flex: 1 0;
 }
+
 .edit-token-container .edit-window-header-row input {
     width: 40px;
     height: 20px;
     text-align: center;
 }
+
 .edit-token-container .edit-window-header-row select {
     width: 110px;
     height: 20px;
 }
+
 .edit-token-edit-boxes,
 .edit-token-edit-boxes input {
     width: 100%;
@@ -1444,12 +1606,15 @@ div.chat-box-content th, div.chat-box-content td {
     border: none;
     opacity: 0.6;
 }
+
 .edit-compendium-container .edit-window-header-row input {
     height: 20px;
 }
+
 .edit-compendium-container .edit-window-header-row select {
     height: 20px;
 }
+
 .edit-compendium-name {
     width: 450px;
     height: 60px;
@@ -1457,15 +1622,18 @@ div.chat-box-content th, div.chat-box-content td {
 
     flex: 0 0 450px;
 }
+
 .edit-compendium-name input {
     width: 100%;
     height: 100%;
-    
+
     font-size: 24px;
 }
+
 .edit-compendium-container .edit-window-area {
     border: none;
 }
+
 .edit-compendium-content {
     width: calc(100% - 8px);
     height: calc(100% - 50px);
@@ -1484,7 +1652,7 @@ div.chat-box-content th, div.chat-box-content td {
     4.11 Context Menu
 ---------------------------------------
 */
-.context-menu, 
+.context-menu,
 .context-menu ul {
     position: fixed;
     z-index: 2000;
@@ -1493,16 +1661,18 @@ div.chat-box-content th, div.chat-box-content td {
 
     box-shadow: var(--shadow-active);
 }
+
 .context-menu * {
     list-style: none;
     margin: 0;
     padding: 0;
 }
+
 .context-menu li {
     width: 180px;
     height: 22px;
     padding: 2px;
-    
+
     white-space: nowrap;
     overflow: hidden;
 
@@ -1513,9 +1683,11 @@ div.chat-box-content th, div.chat-box-content td {
 
     background-color: var(--bg-transparent);
 }
+
 .context-menu li:hover {
     background-color: var(--color-selected);
 }
+
 .context-menu-category::after {
     content: '>';
     position: relative;
@@ -1535,11 +1707,13 @@ div.chat-box-content th, div.chat-box-content td {
     box-shadow: var(--shadow-active);
     border-radius: 8px;
 }
+
 .progress-bar div {
     width: 0%;
     height: 100%;
     background: var(--color-highlight);
 }
+
 .progress-bar p {
     position: absolute;
     top: 0;
@@ -1568,13 +1742,13 @@ div.chat-box-content th, div.chat-box-content td {
     bottom: 0px;
     width: 100%;
     height: 32px;
-    
+
     display: flex;
     flex-direction: row;
     justify-content: left;
     align-content: center;
     opacity: 0.75;
-    
+
     white-space: nowrap;
     line-height: 24px;
     font-size: 16px;
@@ -1583,7 +1757,8 @@ div.chat-box-content th, div.chat-box-content td {
 
     pointer-events: none;
 }
-#controllsbar > div {
+
+#controllsbar>div {
     display: flex;
     margin-right: 24px;
 }
@@ -1602,6 +1777,7 @@ key {
 
     line-height: 18px;
 }
+
 mouse {
     display: inline-block;
     position: relative;
@@ -1616,6 +1792,7 @@ mouse {
 
     overflow: hidden;
 }
+
 mouse[button="left"]::after {
     content: '';
     position: absolute;
@@ -1625,6 +1802,7 @@ mouse[button="left"]::after {
     height: 10px;
     background: black;
 }
+
 mouse[button="right"]::after {
     content: '';
     position: absolute;
@@ -1634,6 +1812,7 @@ mouse[button="right"]::after {
     height: 10px;
     background: black;
 }
+
 mouse[button="middle"]::after {
     content: '';
     position: absolute;
@@ -1652,5 +1831,6 @@ mouse[button="middle"]::after {
 */
 /* TinyMCE Overrides */
 .tox-tinymce-inline {
-    z-index:1000 !important; /* force editor toolbar in front of windows */
+    z-index: 1000 !important;
+    /* force editor toolbar in front of windows */
 }

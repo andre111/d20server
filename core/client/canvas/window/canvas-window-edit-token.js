@@ -44,26 +44,36 @@ export class CanvasWindowEditToken extends CanvasWindowEditEntity {
             posLI.appendChild(document.createTextNode(' x '));
             posLI.appendChild(this.createLongEditor('y'));
             headerRow1.appendChild(posLI);
+            const rotationLI = document.createElement('li');
+            rotationLI.appendChild(document.createTextNode(I18N.get('token.edit.rotation', 'Rotation: ')));
+            rotationLI.appendChild(this.createDoubleEditor('rotation'));
+            headerRow1.appendChild(rotationLI);
+            headerSide.appendChild(headerRow1);
+
+            const headerRow2 = document.createElement('ul');
+            headerRow2.className = 'edit-window-header-row flexrow';
             const sizeLI = document.createElement('li');
             sizeLI.appendChild(document.createTextNode(I18N.get('token.edit.size', 'Size: ')));
             sizeLI.appendChild(this.createLongEditor('width'));
             sizeLI.appendChild(document.createTextNode(' x '));
             sizeLI.appendChild(this.createLongEditor('height'));
-            headerRow1.appendChild(sizeLI);
-            headerSide.appendChild(headerRow1);
+            headerRow2.appendChild(sizeLI);
+            const scrollLi = document.createElement('li');
+            scrollLi.appendChild(document.createTextNode(I18N.get('token.edit.scroll', 'Scroll: ')));
+            scrollLi.appendChild(this.createLongEditor('scrollX'));
+            scrollLi.appendChild(document.createTextNode(' x '));
+            scrollLi.appendChild(this.createLongEditor('scrollY'));
+            headerRow2.appendChild(scrollLi);
+            headerSide.appendChild(headerRow2);
 
-            const headerRow2 = document.createElement('ul');
-            headerRow2.className = 'edit-window-header-row flexrow';
-            const rotationLI = document.createElement('li');
-            rotationLI.appendChild(document.createTextNode(I18N.get('token.edit.rotation', 'Rotation: ')));
-            rotationLI.appendChild(this.createDoubleEditor('rotation'));
-            headerRow2.appendChild(rotationLI);
+            const headerRow3 = document.createElement('ul');
+            headerRow3.className = 'edit-window-header-row flexrow';
             const layerLI = document.createElement('li');
             layerLI.appendChild(document.createTextNode(I18N.get('token.edit.layer', 'Layer: ')));
             layerLI.appendChild(this.createLayerEditor('layer'));
             layerLI.appendChild(this.createLongEditor('depth'));
-            headerRow2.appendChild(layerLI);
-            headerSide.appendChild(headerRow2);
+            headerRow3.appendChild(layerLI);
+            headerSide.appendChild(headerRow3);
             header.appendChild(headerSide);
         }
 
@@ -126,7 +136,7 @@ export class CanvasWindowEditToken extends CanvasWindowEditEntity {
         Events.trigger('editTokenWindowCreateTabs', { w: this, tabs: tabs, reference: this.getReference() });
 
         Tabs.init(tabs);
-        this.setDimensions(420 + 2, 400 + 35);
+        this.setDimensions(420 + 2, 430 + 35);
     }
 
     createBarSettingsEditor(number) {

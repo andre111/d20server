@@ -4,8 +4,8 @@ import { EntityUtils } from '../util/entityutil.js';
 import { ImageService } from '../service/image-service.js';
 import { TokenUtil } from '../../common/util/tokenutil.js';
 
-export const TokenRenderer = {
-    renderTokens: function (ctx, tokens, viewer, highlightToken, grayscale = false, renderInfo = true) {
+export class TokenRenderer {
+    static renderTokens(ctx, tokens, viewer, highlightToken, grayscale = false, renderInfo = true) {
         // render token
         for (const token of tokens) {
             const loc = TokenRenderer.getTokenLocation(token, true);
@@ -29,9 +29,9 @@ export const TokenRenderer = {
                 ctx.restore();
             }
         }
-    },
+    }
 
-    renderToken: function (ctx, token, viewer, x, y, grayscale) {
+    static renderToken(ctx, token, viewer, x, y, grayscale) {
         var img = ImageService.getImage(token.getString('imagePath'), grayscale);
         if (img == null) img = ImageService.MISSING;
 
@@ -40,13 +40,32 @@ export const TokenRenderer = {
             ctx.translate(x, y);
             ctx.rotate(token.getDouble('rotation') * Math.PI / 180);
 
-            ctx.drawImage(img, -token.getLong('width') / 2, -token.getLong('height') / 2, token.getLong('width'), token.getLong('height'));
+            const width = token.getLong('width');
+            const height = token.getLong('height');
+            const scrollX = token.getLong('scrollX');
+            const scrollY = token.getLong('scrollY');
+            if (scrollX == 0 && scrollY == 0) {
+                // draw base image
+                ctx.drawImage(img, -width / 2, -height / 2, width, height);
+            } else {
+                // draw "scrolling" image for paralax effects
+                const time = Date.now() / 1000; //TODO: make this based on a global frame counter
+                let pX = ((scrollX * time) % 100) / 100.0;
+                let pY = ((scrollY * time) % 100) / 100.0;
+                if (pX < 0) pX += 1;
+                if (pY < 0) pY += 1;
+
+                ctx.drawImage(img, (1 - pX) * img.width, (1 - pY) * img.height, pX * img.width, pY * img.height, -width / 2, -height / 2, width * pX, height * pY);
+                ctx.drawImage(img, (1 - pX) * img.width, 0, pX * img.width, (1 - pY) * img.height, -width / 2, -height / 2 + height * pY, width * pX, (1 - pY) * height);
+                ctx.drawImage(img, 0, (1 - pY) * img.height, (1 - pX) * img.width, pY * img.height, -width / 2 + width * pX, -height / 2, (1 - pX) * width, height * pY);
+                ctx.drawImage(img, 0, 0, (1 - pX) * img.width, (1 - pY) * img.height, -width / 2 + width * pX, -height / 2 + height * pY, (1 - pX) * width, (1 - pY) * height);
+            }
 
             ctx.restore();
         }
-    },
+    }
 
-    renderTokenInfo: function (ctx, token, viewer, x, y) {
+    static renderTokenInfo(ctx, token, viewer, x, y) {
         // render additional info
         ctx.save();
         ctx.translate(x, y);
@@ -99,22 +118,22 @@ export const TokenRenderer = {
         }
 
         ctx.restore();
-    },
+    }
 
-    getBarWidth: function (token, bounds, viewer) {
+    static getBarWidth(token, bounds, viewer) {
         return bounds.width;
-    },
+    }
 
-    getBarHeight: function (token, bounds, viewer) {
+    static getBarHeight(token, bounds, viewer) {
         return 14;
-    },
+    }
 
-    getBarX: function (token, bounds, viewer, number) {
+    static getBarX(token, bounds, viewer, number) {
         // calculate (relative) var location
         return -TokenRenderer.getBarWidth(token, bounds, viewer) / 2;
-    },
+    }
 
-    getBarY: function (token, bounds, viewer, number) {
+    static getBarY(token, bounds, viewer, number) {
         // count visible bars
         var visibleBars = 0;
         for (var i = 1; i <= 3; i++) {
@@ -128,21 +147,21 @@ export const TokenRenderer = {
             if (TokenUtil.isBarVisible(token, viewer, i)) barY += barH;
         }
         return barY;
-    },
+    }
 
-    BAR_COLORS: [
+    static BAR_COLORS = [
         'lime',
         'blue',
         'red'
-    ],
+    ];
 
     //-----------------------------------------------------------------------------------------------
-    _lastTokenLocations: new Map(),
-    onMapChange: function (id) {
-        TokenRenderer._lastTokenLocations.clear();
-    },
-    getTokenLocation: function (token, update) {
-        var lastLocation = TokenRenderer._lastTokenLocations.get(token.getID());
+    static #lastTokenLocations = new Map();
+    static onMapChange(id) {
+        TokenRenderer.#lastTokenLocations.clear();
+    }
+    static getTokenLocation(token, update) {
+        var lastLocation = TokenRenderer.#lastTokenLocations.get(token.getID());
         if (lastLocation == null || lastLocation == undefined) {
             lastLocation = { x: token.getLong('x'), y: token.getLong('y') };
         }
@@ -155,8 +174,8 @@ export const TokenRenderer = {
         }
         const currentLocation = { x: x, y: y };
 
-        TokenRenderer._lastTokenLocations.set(token.getID(), currentLocation);
+        TokenRenderer.#lastTokenLocations.set(token.getID(), currentLocation);
         return currentLocation;
     }
-};
+}
 Events.on('mapChange', event => TokenRenderer.onMapChange());
